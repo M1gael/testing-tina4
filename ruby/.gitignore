@@ -1,0 +1,7 @@
+.env
+.keys/
+logs/
+sessions/
+.queue/
+*.db
+vendor/
