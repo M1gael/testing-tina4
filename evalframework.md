@@ -1,6 +1,6 @@
 # TINA4 Testing
 The goal is to create basic implementations using the frameworks to evaluate their ease of use, performance. And to then report any problems or improvement that can be made in evalframework.md under the relative language section.
-There is a documentation directory under each respective language directory.
+There is a documentation directory containing everything needed about every language we are testing this framework on.
 
 ## Python
 ## Ruby
