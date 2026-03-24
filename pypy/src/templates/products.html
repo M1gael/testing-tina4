@@ -4,9 +4,9 @@
 
 {% block content %}
 <h1>Our Products</h1>
-<p>Showing {{ products | length }} product{{ products | length != 1 ? "s" : "" }}</p>
+<p>Showing {{ products | length }} product{{ 's' if products|length != 1 else '' }}</p>
 
-{% if products | length > 0 %}
+{% if products %}
 {% for product in products %}
 <div class="product-card">
   <h3>{{ product.name }}</h3>
