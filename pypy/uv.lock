@@ -1,0 +1,23 @@
+version = 1
+revision = 3
+requires-python = ">=3.12"
+
+[[package]]
+name = "pypy"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "tina4-python" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "tina4-python", specifier = ">=3.1.0" }]
+
+[[package]]
+name = "tina4-python"
+version = "3.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/89/58/6d5f6a3a1f229aa593f3c1934ea115316ab4c0ebc7cf937fd446c4f8c0ca/tina4_python-3.2.0.tar.gz", hash = "sha256:992f61ed49150000487614674ff68028053ab312e57ed5612d4a6c4811eb4114", size = 270944, upload-time = "2026-03-23T14:58:44.615Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0c/09/3ab5793b5c785c25f671ca15594174f7da6a0892cda1728a92e4e2f48b1d/tina4_python-3.2.0-py3-none-any.whl", hash = "sha256:599d949c1da1b1916ed3b37f14cbd0ba67e60db8f4ffc6f848334acc3fa9cf32", size = 349687, upload-time = "2026-03-23T14:58:42.732Z" },
+]
