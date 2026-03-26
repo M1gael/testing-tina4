@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Store{% endblock %}</title>
+  <link rel="stylesheet" href="/css/tina4.min.css">
+</head>
+
+<body>
+  <header>
+    <h1>{% block header %}Store{% endblock %}</h1>
+  </header>
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+  <script src="/js/frond.js"></script>
+</body>
+
+</html>

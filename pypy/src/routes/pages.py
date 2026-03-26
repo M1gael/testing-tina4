@@ -30,3 +30,5 @@ async def products_page(request, response):
     ]
 
     return response.render("products.html", {"products": products})
+
+    
