@@ -1,5 +1,23 @@
 from tina4_python.core.router import get
 
+# 3. Path Parameters
+@get("/users/{id}/posts/{post_id}")
+async def user_post(id, post_id, request, response):
+    return response.json({
+        "user_id": id,
+        "post_id": post_id
+    })
+
+# Typed Parameters
+@get("/orders/{id:int}")
+async def get_order(id, request, response):
+    # id is already an integer thanks to :int
+    return response.json({
+        "order_id": id,
+        "type": type(id).__name__
+    })
+
+# Typed Parameters in Action
 # Integer parameter -- only digits match, auto-cast to int
 @get("/products/{id:int}")
 async def get_product(id, request, response):
