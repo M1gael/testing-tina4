@@ -1,6 +1,6 @@
 from tina4_python.core.router import get, middleware
 
-# 14. Gotchas
+# 14. gotchas
 # testing documented gotchas and their fixes
 
 # gotcha 2: parameter names must be unique

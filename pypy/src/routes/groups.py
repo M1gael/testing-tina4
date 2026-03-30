@@ -1,6 +1,6 @@
 from tina4_python.core.router import get, post, group
 
-# 5. Route Groups
+# 5. route groups
 @group("/api/v1")
 def api_v1():
 
@@ -20,7 +20,7 @@ def api_v1():
     async def list_products(request, response):
         return response.json({"products": []})
 
-# Nested Groups
+# nested groups
 @group("/api")
 def api():
 
