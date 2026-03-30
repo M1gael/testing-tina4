@@ -12,18 +12,18 @@ The primary objective of this repository is to:
 ## Protocol: Documentation Feeding
 The USER will provide documentation sections incrementally. The ASSISTANT (or any automated agent) MUST:
 1. Wait for each documentation snippet before proceeding.
-2. Implement the provided code example exactly as documented within the target language project directory (`pypy/` for Python, `ruby/` for Ruby).
+2. Implement the provided code example exactly as documented within the target language project directory (`pypy/` for Python, `ruru/` for Ruby).
 3. DO NOT implement proactive fixes for framework bugs; the goal is to verify if the documentation works as-is.
 4. Report all discrepancies, errors, or points of confusion to the USER for issue tracking in plain-text code blocks.
 
 ## Project Structure
 *   `pypy/`: The Python testing project and primary workspace.
-*   `ruby/`: The upcoming Ruby testing project and workspace.
+*   `ruru/`: The upcoming Ruby testing project and workspace.
 *   `.agents/`: Automation workflows, reporting skills, and agent-specific configurations.
 
 
 ## Standard Implementation Workflow
-1.  **Isolation**: All test implementations occur within the current language's target project directory (e.g., `pypy/` or `ruby/`).
+1.  **Isolation**: All test implementations occur within the current language's target project directory (e.g., `pypy/` or `ruru/`).
 
 2.  **Organization**: Every documentation section should have a dedicated file in the appropriate routes/feature directory named after the feature (e.g., `chaining.py`).
 3.  **Documentation Consistency**: 
