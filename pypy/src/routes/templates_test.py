@@ -51,4 +51,17 @@ async def templates_variables(request, response):
     
     return response.render("variables.html", data)
 
+@get("/templates/filters")
+async def templates_filters(request, response):
+    # Testing Section 4: Filters and Chaining
+    data = {
+        "items": ["apple", "banana", "cherry", "date"],
+        "scores": [85, 42, 99, 12, 77],
+        "data": {"id": 1, "status": "active"},
+        "missing": None
+    }
+    
+    return response.render("filters.html", data)
+
+
 

@@ -12,7 +12,9 @@ The primary objective of this repository is to:
 ## Protocol: Documentation Feeding
 The USER will provide documentation sections incrementally. The ASSISTANT (or any automated agent) MUST:
 1. Wait for each documentation snippet before proceeding.
-2. Implement the provided code example as a standalone test within the appropriate language project directory.
+2. Implement the provided code example exactly as documented within the appropriate project directory.
+3. DO NOT implement proactive fixes for framework bugs; the goal is to verify if the documentation works as-is.
+4. Report all discrepancies, errors, or points of confusion to the USER for issue tracking.
 
 ## Project Structure
 *   `pypy/`: The Python testing project and primary workspace.

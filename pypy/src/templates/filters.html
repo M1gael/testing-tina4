@@ -1,0 +1,31 @@
+<h3>String Filters</h3>
+<p>upper: {{ "alice" | upper }}</p>
+<p>slug: {{ "Hello World!" | slug }}</p>
+<p>truncate: {{ "this is a very long text" | truncate(10) }}</p>
+<p>nl2br: {{ "line1\nline2" | nl2br }}</p>
+
+<h3>Array Filters</h3>
+<p>count: {{ items | length }}</p>
+<p>join: {{ items | join(" + ") }}</p>
+<p>first/last: {{ items | first }} / {{ items | last }}</p>
+<p>slice: {{ items | slice(1, 3) }}</p>
+
+<h3>Numeric Filters</h3>
+<p>round: {{ 150.555 | round(2) }}</p>
+<p>number_format: {{ 1234567.89 | number_format(2) }}</p>
+
+<h3>JSON, Encodings, and Others</h3>
+<p>json_encode: {{ data | json_encode }}</p>
+<p>base64: {{ "hello" | base64_encode }}</p>
+<p>md5: {{ "hello" | md5 }}</p>
+<p>default: {{ missing | default("fallback value") }}</p>
+<p>date: {{ "2026-03-30T10:00:00" | date("%d/%m/%Y") }}</p>
+
+<h3>Chaining</h3>
+<p>chain: {{ "  alice smith  " | trim | title }}</p>
+<p>largest: {{ scores | sort | reverse | first }}</p>
+
+<h3>Feature Check (Possible Missing)</h3>
+<p>to_json: {{ data | to_json }}</p>
+<p>js_escape: {{ "alert('hi')" | js_escape }}</p>
+<p>data_uri: {{ "test" | data_uri }}</p>
