@@ -14,22 +14,6 @@ The USER will provide documentation sections incrementally. The ASSISTANT (or an
 1. Wait for each documentation snippet before proceeding.
 2. Implement the provided code example as a standalone test within the appropriate language project directory.
 
-## Current Status
-*   **Routing Chapter:** Successfully verified path parameter injection, typed parameters, and standard HTTP methods (GET, POST, PUT, PATCH, DELETE).
-*   **Request & Response Chapter:** Partially verified; documented major discrepancies in file upload handling and `response.redirect()`.
-*   **Input Validation Chapter:** Documentation incorrect/unavailable; `Validator` class and `response.error()` are missing from v3.2.0.
-*   **Framework Versions Tested:** v3.2.0 (with hot-patching) and v3.9.2.
-*   **Identified Issues:** 
-    *   Discrepancies in `request.query` attribute names.
-    *   Missing `@group` decorator support in latest versions.
-    *   `request.files` is empty (files are in `request.body`).
-    *   File metadata uses `file_name` instead of `filename`.
-    *   Uploaded file content is Base64-encoded string instead of raw bytes.
-    *   `response.redirect()` returns 404 instead of 302.
-    *   `response.file()` requires absolute paths for successful resolution.
-    *   Missing `tina4_python.validator` module and `Validator` class.
-    *   Missing `response.error()` method for error envelopes.
-
 ## Project Structure
 *   `pypy/`: The Python testing project and primary workspace.
 *   `.agents/`: Automation workflows, reporting skills, and agent-specific configurations.
