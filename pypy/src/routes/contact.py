@@ -13,10 +13,6 @@ async def submit_contact(request, response):
     # global next_id to maintain state across requests
     global next_id
     body = request.body
-    # safety check if body is None (gotcha #1/2)
-    if not body:
-        body = {}
-        
     errors = []
 
     # validate name (requirement: 2-100 chars)
