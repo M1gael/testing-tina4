@@ -63,5 +63,28 @@ async def templates_filters(request, response):
     
     return response.render("filters.html", data)
 
+@get("/templates/logic")
+async def templates_logic(request, response):
+    # Testing Section 5: Control Tags
+    data = {
+        "user": {
+            "role": "moderator",
+            "verified": False,
+            "first_name": "Alice",
+            "last_name": "Smith"
+        },
+        "price": 150,
+        "in_stock": True,
+        "items": ["Item A", "Item B", "Item C"],
+        "products": [
+            {"name": "Laptop", "price": 999.99},
+            {"name": "Mouse", "price": 25.50}
+        ],
+        "empty_list": []
+    }
+    
+    return response.render("control_tags.html", data)
+
+
 
 
