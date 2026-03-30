@@ -85,6 +85,12 @@ async def templates_logic(request, response):
     
     return response.render("control_tags.html", data)
 
+@get("/templates/inheritance")
+async def templates_inheritance(request, response):
+    # Testing Section 6: Template Inheritance
+    return response.render("home.html")
+
+
 
 
 
