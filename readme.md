@@ -34,3 +34,9 @@ The USER will provide documentation sections incrementally. The ASSISTANT (or an
     *   Continuously monitor `logs/tina4.log` for registration and execution errors.
 5.  **Reporting**: Generate plain-text status reports as defined in the `reporting` skill.
 6.  **Review**: Read the `reporting` skill before performing any `/commit` requested by the USER.
+
+## Pending Tests (Blocked by Bugs)
+The following functionality could not be thoroughly tested due to framework bugs blockading the testing process. We must return to these sections once the framework issues are patched.
+*   **Chapter 5: Database (Migrations)**: The `tina4 migrate` command fails outright with an `ImportError` on `load_dotenv`.
+*   **Chapter 5: Database (HTTP API Testing)**: The `notes.py` API implementation is blocked from live integration testing over via `app.py` because `Database()` connections hang and lock `sqlite:///data/app.db` indefinitely while `tina4 serve` maintains its state locking mechanisms.
+*   **Chapter 5: Database (DatabaseResult Output)**: The `column_info()`, `to_list()`, and `to_paginate()` methods documented for the `DatabaseResult` class are entirely missing from the implementation (yielding `AttributeError`/missing execution logic).
