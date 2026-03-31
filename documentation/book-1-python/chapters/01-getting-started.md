@@ -540,43 +540,21 @@ Restart the server. It now runs on port 8080.
 
 The CLI reads your `.env` file and checks for `TINA4_PORT` (and falls back to `PORT`). The resolved port is passed to the Python server. All three methods work -- use whichever fits your workflow.
 
-### Dashboard Environment Variables
-
-The dev dashboard (see Section 7) requires two additional `.env` variables:
-
-```env
-TINA4_CONSOLE=true
-TINA4_CONSOLE_TOKEN=my-dev-token
-```
-
-| Variable | Default Value | What It Does |
-|----------|---------------|--------------|
-| `TINA4_CONSOLE` | `false` | Enables the built-in dev dashboard |
-| `TINA4_CONSOLE_TOKEN` | *(none)* | Token required to access the dashboard |
-
-Both require `TINA4_DEBUG=true` to function. A full development `.env` with the dashboard enabled looks like:
-
-```env
-TINA4_DEBUG=true
-TINA4_CONSOLE=true
-TINA4_CONSOLE_TOKEN=my-dev-token
-```
-
 For the complete `.env` reference with all 68 variables, see [Book 0, Chapter 4: Environment Variables](../../book-0-understanding/chapters/04-environment-variables.md).
 
 ---
 
 ## 7. The Dev Dashboard
 
-With `TINA4_DEBUG=true` and the console variables configured in your `.env` (see Section 6), Tina4 provides a built-in development dashboard.
+With `TINA4_DEBUG=true` in your `.env`, Tina4 provides a built-in development dashboard. No additional environment variables are needed.
 
 Restart the server and navigate to:
 
 ```
-http://localhost:7145/tina4/console
+http://localhost:7145/__dev
 ```
 
-Enter your token (`my-dev-token`) when prompted. The dashboard shows:
+The dashboard shows:
 
 - **System Overview** -- framework version, Python version, uptime, memory usage, database status
 - **Request Inspector** -- recent HTTP requests with method, path, status, duration, and request ID. Click any request to see full headers, body, database queries, and template renders.
@@ -585,7 +563,7 @@ Enter your token (`my-dev-token`) when prompted. The dashboard shows:
 - **WebSocket Monitor** -- active WebSocket connections with metadata
 - **Routes** -- all registered routes with their methods, paths, and middleware
 
-The console shows you what your application is doing without adding print statements or log calls.
+The dev dashboard shows you what your application is doing without adding print statements or log calls.
 
 When you visit any HTML page (like `/products`), a **debug overlay** appears -- a toolbar at the bottom showing:
 
@@ -599,7 +577,194 @@ This overlay is only visible when `TINA4_DEBUG=true`. Production never sees it.
 
 ---
 
-## 8. Exercise: Greeting API + Product List Template
+## 8. Request & Response Fundamentals
+
+Before jumping into the exercises, let's consolidate how route handlers work in Tina4 Python. Every handler receives two objects: `request` (what the client sent) and `response` (what you send back). Here is the complete picture.
+
+### Reading Query Parameters
+
+Query parameters are the key-value pairs after the `?` in a URL. Access them through `request.params`:
+
+```python
+# URL: /api/search?q=laptop&page=2
+request.params.get("q", "")       # "laptop"
+request.params.get("page", "1")   # "2" (always a string)
+request.params.get("sort", "name") # "name" (default -- param was not sent)
+```
+
+### Reading URL Path Parameters
+
+Route patterns like `/users/{id}` capture segments of the URL. In Tina4 Python, path parameters arrive as function arguments:
+
+```python
+from tina4_python.core.router import get
+
+@get("/users/{id:int}/posts/{slug}")
+async def user_post(id, slug, request, response):
+    # id = 5 (int, because of :int type hint)
+    # slug = "hello-world" (string)
+    return response.json({"user_id": id, "slug": slug})
+```
+
+The `{id:int}` syntax tells Tina4 to convert the value to an integer. Without `:int`, it stays a string.
+
+### Reading the Request Body
+
+POST, PUT, and PATCH requests carry a body. Tina4 parses JSON bodies into a dictionary automatically (as long as the client sends `Content-Type: application/json`):
+
+```python
+from tina4_python.core.router import post
+
+@post("/api/items")
+async def create_item(request, response):
+    name = request.body.get("name", "")
+    price = request.body.get("price", 0)
+    return response.json({"received_name": name, "received_price": price})
+```
+
+### Reading Headers
+
+Headers are available as a dictionary. Header names are case-insensitive:
+
+```python
+content_type = request.headers.get("Content-Type", "not set")
+auth_token = request.headers.get("Authorization", "")
+custom = request.headers.get("X-Custom-Header", "")
+```
+
+### Sending JSON Responses
+
+`response.json()` converts a dictionary to JSON and sets the correct `Content-Type`. Pass a status code as the second argument:
+
+```python
+return response.json({"id": 1, "name": "Widget"})        # 200 OK (default)
+return response.json({"id": 1, "name": "Widget"}, 201)    # 201 Created
+return response.json({"error": "Not found"}, 404)          # 404 Not Found
+```
+
+### Sending HTML / Template Responses
+
+`response.render()` renders a Frond template from `src/templates/` and passes data to it:
+
+```python
+return response.render("products.html", {"products": product_list, "title": "Our Products"})
+```
+
+For raw HTML without a template file:
+
+```python
+return response.html("<h1>Hello</h1><p>This works too.</p>")
+```
+
+### Status Codes
+
+The most common status codes you will use:
+
+| Code | Meaning | When to Use |
+|------|---------|-------------|
+| `200` | OK | Successful GET (default) |
+| `201` | Created | Successful POST that created something |
+| `400` | Bad Request | Client sent invalid input |
+| `404` | Not Found | Resource does not exist |
+| `500` | Internal Server Error | Something broke on the server |
+
+### Worked Example: A Complete Route File
+
+Here is a full route file that ties everything together. It builds a small book lookup API with query parameters, path parameters, JSON responses, and proper status codes. Read through it before attempting the exercises -- it is your reference.
+
+Create `src/routes/books.py`:
+
+```python
+from tina4_python.core.router import get, post
+
+# In-memory data store
+books = [
+    {"id": 1, "title": "Dune", "author": "Frank Herbert", "year": 1965},
+    {"id": 2, "title": "Neuromancer", "author": "William Gibson", "year": 1984},
+    {"id": 3, "title": "Snow Crash", "author": "Neal Stephenson", "year": 1992}
+]
+
+
+@get("/api/books")
+async def list_books(request, response):
+    """List all books. Supports ?author= filter and ?sort=year."""
+    author = request.params.get("author", "")
+    sort_by = request.params.get("sort", "")
+
+    result = books
+
+    # Filter by author if the query param is present
+    if author:
+        result = [b for b in result if author.lower() in b["author"].lower()]
+
+    # Sort by year if requested
+    if sort_by == "year":
+        result = sorted(result, key=lambda b: b["year"])
+
+    return response.json({"books": result, "count": len(result)})
+
+
+@get("/api/books/{id:int}")
+async def get_book(id, request, response):
+    """Get a single book by ID. Returns 404 if not found."""
+    book = next((b for b in books if b["id"] == id), None)
+
+    if book is None:
+        return response.json({"error": f"Book with id {id} not found"}, 404)
+
+    return response.json(book)
+
+
+@post("/api/books")
+async def create_book(request, response):
+    """Create a new book from the JSON body. Returns 201 on success."""
+    title = request.body.get("title", "")
+    author = request.body.get("author", "")
+    year = request.body.get("year", 0)
+
+    if not title or not author:
+        return response.json({"error": "title and author are required"}, 400)
+
+    new_book = {
+        "id": max(b["id"] for b in books) + 1,
+        "title": title,
+        "author": author,
+        "year": year
+    }
+    books.append(new_book)
+
+    return response.json(new_book, 201)
+```
+
+Test it:
+
+```bash
+# List all books
+curl http://localhost:7145/api/books
+
+# Filter by author
+curl "http://localhost:7145/api/books?author=gibson"
+
+# Sort by year
+curl "http://localhost:7145/api/books?sort=year"
+
+# Get a single book
+curl http://localhost:7145/api/books/2
+
+# Get a book that does not exist (returns 404)
+curl http://localhost:7145/api/books/99
+
+# Create a new book
+curl -X POST http://localhost:7145/api/books \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Foundation", "author": "Isaac Asimov", "year": 1951}'
+```
+
+This example covers every building block the exercises use: reading query parameters, reading path parameters, reading the request body, returning JSON with different status codes, and handling missing data. Refer back to it as you work through the exercises below.
+
+---
+
+## 9. Exercise: Greeting API + Product List Template
 
 Build the following two features from scratch, without looking at the examples above.
 
@@ -663,7 +828,7 @@ products = [
 
 ---
 
-## 9. Solutions
+## 10. Solutions
 
 ### Solution A: Greeting API
 
@@ -674,7 +839,7 @@ from tina4_python.core.router import get
 
 @get("/api/greet")
 async def greet(request, response):
-    name = request.query.get("name", "Stranger")
+    name = request.params.get("name", "Stranger")
 
     from datetime import datetime
     hour = datetime.now().hour
@@ -813,7 +978,7 @@ async def store_page(request, response):
 
 ---
 
-## 10. Gotchas
+## 11. Gotchas
 
 ### 1. File not auto-discovered
 

@@ -9,12 +9,21 @@ The primary objective of this repository is to:
 *   Discrepancy Identification: Identify and document cases where the framework's actual behavior deviates from the documentation provided.
 *   Regression Testing: Validate fixes and monitor issues across framework updates.
 
-## Protocol: Documentation Feeding
-The USER will provide documentation sections incrementally. The ASSISTANT (or any automated agent) MUST:
-1. Wait for each documentation snippet before proceeding.
-2. Implement the provided code example exactly as documented within the target language project directory (`pypy/` for Python, `ruru/` for Ruby).
-3. DO NOT implement proactive fixes for framework bugs; the goal is to verify if the documentation works as-is.
-4. Report all discrepancies, errors, or points of confusion to the USER for issue tracking in plain-text code blocks.
+## Protocol: Chapter-Based Evaluation
+The repository contains a `documentation/` folder with complete guides. The ASSISTANT MUST:
+1.  **Wait for Direction**: Do NOT start working on any documentation file until the USER explicitly specifies which chapter (e.g., "Work on Chapter 3").
+2.  **Strict Sequencing**: Implement chapters only in the order requested by the USER. No exceptions.
+3.  **Implementation Fidelity**: Implement the provided code example exactly as documented within the target language project directory (`pypy/` for Python, `ruru/` for Ruby).
+4.  **No Proactive Fixes**: Do NOT implement proactive fixes for framework bugs; the goal is to verify if the documentation works as-is.
+5.  **Issue Reporting**: Report all discrepancies, errors, or points of confusion to the USER for issue tracking in plain-text code blocks as defined in the `reporting` skill.
+
+## Evaluation Progress
+| Language | Chapter | Status | Key Issues Found |
+| :--- | :--- | :--- | :--- |
+| Ruby | 01 | Completed | Missing `webrick`, Ternary Operator bug, POST 401s |
+| Ruby | 02 | Completed | Symbol keys fail, Group Prefixes ignored, Wildcards broken |
+| Ruby | 03 | Pending | - |
+| Python | 01-06 | In Progress | See `pypy/` logs |
 
 ## Project Structure
 *   `pypy/`: The Python testing project and primary workspace.
@@ -38,5 +47,5 @@ The USER will provide documentation sections incrementally. The ASSISTANT (or an
 ## Pending Tests (Blocked by Bugs)
 The following functionality could not be thoroughly tested due to framework bugs blockading the testing process. We must return to these sections once the framework issues are patched.
 *   **Chapter 5: Database (Migrations)**: The `tina4 migrate` command fails outright with an `ImportError` on `load_dotenv`.
-*   **Chapter 5: Database (HTTP API Testing)**: The `notes.py` API implementation is blocked from live integration testing over via `app.py` because `Database()` connections hang and lock `sqlite:///data/app.db` indefinitely while `tina4 serve` maintains its state locking mechanisms.
 *   **Chapter 5: Database (DatabaseResult Output)**: The `column_info()`, `to_list()`, and `to_paginate()` methods documented for the `DatabaseResult` class are entirely missing from the implementation (yielding `AttributeError`/missing execution logic).
+*   **Chapter 5 & 6: Database/ORM (SQLite Lock & Schema Generation)**: The `Note.create_table()` operations (alongside all other schema-altering functions) deadlock with SQLite `Resource Busy` locks while `tina4 serve` maintains its state-locking mechanisms. ORM integration via HTTP endpoints cannot securely execute without crashing or hanging the terminal. Wait for framework pooling updates or explicit offline test setups.
