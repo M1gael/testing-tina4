@@ -1,4 +1,4 @@
-from tina4_python.core.router import get, post, put, delete
+from tina4_python.core.router import get, post, put, delete, noauth
 
 # testing full crud api for products based on documentation exercise
 # testing in-memory store, path parameters, query parameters, and json request bodies
@@ -39,6 +39,7 @@ async def get_product(id, request, response):
 
 # create a new product
 @post("/api/products")
+@noauth()
 async def create_product(request, response):
     global next_id
     body = request.body

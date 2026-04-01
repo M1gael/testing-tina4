@@ -24,7 +24,8 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 02 | Completed | See issues `RB-02-01`, `RB-02-02`, `RB-02-03` |
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
 | Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
-| Python | 01-06 | In Progress | See issues `PY-05-01`, `PY-05-02`, `PY-0506-03` |
+| Python | 01-06 | Completed | Basic Routing, Auth, Middleware verified in v3.10.x |
+| Python | 05-06 | In Progress | Database/ORM issues `PY-05-01`, `PY-05-02`, `PY-0506-03` persist |
 
 ## Project Structure
 *   `pypy/`: The Python testing project and primary workspace.
@@ -53,9 +54,9 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | RB-01-01 | Ruby | 01 | open | 2026-03-31 | `webrick` gem is not listed as a dependency in the documentation but is required at runtime. Server fails to start without it. |
 | RB-01-02 | Ruby | 01 | open | 2026-03-31 | Ternary operator syntax used in route documentation causes a Ruby parse error. The documented pattern is invalid Ruby. |
 | RB-01-03 | Ruby | 01 | open | 2026-03-31 | POST endpoints return 401 Unauthorized when no auth is configured. Framework appears to apply a default auth guard to all non-GET routes. |
-| RB-02-01 | Ruby | 02 | open | 2026-03-31 | Symbol keys (e.g. `params[:id]`) do not work for accessing route parameters. String keys must be used instead, contradicting the documentation. |
+| RB-02-01 | Ruby | 02 | fixed | 2026-03-31 | Symbol keys (e.g. `params[:id]`) do not work for accessing route parameters. String keys must be used instead. |
 | RB-02-02 | Ruby | 02 | open | 2026-03-31 | Route group prefixes are silently ignored at runtime. Routes registered inside a group resolve as if no prefix was applied. |
-| RB-02-03 | Ruby | 02 | open | 2026-03-31 | Wildcard routes (e.g. `/docs/*`) register without error but fail to match any incoming request, always resulting in a 404. |
+| RB-02-03 | Ruby | 02 | fixed | 2026-03-31 | Wildcard routes (e.g. `/docs/*`) now match correctly. Value available via `request.params['wildcard']`. |
 | PY-05-01 | Python | 05 | open | 2026-03-25 | `tina4 migrate` command fails with `ImportError` on `load_dotenv`. Migrations cannot be run via the CLI at all. |
 | PY-05-02 | Python | 05 | open | 2026-03-25 | `DatabaseResult` methods `column_info()`, `to_list()`, and `to_paginate()` are documented but entirely absent from the implementation, yielding `AttributeError`. |
 | PY-0506-03 | Python | 05-06 | open | 2026-03-25 | `Note.create_table()` and all schema-altering ORM operations deadlock with a SQLite `Resource Busy` error while `tina4 serve` is running. ORM integration via HTTP endpoints cannot be tested safely. |
