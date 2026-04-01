@@ -1,4 +1,4 @@
-# testing chapter 6 orm
+# testing orm model definition
 from tina4_python.orm import ORM, IntegerField, StringField, BooleanField, DateTimeField
 
 class Note(ORM):

@@ -16,6 +16,7 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 3.  **Implementation Fidelity**: Implement the provided code example exactly as documented within the target language project directory (`pypy/` for Python, `ruru/` for Ruby).
 4.  **No Proactive Fixes**: Do NOT implement proactive fixes for framework bugs; the goal is to verify if the documentation works as-is.
 5.  **Issue Reporting**: Report all discrepancies, errors, or points of confusion to the USER for issue tracking in plain-text code blocks as defined in the `reporting` skill.
+6.  **Language-Specific Conversations**: Strictly only discuss one language per conversation. If a conversation is started for Python, it remains dedicated to Python and must never transition to Ruby (and vice-versa).
 
 ## Evaluation Progress
 | Language | Chapter | Status | Key Issues Found |
@@ -24,8 +25,12 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 02 | Completed | See issues `RB-02-01`, `RB-02-02`, `RB-02-03` |
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
 | Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
-| Python | 01-06 | Completed | Basic Routing, Auth, Middleware verified in v3.10.x |
-| Python | 05-06 | In Progress | Database/ORM issues `PY-05-01`, `PY-05-02`, `PY-0506-03` persist |
+| Python | 01 | Completed | Path params in signature vs `params` dict. |
+| Python | 02 | Completed | Wildcard key discrepancy; `@group` decorator missing. |
+| Python | 03 | Completed | `request.files` empty; multipart in `request.body`. |
+| Python | 04 | Completed | `tina4.css` missing from default project scaffold. |
+| Python | 05 | Completed | `to_paginate` doesn't slice data; `migrate` CLI broken. |
+| Python | 06 | In Progress | ORM issues: `ForeignKeyField` missing, `auto_now_add` error. |
 
 ## Project Structure
 *   `pypy/`: The Python testing project and primary workspace.
@@ -57,6 +62,13 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | RB-02-01 | Ruby | 02 | fixed | 2026-03-31 | Symbol keys (e.g. `params[:id]`) do not work for accessing route parameters. String keys must be used instead. |
 | RB-02-02 | Ruby | 02 | open | 2026-03-31 | Route group prefixes are silently ignored at runtime. Routes registered inside a group resolve as if no prefix was applied. |
 | RB-02-03 | Ruby | 02 | fixed | 2026-03-31 | Wildcard routes (e.g. `/docs/*`) now match correctly. Value available via `request.params['wildcard']`. |
+| PY-02-05 | Python | 02 | open | 2026-04-01 | `@group` decorator is not exported from `tina4_python.core.router`, preventing documented decorator-style route groups. Only `Router.group()` (imperative) exists. |
+| PY-03-05 | Python | 03 | open | 2026-04-01 | `request.files` is always empty for multipart uploads. Parsed file data is placed in `request.body` instead, contradicting documentation. |
+| PY-05-04 | Python | 05 | open | 2026-04-01 | `DatabaseResult.to_paginate()` fails to slice the `records` list. It calculates metadata correctly but returns the full record set in the `data` key. |
+| PY-05-05 | Python | 05 | open | 2026-04-01 | `DatabaseResult.column_info()` returns `UNKNOWN` for all types in SQLite when the table name cannot be reliably extracted from the SQL query via regex. |
+| PY-04-06 | Python | 04 | open | 2026-04-01 | `tina4.css` documentation states it "ships with every project" but the file is missing from `public/css/` in scaffolded projects. |
+| PY-06-07 | Python | 06 | open | 2026-04-01 | `ForeignKeyField` is missing from `tina4_python.orm`, causing import errors in documented ORM examples. |
+| PY-06-08 | Python | 06 | open | 2026-04-01 | `Field.__init__()` in ORM throws `unexpected keyword argument 'auto_now_add'`, breaking documented timestamps. |
 | PY-05-01 | Python | 05 | open | 2026-03-25 | `tina4 migrate` command fails with `ImportError` on `load_dotenv`. Migrations cannot be run via the CLI at all. |
 | PY-05-02 | Python | 05 | open | 2026-03-25 | `DatabaseResult` methods `column_info()`, `to_list()`, and `to_paginate()` are documented but entirely absent from the implementation, yielding `AttributeError`. |
 | PY-0506-03 | Python | 05-06 | open | 2026-03-25 | `Note.create_table()` and all schema-altering ORM operations deadlock with a SQLite `Resource Busy` error while `tina4 serve` is running. ORM integration via HTTP endpoints cannot be tested safely. |
