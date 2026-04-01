@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Product Catalog{% endblock %}</title>
+    <link rel="stylesheet" href="/css/tina4.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background: #f8f9fa; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { background: #2c3e50; color: white; padding: 20px; margin-bottom: 24px; }
+        .header h1 { margin: 0; }
+        .header p { margin: 4px 0 0; opacity: 0.8; }
+        .filters { margin-bottom: 20px; }
+        .filter-btn { display: inline-block; padding: 6px 14px; margin: 0 6px 6px 0; border-radius: 20px; text-decoration: none; font-size: 0.9em; border: 1px solid #dee2e6; color: #495057; background: white; }
+        .filter-btn.active { background: #2c3e50; color: white; border-color: #2c3e50; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .product-card { background: white; border: 2px solid #e9ecef; border-radius: 8px; padding: 16px; transition: border-color 0.2s; }
+        .product-card:hover { border-color: #adb5bd; }
+        .product-card.featured { border-color: #f39c12; background: #fef9e7; }
+        .product-name { font-size: 1.1em; font-weight: 600; margin: 0 0 4px; }
+        .product-category { font-size: 0.85em; color: #6c757d; margin: 0 0 8px; }
+        .product-price { font-size: 1.2em; font-weight: bold; color: #27ae60; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75em; font-weight: 600; margin-left: 8px; }
+        .badge-featured { background: #f39c12; color: white; }
+        .badge-stock { background: #d4edda; color: #155724; }
+        .badge-nostock { background: #f8d7da; color: #721c24; }
+        .empty-state { text-align: center; padding: 40px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    <script src="/js/frond.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,13 @@
+<p>Raw: {% raw %}{{ message }}{% endraw %}</p>
+<p>Spaceless:
+{% spaceless %}
+<div>
+    <span>A</span>
+</div>
+{% endspaceless %}
+</p>
+<p>Autoescape:
+{% autoescape false %}
+    {{ "<b>Safe</b>" }}
+{% endautoescape %}
+</p>

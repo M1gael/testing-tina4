@@ -23,6 +23,7 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 01 | Completed | See issues `RB-01-01`, `RB-01-02`, `RB-01-03` |
 | Ruby | 02 | Completed | See issues `RB-02-01`, `RB-02-02`, `RB-02-03` |
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
+| Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
 | Python | 01-06 | In Progress | See issues `PY-05-01`, `PY-05-02`, `PY-0506-03` |
 
 ## Project Structure
@@ -63,3 +64,7 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | RB-03-03 | Ruby | 03 | open | 2026-03-31 | All POST routes return `401 Unauthorized` without any configured auth or session logic, making non-GET routes untestable as documented. |
 | RB-03-04 | Ruby | 03 | open | 2026-03-31 | Content negotiation fails because manual header checks (`request.headers["Accept"]`) use Title-Case keys while the framework normalizes them to lowercase. |
 | RB-03-05 | Ruby | 03 | open | 2026-03-31 | `tina4 serve` hangs or deadlocks when a route triggers an unhandled Ruby exception (e.g., the `LocalJumpError` from `return`) instead of cleanly returning a 500 error page. |
+| RB-04-01 | Ruby | 04 | open | 2026-04-01 | Frond ternary operator `condition ? val1 : val2` returns the source object (e.g., an array) instead of the evaluated result when using complex expressions. |
+| RB-04-02 | Ruby | 04 | open | 2026-04-01 | `{% include %}` tag does not inherit parent scope (e.g., loop variables), and the `with` keyword fails to pass any data to the partial. |
+| RB-04-03 | Ruby | 04 | open | 2026-04-01 | Frond macros (`{% macro %}`) and special tags (`{% raw %}`, `{% spaceless %}`) are non-functional and currently produce no output or have no effect. |
+| RB-04-04 | Ruby | 04 | open | 2026-04-01 | Boolean logic in `{% if %}` blocks fails when combined with filters (e.g., `items | length > 0` returns false for non-empty arrays). |

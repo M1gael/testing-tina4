@@ -1,0 +1,42 @@
+{% macro my_test(arg1) %}
+  [Arg: {{ arg1 }}]
+{% endmacro %}
+
+{% from "v_frond.twig" import my_test %}
+
+Ternary (Array length == 2?): {{ myarray | length == 2 ? 'Yes' : 'No' }}
+Ternary (Text length == 5?): {{ mytext | length == 5 ? 'Yes' : 'No' }}
+Ternary (Boolean): {{ myboolean ? 'TrueValue' : 'FalseValue' }}
+
+Include (Should print fruit names):
+{% for fruit in myarray %}
+  {% include "v_frond_partial.twig" %}
+{% endfor %}
+
+Include With:
+{% include "v_frond_partial.twig" with {"fruit": "CustomFruit"} %}
+
+Macro: {{ my_test("HelloFromMacro") }}
+
+Raw: {% raw %}{{ this_should_be_raw }}{% endraw %}
+
+Spaceless:
+{% spaceless %}
+  <ul>
+    <li> A </li>
+  </ul>
+{% endspaceless %}
+
+If/Else (String > 0):
+{% if mytext | length > 0 %}
+  TEXT_EXISTS
+{% else %}
+  TEXT_MISSING
+{% endif %}
+
+If/Else (Array > 0):
+{% if myarray | length > 0 %}
+  ARRAY_EXISTS
+{% else %}
+  ARRAY_MISSING
+{% endif %}

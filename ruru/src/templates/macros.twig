@@ -1,0 +1,18 @@
+{% macro button(text, url, style) %}
+    <a href="{{ url | default('#') }}" class="btn btn-{{ style | default('primary') }}">
+        {{ text }}
+    </a>
+{% endmacro %}
+
+{% macro alert(message, type) %}
+    <div class="alert alert-{{ type | default('info') }}">
+        {{ message }}
+    </div>
+{% endmacro %}
+
+{% macro input(name, label, type, value) %}
+    <div class="form-group">
+        <label for="{{ name }}">{{ label | default(name | capitalize) }}</label>
+        <input type="{{ type | default('text') }}" id="{{ name }}" name="{{ name }}" value="{{ value | default('') }}">
+    </div>
+{% endmacro %}

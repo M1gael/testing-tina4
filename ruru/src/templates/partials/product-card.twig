@@ -1,0 +1,9 @@
+<div class="product-card{{ product.featured ? ' featured' : '' }}">
+    <h3>{{ product.name }}</h3>
+    <p class="price">${{ product.price | number_format(2) }}</p>
+    {% if product.in_stock %}
+        <span class="badge-success">In Stock</span>
+    {% else %}
+        <span class="badge-danger">Out of Stock</span>
+    {% endif %}
+</div>

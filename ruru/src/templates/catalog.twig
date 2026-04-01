@@ -1,0 +1,29 @@
+{% extends "catalog-base.twig" %}
+
+{% from "catalog-macros.twig" import productCard, categoryFilter %}
+
+{% block title %}{{ active_category | default("All") }} Products - Catalog{% endblock %}
+
+{% block content %}
+    <div class="header">
+        <h1>Product Catalog</h1>
+        <p>{{ products | length }} product{{ products | length != 1 ? 's' : '' }}{% if active_category %} in {{ active_category }}{% endif %}</p>
+    </div>
+
+    <div class="container">
+        {{ categoryFilter(categories, active_category) }}
+
+        {% if products | length > 0 %}
+            <div class="product-grid">
+                {% for product in products %}
+                    {{ productCard(product) }}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h2>No products found</h2>
+                <p>Try a different category or <a href="/catalog">view all products</a>.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

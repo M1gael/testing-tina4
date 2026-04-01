@@ -1,0 +1,17 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <h1>Filters</h1>
+
+    <p>Upper: {{ "alice" | upper }}</p>
+    <p>Lower: {{ "ALICE" | lower }}</p>
+    <p>Capitalize: {{ "alice smith" | capitalize }}</p>
+    <p>Title: {{ "alice smith" | title }}</p>
+    <p>Reverse String: {{ "abc" | reverse }}</p>
+    <p>Truncate: {{ "This is a very long text indeed." | truncate(10) }}</p>
+    <p>JSON: {{ metadata | to_json }}</p>
+    <p>Default: {{ undefined_var | default("Guest") }}</p>
+    <p>Number format: {{ 1234.5678 | number_format(2) }}</p>
+    <p>Date: {{ "2026-03-31" | date("Y-m-d") }}</p>
+    <p>Chaining: {{ "  alice  " | trim | upper }}</p>
+{% endblock %}

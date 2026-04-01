@@ -1,0 +1,18 @@
+{% from "macros.twig" import button, alert, input %}
+
+{% extends "base.twig" %}
+
+{% block content %}
+    <h1>Macros</h1>
+
+    {{ alert("Your profile has been updated.", "success") }}
+
+    <form method="POST" action="/profile">
+        {{ input("name", "Full Name", "text", "Alice") }}
+        {{ input("email", "Email Address", "email", "alice@example.com") }}
+        {{ input("phone", "Phone Number", "tel", "") }}
+
+        {{ button("Save Changes", "", "primary") }}
+        {{ button("Cancel", "/dashboard", "secondary") }}
+    </form>
+{% endblock %}

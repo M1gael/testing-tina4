@@ -1,0 +1,10 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    {% include "partials/header.twig" with {"site_name": "Include Shop"} %}
+
+    <h1>Products</h1>
+    {% for product in products %}
+        {% include "partials/product-card.twig" %}
+    {% endfor %}
+{% endblock %}

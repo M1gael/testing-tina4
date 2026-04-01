@@ -1,0 +1,41 @@
+{% extends "base.twig" %}
+
+{% block content %}
+    <h1>Loop and Conditionals</h1>
+
+    <table>
+        <thead>
+            <tr><th>#</th><th>Name</th><th>Price</th><th>Is Odd?</th></tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            <tr style="background: {{ loop.index is odd ? '#eee' : '#fff' }}">
+                <td>{{ loop.index }}</td>
+                <td>{{ product.name }}</td>
+                <td>${{ product.price | number_format(2) }}</td>
+                <td>{{ loop.index is odd ? 'Yes' : 'No' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">No products found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+
+    {% if user_role == "admin" %}
+        <p>Welcome, Admin!</p>
+    {% elseif user_role == "editor" %}
+        <p>Welcome, Editor!</p>
+    {% else %}
+        <p>Welcome, Viewer!</p>
+    {% endif %}
+
+    <p>User defined: {{ user_name is defined ? user_name : 'No Name' }}</p>
+
+    {% set total_value = 0 %}
+    {% for product in products %}
+        {% set total_value = total_value + product.price %}
+    {% endfor %}
+    <p>Total inventory price: ${{ total_value | number_format(2) }}</p>
+{% endblock %}
