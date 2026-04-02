@@ -58,10 +58,12 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | RB-01-01 | Ruby | 01 | open | 2026-03-31 | `webrick` gem is not listed as a dependency in the documentation but is required at runtime. Server fails to start without it. |
 | RB-01-02 | Ruby | 01 | open | 2026-03-31 | Ternary operator syntax used in route documentation causes a Ruby parse error. The documented pattern is invalid Ruby. |
+| PY-01-01 | Python | 01 | open | 2026-04-02 | Path parameters are only available via the function signature and are missing from the `request.params` dictionary, which is inconsistent with other Tina4 implementations. |
 | RB-01-03 | Ruby | 01 | open | 2026-03-31 | POST endpoints return 401 Unauthorized when no auth is configured. Framework appears to apply a default auth guard to all non-GET routes. |
 | RB-02-01 | Ruby | 02 | fixed | 2026-03-31 | Symbol keys (e.g. `params[:id]`) do not work for accessing route parameters. String keys must be used instead. |
 | RB-02-02 | Ruby | 02 | open | 2026-03-31 | Route group prefixes are silently ignored at runtime. Routes registered inside a group resolve as if no prefix was applied. |
 | RB-02-03 | Ruby | 02 | fixed | 2026-03-31 | Wildcard routes (e.g. `/docs/*`) now match correctly. Value available via `request.params['wildcard']`. |
+| PY-02-03 | Python | 02 | open | 2026-04-02 | Wildcard route values are indexed by the key `"wildcard"` in `request.params`, but the documentation states the key should be `"*"` (e.g. `request.params.get("*")`). |
 | PY-02-05 | Python | 02 | open | 2026-04-01 | `@group` decorator is not exported from `tina4_python.core.router`, preventing documented decorator-style route groups. Only `Router.group()` (imperative) exists. |
 | PY-03-05 | Python | 03 | open | 2026-04-01 | `request.files` is always empty for multipart uploads. Parsed file data is placed in `request.body` instead, contradicting documentation. |
 | PY-05-04 | Python | 05 | open | 2026-04-01 | `DatabaseResult.to_paginate()` fails to slice the `records` list. It calculates metadata correctly but returns the full record set in the `data` key. |
@@ -69,8 +71,8 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-04-06 | Python | 04 | open | 2026-04-01 | `tina4.css` documentation states it "ships with every project" but the file is missing from `public/css/` in scaffolded projects. |
 | PY-06-07 | Python | 06 | open | 2026-04-01 | `ForeignKeyField` is missing from `tina4_python.orm`, causing import errors in documented ORM examples. |
 | PY-06-08 | Python | 06 | open | 2026-04-01 | `Field.__init__()` in ORM throws `unexpected keyword argument 'auto_now_add'`, breaking documented timestamps. |
-| PY-05-01 | Python | 05 | open | 2026-03-25 | `tina4 migrate` command fails with `ImportError` on `load_dotenv`. Migrations cannot be run via the CLI at all. |
-| PY-05-02 | Python | 05 | open | 2026-03-25 | `DatabaseResult` methods `column_info()`, `to_list()`, and `to_paginate()` are documented but entirely absent from the implementation, yielding `AttributeError`. |
+| PY-05-01 | Python | 05 | fixed | 2026-03-25 | `tina4 migrate` command successfully executes migrations without the former `load_dotenv` ImportError. |
+| PY-05-02 | Python | 05 | fixed | 2026-03-25 | `DatabaseResult` methods `column_info()`, `to_list()`, and `to_paginate()` are now present in the implementation. |
 | PY-0506-03 | Python | 05-06 | open | 2026-03-25 | `Note.create_table()` and all schema-altering ORM operations deadlock with a SQLite `Resource Busy` error while `tina4 serve` is running. ORM integration via HTTP endpoints cannot be tested safely. |
 | RB-03-01 | Ruby | 03 | open | 2026-03-31 | Header names are normalized to lowercase (e.g., `accept`) at runtime, contradicting documentation stating they "keep their original casing". |
 | RB-03-02 | Ruby | 03 | open | 2026-03-31 | Usage of the `return` keyword within `Tina4::Router` blocks causes an `unexpected return` LocalJumpError and 500 status. `return` is used extensively in chapter 3 examples. |

@@ -6,6 +6,66 @@ This chapter covers every v3 release from the initial launch through the current
 
 ---
 
+## v3.10.48 — April 2, 2026
+
+### Bug Fixes
+
+**Puma requires `--production` flag** — Puma no longer auto-selected when `TINA4_DEBUG=false`. Use `tina4ruby serve --production` to enable Puma. Added FakeData (46), Gallery (16), and DevReload (37) tests.
+
+---
+
+## v3.10.46 — April 1, 2026
+
+### Test Coverage
+
+344 new tests added across cache (56), ORM (19), Frond (28), database drivers (85), auth (21), SCSS (10), dotenv (30), queue backends (10), migration (10), session handlers (11), router (14), log (13), CSRF middleware (17). Fixed session handler DB key bug (symbol vs string). Ruby now at 2,274 tests with full parity across all 49 core areas.
+
+---
+
+## v3.10.45 — April 1, 2026
+
+### Notes
+
+Version bump for parity with PHP CLI serve fix. No Ruby-specific changes.
+
+---
+
+## v3.10.44 — April 1, 2026
+
+### New Features
+
+**Database tab redesign** — Split-screen layout with tables navigation on the left and query editor + results on the right. Click-to-select table highlighting.
+
+**Copy CSV / Copy JSON** — Copy query results to clipboard in CSV or JSON format.
+
+**Paste data** — Modal for pasting JSON arrays or CSV/tab-separated data. Auto-generates INSERT statements targeting the selected table, or prompts for a new table name with CREATE TABLE generation. SQL input passes through unchanged.
+
+**Multi-statement execution** — Query runner handles batched SQL statements in a transaction.
+
+**Database badge on load** — Table count shows immediately without clicking the Database tab.
+
+**Star wiggle animation** — Empty star (☆) on the landing page with delayed wiggle animation at random intervals.
+
+### Bug Fixes
+
+**Default port** — Ruby default port set to 7147 (PHP=7145, Python=7146, Ruby=7147, Node=7148).
+
+**SQLite LIMIT fix** — Prevents double-LIMIT errors in the database browser.
+
+**browseTable quote escaping** — Fixed table name click handlers.
+
+**ORM table name pluralization** — Fixed default table name resolution. Table names are now pluralized by default (adding "s" suffix), only skipping when `ORM_PLURAL_TABLE_NAMES` is explicitly set to false.
+
+**QueryBuilder closed-connection detection** — `ensure_db!` now checks if the resolved database connection is still open, raising a proper error instead of crashing with `ArgumentError: prepare called on a closed database`.
+
+**Metrics directory validation** — `quick_metrics` and `full_analysis` now check directory existence before `_resolve_root` fallback, so missing-directory errors are raised correctly.
+
+### Test Coverage
+
+88 new tests added (DevMailbox 40, Static files 18, CLI scaffolding 30), plus 13 v3.10.44 feature specs and 60 pre-existing ORM/metrics bug fixes. 1,913 tests passing, 0 failures.
+
+---
+
 ## v3.10.40 — April 1, 2026
 
 ### Bug Fixes

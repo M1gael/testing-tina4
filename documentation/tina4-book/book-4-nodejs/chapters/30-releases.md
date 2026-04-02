@@ -6,6 +6,64 @@ This chapter covers every release from v3.0.0 through v3.10.x. Each section grou
 
 ---
 
+## v3.10.48 — April 2, 2026
+
+### Bug Fixes
+
+**Cluster mode requires `TINA4_PRODUCTION=true`** — Worker forking no longer auto-triggers when debug is off. Set `TINA4_PRODUCTION=true` env var or use `tina4 serve --production` to enable cluster mode.
+
+---
+
+## v3.10.46 — April 1, 2026
+
+### Test Coverage
+
+CSRF middleware expanded to 32 tests matching Python reference. Node.js now at 2,546 tests with full parity across all 49 core areas.
+
+---
+
+## v3.10.45 — April 1, 2026
+
+### Notes
+
+Version bump for parity with PHP CLI serve fix. No Node.js-specific changes.
+
+---
+
+## v3.10.44 — April 1, 2026
+
+### New Features
+
+**Database tab redesign** — Split-screen layout with tables navigation on the left and query editor + results on the right. Click-to-select table highlighting.
+
+**Copy CSV / Copy JSON** — Copy query results to clipboard in CSV or JSON format.
+
+**Paste data** — Modal for pasting JSON arrays or CSV/tab-separated data. Auto-generates INSERT statements targeting the selected table, or prompts for a new table name with CREATE TABLE generation. SQL input passes through unchanged.
+
+**Multi-statement execution** — Query runner handles batched SQL statements in a transaction.
+
+**Database badge on load** — Table count shows immediately without clicking the Database tab.
+
+**Star wiggle animation** — Empty star (☆) on the landing page with delayed wiggle animation at random intervals.
+
+### Bug Fixes
+
+**Default port** — Node.js default port set to 7148 (PHP=7145, Python=7146, Ruby=7147, Node=7148).
+
+**SQLite LIMIT fix** — Prevents double-LIMIT errors in the database browser.
+
+**browseTable quote escaping** — Fixed table name click handlers.
+
+**Server handler dispatch regex** — Fixed a regex that required whitespace after `async` in handler functions. Transpiled auto-CRUD handlers producing `async(req,res)=>` were called with zero arguments, causing crashes.
+
+**Cluster mode in tests** — Server-based tests now set `TINA4_DEBUG=true` to prevent cluster mode forking, which was causing ECONNREFUSED errors.
+
+### Test Coverage
+
+Massive test expansion — 718 new tests added across Auth (+52), ORM (+30), FakeData (+48), Cache (+23), DevMailbox (+32), Static (+21), Queue (+20), Frond (+57), CLI scaffolding (55), Metrics (69), plus v3.10.44 feature tests and server test fixes. 2,530 tests passing, 0 failures.
+
+---
+
 ## v3.10.40 — April 1, 2026
 
 ### Bug Fixes
