@@ -25,12 +25,12 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 02 | Completed | See issues `RB-02-01`, `RB-02-02`, `RB-02-03` |
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
 | Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
-| Python | 01 | Completed | Path params in signature vs `params` dict. |
-| Python | 02 | Completed | Wildcard key discrepancy; `@group` decorator missing. |
-| Python | 03 | Completed | `request.files` empty; multipart in `request.body`. |
-| Python | 04 | Completed | `tina4.css` missing from default project scaffold. |
-| Python | 05 | Completed | `to_paginate` doesn't slice data; `migrate` CLI broken. |
-| Python | 06 | In Progress | ORM issues: `ForeignKeyField` missing, `auto_now_add` error. |
+| Python | 01 | Completed | Path parameters now mirrored in `request.params`. |
+| Python | 02 | Completed | Wildcard key fixed to `*`. `@group` still missing. |
+| Python | 03 | Completed | `request.files` now populated correctly. |
+| Python | 04 | Completed | `tina4.css` still missing from scaffold. |
+| Python | 05 | Completed | Pagination slicing and type detection FIXED. |
+| Python | 06 | In Progress | ORM Issues: `orm_bind` decorator bug; Missing `ForeignKeyField`. |
 | PHP | 01 | Completed | Basic GET/POST routes verified. |
 | PHP | 02 | Completed | Chaining required for middleware; 2-arg `get()`. |
 | PHP | 03 | Completed | File uploads and validation verified. |
@@ -64,16 +64,16 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | RB-01-01 | Ruby | 01 | open | 2026-03-31 | `webrick` gem is not listed as a dependency in the documentation but is required at runtime. Server fails to start without it. |
 | RB-01-02 | Ruby | 01 | open | 2026-03-31 | Ternary operator syntax used in route documentation causes a Ruby parse error. The documented pattern is invalid Ruby. |
-| PY-01-01 | Python | 01 | open | 2026-04-02 | Path parameters are only available via the function signature and are missing from the `request.params` dictionary, which is inconsistent with other Tina4 implementations. |
+| PY-01-01 | Python | 01 | fixed | 2026-04-02 | Path parameters are now correctly mirrored in the `request.params` dictionary (Fixed in v3.10.50). |
 | RB-01-03 | Ruby | 01 | open | 2026-03-31 | POST endpoints return 401 Unauthorized when no auth is configured. Framework appears to apply a default auth guard to all non-GET routes. |
 | RB-02-01 | Ruby | 02 | fixed | 2026-03-31 | Symbol keys (e.g. `params[:id]`) do not work for accessing route parameters. String keys must be used instead. |
 | RB-02-02 | Ruby | 02 | open | 2026-03-31 | Route group prefixes are silently ignored at runtime. Routes registered inside a group resolve as if no prefix was applied. |
 | RB-02-03 | Ruby | 02 | fixed | 2026-03-31 | Wildcard routes (e.g. `/docs/*`) now match correctly. Value available via `request.params['wildcard']`. |
-| PY-02-03 | Python | 02 | open | 2026-04-02 | Wildcard route values are indexed by the key `"wildcard"` in `request.params`, but the documentation states the key should be `"*"` (e.g. `request.params.get("*")`). |
+| PY-02-03 | Python | 02 | fixed | 2026-04-02 | Wildcard route values are now correctly indexed by the key `"*"` in `request.params` (Fixed in v3.10.50). |
 | PY-02-05 | Python | 02 | open | 2026-04-01 | `@group` decorator is not exported from `tina4_python.core.router`, preventing documented decorator-style route groups. Only `Router.group()` (imperative) exists. |
-| PY-03-05 | Python | 03 | open | 2026-04-01 | `request.files` is always empty for multipart uploads. Parsed file data is placed in `request.body` instead, contradicting documentation. |
-| PY-05-04 | Python | 05 | open | 2026-04-01 | `DatabaseResult.to_paginate()` fails to slice the `records` list. It calculates metadata correctly but returns the full record set in the `data` key. |
-| PY-05-05 | Python | 05 | open | 2026-04-01 | `DatabaseResult.column_info()` returns `UNKNOWN` for all types in SQLite when the table name cannot be reliably extracted from the SQL query via regex. |
+| PY-03-05 | Python | 03 | fixed | 2026-04-01 | `request.files` is now correctly populated for multipart uploads (Fixed in v3.10.50). |
+| PY-05-04 | Python | 05 | fixed | 2026-04-01 | `DatabaseResult.to_paginate()` now successfully slices the record set based on page arguments (Fixed in v3.10.50). |
+| PY-05-05 | Python | 05 | fixed | 2026-04-01 | `DatabaseResult.column_info()` now correctly identifies SQLite types (Fixed in v3.10.50). |
 | PY-04-06 | Python | 04 | open | 2026-04-01 | `tina4.css` documentation states it "ships with every project" but the file is missing from `public/css/` in scaffolded projects. |
 | PY-06-07 | Python | 06 | open | 2026-04-01 | `ForeignKeyField` is missing from `tina4_python.orm`, causing import errors in documented ORM examples. |
 | PY-06-08 | Python | 06 | open | 2026-04-01 | `Field.__init__()` in ORM throws `unexpected keyword argument 'auto_now_add'`, breaking documented timestamps. |
@@ -100,3 +100,4 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PH-05-02 | PHP | 05 | open | 2026-04-07 | `Database::getDatabaseType()` method is missing from the PHP implementation but is featured prominently in Chapter 5 examples for schema inspection. |
 | PH-01-01 | PHP | 01 | open | 2026-04-07 | `tina4 init` / `tina4php` CLI commands are not globally available in some environments; must use `./vendor/bin/tina4php` instead. |
 | PH-04-01 | PHP | 04 | open | 2026-04-07 | Documentation uses `.twig` extension in Chapter 4 examples but `.html` in Chapter 1. Both appear to work, but the inconsistency can cause confusion regarding the preferred extension for Frond templates. |
+| PY-06-09 | Python | 06 | open | 2026-04-07 | `@orm_bind` used as a class decorator fails by returning `None`, effectively deleting the model class and causing `AttributeError: 'NoneType' object has no attribute 'create_table'`. |
