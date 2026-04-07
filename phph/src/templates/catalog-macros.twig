@@ -1,0 +1,28 @@
+{% macro productCard(product) %}
+    <div class="product-card {{ product.featured ? 'featured' : '' }}">
+        <div class="product-name">{{ product.name }}</div>
+        <div class="product-category">{{ product.category }}</div>
+        <div class="product-price">${{ product.price | number_format(2) }}</div>
+        <div class="mt-2">
+            {% if product.in_stock %}
+                <span class="badge badge-success">In Stock</span>
+            {% else %}
+                <span class="badge badge-danger">Out of Stock</span>
+            {% endif %}
+            {% if product.featured %}
+                <span class="badge badge-warning">Featured</span>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro categoryFilter(categories, active) %}
+    <div class="filters">
+        <a href="/catalog" class="filter-btn {{ active == '' ? 'active' : '' }}">All</a>
+        {% for category in categories %}
+            <a href="/catalog?category={{ category | url_encode }}" class="filter-btn {{ active == category ? 'active' : '' }}">
+                {{ category }}
+            </a>
+        {% endfor %}
+    </div>
+{% endmacro %}

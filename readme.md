@@ -31,10 +31,16 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Python | 04 | Completed | `tina4.css` missing from default project scaffold. |
 | Python | 05 | Completed | `to_paginate` doesn't slice data; `migrate` CLI broken. |
 | Python | 06 | In Progress | ORM issues: `ForeignKeyField` missing, `auto_now_add` error. |
+| PHP | 01 | Completed | Basic GET/POST routes verified. |
+| PHP | 02 | Completed | Chaining required for middleware; 2-arg `get()`. |
+| PHP | 03 | Completed | File uploads and validation verified. |
+| PHP | 04 | Completed | Frond templates and macros verified. |
+| PHP | 05 | In Progress | Namespace/Class mismatch in `Database` usage. |
 
 ## Project Structure
+*   `phph/`: The PHP testing project and workspace.
 *   `pypy/`: The Python testing project and primary workspace.
-*   `ruru/`: The upcoming Ruby testing project and workspace.
+*   `ruru/`: The Ruby testing project and workspace.
 *   `.agents/`: Automation workflows, reporting skills, and agent-specific configurations.
 
 
@@ -88,3 +94,9 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | RB-05-03 | Ruby | 05 | open | 2026-04-01 | `Tina4.seed` is undefined by default. Requires an undocumented manual `require "tina4/seeder"` before use. |
 | RB-05-04 | Ruby | 05 | open | 2026-04-01 | Documented curl examples fail with `401 Unauthorized` for POST/PUT/DELETE because write-routes are secure-by-default. Undocumented `.no_auth` chain method is required. |
 | RB-05-05 | Ruby | 05 | open | 2026-04-01 | `request.body` returns raw string, not a Hash. Using `body["title"]` (as documented) silently returns the literal substring `"title"`, bypassing validations and inserting bad data. Requires `request.body_parsed` instead. |
+| PH-02-01 | PHP | 02 | open | 2026-04-07 | `Router::get()` and other route methods only accept 2 arguments (path, callback). Documentation states 3 arguments are supported (including middleware array), but this causes a "Too many arguments" error. Chaining `->middleware()` is required instead. |
+| PH-02-02 | PHP | 02 | open | 2026-04-07 | PHP middleware callbacks do NOT receive a `$next` argument. Returning `true` continues the chain, while documentation incorrectly suggests calling `$next($request, $response)`. |
+| PH-05-01 | PHP | 05 | open | 2026-04-07 | `Database` class is located in `Tina4\Database` namespace. Documentation incorrectly suggests `use Tina4\Database` followed by `Database::getConnection()`, which fails because it refers to the namespace. Correct usage is `use Tina4\Database\Database`. |
+| PH-05-02 | PHP | 05 | open | 2026-04-07 | `Database::getDatabaseType()` method is missing from the PHP implementation but is featured prominently in Chapter 5 examples for schema inspection. |
+| PH-01-01 | PHP | 01 | open | 2026-04-07 | `tina4 init` / `tina4php` CLI commands are not globally available in some environments; must use `./vendor/bin/tina4php` instead. |
+| PH-04-01 | PHP | 04 | open | 2026-04-07 | Documentation uses `.twig` extension in Chapter 4 examples but `.html` in Chapter 1. Both appear to work, but the inconsistency can cause confusion regarding the preferred extension for Frond templates. |
