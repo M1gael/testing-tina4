@@ -2,7 +2,7 @@
 
 ## 1. What Is Tina4 PHP
 
-Tina4 PHP is a zero-dependency web framework for PHP 8.1+. One Composer package. Under 5,000 lines of code. Routing, an ORM, a template engine, authentication, queues, WebSocket, and 70 other features -- all included.
+Tina4 PHP is a zero-dependency web framework for PHP 8.1+. One Composer package. Routing, an ORM, a template engine, authentication, queues, WebSocket, and 70 other features -- all included.
 
 It belongs to the Tina4 family: four identical frameworks in Python, PHP, Ruby, and Node.js. Learn one, know all four. Same project structure. Same template syntax. Same CLI commands. Same `.env` variables.
 
@@ -51,14 +51,21 @@ If Composer is not installed, get it from [https://getcomposer.org](https://getc
 
 3. **The Tina4 CLI** -- a Rust-based binary that manages all four Tina4 frameworks:
 
+**macOS (Homebrew):**
+
 ```bash
-# macOS (Homebrew)
 brew install tina4stack/tap/tina4
+```
 
-# Linux / macOS (install script)
+**Linux / macOS (install script):**
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/tina4stack/tina4/main/install.sh | bash
+```
 
-# Windows (PowerShell)
+**Windows (PowerShell):**
+
+```powershell
 irm https://raw.githubusercontent.com/tina4stack/tina4/main/install.ps1 | iex
 ```
 
@@ -495,7 +502,7 @@ The `tina4.css` file is Tina4's built-in CSS utility framework. Layout utilities
 
 Open `.env` at the project root:
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -530,7 +537,7 @@ tina4 serve --port 8080
 
 Or add it to your `.env` file:
 
-```env
+```bash
 TINA4_DEBUG=true
 TINA4_PORT=8080
 ```
@@ -638,7 +645,7 @@ mkdir -p src/routes src/templates src/public
 
 ### Step 4: Create `.env`
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -1108,7 +1115,7 @@ Router::get("/store", function ($request, $response) {
 
 **Fix:** Stop the other process, or change the port:
 
-```env
+```bash
 TINA4_PORT=8080
 ```
 

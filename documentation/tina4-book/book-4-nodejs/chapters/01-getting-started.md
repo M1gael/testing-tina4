@@ -2,7 +2,7 @@
 
 ## 1. What Is Tina4 Node.js
 
-Tina4 Node.js is a zero-dependency web framework. One npm package. Under 5,000 lines of code. It hands you routing, an ORM, a template engine, authentication, queues, WebSocket, and 70 other features. Node.js 22+ and TypeScript.
+Tina4 Node.js is a zero-dependency web framework. One npm package. It hands you routing, an ORM, a template engine, authentication, queues, WebSocket, and 70 other features. Node.js 22+ and TypeScript.
 
 Truly zero runtime dependencies means no native C++ addons, no `node-gyp`, no platform-specific binaries. SQLite support uses Node's built-in `node:sqlite` module (available in Node 22+), so even database access requires nothing beyond what ships with Node.js itself.
 
@@ -48,14 +48,21 @@ npm ships with Node.js. If Node.js is installed, npm is too.
 
 3. **The Tina4 CLI** -- a Rust-based binary that manages all four Tina4 frameworks:
 
+**macOS (Homebrew):**
+
 ```bash
-# macOS (Homebrew)
 brew install tina4stack/tap/tina4
+```
 
-# Linux / macOS (install script)
+**Linux / macOS (install script):**
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/tina4stack/tina4/main/install.sh | bash
+```
 
-# Windows (PowerShell)
+**Windows (PowerShell):**
+
+```powershell
 irm https://raw.githubusercontent.com/tina4stack/tina4/main/install.ps1 | iex
 ```
 
@@ -81,13 +88,25 @@ Verify:
 tsx --version
 ```
 
+## Installing the Tina4 CLI
+
+```bash
+cargo install tina4
+```
+
+Or download from [GitHub Releases](https://github.com/tina4stack/tina4/releases).
+
+The `tina4` CLI manages project scaffolding, development servers, migrations, and more across all Tina4 frameworks.
+
 ### Creating a New Project
 
 The Tina4 CLI scaffolds a new project in one command:
 
 ```bash
-tina4 init my-store
+tina4 init nodejs my-store
 ```
+
+`tina4 init` installs the Tina4 CLI globally (via cargo, homebrew, or direct download), then scaffolds a complete project with routes, templates, database, and configuration.
 
 You should see:
 
@@ -515,7 +534,7 @@ The `tina4.css` file in the base template is Tina4's built-in CSS utility framew
 
 Open the `.env` file at the root of your project:
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -550,7 +569,7 @@ tina4 serve --port 8080
 
 Or add it to your `.env` file:
 
-```env
+```bash
 TINA4_DEBUG=true
 TINA4_PORT=8080
 ```
@@ -632,7 +651,7 @@ tina4 serve
   Server running at http://0.0.0.0:7148
 ```
 
-The CLI adds live reload and other development features. For direct Node.js execution (advanced usage), see [Chapter 21: CLI](21-cli.md).
+The CLI adds live reload and other development features. For direct Node.js execution (advanced usage), see [Chapter 30: CLI](30-cli.md).
 
 ---
 
@@ -701,7 +720,7 @@ mkdir -p src/routes src/templates src/public
 
 ### Step 5: Create `.env`
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -1160,7 +1179,7 @@ Router.get("/store", async (req, res) => {
 
 **Fix:** Stop the other process, or change the port:
 
-```env
+```bash
 TINA4_PORT=8080
 ```
 

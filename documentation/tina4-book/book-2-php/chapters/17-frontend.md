@@ -1,4 +1,4 @@
-# Chapter 15: Frontend with tina4css
+# Chapter 17: Frontend with tina4css
 
 ## 1. The Problem with Frontend Toolchains
 
@@ -449,7 +449,7 @@ The `data-frond-submit` attribute tells frond.js the URL to POST to. The `data-f
 
 ### Token Management
 
-When your application uses JWT authentication (Chapter 7), frond.js manages tokens automatically:
+When your application uses JWT authentication (Chapter 8), frond.js manages tokens automatically:
 
 ```javascript
 // Store the token after login
@@ -1225,3 +1225,26 @@ frond.post("/api/products", {
 ```
 
 This tag is included in all the examples above but is easy to forget when creating templates from scratch.
+
+---
+
+## 14. HtmlElement — Programmatic HTML Builder
+
+Build HTML in PHP without string concatenation:
+
+```php
+$el = new HtmlElement("div", ["class" => "card"], ["Hello"]);
+echo $el; // <div class="card">Hello</div>
+
+// Nesting
+$card = new HtmlElement("div", ["class" => "card"], [
+    new HtmlElement("h2", [], ["Title"]),
+    new HtmlElement("p", [], ["Content"]),
+]);
+
+// Helper functions
+extract(HtmlElement::helpers());
+echo $_div(["class" => "card"], $_p("Hello"), $_a(["href" => "/"], "Home"));
+```
+
+Void tags (`<br>`, `<img>`, `<input>`) render without closing tags. Boolean attributes render as bare names.

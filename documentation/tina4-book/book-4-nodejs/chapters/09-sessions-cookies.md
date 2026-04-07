@@ -16,7 +16,7 @@ The default backend is file-based sessions. They work out of the box with no add
 
 To change the backend, set `TINA4_SESSION_BACKEND` in `.env`:
 
-```env
+```bash
 TINA4_SESSION_BACKEND=file
 ```
 
@@ -32,7 +32,7 @@ TINA4_SESSION_BACKEND=file
 
 ### Redis Configuration
 
-```env
+```bash
 TINA4_SESSION_BACKEND=redis
 TINA4_SESSION_HOST=localhost
 TINA4_SESSION_PORT=6379
@@ -47,7 +47,7 @@ npm install ioredis
 
 ### MongoDB Configuration
 
-```env
+```bash
 TINA4_SESSION_BACKEND=mongodb
 TINA4_SESSION_HOST=localhost
 TINA4_SESSION_PORT=27017
@@ -56,7 +56,7 @@ TINA4_SESSION_DATABASE=tina4_sessions
 
 ### Valkey Configuration
 
-```env
+```bash
 TINA4_SESSION_BACKEND=valkey
 TINA4_SESSION_HOST=localhost
 TINA4_SESSION_PORT=6379
@@ -64,7 +64,7 @@ TINA4_SESSION_PORT=6379
 
 ### Database Sessions
 
-```env
+```bash
 TINA4_SESSION_BACKEND=database
 ```
 
@@ -72,7 +72,7 @@ Stores sessions in the `tina4_session` table using your existing database connec
 
 ### Session Lifetime
 
-```env
+```bash
 TINA4_SESSION_TTL=3600  # 1 hour in seconds (default)
 ```
 
@@ -99,7 +99,10 @@ Access session data through `req.session`. It is available in every route handle
 | `req.session.save()` | Persist session data (auto-called after response) |
 | `req.session.regenerate()` | Generate a new session ID, preserve data |
 | `req.session.flash(key, value)` | Set flash data (one-time read) |
-| `req.session.getFlash(key)` | Read and remove flash data |
+| `req.session.flash(key)` | Read and remove flash data (dual-mode) |
+| `req.session.getFlash(key)` | Explicit getter alias for flash(key) |
+| `req.session.getSessionId()` | Get current session ID |
+| `req.session.cookieHeader()` | Get Set-Cookie header value |
 | `req.session.all()` | Get all session data as an object |
 
 ---
@@ -249,10 +252,12 @@ Router.post("/api/contact", async (req, res) => {
 
 ### Reading a Flash Message
 
+Flash is dual-mode: `flash(key, value)` sets, `flash(key)` gets and removes. `getFlash()` is an explicit alias.
+
 ```typescript
 Router.get("/contact", async (req, res) => {
-    const flashMessage = req.session.getFlash("message");
-    const flashType = req.session.getFlash("message_type") ?? "info";
+    const flashMessage = req.session.flash("message");       // get + auto-remove
+    const flashType = req.session.flash("message_type") ?? "info";
 
     return res.html("contact.html", {
         flash_message: flashMessage,
@@ -494,7 +499,7 @@ Router.post("/logout", async (req, res) => {
 
 The session cookie (`tina4_session`) is `HttpOnly` and `SameSite=Lax` by default. For production, ensure HTTPS:
 
-```env
+```bash
 TINA4_SESSION_SECURE=true     # Only send over HTTPS
 TINA4_SESSION_HTTPONLY=true   # Not accessible via JavaScript (default)
 TINA4_SESSION_SAMESITE=Lax   # Prevent CSRF via cross-site requests (default)

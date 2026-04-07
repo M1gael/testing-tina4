@@ -123,7 +123,7 @@
 21. [Building a Complete App](book-4-nodejs/chapters/21-complete-app.md)
 22. [Vibe Coding with AI](book-4-nodejs/chapters/22-vibe-coding-with-ai.md)
 
-### Book 5: tina4-js — The Sub-3KB Reactive Frontend Framework
+### Book 5: tina4-js — The 1.5KB Reactive Frontend Core
 
 [📥 Download PDF](book-5-javascript/Tina4-for-JavaScript-Developers.pdf)
 
@@ -165,4 +165,4 @@ Every chapter includes:
 
 ---
 
-*Tina4 — This is not a framework. https://tina4.com*
+*Tina4 — The Intelligent Native Application 4ramework. https://tina4.com*

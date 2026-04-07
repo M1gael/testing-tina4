@@ -1,0 +1,145 @@
+nohup: ignoring input
+✓ Detected python project
+▶ Starting tina4python on 0.0.0.0:7145
+[31m2026-04-02T14:39:48.576Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/author.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[31m2026-04-02T14:39:48.576Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/blog_post.py: cannot import name 'ForeignKeyField' from 'tina4_python.orm' (/var/home/work/gitdir/testing-tina4/pypy/.venv/lib/python3.13/site-packages/tina4_python/orm/__init__.py)[0m
+[31m2026-04-02T14:39:48.577Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/comment.py: cannot import name 'ForeignKeyField' from 'tina4_python.orm' (/var/home/work/gitdir/testing-tina4/pypy/.venv/lib/python3.13/site-packages/tina4_python/orm/__init__.py)[0m
+[31m2026-04-02T14:39:48.577Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/note.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-02T14:39:48.577Z [DEBUG  ] Loaded: src.orm.product[0m
+[31m2026-04-02T14:39:48.578Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/task.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-02T14:39:48.578Z [DEBUG  ] Route registered: GET /api/public/info (auth=public)[0m
+[36m2026-04-02T14:39:48.578Z [DEBUG  ] Route registered: GET /api/profile (auth=required)[0m
+[36m2026-04-02T14:39:48.578Z [DEBUG  ] Loaded: src.routes.auth_decorators[0m
+[31m2026-04-02T14:39:48.579Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/autocrud_test.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[31m2026-04-02T14:39:48.580Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/blog.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-02T14:39:48.580Z [DEBUG  ] Route registered: GET /api/account (auth=public)[0m
+error: get_account.secure() failed: 'function' object has no attribute 'secure'
+[36m2026-04-02T14:39:48.580Z [DEBUG  ] Route registered: GET /api/catalog (auth=public)[0m
+[36m2026-04-02T14:39:48.580Z [DEBUG  ] Route registered: GET /api/important_data (auth=public)[0m
+[36m2026-04-02T14:39:48.580Z [DEBUG  ] Loaded: src.routes.chaining[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Route registered: POST /api/contact (auth=required)[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Route registered: GET /api/contact/submissions (auth=public)[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Loaded: src.routes.contact[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Route registered: POST /api/files/upload (auth=required)[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Loaded: src.routes.file_upload_example[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Route registered: POST /test/files (auth=public)[0m
+[36m2026-04-02T14:39:48.581Z [DEBUG  ] Loaded: src.routes.files_test[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Route registered: GET /gotcha/users/{id}/posts/{id} (auth=public)[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Route registered: GET /items/{id:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Route registered: GET /items/export (auth=public)[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Route registered: GET /gotcha/order (auth=public)[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Route registered: GET /gotcha/sync (auth=public)[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Loaded: src.routes.gotchas[0m
+[36m2026-04-02T14:39:48.582Z [DEBUG  ] Route registered: GET /api/greeting/{name} (auth=public)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: GET /api/greet (auth=public)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: POST /api/greeting (auth=required)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Loaded: src.routes.greeting[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: GET /api/v1/users (auth=public)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: GET /api/v1/users/{id:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: POST /api/v1/users (auth=required)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: GET /api/v1/products (auth=public)[0m
+[36m2026-04-02T14:39:48.583Z [DEBUG  ] Route registered: GET /api/v1/status (auth=public)[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Route registered: GET /api/v2/status (auth=public)[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Loaded: src.routes.groups[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Route registered: GET /hello (auth=public)[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Route registered: GET /hello-redirect (auth=public)[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Loaded: src.routes.hello[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Route registered: GET /products (auth=public)[0m
+[36m2026-04-02T14:39:48.584Z [DEBUG  ] Route registered: POST /products (auth=required)[0m
+[36m2026-04-02T14:39:48.585Z [DEBUG  ] Route registered: PUT /products/{id} (auth=required)[0m
+[36m2026-04-02T14:39:48.585Z [DEBUG  ] Route registered: PATCH /products/{id} (auth=required)[0m
+[36m2026-04-02T14:39:48.585Z [DEBUG  ] Route registered: DELETE /products/{id} (auth=required)[0m
+[36m2026-04-02T14:39:48.585Z [DEBUG  ] Loaded: src.routes.https[0m
+[36m2026-04-02T14:39:48.585Z [DEBUG  ] Route registered: GET /api/middleware-test (auth=public)[0m
+[36m2026-04-02T14:39:48.585Z [DEBUG  ] Loaded: src.routes.middleware_v2[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: GET /api/data (auth=public)[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: GET /api/secret (auth=public)[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: GET /api/important (auth=public)[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Loaded: src.routes.middlewares[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: GET /api/notes (auth=public)[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: GET /api/notes/categories (auth=public)[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: GET /api/notes/{id:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.586Z [DEBUG  ] Route registered: POST /api/notes (auth=required)[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Route registered: PUT /api/notes/{id:int} (auth=required)[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Route registered: DELETE /api/notes/{id:int} (auth=required)[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Loaded: src.routes.notes[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Route registered: GET /products (auth=public)[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Loaded: src.routes.pages[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Route registered: GET /nested/home (auth=public)[0m
+[36m2026-04-02T14:39:48.587Z [DEBUG  ] Loaded: src.routes.pages_nested.home[0m
+[36m2026-04-02T14:39:48.588Z [DEBUG  ] Route registered: GET /users/{id}/posts/{post_id} (auth=public)[0m
+[36m2026-04-02T14:39:48.588Z [DEBUG  ] Route registered: GET /orders/{id:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.588Z [DEBUG  ] Route registered: GET /products/{id:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.588Z [DEBUG  ] Route registered: GET /products/{id:int}/price/{price:float} (auth=public)[0m
+[36m2026-04-02T14:39:48.588Z [DEBUG  ] Route registered: GET /files/{filepath:path} (auth=public)[0m
+[36m2026-04-02T14:39:48.588Z [DEBUG  ] Loaded: src.routes.pathparams[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Route registered: GET /api/products (auth=public)[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Route registered: GET /api/products/{id:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Route registered: POST /api/products (auth=public)[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Route registered: PUT /api/products/{id:int} (auth=required)[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Route registered: DELETE /api/products/{id:int} (auth=required)[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Loaded: src.routes.product_api[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Route registered: GET /search (auth=public)[0m
+[36m2026-04-02T14:39:48.589Z [DEBUG  ] Loaded: src.routes.queries[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/check (auth=public)[0m✓ Browser opened: http://localhost:7145
+👁 File watcher active — src/, migrations/, .env
+
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/info (auth=public)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/users/{id:int}/posts/{slug} (auth=public)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/search (auth=public)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: POST /chapter3/feedback (auth=required)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/headers (auth=public)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/whoami (auth=public)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: GET /chapter3/cookies (auth=public)[0m
+[36m2026-04-02T14:39:48.590Z [DEBUG  ] Route registered: POST /chapter3/upload (auth=required)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: POST /chapter3/upload/save (auth=required)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/status-test/{code:int} (auth=public)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/welcome-html (auth=public)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/robots-test.txt (auth=public)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/old-url (auth=public)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/dashboard (auth=public)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/download/test (auth=public)[0m
+[36m2026-04-02T14:39:48.591Z [DEBUG  ] Route registered: GET /chapter3/headers-chain (auth=public)[0m
+[36m2026-04-02T14:39:48.592Z [DEBUG  ] Route registered: POST /chapter3/session-test (auth=required)[0m
+[36m2026-04-02T14:39:48.592Z [DEBUG  ] Loaded: src.routes.request_response[0m
+[36m2026-04-02T14:39:48.592Z [DEBUG  ] Route registered: GET /test/slicing (auth=public)[0m
+[36m2026-04-02T14:39:48.592Z [DEBUG  ] Loaded: src.routes.slicing_test[0m
+[36m2026-04-02T14:39:48.592Z [DEBUG  ] Route registered: GET /store (auth=public)[0m
+[36m2026-04-02T14:39:48.592Z [DEBUG  ] Loaded: src.routes.store[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Route registered: GET /about (auth=public)[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Route registered: GET /about-explicit (auth=public)[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Route registered: GET /templates/variables (auth=public)[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Route registered: GET /templates/filters (auth=public)[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Route registered: GET /templates/logic (auth=public)[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Route registered: GET /templates/inheritance (auth=public)[0m
+[36m2026-04-02T14:39:48.593Z [DEBUG  ] Loaded: src.routes.templates_test[0m
+[31m2026-04-02T14:39:48.594Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/v3_10_50_test.py: No module named 'requests'[0m
+[36m2026-04-02T14:39:48.594Z [DEBUG  ] Route registered: POST /chapter4/validate (auth=required)[0m
+[36m2026-04-02T14:39:48.594Z [DEBUG  ] Route registered: POST /chapter4/error (auth=required)[0m
+[36m2026-04-02T14:39:48.594Z [DEBUG  ] Loaded: src.routes.validation[0m
+[36m2026-04-02T14:39:48.595Z [DEBUG  ] Route registered: GET /docs/* (auth=public)[0m
+[36m2026-04-02T14:39:48.595Z [DEBUG  ] Route registered: GET /* (auth=public)[0m
+[36m2026-04-02T14:39:48.595Z [DEBUG  ] Loaded: src.routes.wildcards[0m
+[32m2026-04-02T14:39:48.595Z [INFO   ] Discovered 84 routes[0m
+[32m2026-04-02T14:39:48.595Z [INFO   ] Port 7145 in use — using 7146 instead[0m
+[32m2026-04-02T14:39:48.596Z [INFO   ] DevReload: file watcher started (interval=3.0s)[0m
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ `/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+
+  Tina4 Python v3.10.50 — This Is Now A 4Framework
+
+  Server:    http://localhost:7146 (asyncio)
+  Swagger:   http://localhost:7146/swagger
+  Dashboard: http://localhost:7146/__dev
+  Debug:     ON (Log level: ALL)
+
+[32m2026-04-02T14:39:48.596Z [INFO   ] Server started http://localhost:7146 (asyncio)[0m
+[32m2026-04-02T14:39:48.596Z [INFO   ] Development server: asyncio[0m
+[36m2026-04-02T14:39:48.598Z [DEBUG  ] DevReload: watching src, public (extensions: .css, .html, .js, .py, .scss, .twig)[0m
+[32m2026-04-02T15:00:32.930Z [INFO   ] Shutting down gracefully...[0m
+[32m2026-04-02T15:00:32.970Z [INFO   ] Shutting down gracefully...[0m
+[32m2026-04-02T15:00:32.971Z [INFO   ] Server stopped.[0m

@@ -2,7 +2,7 @@
 
 ## 1. What Is Tina4 Python
 
-Tina4 Python is a zero-dependency web framework for Python 3.12+. One package. Under 5,000 lines of code. Routing, ORM, template engine, authentication, queues, WebSocket, and 70 other features -- all built in.
+Tina4 Python is a zero-dependency web framework for Python 3.12+. One package. Routing, ORM, template engine, authentication, queues, WebSocket, and 70 other features -- all built in.
 
 It belongs to the Tina4 family -- four identical frameworks in Python, PHP, Ruby, and Node.js. Everything you learn here transfers to the other three. Same project structure. Same template syntax. Same CLI commands. Same `.env` variables.
 
@@ -56,14 +56,21 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 3. **The Tina4 CLI** -- a Rust-based binary that manages all four Tina4 frameworks:
 
+**macOS (Homebrew):**
+
 ```bash
-# macOS (Homebrew)
 brew install tina4stack/tap/tina4
+```
 
-# Linux / macOS (install script)
+**Linux / macOS (install script):**
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/tina4stack/tina4/main/install.sh | bash
+```
 
-# Windows (PowerShell)
+**Windows (PowerShell):**
+
+```powershell
 irm https://raw.githubusercontent.com/tina4stack/tina4/main/install.ps1 | iex
 ```
 
@@ -77,13 +84,25 @@ tina4 --version
 tina4 0.1.0
 ```
 
+## Installing the Tina4 CLI
+
+```bash
+cargo install tina4
+```
+
+Or download from [GitHub Releases](https://github.com/tina4stack/tina4/releases).
+
+The `tina4` CLI manages project scaffolding, development servers, migrations, and more across all Tina4 frameworks.
+
 ### Creating a New Project
 
 One command. One package. No dependency tree.
 
 ```bash
-tina4 init my-store
+tina4 init python my-store
 ```
+
+`tina4 init` installs the Tina4 CLI globally (via cargo, homebrew, or direct download), then scaffolds a complete project with routes, templates, database, and configuration.
 
 You should see:
 
@@ -489,7 +508,7 @@ The `tina4.css` file is Tina4's built-in CSS utility framework. Layout utilities
 
 Open the `.env` file at the root of your project:
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -524,7 +543,7 @@ tina4 serve --port 8080
 
 Or add it to your `.env` file:
 
-```env
+```bash
 TINA4_DEBUG=true
 TINA4_PORT=8080
 ```
@@ -629,7 +648,7 @@ mkdir -p src/routes src/templates src/public
 
 ### Step 4: Create `.env`
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 

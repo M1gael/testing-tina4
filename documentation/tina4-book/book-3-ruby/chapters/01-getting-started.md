@@ -2,7 +2,7 @@
 
 ## 1. What Is Tina4 Ruby
 
-Tina4 Ruby is a zero-dependency web framework for Ruby 3.1+. One gem. Under 5,000 lines of code. Routing, ORM, template engine, authentication, queues, WebSocket, and 70 other features -- all built in.
+Tina4 Ruby is a zero-dependency web framework for Ruby 3.1+. One gem. Routing, ORM, template engine, authentication, queues, WebSocket, and 70 other features -- all built in.
 
 It belongs to the Tina4 family. Four identical frameworks. Python, PHP, Ruby, Node.js. Everything you learn here transfers to the other three languages. Same project structure. Same template syntax. Same CLI commands. Same `.env` variables.
 
@@ -46,14 +46,21 @@ Not installed? `gem install bundler`.
 
 3. **The Tina4 CLI** -- a Rust-based binary that manages all four Tina4 frameworks:
 
+**macOS (Homebrew):**
+
 ```bash
-# macOS (Homebrew)
 brew install tina4stack/tap/tina4
+```
 
-# Linux / macOS (install script)
+**Linux / macOS (install script):**
+
+```bash
 curl -fsSL https://raw.githubusercontent.com/tina4stack/tina4/main/install.sh | bash
+```
 
-# Windows (PowerShell)
+**Windows (PowerShell):**
+
+```powershell
 irm https://raw.githubusercontent.com/tina4stack/tina4/main/install.ps1 | iex
 ```
 
@@ -78,13 +85,25 @@ sudo apt-get install libsqlite3-dev
 sudo dnf install sqlite-devel
 ```
 
+## Installing the Tina4 CLI
+
+```bash
+cargo install tina4
+```
+
+Or download from [GitHub Releases](https://github.com/tina4stack/tina4/releases).
+
+The `tina4` CLI manages project scaffolding, development servers, migrations, and more across all Tina4 frameworks.
+
 ### Creating a New Project
 
 One command:
 
 ```bash
-tina4 init my-store
+tina4 init ruby my-store
 ```
+
+`tina4 init` installs the Tina4 CLI globally (via cargo, homebrew, or direct download), then scaffolds a complete project with routes, templates, database, and configuration.
 
 ```
 Creating Tina4 project in ./my-store ...
@@ -477,7 +496,7 @@ Open `http://localhost:7147/products`. You see:
 
 Open `.env` at the project root:
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -512,7 +531,7 @@ tina4 serve --port 8080
 
 Or add it to your `.env` file:
 
-```env
+```bash
 TINA4_DEBUG=true
 TINA4_PORT=8080
 ```
@@ -619,7 +638,7 @@ mkdir -p src/routes src/templates src/public
 
 ### Step 4: Create `.env`
 
-```env
+```bash
 TINA4_DEBUG=true
 ```
 
@@ -1067,7 +1086,7 @@ end
 
 **Fix:** Stop the other process, or change the port:
 
-```env
+```bash
 TINA4_PORT=8080
 ```
 
