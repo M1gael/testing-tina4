@@ -1,4 +1,4 @@
-# testing chapter 6 orm
+# testing orm comment model
 from tina4_python.orm import ORM, IntegerField, StringField, DateTimeField, ForeignKeyField
 
 class Comment(ORM):

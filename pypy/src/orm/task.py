@@ -1,4 +1,4 @@
-# testing chapter 6 soft delete
+# testing orm soft delete model
 from tina4_python.orm import ORM, IntegerField, StringField, BooleanField, DateTimeField
 
 class Task(ORM):

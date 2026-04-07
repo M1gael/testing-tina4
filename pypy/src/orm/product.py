@@ -1,4 +1,4 @@
-# testing chapter 6 validation
+# testing orm validation model
 from tina4_python.orm import ORM, IntegerField, StringField, NumericField
 
 class Product(ORM):

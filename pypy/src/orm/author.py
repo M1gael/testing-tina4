@@ -1,4 +1,4 @@
-# testing chapter 6 orm
+# testing orm author model
 from tina4_python.orm import ORM, IntegerField, StringField, DateTimeField
 
 class Author(ORM):

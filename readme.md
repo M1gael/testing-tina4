@@ -30,7 +30,7 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Python | 03 | Completed | `request.files` now populated correctly. |
 | Python | 04 | Completed | `tina4.css` still missing from scaffold. |
 | Python | 05 | Completed | Pagination slicing and type detection FIXED. |
-| Python | 06 | In Progress | ORM Issues: `orm_bind` decorator bug; Missing `ForeignKeyField`. |
+| Python | 06 | Completed | Implemented exactly as documented; blocked by missing `ForeignKeyField` and `auto_now_add` issues. |
 | PHP | 01 | Completed | Basic GET/POST routes verified. |
 | PHP | 02 | Completed | Chaining required for middleware; 2-arg `get()`. |
 | PHP | 03 | Completed | File uploads and validation verified. |
