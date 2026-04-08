@@ -31,6 +31,10 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Python | 04 | Completed | `tina4.css` still missing from scaffold. |
 | Python | 05 | Completed | Pagination slicing and type detection FIXED. |
 | Python | 06 | Completed | Implemented exactly as documented; blocked by missing `ForeignKeyField` and `auto_now_add` issues. |
+| Python | 07 | Completed | `QueryBuilder` correctly handles joins and to_mongo(); `db.execute` returns bool not object for INSERTs. |
+| Python | 08 | Completed | `Auth.get_token()` is instance method, not static as documented. Profile @secured works. |
+| Python | 09 | Completed | Session/Cookie APIs verified; TTL default is 1800 but documented as 3600. |
+| Python | 10 | Completed | `Router.group` callback requires 1 argument; POST routes are secured by default. |
 | PHP | 01 | Completed | Basic GET/POST routes verified. |
 | PHP | 02 | Completed | Chaining required for middleware; 2-arg `get()`. |
 | PHP | 03 | Completed | File uploads and validation verified. |
@@ -101,3 +105,7 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PH-01-01 | PHP | 01 | open | 2026-04-07 | `tina4 init` / `tina4php` CLI commands are not globally available in some environments; must use `./vendor/bin/tina4php` instead. |
 | PH-04-01 | PHP | 04 | open | 2026-04-07 | Documentation uses `.twig` extension in Chapter 4 examples but `.html` in Chapter 1. Both appear to work, but the inconsistency can cause confusion regarding the preferred extension for Frond templates. |
 | PY-06-09 | Python | 06 | open | 2026-04-07 | `@orm_bind` used as a class decorator fails by returning `None`, effectively deleting the model class and causing `AttributeError: 'NoneType' object has no attribute 'create_table'`. |
+| PY-07-01 | Python | 07 | open | 2026-04-07 | `Database.execute()` returns `True` (bool) for write operations without `RETURNING`. Documentation erroneously suggests it returns a result object with a `last_id` attribute. |
+| PY-08-01 | Python | 08 | open | 2026-04-07 | `Auth.get_token()` is implemented as an instance method, but documentation shows it being called as a class/static method (`Auth.get_token(payload)`). |
+| PY-09-01 | Python | 09 | open | 2026-04-07 | `TINA4_SESSION_TTL` default value in code is `1800` (30m), but documentation states the default is `3600` (1hr). |
+| PY-10-01 | Python | 10 | open | 2026-04-07 | `Router.group()` callback is documented as taking no arguments, but implementation passes a `RouteGroup` object, requiring the callback to accept one argument. |
