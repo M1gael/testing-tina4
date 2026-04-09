@@ -1,5 +1,24 @@
 # Chapter 35: Release Notes
 
+## v3.10.85 (2026-04-09)
+
+- Version bump for parity with Python and PHP releases
+
+## v3.10.84 (2026-04-09)
+
+- **fix:** Router/middleware was setting `request.user` / `request.auth` / auth payload to `true` (boolean) instead of the actual JWT payload after `valid_token?` was changed to return bool — any code reading `request.user["sub"]` etc. would have failed silently or crashed
+- **fix:** CSRF middleware was not correctly rejecting invalid tokens (nil check on bool result always passed)
+- **add:** Headless routing auth payload integration tests to prevent regression
+
+## v3.10.83 (2026-04-08)
+
+- **feat:** WebSocket rooms — `join_room`, `leave_room`, `broadcast_to_room`, `room_count`, `get_room_connections`
+- **feat:** Queue signature parity — instance-scoped `push`/`pop`/`retry`, no topic params on public methods
+- **feat:** Auth cleanup — canonical `getToken`/`validToken` methods
+- Full parity across Python, PHP, Ruby, Node.js
+
+---
+
 ## v3.10.70 (2026-04-06)
 
 - **New:** SSE (Server-Sent Events) support via `response.stream()` — pass a generator, framework handles chunked transfer encoding, keep-alive, and `text/event-stream` content type

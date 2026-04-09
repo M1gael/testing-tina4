@@ -1,5 +1,28 @@
 # Chapter 35: Release Notes
 
+## v3.10.85 (2026-04-09)
+
+- **fix:** Removed duplicate `Job` class from `Queue.php` — canonical definition is `Job.php` only
+- **fix:** `Job.php::fail()` now delegates to `writeFailed()` instead of calling private `getBasePath()` directly
+
+## v3.10.84 (2026-04-09)
+
+- **fix:** Router/middleware was setting `request.user` / `request.auth` / auth payload to `true` (boolean) instead of the actual JWT payload after `validToken()` was changed to return bool — any code reading `request.user["sub"]` etc. would have failed silently or crashed
+- **fix:** CSRF middleware was not correctly rejecting invalid tokens (nil check on bool result always passed)
+- **fix:** `toObject()` declared wrong return type (`array` vs actual `object`)
+- **fix:** Router `request.user` and gallery auth verify endpoint updated for bool `validToken`
+- **add:** Headless routing auth payload integration tests to prevent regression
+
+## v3.10.83 (2026-04-08)
+
+- **fix:** CORS headers now set before auth short-circuit (#106)
+- **fix:** ORM find/all/where no longer crash with DatabaseResult object (#108)
+- **fix:** toObject() returns stdClass, not array (#107)
+- **fix:** Firebird absolute path no longer strips leading slash (#101)
+- **feat:** WebSocket rooms — joinRoom, leaveRoom, broadcastToRoom, getRoomConnections, roomCount
+- **feat:** queue signature parity — instance-scoped, no topic params on public methods
+- **feat:** auth alias cleanup — removed createToken/validateToken aliases
+
 ## v3.10.70 (2026-04-06)
 
 - **New:** SSE (Server-Sent Events) support via `response.stream()` — pass a generator, framework handles chunked transfer encoding, keep-alive, and `text/event-stream` content type

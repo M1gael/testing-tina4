@@ -1,5 +1,23 @@
 # Chapter 35: Release Notes
 
+## v3.10.85 (2026-04-09)
+
+- **refactor:** Split queue adapters into separate files — `queue/rabbitmq_backend.py`, `queue/kafka_backend.py`, `queue/mongo_backend.py` (one class per file, aligning with PHP/Node/Ruby architecture)
+- **fix:** Updated remaining tests to use bool `valid_token()` + `get_payload()` pattern
+
+## v3.10.84 (2026-04-09)
+
+- **fix:** Router/middleware was setting `request.user` / `request.auth` / auth payload to `true` (boolean) instead of the actual JWT payload dict after `validToken()` was changed to return bool — any code reading `request.user["sub"]` etc. would have failed silently or crashed
+- **fix:** CSRF middleware was not correctly rejecting invalid tokens (nil check on bool result always passed)
+- **fix:** `AuthMiddleware.before_request` called `get_payload` incorrectly — would TypeError at runtime on valid token
+- **add:** Headless routing auth payload integration tests to prevent regression
+
+## v3.10.83 (2026-04-08)
+
+- **fix:** prevent orphaned session files on WebSocket and anonymous requests (#36)
+- **feat:** WebSocket rooms — `join_room`, `leave_room`, `broadcast_to_room`, `room_count`, `get_room_connections`
+- **feat:** queue signature parity — instance-scoped `push`/`pop`/`retry`, no topic params on public methods
+
 ## v3.10.70 (2026-04-06)
 
 - **New:** SSE (Server-Sent Events) support via `response.stream()` — pass a generator, framework handles chunked transfer encoding, keep-alive, and `text/event-stream` content type
