@@ -1,0 +1,198 @@
+nohup: ignoring input
+⚠ Port 7147 in use — killing existing process...
+✓ Port 7147 freed
+✓ Detected ruby project
+▶ Starting tina4ruby on 0.0.0.0:7147
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ `/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+  TINA4 — The Intelligent Native Application 4ramework
+  Simple. Fast. Human. | Built for AI. Built for you.
+
+  Server:    http://localhost:7147 (WEBrick)
+  Swagger:   http://localhost:7147/swagger
+  Dashboard: http://localhost:7147/__dev
+  Debug:     ON (Log level: ALL)
+
+[32m2026-04-09T11:25:42.844Z [INFO   ] Tina4 Ruby v3.10.85 initializing...[0m
+[32m2026-04-09T11:25:42.852Z [INFO   ] Database connected: sqlite[0m
+[32m2026-04-09T11:25:42.853Z [INFO   ] Database connected: sqlite:////var/home/work/gitdir/testing-tina4/ruru/data/app.db[0m
+[36m2026-04-09T11:25:42.853Z [DEBUG  ] Route registered: GET /api/gallery/crash[0m
+[36m2026-04-09T11:25:42.853Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/api/gallery_crash.rb[0m
+[36m2026-04-09T11:25:42.853Z [DEBUG  ] Route registered: GET /api/gallery/hello[0m
+[36m2026-04-09T11:25:42.853Z [DEBUG  ] Route registered: GET /api/gallery/hello/{name}[0m
+[36m2026-04-09T11:25:42.853Z [DEBUG  ] Route registered: POST /api/gallery/hello[0m
+[36m2026-04-09T11:25:42.853Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/api/gallery_hello.rb[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Route registered: POST /api/register[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Route registered: POST /api/login[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Route registered: GET /api/profile[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/auth_demo.rb[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Route registered: GET /api/books[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Route registered: GET /api/books/{id:int}[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Route registered: POST /api/books[0m
+[36m2026-04-09T11:25:42.854Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/books.rb[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Route registered: GET /catalog[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/catalog.rb[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Route registered: GET /api/account[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Route registered: GET /api/catalog[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Route registered: GET /api/data_chained[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/chaining.rb[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Route registered: GET /api/check-users[0m
+[36m2026-04-09T11:25:42.857Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/check_db.rb[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Route registered: GET /api/products/{id:int}[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/content_negotiation.rb[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Route registered: POST /login[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Route registered: GET /profile[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Route registered: POST /logout[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/cookies.rb[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Route registered: GET /api/data[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Route registered: GET /demo/cors[0m
+[36m2026-04-09T11:25:42.858Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/custom_headers.rb[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/test-db[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/schema[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/test-paginate[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/test-column-info[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/test-seed[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/test-fake[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/database_demo.rb[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /debug/headers[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/debug_headers.rb[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/public/info[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Route registered: GET /api/profile[0m
+[36m2026-04-09T11:25:42.859Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/decorators.rb[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Route registered: GET /api/reports/{filename}[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Route registered: GET /api/reports/{filename}/download[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/downloads.rb[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Route registered: GET /frond-debug[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/frond_debug.rb[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Route registered: GET /api/greet[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/greet.rb[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Route registered: GET /api/greeting/{name}[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Route registered: POST /api/greeting[0m
+[36m2026-04-09T11:25:42.860Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/greeting.rb[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: GET /users[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: GET /users/{id:int}[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: POST /users[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: GET /products_group[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: GET /status[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: GET /status[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/groups.rb[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Route registered: GET /hello[0m
+[36m2026-04-09T11:25:42.861Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/hello.rb[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: POST /api/images[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: GET /api/images/{filename}[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/images.rb[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: GET /products_crud[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: POST /products_crud[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: PUT /products_crud/{id}[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: PATCH /products_crud/{id}[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Route registered: DELETE /products_crud/{id}[0m
+[36m2026-04-09T11:25:42.862Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/methods.rb[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /api/data[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /api/secret[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /dashboard[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /users[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /api/important[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/middleware.rb[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /api/notes[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: GET /api/notes/{id:int}[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: POST /api/notes[0m
+[36m2026-04-09T11:25:42.863Z [DEBUG  ] Route registered: PUT /api/notes/{id:int}[0m
+[36m2026-04-09T11:25:42.864Z [DEBUG  ] Route registered: DELETE /api/notes/{id:int}[0m✓ Browser opened: http://localhost:7147
+👁 File watcher active — src/, migrations/, .env
+
+[36m2026-04-09T11:25:42.864Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/notes.rb[0m
+[36m2026-04-09T11:25:42.864Z [DEBUG  ] Route registered: GET /api/orm-test[0m
+[36m2026-04-09T11:25:42.864Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/orm_demo.rb[0m
+[36m2026-04-09T11:25:42.864Z [DEBUG  ] Route registered: GET /products[0m
+[36m2026-04-09T11:25:42.864Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/pages.rb[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /users/{id}/posts/{post_id}[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /orders/{id:int}[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /products_item/{id:int}[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /products_item/{id:int}/price/{price:float}[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /files/{filepath:path}[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/path_params.rb[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /api/product_api[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: GET /api/product_api/{id:int}[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: POST /api/product_api[0m
+[36m2026-04-09T11:25:42.865Z [DEBUG  ] Route registered: PUT /api/product_api/{id:int}[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Route registered: DELETE /api/product_api/{id:int}[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/product_api.rb[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Route registered: GET /api/qb-test[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/qb_demo.rb[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Route registered: GET /search[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/query.rb[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Route registered: GET /echo[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Route registered: POST /debug/request[0m
+[36m2026-04-09T11:25:42.866Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/request_info.rb[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /demo/json[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /demo/html[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /demo/text[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /api/feed[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: POST /api/things[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /demo/redirect[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /demo/redirect-permanent[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/response_methods.rb[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: POST /demo/status[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/status_codes.rb[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Route registered: GET /store[0m
+[36m2026-04-09T11:25:42.867Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/store.rb[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /welcome[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /profile[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /expressions[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /about[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /products/list[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /v6_demo[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /v7_filters[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Route registered: GET /macros[0m
+[36m2026-04-09T11:25:42.868Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/templates_demo.rb[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: POST /api/upload[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: POST /api/upload/save[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: POST /api/upload-many[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/uploads.rb[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: GET /v-frond[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/v_frond.rb[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: POST /api/users[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/validator.rb[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: GET /docs/*[0m
+[36m2026-04-09T11:25:42.869Z [DEBUG  ] Route registered: GET /*[0m
+[36m2026-04-09T11:25:42.870Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/routes/zz_wildcard.rb[0m
+[36m2026-04-09T11:25:42.870Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/orm/author.rb[0m
+[36m2026-04-09T11:25:42.870Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/orm/blog_post.rb[0m
+[36m2026-04-09T11:25:42.870Z [DEBUG  ] Auto-loaded: /var/home/work/gitdir/testing-tina4/ruru/src/orm/note.rb[0m
+[32m2026-04-09T11:25:42.870Z [INFO   ] Tina4 initialized successfully[0m
+[32m2026-04-09T11:25:42.873Z [INFO   ] Development server: WEBrick[0m
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ `/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+  TINA4 — The Intelligent Native Application 4ramework
+  Simple. Fast. Human. | Built for AI. Built for you.
+
+  Server:    http://localhost:7147 (WEBrick)
+  Swagger:   http://localhost:7147/swagger
+  Dashboard: http://localhost:7147/__dev
+  Debug:     ON (Log level: ALL)
+
+[32m2026-04-09T11:25:42.902Z [INFO   ] Starting Tina4 WEBrick server on http://0.0.0.0:7147[0m
+  Test Port: http://localhost:8147 (stable — no hot-reload)
+Opening in existing browser session.
+        [31m2026-04-09T11:25:01.069Z [ERROR  ] 500 Internal Server Error: unexpected return[0m
+[31m2026-04-09T11:25:01.069Z [ERROR  ] /var/home/work/gitdir/testing-tina4/ruru/src/routes/books.rb:35:in `block in <top (required)>'
+/var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/rack_app.rb:218:in `handle_route'
+/var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/rack_app.rb:86:in `call'
+/var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/webserver.rb:113:in `block (3 levels) in start'
+/var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/shutdown.rb:28:in `track_request'
+/var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/webserver.rb:111:in `block (2 levels) in start'
+/var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/webserver.rb:98:in `block (3 levels) in start'
+/var/home/work/.local/share/gem/ruby/gems/webrick-1.9.2/lib/webrick/httpservlet/abstract.rb:105:in `service'
+/var/home/work/.local/share/gem/ruby/gems/webrick-1.9.2/lib/webrick/httpserver.rb:140:in `service'
+/var/home/work/.local/share/gem/ruby/gems/webrick-1.9.2/lib/webrick/httpserver.rb:96:in `run'[0m
+[32m2026-04-09T11:25:41.816Z [INFO   ] Shutdown signal received, stopping gracefully...[0m
+[32m2026-04-09T11:25:41.816Z [INFO   ] Database connections closed[0m
+[32m2026-04-09T11:25:41.816Z [INFO   ] Shutdown complete[0m

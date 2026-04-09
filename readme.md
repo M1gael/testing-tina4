@@ -25,6 +25,7 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 02 | Completed | See issues `RB-02-01`, `RB-02-02`, `RB-02-03` |
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
 | Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
+| Ruby | 05 | Completed | See issues `RB-05-01` to `RB-05-05`. `to_paginate` now provides dual-key support. |
 | Python | 01 | Completed | Path parameters now mirrored in `request.params`. |
 | Python | 02 | Completed | Wildcard key fixed to `*`. `@group` still missing. |
 | Python | 03 | Completed | `request.files` now populated correctly. |
@@ -94,7 +95,7 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | RB-04-03 | Ruby | 04 | open | 2026-04-01 | Frond macros (`{% macro %}`) and special tags (`{% raw %}`, `{% spaceless %}`) are non-functional and currently produce no output or have no effect. |
 | RB-04-04 | Ruby | 04 | open | 2026-04-01 | Boolean logic in `{% if %}` blocks fails when combined with filters (e.g., `items | length > 0` returns false for non-empty arrays). |
 | RB-05-01 | Ruby | 05 | open | 2026-04-01 | `sqlite3` gem is not documented as a dependency but is required for the default database connection. Server fails to start on health checks. |
-| RB-05-02 | Ruby | 05 | open | 2026-04-01 | `DatabaseResult#to_paginate` returns keys `data`/`page`/`per_page`/`total` instead of the documented `records`/`count`/`limit`/`offset`. |
+| RB-05-02 | Ruby | 05 | fixed | 2026-04-01 | `DatabaseResult#to_paginate` now returns BOTH documented (`records`/`count`) and extra (`data`/`total`) keys, ensuring compatibility. |
 | RB-05-03 | Ruby | 05 | open | 2026-04-01 | `Tina4.seed` is undefined by default. Requires an undocumented manual `require "tina4/seeder"` before use. |
 | RB-05-04 | Ruby | 05 | open | 2026-04-01 | Documented curl examples fail with `401 Unauthorized` for POST/PUT/DELETE because write-routes are secure-by-default. Undocumented `.no_auth` chain method is required. |
 | RB-05-05 | Ruby | 05 | open | 2026-04-01 | `request.body` returns raw string, not a Hash. Using `body["title"]` (as documented) silently returns the literal substring `"title"`, bypassing validations and inserting bad data. Requires `request.body_parsed` instead. |

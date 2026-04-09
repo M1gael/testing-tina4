@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Server: WEBrick/1.9.2 (Ruby/3.3.10/2025-10-23)
+Date: Thu, 09 Apr 2026 10:29:11 GMT
+Content-Length: 640
+Connection: Keep-Alive
+
+{"message":"Login successful","token":"eyJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjo0LCJlbWFpbCI6ImZpbmFsQGV4YW1wbGUuY29tIiwibmFtZSI6IkZpbmFsIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3NzU3MzA1NTEsImV4cCI6MTc3NTczNDE1MSwibmJmIjoxNzc1NzMwNTUxfQ.HQjCvakUh_T0Rd9K2vz53dw9knkj2AXkcYKZmtl9RUXrcSKusWkm5dE4lCsmUL23HdCPXaPdY5Rh-bpeMkpK_zsNoueuoDk0pjaSFkZY3Suu3jTedajP1jyZcTr9nTJ3lOcuyucg9a2xyHFkObBgNsjBb91EnX8dcwhBLoqAIJ-TT7WXMvHLyAHZFZGaUzjo4SKy80m8OJDhVoC_SNIaGrHvs4fkrO68d_wcQpzgN4z826z6GVAJcYk09-Q8ZYuU2-EGeOGkgezXh1Z95dHtAhIDKdLuIFiZxg_cLdASZ0Itu0pSLRWdRLxPQFoZOB2pKhUHxhhJCTJDd5DnGal_nw","user":{"id":4,"name":"Final","email":"final@example.com","role":"user"}}
