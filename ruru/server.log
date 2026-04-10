@@ -182,8 +182,10 @@ nohup: ignoring input
 [32m2026-04-09T11:25:42.902Z [INFO   ] Starting Tina4 WEBrick server on http://0.0.0.0:7147[0m
   Test Port: http://localhost:8147 (stable — no hot-reload)
 Opening in existing browser session.
-        [31m2026-04-09T11:25:01.069Z [ERROR  ] 500 Internal Server Error: unexpected return[0m
-[31m2026-04-09T11:25:01.069Z [ERROR  ] /var/home/work/gitdir/testing-tina4/ruru/src/routes/books.rb:35:in `block in <top (required)>'
+[32m2026-04-09T18:17:26.062Z [INFO   ] Shutdown signal received, stopping gracefully...[0m
+[32m2026-04-09T18:17:26.169Z [INFO   ] Database connections closed[0m
+[32m2026-04-09T18:17:26.169Z [INFO   ] Shutdown complete[0m
+d)>'
 /var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/rack_app.rb:218:in `handle_route'
 /var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/rack_app.rb:86:in `call'
 /var/home/work/.local/share/gem/ruby/gems/tina4ruby-3.10.85/lib/tina4/webserver.rb:113:in `block (3 levels) in start'
