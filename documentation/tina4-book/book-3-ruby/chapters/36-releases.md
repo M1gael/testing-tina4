@@ -1,5 +1,17 @@
 # Chapter 35: Release Notes
 
+## v3.10.90 (2026-04-09)
+
+- **docs:** Chapter 4 (Templates) — new "Dumping Values for Debugging" section covering both `{{ x|dump }}` and `{{ dump(x) }}` forms, their shared `<pre>value.inspect</pre>` output, and the `TINA4_DEBUG=true` production gate. Filter table entry updated to reference the new section.
+- **docs:** `plan/parity/parity-template.md` updated with a cross-framework dump helper comparison table and marks dump parity as confirmed across all 4 frameworks at v3.10.89.
+- **chore:** Version sync release — brings all 4 frameworks to the same patch version (3.10.90) so downstream users can upgrade PHP/Python/Ruby/Node.js in lockstep without hunting version mismatches.
+
+## v3.10.89 (2026-04-09)
+
+- **feat:** `{{ dump(value) }}` global function form added to Frond alongside the existing `{{ value|dump }}` filter. Both call a single `Tina4::Frond.render_dump` helper and produce identical output (`<pre>value.inspect</pre>` HTML-escaped).
+- **security:** Dump is now **gated on `TINA4_DEBUG=true`**. In production (env var unset or `false`) both the filter and function silently return an empty `SafeString`. This prevents accidental leaks of internal state, object shapes, and sensitive values into rendered HTML when a developer leaves a `{{ dump(x) }}` call in a template.
+- **test:** 3 new `spec/frond_spec.rb` examples covering debug-mode output, production silencing, function/filter parity, and function-form production silencing.
+
 ## v3.10.86 (2026-04-09)
 
 - **feat:** `foreign_key_field` DSL auto-wires both sides of a foreign key relationship. Declaring `foreign_key_field :user_id, references: User` registers the integer column, calls `belongs_to :user` on the declaring class, and calls `has_many :posts` on the referenced class. Supports `related_name:` for custom has-many names and deferred wiring via a module-level registry so the referenced class can be defined either before or after the declaring one.
@@ -188,7 +200,7 @@ db1 = Tina4::Container.resolve(:db)  # creates instance
 db2 = Tina4::Container.resolve(:db)  # same instance
 ```
 
-**`Router.match(path, method)`** — alias for `find_route()` (parity with Python, PHP, Node.js).
+**`Router.match(method, path)`** — primary route lookup (replaces `find_route`; consistent with Python, PHP, Node.js). **`Router.add(method, path, handler)`** — primary imperative registration (replaces `add_route`; all convenience methods delegate to this).
 
 **`Router.get_routes` and `Router.list_routes`** — explicit listing methods (remove ambiguous `routes` alias).
 

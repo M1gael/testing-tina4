@@ -15,9 +15,9 @@ requires-dist = [{ name = "tina4-python", specifier = ">=3.1.0" }]
 
 [[package]]
 name = "tina4-python"
-version = "3.10.86"
+version = "3.10.91"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/42/22/4da71548e0b8f0e6cc283f740fce7e5675bcb3d1ad3c3c04acd82d52d4f9/tina4_python-3.10.86.tar.gz", hash = "sha256:67ce0c26508102054151f052ade8e86cc1889651db63d00db11b4852cd31215e", size = 390994, upload-time = "2026-04-09T12:19:47.511Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/99/07/55825e04c306975f3c803d240218450843dd227ab34597b9c589fec29405/tina4_python-3.10.91.tar.gz", hash = "sha256:65afc915642cd7c0dc14ea3e10f67172a3cf0fedf6ae954fe60914e0d85800ef", size = 399815, upload-time = "2026-04-10T13:35:53.254Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/90/2a/caba2f8141c971255a2a3843775cafc44a0af27c03ad75ead3057bd5ba9d/tina4_python-3.10.86-py3-none-any.whl", hash = "sha256:5422898934662d037759bf8d96a2b6a0a9e59f037fc2ca8022084fff38200a30", size = 481556, upload-time = "2026-04-09T12:19:45.394Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/8b/f103307d349fe533ecf69e9eb43cc6b88e8fa4ff8dcaab686761e0b68ca4/tina4_python-3.10.91-py3-none-any.whl", hash = "sha256:0941e9b4f192aa8fe24c416cb93483f866308fd0ef6d0df1f5e77868f0f18c09", size = 490920, upload-time = "2026-04-10T13:35:51.572Z" },
 ]
