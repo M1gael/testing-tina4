@@ -1,5 +1,41 @@
 # Chapter 35: Release Notes
 
+## v3.10.99 (2026-04-12)
+
+- **breaking:** `auto_map` now defaults to `true` — ORM models automatically map between camelCase properties and snake_case DB columns. Set `self.auto_map = false` on your model class to restore the old behaviour.
+- **feat:** `to_h(case:)` parameter — pass `case: 'camel'` to get camelCase keys (for JSON APIs) or `case: 'snake'` (default) for snake_case keys matching DB columns. All aliases (`to_dict`, `to_hash`, `to_assoc`, `to_object`) support the parameter.
+- **feat:** Frond `replace` filter now accepts Hash args — `{{ v|replace({"T": " ", "-": "/"}) }}` for multiple substitutions in one call.
+- **tests:** 6 new parity tests covering `to_h(case:)`, `auto_map` default, `replace` filter (Hash + positional), and `ServiceRunner` registration. 2,519 tests passing.
+- **parity:** All features shipped identically across Python, PHP, Ruby, Node.js.
+
+## v3.10.97 (2026-04-11)
+
+- **fix:** frond.form.submit redirect handling — XHR follows 3xx redirects transparently; fixed by detecting `xhr.responseURL` mismatch and navigating instead.
+- **dep:** Updated frond.min.js to v2.1.2.
+- **parity:** All 4 frameworks bumped to 3.10.97.
+
+## v3.10.93 (2026-04-11)
+
+- **fix:** Frond bracket depth tracking in `find_outside_quotes` — expressions like `arr[i % 2]` no longer treated as top-level arithmetic.
+- **fix:** Frond subscript expression evaluation — bracket content uses `eval_expr()` instead of simple variable lookup, enabling `arr[loop.index0 % 2]`.
+- **fix:** Frond slice with variable bounds — `items[start:end]` evaluates bounds through `eval_expr()`.
+- **docs:** Developer skills updated — Metrics Dashboard guidance, Frond Template Parity rules, `@noauth` security warnings.
+- **parity:** All Frond fixes applied identically across Python, PHP, Ruby, Node.js. 2,513 tests passing.
+
+## v3.10.92 (2026-04-10)
+
+- **breaking:** Rename `ErrorOverlay` methods — `render` → `render_error_overlay`, `render_production` → `render_production_error`, `debug_mode?` → `is_debug_mode`.
+- **feat:** Add `Server.handle(env)` for cross-framework parity.
+- **breaking:** Rename `WebSocketBackplane.create` → `WebSocketBackplane.create_backplane`.
+- **feat:** Add `ScssCompiler.compile`, `add_import_path`, `set_variable` methods.
+- **feat:** Add `DevAdmin.register` method.
+- **parity:** 44/44 cross-framework features green. 2,487 tests passing.
+
+## v3.10.91 (2026-04-10)
+
+- **feat:** Add parity methods — `Response.send` params, `Middleware.check`/`is_preflight`, AI/Log aliases, MCP optional router.
+- **breaking:** Rename `from()` → `from_table()`, `error_envelope` → `error_response`, remove aliases.
+
 ## v3.10.90 (2026-04-09)
 
 - **docs:** Chapter 4 (Templates) — new "Dumping Values for Debugging" section covering both `{{ x|dump }}` and `{{ dump(x) }}` forms, their shared `<pre>value.inspect</pre>` output, and the `TINA4_DEBUG=true` production gate. Filter table entry updated to reference the new section.

@@ -1,5 +1,53 @@
 # Chapter 35: Release Notes
 
+## v3.10.99 (2026-04-12)
+
+- **breaking:** `autoMap` now defaults to `true` — ORM models automatically map between camelCase properties and snake_case DB columns. Set `public bool $autoMap = false;` on your model to restore the old behaviour.
+- **breaking:** `all()` now returns a flat array of model instances instead of `['data' => [...], 'total' => N, ...]`. Use `count()` separately if you need the total.
+- **feat:** `toDict(include, case)` parameter — pass `case: 'snake'` to get snake_case keys matching DB columns, or `case: 'camel'` (default) for camelCase.
+- **feat:** Frond `replace` filter now accepts dict args — `{{ v|replace({"T": " ", "-": "/"}) }}` for multiple substitutions in one call.
+- **feat:** `$app->background(callback, interval)` — register periodic tasks that run cooperatively in the `stream_select` event loop. No threads, no separate processes.
+- **feat:** Background timing guard — warns when callbacks exceed their interval, helping developers identify blocking operations.
+- **feat:** WebSocket room management moved to `Server` class — `joinRoom()`, `leaveRoom()`, `broadcastToRoom()` now work reliably via `WebSocketConnection->server`.
+- **feat:** Docker image now bundles the example store demo — `docker run tina4stack/tina4-php:v3` starts a working app out of the box.
+- **fix:** AutoCrud updated for new `all()` return format.
+- **fix:** Cart nav badge now updates reactively on quantity change and item removal.
+- **fix:** Non-blocking queue consumer — `processOrders()` uses `$queue->pop()` instead of blocking `$queue->consume()`.
+- **tests:** 6 new parity tests covering `toDict(case:)`, `autoMap` default, `replace` filter (dict + positional), and `background()` registration. 2,345 tests passing.
+- **parity:** All features shipped identically across Python, PHP, Ruby, Node.js.
+
+## v3.10.97 (2026-04-11)
+
+- **fix:** frond.form.submit redirect handling — XHR follows 3xx redirects transparently; fixed by detecting `xhr.responseURL` mismatch and navigating instead.
+- **dep:** Updated frond.min.js to v2.1.2.
+- **parity:** All 4 frameworks bumped to 3.10.97.
+
+## v3.10.93 (2026-04-11)
+
+- **fix:** Frond bracket depth tracking in `findOutsideQuotes()` and `splitOutsideQuotes()` — expressions like `$arr[$i % 2]` no longer treated as top-level arithmetic.
+- **fix:** Frond subscript expression evaluation — bracket content uses `evaluateExpression()` instead of `resolveVariable()`, enabling `arr[loop.index0 % 2]`.
+- **fix:** Frond slice with variable bounds — `items[start:end]` evaluates bounds through `evaluateExpression()`.
+- **docs:** Developer skills updated — Metrics Dashboard guidance, Frond Template Parity rules, `@noauth` security warnings.
+- **parity:** All Frond fixes applied identically across Python, PHP, Ruby, Node.js. 2,339 tests passing (263 Frond).
+
+## v3.10.92 (2026-04-10)
+
+- **feat:** Add `RateLimiterMiddleware` class with `beforeRateLimit()`, `check()`, `reset()` static methods.
+- **breaking:** Rename `ErrorOverlay` methods — `render()` → `renderErrorOverlay()`, `renderProduction()` → `renderProductionError()`.
+- **feat:** Add `Server::handle(Request $request): Response` for cross-framework parity.
+- **feat:** Add `DatabaseResult::size()` method.
+- **breaking:** Rename `WebSocketBackplane::create()` → `WebSocketBackplane::createBackplane()`.
+- **feat:** Add `DevAdmin::health()` method.
+- **feat:** Add `ScssCompiler::compileScss()` method.
+- **fix:** Add `DatabaseSessionHandler::delete()` delegating to `destroy()`.
+- **fix:** `SmokeTest` — pass secret explicitly to `Auth::getToken()` to fix test ordering issue.
+- **parity:** 44/44 cross-framework features green. 2,305 tests passing.
+
+## v3.10.91 (2026-04-10)
+
+- **feat:** Add parity methods — `GraphQLType::parse()`, `Response::send()` params, `MCP::registerRoutes()` optional router.
+- **breaking:** Rename `from()` → `fromTable()`, `template()` → `render()` — align with Python canonical names.
+
 ## v3.10.90 (2026-04-09)
 
 - **docs:** Chapter 4 (Templates) — new "Dumping Values for Debugging" section covering both `{{ $x|dump }}` and `{{ dump($x) }}` forms, their shared `<pre>var_dump()</pre>` output, and the `TINA4_DEBUG=true` production gate. Filter table entry updated to reference the new section.
