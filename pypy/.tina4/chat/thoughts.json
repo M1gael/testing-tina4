@@ -1,0 +1,104 @@
+[
+  {
+    "id": "19d86aadba6",
+    "timestamp": "1776080835Z",
+    "message": "Hey, I noticed there are a few uncommitted files floating around in the repo. It's usually best to get those saved and pushed regularly so we don't lose any recent work or cause merge headaches down the line. Let me know if you're running into any blockers while you're working on those!",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Let's commit",
+        "action": "commit"
+      },
+      {
+        "label": "I'm on it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19d86af6fd8",
+    "timestamp": "1776081135Z",
+    "message": "Hey, I noticed there are 8 uncommitted files sitting in the project right now. Just wanted to give a friendly nudge because having things committed regularly helps us keep a stable history and makes it much easier for anyone to jump in and understand the current state. Let me know if you're in the middle of something big and need a hand getting those saved!",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Let's commit",
+        "action": "commit"
+      },
+      {
+        "label": "I'm on it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19d86b40248",
+    "timestamp": "1776081435Z",
+    "message": "Hey, I noticed there are 8 uncommitted files sitting around in the repo right now. I'm a little worried about potential merge conflicts or losing work if something unexpected happens to the machine. Maybe it's a good time to push those changes up to a branch?",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19d86b89637",
+    "timestamp": "1776081735Z",
+    "message": "Hey, I noticed there are 8 uncommitted files hanging out in the project right now. With this many changes, I'm a little worried about potential merge conflicts or losing work if something unexpected happens. Could you take a moment to commit those changes when you get a chance?",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19d86bd2b42",
+    "timestamp": "1776082035Z",
+    "message": "Hey, I noticed there are 8 uncommitted files sitting around in the project. When things are this open, it can get tricky to track changes or safely pull updates, so I wanted to gently flag it as something to take a quick look at. Just want to make sure we keep the codebase stable as we move forward!",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19d86c1be8e",
+    "timestamp": "1776082335Z",
+    "message": "Hey, I noticed there are 8 uncommitted files sitting around in the repo. When things are this messy, it can make it really hard to track down bugs or collaborate smoothly, so I wanted to gently flag it. Maybe take a moment to commit those changes so we can keep the project history clean and stable?",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  }
+]

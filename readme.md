@@ -26,16 +26,16 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
 | Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
 | Ruby | 05 | Completed | See issues `RB-05-01` to `RB-05-05`. `to_paginate` now provides dual-key support. |
-| Python | 01 | Completed | Path parameters now mirrored in `request.params`. |
-| Python | 02 | Completed | Wildcard key fixed to `*`. `@group` still missing. |
-| Python | 03 | Completed | `request.files` now populated correctly. |
-| Python | 04 | Completed | `tina4.css` still missing from scaffold. |
-| Python | 05 | Completed | Pagination slicing and type detection FIXED. |
-| Python | 06 | Completed | Implemented exactly as documented; blocked by missing `ForeignKeyField` and `auto_now_add` issues. |
-| Python | 07 | Completed | `QueryBuilder` correctly handles joins and to_mongo(); `db.execute` returns bool not object for INSERTs. |
-| Python | 08 | Completed | `Auth.get_token()` is instance method, not static as documented. Profile @secured works. |
-| Python | 09 | Completed | Session/Cookie APIs verified; TTL default is 1800 but documented as 3600. |
-| Python | 10 | Completed | `Router.group` callback requires 1 argument; POST routes are secured by default. |
+| Python | 01 | Completed | Verified. Path parameters mirrored in `request.params`. |
+| Python | 02 | Completed | Faulty. Path parameters match but NO auto-casting to `int/float` (`PY-02-06`). |
+| Python | 03 | Completed | Faulty. POST routes secure-by-default (undocumented). Multipart handled in `request.body`. |
+| Python | 04 | Completed | Faulty. `tina4.css` still missing from scaffold. |
+| Python | 05 | Completed | Faulty. `tina4_migration` not recording runs (`PY-05-07`). Relative path needed for DB. |
+| Python | 06 | Completed | Faulty. `auto_now_add` causes TypeError. `ForeignKeyField` FIXED. |
+| Python | 07 | Completed | Faulty. `db.execute` returns bool, not object with `last_id` (`PY-07-01`). |
+| Python | 08 | Completed | Verified. `@noauth()` and `@secured()` functional with correct nesting order. |
+| Python | 09 | Completed | Verified. Session/Cookie APIs work; TTL default mismatch persists. |
+| Python | 10 | Completed | Verified. Middleware chain and short-circuiting functional. |
 | PHP | 01 | Completed | Basic GET/POST routes verified. |
 | PHP | 02 | Completed | Chaining required for middleware; 2-arg `get()`. |
 | PHP | 03 | Completed | File uploads and validation verified. |
@@ -72,7 +72,7 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-01-01 | Python | 01 | fixed | 2026-04-02 | Path parameters are now correctly mirrored in the `request.params` dictionary (Fixed in v3.10.50). |
 | RB-01-03 | Ruby | 01 | open | 2026-03-31 | POST endpoints return 401 Unauthorized when no auth is configured. Framework appears to apply a default auth guard to all non-GET routes. |
 | RB-02-01 | Ruby | 02 | fixed | 2026-03-31 | Symbol keys (e.g. `params[:id]`) do not work for accessing route parameters. String keys must be used instead. |
-| RB-02-02 | Ruby | 02 | open | 2026-03-31 | Route group prefixes are silently ignored at runtime. Routes registered inside a group resolve as if no prefix was applied. |
+| RB-02-02 | Ruby | 02 | not-a-bug | 2026-03-31 | Not a bug. Using `Tina4::Router.get` inside a group bypasses the group context. Must use the block's DSL methods (`get`, `post`, etc.) to inherit the prefix. |
 | RB-02-03 | Ruby | 02 | fixed | 2026-03-31 | Wildcard routes (e.g. `/docs/*`) now match correctly. Value available via `request.params['wildcard']`. |
 | PY-02-03 | Python | 02 | fixed | 2026-04-02 | Wildcard route values are now correctly indexed by the key `"*"` in `request.params` (Fixed in v3.10.50). |
 | PY-02-05 | Python | 02 | open | 2026-04-01 | `@group` decorator is not exported from `tina4_python.core.router`, preventing documented decorator-style route groups. Only `Router.group()` (imperative) exists. |
@@ -87,17 +87,17 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-0506-03 | Python | 05-06 | open | 2026-03-25 | `Note.create_table()` and all schema-altering ORM operations deadlock with a SQLite `Resource Busy` error while `tina4 serve` is running. ORM integration via HTTP endpoints cannot be tested safely. |
 | RB-03-01 | Ruby | 03 | open | 2026-03-31 | Header names are normalized to lowercase (e.g., `accept`) at runtime, contradicting documentation stating they "keep their original casing". |
 | RB-03-02 | Ruby | 03 | open | 2026-03-31 | Usage of the `return` keyword within `Tina4::Router` blocks causes an `unexpected return` LocalJumpError and 500 status. `return` is used extensively in chapter 3 examples. |
-| RB-03-03 | Ruby | 03 | open | 2026-03-31 | All POST routes return `401 Unauthorized` without any configured auth or session logic, making non-GET routes untestable as documented. |
+| RB-03-03 | Ruby | 03 | not-a-bug | 2026-03-31 | Not a bug. ALL write routes (POST, PUT, PATCH, DELETE) require authentication by default in v3. Use `.no_auth` to open routes publicly. |
 | RB-03-04 | Ruby | 03 | open | 2026-03-31 | Content negotiation fails because manual header checks (`request.headers["Accept"]`) use Title-Case keys while the framework normalizes them to lowercase. |
 | RB-03-05 | Ruby | 03 | open | 2026-03-31 | `tina4 serve` hangs or deadlocks when a route triggers an unhandled Ruby exception (e.g., the `LocalJumpError` from `return`) instead of cleanly returning a 500 error page. |
 | RB-04-01 | Ruby | 04 | open | 2026-04-01 | Frond ternary operator `condition ? val1 : val2` returns the source object (e.g., an array) instead of the evaluated result when using complex expressions. |
-| RB-04-02 | Ruby | 04 | open | 2026-04-01 | `{% include %}` tag does not inherit parent scope (e.g., loop variables), and the `with` keyword fails to pass any data to the partial. |
-| RB-04-03 | Ruby | 04 | open | 2026-04-01 | Frond macros (`{% macro %}`) and special tags (`{% raw %}`, `{% spaceless %}`) are non-functional and currently produce no output or have no effect. |
+| RB-04-02 | Ruby | 04 | fixed | 2026-04-01 | Fixed in v3.10.91+. Included templates inherit parent context via duplication, and the `with` keyword is correctly parsed. |
+| RB-04-03 | Ruby | 04 | fixed | 2026-04-01 | Fixed in v3.10.91+. Frond supports `handle_macro`, `handle_from_import`, `{% raw %}`, and `{% spaceless %}` blocks. |
 | RB-04-04 | Ruby | 04 | open | 2026-04-01 | Boolean logic in `{% if %}` blocks fails when combined with filters (e.g., `items | length > 0` returns false for non-empty arrays). |
 | RB-05-01 | Ruby | 05 | open | 2026-04-01 | `sqlite3` gem is not documented as a dependency but is required for the default database connection. Server fails to start on health checks. |
 | RB-05-02 | Ruby | 05 | fixed | 2026-04-01 | `DatabaseResult#to_paginate` now returns BOTH documented (`records`/`count`) and extra (`data`/`total`) keys, ensuring compatibility. |
 | RB-05-03 | Ruby | 05 | open | 2026-04-01 | `Tina4.seed` is undefined by default. Requires an undocumented manual `require "tina4/seeder"` before use. |
-| RB-05-04 | Ruby | 05 | open | 2026-04-01 | Documented curl examples fail with `401 Unauthorized` for POST/PUT/DELETE because write-routes are secure-by-default. Undocumented `.no_auth` chain method is required. |
+| RB-05-04 | Ruby | 05 | not-a-bug | 2026-04-01 | Not a bug. High-security by default. Write-routes require auth. Use `.no_auth` to bypass for public endpoints like webhooks. |
 | RB-05-05 | Ruby | 05 | open | 2026-04-01 | `request.body` returns raw string, not a Hash. Using `body["title"]` (as documented) silently returns the literal substring `"title"`, bypassing validations and inserting bad data. Requires `request.body_parsed` instead. |
 | PH-02-01 | PHP | 02 | open | 2026-04-07 | `Router::get()` and other route methods only accept 2 arguments (path, callback). Documentation states 3 arguments are supported (including middleware array), but this causes a "Too many arguments" error. Chaining `->middleware()` is required instead. |
 | PH-02-02 | PHP | 02 | open | 2026-04-07 | PHP middleware callbacks do NOT receive a `$next` argument. Returning `true` continues the chain, while documentation incorrectly suggests calling `$next($request, $response)`. |
@@ -110,3 +110,6 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-08-01 | Python | 08 | open | 2026-04-07 | `Auth.get_token()` is implemented as an instance method, but documentation shows it being called as a class/static method (`Auth.get_token(payload)`). |
 | PY-09-01 | Python | 09 | open | 2026-04-07 | `TINA4_SESSION_TTL` default value in code is `1800` (30m), but documentation states the default is `3600` (1hr). |
 | PY-10-01 | Python | 10 | open | 2026-04-07 | `Router.group()` callback is documented as taking no arguments, but implementation passes a `RouteGroup` object, requiring the callback to accept one argument. |
+| PY-02-06 | Python | 02 | open | 2026-04-13 | Path parameter type hints (e.g., `:int`) act as constraints but fail to perform auto-casting. Values remain strings. |
+| PY-05-07 | Python | 05 | open | 2026-04-13 | Migration runner fails to record completed migrations in the `tina4_migration` table, causing duplicate-table errors on subsequent runs. |
+| PY-06-07 | Python | 06 | fixed | 2026-04-01 | `ForeignKeyField` is now correctly exported from `tina4_python.orm` (Verified in v3.11.1). |

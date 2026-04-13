@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "A Tina4 Python project"
 requires-python = ">=3.12"
 dependencies = [
+    "requests>=2.33.1",
     "tina4-python>=3.1.0",
 ]
 

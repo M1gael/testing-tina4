@@ -1,0 +1,87 @@
+✓ Detected python project
+▶ Starting tina4python on 0.0.0.0:7145
+  ▶ Starting agent server on port 9145
+  ℹ Loaded 6 agents: supervisor, planner, coder, vision, image-gen, debug
+  ℹ Background thinking loop started (every 5 min)
+  ✓ Agent server listening on http://127.0.0.1:9145
+[31m2026-04-13T12:20:51.457Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/author.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[31m2026-04-13T12:20:51.457Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/blog_post.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[31m2026-04-13T12:20:51.458Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/comment.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[31m2026-04-13T12:20:51.458Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/note.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-13T12:20:51.458Z [DEBUG  ] Loaded: src.orm.product[0m
+[31m2026-04-13T12:20:51.458Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/orm/task.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-13T12:20:51.459Z [DEBUG  ] Loaded: src.orm.user[0m
+[36m2026-04-13T12:20:51.459Z [DEBUG  ] Route registered: GET /api/public/info (auth=public)[0m
+[36m2026-04-13T12:20:51.459Z [DEBUG  ] Route registered: GET /api/profile (auth=required)[0m
+[36m2026-04-13T12:20:51.459Z [DEBUG  ] Loaded: src.routes.auth_decorators[0m
+[36m2026-04-13T12:20:51.459Z [DEBUG  ] Route registered: GET /chapter8/init (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: POST /chapter8/register (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: POST /chapter8/login (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter8/profile (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter8/secured (auth=required)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter9/set-session (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter9/get-session (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter9/flash-set (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter9/flash-get (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter9/cookie-set (auth=public)[0m
+[36m2026-04-13T12:20:51.460Z [DEBUG  ] Route registered: GET /chapter9/cookie-get (auth=public)[0m
+[36m2026-04-13T12:20:51.461Z [DEBUG  ] Loaded: src.routes.auth_session_test[0m
+[31m2026-04-13T12:20:51.461Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/autocrud_test.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[31m2026-04-13T12:20:51.462Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/blog.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-13T12:20:51.462Z [DEBUG  ] Route registered: GET /api/account (auth=public)[0m
+error: get_account.secure() failed: 'function' object has no attribute 'secure'
+[36m2026-04-13T12:20:51.462Z [DEBUG  ] Route registered: GET /api/catalog (auth=public)[0m
+[36m2026-04-13T12:20:51.462Z [DEBUG  ] Route registered: GET /api/important_data (auth=public)[0m
+[36m2026-04-13T12:20:51.463Z [DEBUG  ] Loaded: src.routes.chaining[0m
+[36m2026-04-13T12:20:51.463Z [DEBUG  ] Route registered: POST /api/contact (auth=required)[0m
+[36m2026-04-13T12:20:51.463Z [DEBUG  ] Route registered: GET /api/contact/submissions (auth=public)[0m
+[36m2026-04-13T12:20:51.463Z [DEBUG  ] Loaded: src.routes.contact[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Route registered: POST /api/files/upload (auth=required)[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Loaded: src.routes.file_upload_example[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Route registered: POST /test/files (auth=public)[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Loaded: src.routes.files_test[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Route registered: GET /gotcha/users/{id}/posts/{id} (auth=public)[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Route registered: GET /items/{id:int} (auth=public)[0m
+[36m2026-04-13T12:20:51.464Z [DEBUG  ] Route registered: GET /items/export (auth=public)[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Route registered: GET /gotcha/order (auth=public)[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Route registered: GET /gotcha/sync (auth=public)[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Loaded: src.routes.gotchas[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Route registered: GET /api/greeting/{name} (auth=public)[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Route registered: GET /api/greet (auth=public)[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Route registered: POST /api/greeting (auth=required)[0m
+[36m2026-04-13T12:20:51.465Z [DEBUG  ] Loaded: src.routes.greeting[0m
+[31m2026-04-13T12:20:51.465Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/groups.py: register_api_v1() takes 0 positional arguments but 1 was given[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: GET /hello (auth=public)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: GET /hello-redirect (auth=public)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Loaded: src.routes.hello[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: GET /products (auth=public)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: POST /products (auth=required)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: PUT /products/{id} (auth=required)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: PATCH /products/{id} (auth=required)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Route registered: DELETE /products/{id} (auth=required)[0m
+[36m2026-04-13T12:20:51.466Z [DEBUG  ] Loaded: src.routes.https[0m
+[36m2026-04-13T12:20:51.467Z [DEBUG  ] Route registered: GET /chapter10/test-timing (auth=public)[0m
+[36m2026-04-13T12:20:51.467Z [DEBUG  ] Route registered: GET /chapter10/test-log (auth=public)[0m
+[36m2026-04-13T12:20:51.467Z [DEBUG  ] Route registered: GET /chapter10/test-short-circuit (auth=public)[0m
+[31m2026-04-13T12:20:51.467Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/middleware_test.py: secure_group() takes 0 positional arguments but 1 was given[0m
+[36m2026-04-13T12:20:51.467Z [DEBUG  ] Route registered: GET /api/middleware-test (auth=public)[0m
+[36m2026-04-13T12:20:51.467Z [DEBUG  ] Loaded: src.routes.middleware_v2[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: GET /api/data (auth=public)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: GET /api/secret (auth=public)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: GET /api/important (auth=public)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Loaded: src.routes.middlewares[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: GET /api/notes (auth=public)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: GET /api/notes/categories (auth=public)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: GET /api/notes/{id:int} (auth=public)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: POST /api/notes (auth=required)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: PUT /api/notes/{id:int} (auth=required)[0m
+[36m2026-04-13T12:20:51.468Z [DEBUG  ] Route registered: DELETE /api/notes/{id:int} (auth=required)[0m
+[36m2026-04-13T12:20:51.469Z [DEBUG  ] Loaded: src.routes.notes[0m
+[31m2026-04-13T12:20:51.469Z [ERROR  ] Failed to load /var/home/work/gitdir/testing-tina4/pypy/src/routes/orm_chapter_six.py: Field.__init__() got an unexpected keyword argument 'auto_now_add'[0m
+[36m2026-04-13T12:20:51.469Z [DEBUG  ] Route registered: GET /test-orm-init (auth=public)[0m
+[36m2026-04-13T12:20:51.469Z [DEBUG  ] Loaded: src.routes.orm_deadlock_test[0m
+[36m2026-04-13T12:20:51.470Z [DEBUG  ] Route registered: GET /products (auth=public)[0m
+[36m2026-04-13T12:20:51.470Z [DEBUG  ] Loaded: src.routes.pages[0m
+[36m2026-04-13T12:20:51.470Z [DEBUG  ] Route registered: GET /nested/home (auth=public)[0m
+[36m2026-04-13T12:20:51.470Z [DEBUG  ] Loaded: src.routes.pages_nested.home[0m✓ Browser opened: http://localhost:7145
+👁 Framework hot reload active — press Ctrl+C to stop

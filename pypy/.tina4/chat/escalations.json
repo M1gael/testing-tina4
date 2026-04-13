@@ -1,0 +1,32 @@
+[
+  {
+    "id": "uncommitted_files",
+    "category": "uncommitted",
+    "level": 3,
+    "message": "8 uncommitted files in the project",
+    "first_seen": "1776080835Z",
+    "last_prompted": "1776081435Z",
+    "dismissed": false,
+    "acted_on": false
+  },
+  {
+    "id": "no_tests",
+    "category": "untested",
+    "level": 3,
+    "message": "32 routes with no test files at all",
+    "first_seen": "1776080835Z",
+    "last_prompted": "1776081435Z",
+    "dismissed": false,
+    "acted_on": false
+  },
+  {
+    "id": "no_env_example",
+    "category": "convention",
+    "level": 3,
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "first_seen": "1776080835Z",
+    "last_prompted": "1776081435Z",
+    "dismissed": false,
+    "acted_on": false
+  }
+]

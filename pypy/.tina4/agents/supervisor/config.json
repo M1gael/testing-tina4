@@ -1,0 +1,1 @@
+{"model":"thinking","temperature":0.3,"max_tokens":2048,"tools":["list_routes","list_tables","project_info","file_list"],"max_iterations":1}
