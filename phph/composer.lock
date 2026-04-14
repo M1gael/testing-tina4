@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "tina4stack/tina4php",
-            "version": "3.11.1",
+            "version": "3.11.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tina4stack/tina4-php.git",
-                "reference": "81f39fc8550c2ad9d5d61903044c1e911745a3d4"
+                "reference": "ff4b7efd1fe989077d6d01e2bf93d9585c2068ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tina4stack/tina4-php/zipball/81f39fc8550c2ad9d5d61903044c1e911745a3d4",
-                "reference": "81f39fc8550c2ad9d5d61903044c1e911745a3d4",
+                "url": "https://api.github.com/repos/tina4stack/tina4-php/zipball/ff4b7efd1fe989077d6d01e2bf93d9585c2068ea",
+                "reference": "ff4b7efd1fe989077d6d01e2bf93d9585c2068ea",
                 "shasum": ""
             },
             "require": {
@@ -59,9 +59,9 @@
             "description": "Tina4 for PHP — 54 built-in features, zero dependencies",
             "support": {
                 "issues": "https://github.com/tina4stack/tina4-php/issues",
-                "source": "https://github.com/tina4stack/tina4-php/tree/3.11.1"
+                "source": "https://github.com/tina4stack/tina4-php/tree/3.11.8"
             },
-            "time": "2026-04-13T10:48:23+00:00"
+            "time": "2026-04-14T02:08:46+00:00"
         }
     ],
     "packages-dev": [],
