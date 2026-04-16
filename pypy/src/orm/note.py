@@ -10,5 +10,5 @@ class Note(ORM):
     content = StringField(default="")
     category = StringField(default="general")
     pinned = BooleanField(default=False)
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
+    created_at = DateTimeField()
+    updated_at = DateTimeField()

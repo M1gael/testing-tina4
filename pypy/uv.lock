@@ -125,11 +125,11 @@ wheels = [
 
 [[package]]
 name = "tina4-python"
-version = "3.11.8"
+version = "3.11.12"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a9/35/45a1275f6e3e9f2e2fb013074732c1185dc5964bbd5a68227c96e49b3ef5/tina4_python-3.11.8.tar.gz", hash = "sha256:627322594a95e4bfa03b8b6b065cf09df47847f5ba6676cea9aede83d9a0d881", size = 400513, upload-time = "2026-04-14T07:25:03.909Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a0/63/0e6611f421919aa25eb09ccbe265d6996f872d2e51c29a33f328addfe7af/tina4_python-3.11.12.tar.gz", hash = "sha256:e52ea6fe498fb27ae989cc7755ef22998987e936ff05482baa3d8fdbe8b1a2df", size = 401921, upload-time = "2026-04-16T11:18:53.806Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bd/86/16d747c0133853be192342a9397a3cb39e22985937ca23aac4342f2a9758/tina4_python-3.11.8-py3-none-any.whl", hash = "sha256:c54356a24402783b4f1fc8ac2470c9d996bcd501f1ab56718b0f6f9116b2d1c0", size = 492774, upload-time = "2026-04-14T07:25:02.51Z" },
+    { url = "https://files.pythonhosted.org/packages/80/47/f984d941d6f0f0f04b604f117585843e76f14c98bc38909c5823f486bdee/tina4_python-3.11.12-py3-none-any.whl", hash = "sha256:c643e6ff1e4862aeebda52bd73605895ac440a10c2f455019061d1a0431c5931", size = 493984, upload-time = "2026-04-16T11:18:55.703Z" },
 ]
 
 [[package]]

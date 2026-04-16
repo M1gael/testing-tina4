@@ -9,4 +9,4 @@ class Task(ORM):
     title = StringField(required=True)
     completed = BooleanField(default=False)
     deleted_at = DateTimeField()  # Required for soft delete
-    created_at = DateTimeField(auto_now_add=True)
+    created_at = DateTimeField()

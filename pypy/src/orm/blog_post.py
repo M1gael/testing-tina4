@@ -10,8 +10,8 @@ class BlogPost(ORM):
     slug = StringField(required=True)
     content = StringField(default="")
     status = StringField(default="draft", choices=["draft", "published", "archived"])
-    created_at = DateTimeField(auto_now_add=True)
-    updated_at = DateTimeField(auto_now=True)
+    created_at = DateTimeField()
+    updated_at = DateTimeField()
 
     @classmethod
     def published(cls):

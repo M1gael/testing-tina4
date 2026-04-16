@@ -52,7 +52,9 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 ## Standard Implementation Workflow
 1.  **Isolation**: All test implementations occur within the current language's target project directory (e.g., `pypy/` or `ruru/`).
 
-2.  **Organization**: Every documentation section should have a dedicated file in the appropriate routes/feature directory named after the feature (e.g., `chaining.py`).
+2.  **Organization**: 
+    *   Files MUST be prefixed with the chapter number and padded to two digits (e.g. `ch01_`, `ch02_`).
+    *   Every documentation section should have a dedicated file in the appropriate routes/feature directory named after the feature (e.g., `src/routes/ch01_routing.py`, `src/orm/ch06_author.py`).
 3.  **Documentation Consistency**: 
     *   Implement exactly as documented first.
     *   Add lowercase, space-prefixed comments at the top of each file explaining the test case.
@@ -81,7 +83,7 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-05-05 | Python | 05 | fixed | 2026-04-01 | `DatabaseResult.column_info()` now correctly identifies SQLite types (Fixed in v3.10.50). |
 | PY-04-06 | Python | 04 | open | 2026-04-01 | `tina4.css` documentation states it "ships with every project" but the file is missing from `public/css/` in scaffolded projects. |
 | PY-06-07 | Python | 06 | open | 2026-04-01 | `ForeignKeyField` is missing from `tina4_python.orm`, causing import errors in documented ORM examples. |
-| PY-06-08 | Python | 06 | open | 2026-04-01 | `Field.__init__()` in ORM throws `unexpected keyword argument 'auto_now_add'`, breaking documented timestamps. |
+| PY-06-08 | Python | 06 | fixed | 2026-04-01 | `Field.__init__()` in ORM throws `unexpected keyword argument 'auto_now_add'`, breaking documented timestamps. (Docs updated in v3.11.12 to strictly use `auto_increment=True`) |
 | PY-05-01 | Python | 05 | fixed | 2026-03-25 | `tina4 migrate` command successfully executes migrations without the former `load_dotenv` ImportError. |
 | PY-05-02 | Python | 05 | fixed | 2026-03-25 | `DatabaseResult` methods `column_info()`, `to_list()`, and `to_paginate()` are now present in the implementation. |
 | PY-0506-03 | Python | 05-06 | open | 2026-03-25 | `Note.create_table()` and all schema-altering ORM operations deadlock with a SQLite `Resource Busy` error while `tina4 serve` is running. ORM integration via HTTP endpoints cannot be tested safely. |
@@ -108,8 +110,9 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-06-09 | Python | 06 | open | 2026-04-07 | `@orm_bind` used as a class decorator fails by returning `None`, effectively deleting the model class and causing `AttributeError: 'NoneType' object has no attribute 'create_table'`. |
 | PY-07-01 | Python | 07 | open | 2026-04-07 | `Database.execute()` returns `True` (bool) for write operations without `RETURNING`. Documentation erroneously suggests it returns a result object with a `last_id` attribute. |
 | PY-08-01 | Python | 08 | open | 2026-04-07 | `Auth.get_token()` is implemented as an instance method, but documentation shows it being called as a class/static method (`Auth.get_token(payload)`). |
-| PY-09-01 | Python | 09 | open | 2026-04-07 | `TINA4_SESSION_TTL` default value in code is `1800` (30m), but documentation states the default is `3600` (1hr). |
-| PY-10-01 | Python | 10 | open | 2026-04-07 | `Router.group()` callback is documented as taking no arguments, but implementation passes a `RouteGroup` object, requiring the callback to accept one argument. |
+| PY-09-01 | Python | 09 | fixed | 2026-04-07 | `TINA4_SESSION_TTL` default value in code is `1800` (30m), but documentation states the default is `3600` (1hr). (Docs updated in v3.11.12 to match code default of 1800) |
+| PY-10-01 | Python | 10 | fixed | 2026-04-07 | `Router.group()` callback is documented as taking no arguments, but implementation passes a `RouteGroup` object, requiring the callback to accept one argument. (Docs updated in v3.11.12 to pass group arg) |
 | PY-02-06 | Python | 02 | open | 2026-04-13 | Path parameter type hints (e.g., `:int`) act as constraints but fail to perform auto-casting. Values remain strings. |
 | PY-05-07 | Python | 05 | open | 2026-04-13 | Migration runner fails to record completed migrations in the `tina4_migration` table, causing duplicate-table errors on subsequent runs. |
 | PY-06-07 | Python | 06 | fixed | 2026-04-01 | `ForeignKeyField` is now correctly exported from `tina4_python.orm` (Verified in v3.11.1). |
+| CLI-01-01| Rust CLI | N/A| open | 2026-04-16 | Rust CLI `watcher.rs` continuously sends spurious `POST /__dev/api/reload` events (every ~5s) for completely idle, unedited files on Linux overlayfs setups, causing framework log spam. |

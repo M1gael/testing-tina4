@@ -50,8 +50,8 @@ async def test_short_circuit(request, response):
     return response.json({"message": "Not in maintenance"})
 
 # testing Section 5: Route Groups with Middleware
-def secure_group():
-    @get("/info")
+def secure_group(group):
+    @group.get("/info")
     @noauth() # try to bypass group middleware? Section 5 says group always runs
     async def get_info(request, response):
         return response.json({"message": "Info from group", "user": getattr(request, "user", None)})

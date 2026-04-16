@@ -8,4 +8,4 @@ class Author(ORM):
     name = StringField(required=True, min_length=2)
     email = StringField(required=True)
     bio = StringField(default="")
-    created_at = DateTimeField(auto_now_add=True)
+    created_at = DateTimeField()

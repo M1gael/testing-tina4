@@ -9,4 +9,4 @@ class Comment(ORM):
     author_name = StringField(required=True)
     author_email = StringField(required=True)
     body = StringField(required=True, min_length=5)
-    created_at = DateTimeField(auto_now_add=True)
+    created_at = DateTimeField()
