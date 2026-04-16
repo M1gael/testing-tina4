@@ -16,7 +16,9 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 3.  **Implementation Fidelity**: Implement the provided code example exactly as documented within the target language project directory (`pypy/` for Python, `ruru/` for Ruby).
 4.  **No Proactive Fixes**: Do NOT implement proactive fixes for framework bugs; the goal is to verify if the documentation works as-is.
 5.  **Issue Reporting**: Report all discrepancies, errors, or points of confusion to the USER for issue tracking in plain-text code blocks as defined in the `reporting` skill.
-6.  **Language-Specific Conversations**: Strictly only discuss one language per conversation. If a conversation is started for Python, it remains dedicated to Python and must never transition to Ruby (and vice-versa).
+6.  **Blind Implementation**: Do NOT consult the Known Issues Log while implementing a chapter. Implement exactly from documentation, discover bugs naturally as a new user would. Only cross-reference the Known Issues Log AFTER a bug has been observed and documented, to determine if it is already tracked or is new.
+7.  **Strict Structural Testing**: All implementation and verification MUST occur within the standard Tina4 project structure (`src/routes`, `src/templates`, etc.). Standalone or "next to app.py" test scripts are strictly prohibited unless a feature cannot be tested any other way (e.g. CLI internal logic).
+8.  **Language-Specific Conversations**: Strictly only discuss one language per conversation. If a conversation is started for Python, it remains dedicated to Python and must never transition to Ruby (and vice-versa).
 
 ## Evaluation Progress
 | Language | Chapter | Status | Key Issues Found |
@@ -26,11 +28,11 @@ The repository contains a `documentation/` folder with complete guides. The ASSI
 | Ruby | 03 | Completed | See issues `RB-03-01`, `RB-03-02`, `RB-03-03`, `RB-03-04`, `RB-03-05` |
 | Ruby | 04 | Completed | See issues `RB-04-01`, `RB-04-02`, `RB-04-03`, `RB-04-04` |
 | Ruby | 05 | Completed | See issues `RB-05-01` to `RB-05-05`. `to_paginate` now provides dual-key support. |
-| Python | 01 | Completed | Verified. Path parameters mirrored in `request.params`. |
-| Python | 02 | Completed | Faulty. Path parameters match but NO auto-casting to `int/float` (`PY-02-06`). |
-| Python | 03 | Completed | Faulty. POST routes secure-by-default (undocumented). Multipart handled in `request.body`. |
-| Python | 04 | Completed | Faulty. `tina4.css` still missing from scaffold. |
-| Python | 05 | Completed | Faulty. `tina4_migration` not recording runs (`PY-05-07`). Relative path needed for DB. |
+| Python | 01 | Completed | Verified (Pass 5). Path parameters mirrored in `request.params`. |
+| Python | 02 | Completed | Verified (Pass 5). Path parameters match but NO auto-casting to `int/float` (`PY-02-06`). |
+| Python | 03 | Completed | Verified (Pass 5). `POST` routes require Undocumented `@noauth()` (`PY-05-08`). |
+| Python | 04 | Completed | Verified (Pass 5). `format` filter fails for numeric types (`PY-04-03`). |
+| Python | 05 | Completed | Verified (Pass 5). `DatabaseResult` JSON serialization bug (`PY-05-11`). |
 | Python | 06 | Completed | Faulty. `auto_now_add` causes TypeError. `ForeignKeyField` FIXED. |
 | Python | 07 | Completed | Faulty. `db.execute` returns bool, not object with `last_id` (`PY-07-01`). |
 | Python | 08 | Completed | Verified. `@noauth()` and `@secured()` functional with correct nesting order. |
@@ -113,6 +115,13 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-09-01 | Python | 09 | fixed | 2026-04-07 | `TINA4_SESSION_TTL` default value in code is `1800` (30m), but documentation states the default is `3600` (1hr). (Docs updated in v3.11.12 to match code default of 1800) |
 | PY-10-01 | Python | 10 | fixed | 2026-04-07 | `Router.group()` callback is documented as taking no arguments, but implementation passes a `RouteGroup` object, requiring the callback to accept one argument. (Docs updated in v3.11.12 to pass group arg) |
 | PY-02-06 | Python | 02 | open | 2026-04-13 | Path parameter type hints (e.g., `:int`) act as constraints but fail to perform auto-casting. Values remain strings. |
-| PY-05-07 | Python | 05 | open | 2026-04-13 | Migration runner fails to record completed migrations in the `tina4_migration` table, causing duplicate-table errors on subsequent runs. |
+| PY-04-03 | Python | 04 | open | 2026-04-16 | Frond `format` filter (e.g., `"%.2f"\|format(val)`) raises `TypeError` "must be real number, not str" for numeric types, even after explicit `\|float` casting. |
+| PY-05-07 | Python | 05 | fixed | 2026-04-13 | Migration runner successfully records migrations in the `tina4_migration` table as of v3.11.12. |
+| PY-02-12 | Python | 02 | open | 2026-04-16 | `@noauth` decorator must be used with parentheses `@noauth()` to work; documentation incorrectly shows it without. |
+| PY-05-08 | Python | 05 | open | 2026-04-16 | All non-GET routes (POST, PUT, DELETE) are `auth=required` by default, contradicting documentation examples. |
+| PY-05-09 | Python | 05 | open | 2026-04-16 | `tina4 migrate` defaults to `data/app.db` while `Database()` defaults to `data/tina4.db`, causing missing table errors. |
+| PY-05-10 | Python | 05 | open | 2026-04-16 | `tina4 generate migration` only creates the 'up' .sql file, despite documentation stating it creates 'down' too. |
+| PY-05-11 | Python | 05 | open | 2026-04-16 | `DatabaseResult` objects returned directly in `response.json()` serialize to strings instead of lists of dictionaries. |
 | PY-06-07 | Python | 06 | fixed | 2026-04-01 | `ForeignKeyField` is now correctly exported from `tina4_python.orm` (Verified in v3.11.1). |
+| PY-01-02 | Python | 01 | open | 2026-04-16 | Chapter 1 does not specify `tina4 init python .` as an option for initializing in the current directory; this is only mentioned in Chapter 37. |
 | CLI-01-01| Rust CLI | N/A| open | 2026-04-16 | Rust CLI `watcher.rs` continuously sends spurious `POST /__dev/api/reload` events (every ~5s) for completely idle, unedited files on Linux overlayfs setups, causing framework log spam. |
