@@ -1,1 +1,0 @@
-Generate images based on user descriptions.
