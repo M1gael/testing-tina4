@@ -1,0 +1,36 @@
+[
+  {
+    "id": "19d9856249d",
+    "timestamp": "1776377272Z",
+    "message": "Hey, I noticed we have 14 routes without any corresponding tests right now. While the code looks solid, adding some tests will really help us catch regressions as we build out more features, which makes future maintenance so much smoother. Let me know if you want to pair up on writing some of those first!",
+    "category": "untested",
+    "actions": [
+      {
+        "label": "Good idea, draft some",
+        "action": "draft_tests"
+      },
+      {
+        "label": "Later",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19d985ab6cc",
+    "timestamp": "1776377572Z",
+    "message": "Hey, I noticed we have 14 routes without any corresponding tests, which is a bit of a risk as the codebase grows. Adding some tests now will really help us catch regressions later and make refactoring much safer down the line. Let me know if you want to pair up on tackling a few of those!",
+    "category": "untested",
+    "actions": [
+      {
+        "label": "Help me write tests",
+        "action": "scaffold_tests"
+      },
+      {
+        "label": "I'll handle it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  }
+]

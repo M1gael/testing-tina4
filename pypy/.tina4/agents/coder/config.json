@@ -1,0 +1,1 @@
+{"model":"thinking","temperature":0.1,"max_tokens":4096,"tools":["file_read","file_write"],"max_iterations":10}

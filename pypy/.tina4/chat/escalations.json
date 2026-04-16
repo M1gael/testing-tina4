@@ -1,0 +1,22 @@
+[
+  {
+    "id": "no_tests",
+    "category": "untested",
+    "level": 2,
+    "message": "14 routes with no test files at all",
+    "first_seen": "1776377272Z",
+    "last_prompted": "1776377572Z",
+    "dismissed": false,
+    "acted_on": false
+  },
+  {
+    "id": "no_env_example",
+    "category": "convention",
+    "level": 2,
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "first_seen": "1776377272Z",
+    "last_prompted": "1776377572Z",
+    "dismissed": false,
+    "acted_on": false
+  }
+]

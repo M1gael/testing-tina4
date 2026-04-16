@@ -125,3 +125,7 @@ All confirmed framework bugs and documentation discrepancies are tracked here. S
 | PY-06-07 | Python | 06 | fixed | 2026-04-01 | `ForeignKeyField` is now correctly exported from `tina4_python.orm` (Verified in v3.11.1). |
 | PY-01-02 | Python | 01 | open | 2026-04-16 | Chapter 1 does not specify `tina4 init python .` as an option for initializing in the current directory; this is only mentioned in Chapter 37. |
 | CLI-01-01| Rust CLI | N/A| open | 2026-04-16 | Rust CLI `watcher.rs` continuously sends spurious `POST /__dev/api/reload` events (every ~5s) for completely idle, unedited files on Linux overlayfs setups, causing framework log spam. |
+| PY-01-03 | Python | 01 | open | 2026-04-17 | `POST /api/greeting` returns 401 Unauthorized by default. Chapter 1 examples imply these are public endpoints. |
+| PY-02-13 | Python | 02 | open | 2026-04-17 | `Router.group()` callback requires one argument (the group object), but Chapter 2 documentation incorrectly shows `lambda: [...]` taking 0 arguments. |
+| PY-02-14 | Python | 02 | open | 2026-04-17 | Chaining `.secure()` or `.cache()` on a decorated function handler raises `AttributeError: 'function' object has no attribute 'secure'`. |
+
