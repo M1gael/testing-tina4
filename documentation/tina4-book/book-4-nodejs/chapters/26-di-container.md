@@ -129,8 +129,8 @@ import { Container } from "tina4-nodejs";
 const container = new Container();
 
 container.singleton("config", () => ({
-    smtpHost: process.env.TINA4_MAIL_SMTP_HOST ?? "localhost",
-    smtpPort: parseInt(process.env.TINA4_MAIL_SMTP_PORT ?? "587")
+    smtpHost: process.env.TINA4_MAIL_HOST ?? "localhost",
+    smtpPort: parseInt(process.env.TINA4_MAIL_PORT ?? "587")
 }));
 
 container.singleton("mailer", (c) => {
@@ -235,8 +235,8 @@ Wire together a product store API using the DI container.
 ### Test with:
 
 ```bash
-curl http://localhost:7145/api/store/1
-curl http://localhost:7145/api/store/99  # should return 404
+curl http://localhost:7148/api/store/1
+curl http://localhost:7148/api/store/99  # should return 404
 ```
 
 ---

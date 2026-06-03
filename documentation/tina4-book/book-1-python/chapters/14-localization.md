@@ -133,10 +133,10 @@ async def welcome(request, response):
 ```
 
 ```bash
-curl "http://localhost:7145/api/welcome?lang=en"
+curl "http://localhost:7146/api/welcome?lang=en"
 # {"message": "Hello, World!", "locale": "en"}
 
-curl "http://localhost:7145/api/welcome?lang=de"
+curl "http://localhost:7146/api/welcome?lang=de"
 # {"message": "Hallo, World!", "locale": "de"}
 ```
 
@@ -240,12 +240,11 @@ When a key is missing from the active locale, Tina4 falls back through a chain:
 
 1. Active locale (`de`)
 2. Base language (`de` if locale was `de_AT`)
-3. Default locale (`en` or whatever `TINA4_LOCALE_FALLBACK` is set to)
+3. Default locale (`en` — or whatever you passed as `default_locale=` when creating the `I18n` instance)
 4. The raw key string itself
 
 ```bash
 TINA4_LOCALE=de
-TINA4_LOCALE_FALLBACK=en
 ```
 
 ```json
@@ -329,19 +328,19 @@ Build an API that returns translated error messages and UI strings based on the 
 
 ```bash
 # English (default)
-curl "http://localhost:7145/api/users/999"
+curl "http://localhost:7146/api/users/999"
 # {"error": "The requested resource was not found."}
 
 # French
-curl "http://localhost:7145/api/users/999?lang=fr"
+curl "http://localhost:7146/api/users/999?lang=fr"
 # {"error": "La ressource demandée est introuvable."}
 
 # Spanish
-curl "http://localhost:7145/api/users/999?lang=es"
+curl "http://localhost:7146/api/users/999?lang=es"
 # {"error": "El recurso solicitado no fue encontrado."}
 
 # Create user in French
-curl -X POST "http://localhost:7145/api/users?lang=fr" \
+curl -X POST "http://localhost:7146/api/users?lang=fr" \
   -H "Content-Type: application/json" \
   -d '{"email": "alice@example.com", "name": "Alice"}'
 ```
@@ -462,7 +461,7 @@ async def create_user(request, response):
 
 **Problem:** `I18n(locale="zh", ...)` crashes because `src/locales/zh.json` does not exist.
 
-**Fix:** Set `TINA4_LOCALE_FALLBACK=en`. Always validate user-supplied locale values against a supported list before creating the `I18n` instance.
+**Fix:** Pass `default_locale="en"` when creating the `I18n` instance. Always validate user-supplied locale values against a supported list before passing them to `I18n.set_locale()`.
 
 ### 2. Placeholder name mismatch
 

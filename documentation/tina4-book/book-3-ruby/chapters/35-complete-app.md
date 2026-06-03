@@ -76,7 +76,7 @@ JWT_EXPIRY=86400
 
 ### Create Migrations
 
-Create `src/migrations/20260322150000_create_users_table.sql`:
+Create `migrations/20260322150000_create_users_table.sql`:
 
 ```sql
 -- UP
@@ -95,7 +95,7 @@ CREATE INDEX idx_users_email ON users(email);
 DROP TABLE IF EXISTS users;
 ```
 
-Create `src/migrations/20260322150100_create_tasks_table.sql`:
+Create `migrations/20260322150100_create_tasks_table.sql`:
 
 ```sql
 -- UP
@@ -688,7 +688,7 @@ Create `src/templates/emails/task-assigned.html`:
 Start the queue worker in a separate terminal:
 
 ```bash
-tina4 queue:work
+tina4 queue work
 ```
 
 ---
@@ -935,9 +935,9 @@ Use the Dockerfile and docker-compose.yml from Chapter 33. Create `.env.producti
 TINA4_DEBUG=false
 TINA4_LOG_LEVEL=WARNING
 JWT_SECRET=your-production-secret-at-least-32-characters
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 TINA4_CACHE_BACKEND=redis
-TINA4_CACHE_HOST=redis
+TINA4_CACHE_URL=redis
 ```
 
 Deploy:
@@ -1080,7 +1080,7 @@ TaskFlow is a solid foundation. Here are ideas for extending it.
 
 **Problem:** Task assignment emails are queued but never sent.
 
-**Fix:** Run `tina4 queue:work` in a separate terminal or as a systemd service.
+**Fix:** Run `tina4 queue work` in a separate terminal or as a systemd service.
 
 ### 4. Token Expired During Long Sessions
 

@@ -20,39 +20,68 @@ When you scaffold a project with `tina4 init`, Tina4 drops a SQLite database at 
 TINA4_DEBUG=true
 ```
 
-With no explicit `DATABASE_URL`, Tina4 defaults to `sqlite:///data/app.db`. That is why the health check at `/health` shows `"database": "connected"` with zero configuration.
+With no explicit `TINA4_DATABASE_URL`, Tina4 defaults to `sqlite:///data/app.db`. That is why the health check at `/health` shows `"database": "connected"` with zero configuration.
 
 SQLite support uses Node's built-in `node:sqlite` module (Node 22+). No native C++ addons are needed. No `node-gyp`. No platform-specific binaries. This is what makes Tina4 Node.js truly zero runtime dependencies -- even the database driver ships with Node itself.
 
 ### Connection Strings for Other Databases
 
-Set `DATABASE_URL` in `.env` to use a different engine:
+Set `TINA4_DATABASE_URL` in `.env` to use a different engine:
 
 ```bash
 # SQLite (explicit)
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 
 # PostgreSQL
-DATABASE_URL=postgres://localhost:5432/myapp
+TINA4_DATABASE_URL=postgres://localhost:5432/myapp
 
 # MySQL
-DATABASE_URL=mysql://localhost:3306/myapp
+TINA4_DATABASE_URL=mysql://localhost:3306/myapp
 
 # Microsoft SQL Server
-DATABASE_URL=mssql://localhost:1433/myapp
+TINA4_DATABASE_URL=mssql://localhost:1433/myapp
 
 # Firebird
-DATABASE_URL=firebird://localhost:3050/path/to/database.fdb
+TINA4_DATABASE_URL=firebird://localhost:3050/path/to/database.fdb
 ```
 
 The Firebird adapter requires the `node-firebird` package (`npm install node-firebird`). SQL dialect differences are handled automatically: `LIMIT`/`OFFSET` is translated to `ROWS X TO Y`, boolean values are converted to integers, and `ILIKE` is converted to `LOWER() LIKE LOWER()`.
 
+### Firebird URL Forms
+
+Firebird is the awkward one: every other engine has a server-side database name (`postgres://host:port/dbname`), but Firebird wants either an absolute file path on the server, a Windows drive-letter path, or an alias. The classic URI form needs a double slash to keep the leading `/` of an absolute path through `new URL()`, which is unintuitive.
+
+Tina4 normalises five equivalent forms. Pick whichever reads best:
+
+```bash
+# Classic double-slash absolute path -- the URL spec way
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050//firebird/data/app.fdb
+
+# Single-slash absolute path -- what most people instinctively type
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/firebird/data/app.fdb
+
+# Windows drive-letter path (also accepts /C%3A/Data/app.fdb)
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@host:3050/C:/Data/app.fdb
+
+# Firebird alias (single token, no slashes)
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/employee
+```
+
+For ops setups that keep the server URL and database location in separate config layers -- or for Windows backslash paths -- set `TINA4_DATABASE_FIREBIRD_PATH`:
+
+```bash
+TINA4_DATABASE_FIREBIRD_PATH=C:\firebird\data\app.fdb
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/ignored
+```
+
+The env override wins over whatever path is in the URL.
+
 ### Separate Credentials
 
 ```bash
-DATABASE_URL=postgres://localhost:5432/myapp
-DATABASE_USERNAME=myuser
-DATABASE_PASSWORD=secretpassword
+TINA4_DATABASE_URL=postgres://localhost:5432/myapp
+TINA4_DATABASE_USERNAME=myuser
+TINA4_DATABASE_PASSWORD=secretpassword
 ```
 
 ### Connection Pooling

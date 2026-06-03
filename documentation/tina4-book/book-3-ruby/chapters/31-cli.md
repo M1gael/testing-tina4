@@ -24,7 +24,7 @@ Creating Tina4 project in ./my-project ...
   Created .gitignore
   Created src/routes/
   Created src/orm/
-  Created src/migrations/
+  Created migrations/
   Created src/seeds/
   Created src/templates/
   Created src/templates/errors/
@@ -111,7 +111,7 @@ tina4 serve
   Press Ctrl+C to stop
 ```
 
-`tina4 serve` detects the language and starts the appropriate server. For Ruby, it runs `bundle exec ruby app.rb` with live reload enabled.
+`tina4 serve` detects the language and starts the appropriate server. For Ruby, it spawns the Tina4 Ruby runtime with SCSS compilation, file watching, and live reload all wired in.
 
 ### Options
 
@@ -121,18 +121,18 @@ tina4 serve --host 127.0.0.1   # Bind to localhost only
 tina4 serve --production       # Production mode (no live reload, debug off)
 ```
 
-### Direct Ruby Execution
+### Bypassing the CLI
 
-You can start the server directly:
+The framework refuses to start without the Rust CLI. For sandboxed environments (Docker images, CI runners, APM agents) set `TINA4_OVERRIDE_CLIENT=true` in `.env` and only then run:
 
 ```bash
-bundle exec ruby app.rb
+TINA4_OVERRIDE_CLIENT=true bundle exec ruby app.rb
 ```
 
-This is identical to `tina4 serve` but gives you more control over the Ruby runtime. For production, use Puma:
+This bypasses SCSS compilation and live reload. For production deployments use `tina4 serve --production` (or set the override and run Puma directly):
 
 ```bash
-bundle exec puma -C config/puma.rb
+TINA4_OVERRIDE_CLIENT=true bundle exec puma -C config/puma.rb
 ```
 
 ---
@@ -142,12 +142,12 @@ bundle exec puma -C config/puma.rb
 The `generate model` command creates an ORM model file and a matching migration. One command produces both.
 
 ```bash
-tina4 generate:model Product
+tina4 generate model Product
 ```
 
 ```
 Created src/orm/product.rb
-Created src/migrations/20260322120000_create_products_table.sql
+Created migrations/20260322120000_create_products_table.sql
 ```
 
 The generated model:
@@ -181,7 +181,7 @@ The model is ready to use. Add your fields and run migrations.
 Specify fields on the command line:
 
 ```bash
-tina4 generate:model Product --fields "name:string,price:float,category:string,in_stock:bool"
+tina4 generate model Product --fields "name:string,price:float,category:string,in_stock:bool"
 ```
 
 The generated model includes all the fields:
@@ -243,7 +243,7 @@ DROP TABLE IF EXISTS products;
 The `generate route` command creates a complete CRUD route file with all five REST endpoints. It reads the model's properties and builds routes with proper type casting and nil checks.
 
 ```bash
-tina4 generate:route products
+tina4 generate route products
 ```
 
 ```
@@ -337,11 +337,11 @@ The generator reads the model's properties and creates routes with type casting 
 The `generate migration` command creates a timestamped migration file with `UP` and `DOWN` sections. The timestamp ensures migrations run in order.
 
 ```bash
-tina4 generate:migration add_category_to_products
+tina4 generate migration add_category_to_products
 ```
 
 ```
-Created src/migrations/20260322120500_add_category_to_products.sql
+Created migrations/20260322120500_add_category_to_products.sql
 ```
 
 The generated file:
@@ -418,7 +418,7 @@ tina4 generate:crud Product
 ```
 Created src/orm/product.rb
 Created src/routes/products.rb
-Created src/migrations/20260322120000_create_products_table.sql
+Created migrations/20260322120000_create_products_table.sql
 ```
 
 Model. CRUD routes. Migration. All wired together. Ready to use.
@@ -447,7 +447,7 @@ Tina4 Doctor -- Checking your project...
   [OK] src/templates/ directory exists (5 templates)
   [OK] src/public/ directory exists (static files served)
   [OK] tests/ directory exists (4 test files)
-  [WARN] No migrations found in src/migrations/
+  [WARN] No migrations found in migrations/
   [OK] AI context: Claude Code detected, CLAUDE.md present
   [OK] .gitignore includes .env, data/, logs/
 
@@ -555,7 +555,7 @@ Running migrations...
 ### Rollback
 
 ```bash
-tina4 migrate:rollback
+tina4 migrate --rollback
 ```
 
 ```
@@ -567,7 +567,7 @@ Rolling back last migration...
 
 ### Migration Table Auto-Upgrade
 
-If your project was created with an earlier version of Tina4, the `tina4_migration` tracking table may use the older v2 schema. Running `tina4 migrate` detects the old layout and adds the missing `migration_id`, `batch`, and `executed_at` columns, backfilling existing data. No manual intervention needed.
+If your project was created with an early v3 release, the `tina4_migration` tracking table may use the older two-column schema. Running `tina4 migrate` detects the old layout and adds the missing `migration_id`, `batch`, and `executed_at` columns, backfilling existing data. No manual intervention needed.
 
 ### Status
 
@@ -600,8 +600,8 @@ tina4 migrate:fresh        # Roll back and re-run all migrations
 ## 13. tina4 queue -- Queue Management
 
 ```bash
-tina4 queue:work                     # Start processing all queues
-tina4 queue:work --queue emails      # Process specific queue
+tina4 queue work                     # Start processing all queues
+tina4 queue work --queue emails      # Process specific queue
 tina4 queue:dead                     # View dead letter queue
 tina4 queue:retry 42                 # Retry a dead letter job
 tina4 queue:retry --all              # Retry all dead letter jobs
@@ -614,8 +614,8 @@ tina4 queue:stats                    # Show queue statistics
 ## 14. tina4 build -- Build Commands
 
 ```bash
-tina4 build:css                      # Compile SCSS to CSS
-tina4 build:js                       # Bundle and minify JavaScript
+tina4 scss                      # Compile SCSS to CSS
+tina4 build                       # Bundle and minify JavaScript
 tina4 build                          # Run all build steps
 ```
 
@@ -624,7 +624,7 @@ tina4 build                          # Run all build steps
 ## 15. tina4 deploy -- Deployment
 
 ```bash
-tina4 deploy:docker                  # Generate Dockerfile and docker-compose.yml
+tina4 deploy docker                  # Generate Dockerfile and docker-compose.yml
 tina4 deploy:systemd                 # Generate systemd service file
 tina4 deploy:nginx                   # Generate Nginx config
 ```
@@ -791,7 +791,7 @@ source ~/.zshrc
 
 ### 3. Generated Files Overwrite Existing Code
 
-**Problem:** Running `tina4 generate:route products` overwrites your custom route file.
+**Problem:** Running `tina4 generate route products` overwrites your custom route file.
 
 **Cause:** The generate command creates files at fixed paths.
 
@@ -803,11 +803,11 @@ source ~/.zshrc
 
 **Cause:** Migration files run in alphabetical (timestamp) order. If migration B depends on a table created by migration A, but A has a later timestamp, B runs first and fails.
 
-**Fix:** Use consistent timestamps. The `tina4 generate:migration` command uses the current timestamp. Generate migrations in order to ensure correct execution. If you need to fix ordering, rename the migration files to adjust their timestamps.
+**Fix:** Use consistent timestamps. The `tina4 generate migration` command uses the current timestamp. Generate migrations in order to ensure correct execution. If you need to fix ordering, rename the migration files to adjust their timestamps.
 
 ### 5. tina4 serve Uses Wrong Port
 
-**Problem:** `tina4 serve` starts on port 7145 but you need port 8080.
+**Problem:** `tina4 serve` starts on port 7147 but you need port 8080.
 
 **Cause:** The default port for Ruby is 7147 unless overridden.
 
@@ -823,15 +823,15 @@ source ~/.zshrc
 
 ### 7. Model Name Must Be PascalCase
 
-**Problem:** `tina4 generate:model order_item` creates a model class named `order_item` which is not valid Ruby convention.
+**Problem:** `tina4 generate model order_item` creates a model class named `order_item` which is not valid Ruby convention.
 
 **Cause:** The CLI uses the argument as-is for the class name.
 
-**Fix:** Use PascalCase for model names: `tina4 generate:model OrderItem`. The CLI converts it to snake_case for the table name (`order_items`).
+**Fix:** Use PascalCase for model names: `tina4 generate model OrderItem`. The CLI converts it to snake_case for the table name (`order_items`).
 
 ### 8. build:css Fails
 
-**Problem:** `tina4 build:css` fails with "sass not found".
+**Problem:** `tina4 scss` fails with "sass not found".
 
 **Cause:** The Sass compiler is not installed.
 
@@ -843,7 +843,7 @@ source ~/.zshrc
 
 **Cause:** The CLI cannot detect the language without a `Gemfile`.
 
-**Fix:** Make sure your project has a `Gemfile` so the CLI detects Ruby. Or use `tina4 deploy:docker --lang ruby`.
+**Fix:** Make sure your project has a `Gemfile` so the CLI detects Ruby. Or use `tina4 deploy docker --lang ruby`.
 
 ---
 

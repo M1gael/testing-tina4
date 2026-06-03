@@ -18,7 +18,7 @@ Router::get("/echo", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/echo
+curl http://localhost:7145/echo
 ```
 
 ```json
@@ -158,7 +158,7 @@ Router::post("/debug/request", function ($request, $response) {
 ```
 
 ```bash
-curl -X POST "http://localhost:7146/debug/request?page=1" \
+curl -X POST "http://localhost:7145/debug/request?page=1" \
   -H "Content-Type: application/json" \
   -H "X-Custom: hello" \
   -d '{"name": "test"}'
@@ -174,7 +174,7 @@ curl -X POST "http://localhost:7146/debug/request?page=1" \
   "headers": {
     "content-type": "application/json",
     "x-custom": "hello",
-    "host": "localhost:7146",
+    "host": "localhost:7145",
     "user-agent": "curl/8.4.0",
     "accept": "*/*",
     "content-length": "16"
@@ -379,7 +379,7 @@ Router::get("/api/data", function ($request, $response) {
 ```
 
 ```bash
-curl -v http://localhost:7146/api/data 2>&1 | grep "< X-"
+curl -v http://localhost:7145/api/data 2>&1 | grep "< X-"
 ```
 
 ```
@@ -481,16 +481,16 @@ Router::post("/api/upload", function ($request, $response) {
     $file = $request->files["image"];
 
     return $response->json([
-        "name" => $file->name,        // "photo.jpg"
-        "type" => $file->type,        // "image/jpeg"
-        "size" => $file->size,        // 245760 (bytes)
-        "tmp_path" => $file->tmpPath  // Temporary file location
+        "name" => $file["filename"],        // "photo.jpg"
+        "type" => $file["type"],        // "image/jpeg"
+        "size" => $file["size"],        // 245760 (bytes)
+        "tmp_path" => $file["tmp_name"]  // Temporary file location
     ]);
 });
 ```
 
 ```bash
-curl -X POST http://localhost:7146/api/upload \
+curl -X POST http://localhost:7145/api/upload \
   -F "image=@/path/to/photo.jpg"
 ```
 
@@ -520,18 +520,18 @@ Router::post("/api/upload", function ($request, $response) {
 
     // Validate file type
     $allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-    if (!in_array($file->type, $allowedTypes)) {
+    if (!in_array($file["type"], $allowedTypes)) {
         return $response->json(["error" => "Invalid file type. Allowed: JPEG, PNG, GIF, WebP"], 400);
     }
 
     // Validate file size (max 5MB)
     $maxSize = 5 * 1024 * 1024;
-    if ($file->size > $maxSize) {
+    if ($file["size"] > $maxSize) {
         return $response->json(["error" => "File too large. Maximum size: 5MB"], 400);
     }
 
     // Generate a unique filename
-    $extension = pathinfo($file->name, PATHINFO_EXTENSION);
+    $extension = pathinfo($file["filename"], PATHINFO_EXTENSION);
     $filename = uniqid("img_") . "." . $extension;
     $destination = __DIR__ . "/../../public/uploads/" . $filename;
 
@@ -541,19 +541,19 @@ Router::post("/api/upload", function ($request, $response) {
     }
 
     // Move the file
-    rename($file->tmpPath, $destination);
+    rename($file["tmp_name"], $destination);
 
     return $response->json([
         "message" => "File uploaded successfully",
         "filename" => $filename,
         "url" => "/uploads/" . $filename,
-        "size" => $file->size
+        "size" => $file["size"]
     ], 201);
 });
 ```
 
 ```bash
-curl -X POST http://localhost:7146/api/upload \
+curl -X POST http://localhost:7145/api/upload \
   -F "image=@/path/to/photo.jpg"
 ```
 
@@ -566,7 +566,7 @@ curl -X POST http://localhost:7146/api/upload \
 }
 ```
 
-The file is now available at `http://localhost:7146/uploads/img_65f3a7b8c1234.jpg`.
+The file is now available at `http://localhost:7145/uploads/img_65f3a7b8c1234.jpg`.
 
 ### Handling Multiple Files
 
@@ -577,7 +577,7 @@ Router::post("/api/upload-many", function ($request, $response) {
     $results = [];
 
     foreach ($request->files as $key => $file) {
-        $extension = pathinfo($file->name, PATHINFO_EXTENSION);
+        $extension = pathinfo($file["filename"], PATHINFO_EXTENSION);
         $filename = uniqid("file_") . "." . $extension;
         $destination = __DIR__ . "/../../public/uploads/" . $filename;
 
@@ -585,10 +585,10 @@ Router::post("/api/upload-many", function ($request, $response) {
             mkdir(dirname($destination), 0755, true);
         }
 
-        rename($file->tmpPath, $destination);
+        rename($file["tmp_name"], $destination);
 
         $results[] = [
-            "original_name" => $file->name,
+            "original_name" => $file["filename"],
             "saved_as" => $filename,
             "url" => "/uploads/" . $filename
         ];
@@ -664,7 +664,7 @@ Router::get("/api/products/{id:int}", function ($request, $response) {
 
 ```bash
 # JSON (default)
-curl http://localhost:7146/api/products/1
+curl http://localhost:7145/api/products/1
 ```
 
 ```json
@@ -673,7 +673,7 @@ curl http://localhost:7146/api/products/1
 
 ```bash
 # Plain text
-curl http://localhost:7146/api/products/1 -H "Accept: text/plain"
+curl http://localhost:7145/api/products/1 -H "Accept: text/plain"
 ```
 
 ```
@@ -682,7 +682,7 @@ Product #1: Wireless Keyboard - $79.99
 
 ```bash
 # HTML (renders the template)
-curl http://localhost:7146/api/products/1 -H "Accept: text/html"
+curl http://localhost:7145/api/products/1 -H "Accept: text/html"
 ```
 
 ```html
@@ -694,7 +694,7 @@ curl http://localhost:7146/api/products/1 -H "Accept: text/html"
 
 ## 10. Input Validation
 
-Tina4 ships a `Validator` class for declarative input validation. Chain rules. Check the result. When validation fails, `$response->sendError()` returns a structured error envelope.
+Tina4 ships a `Validator` class for declarative input validation. Chain rules. Check the result. When validation fails, `$response->error()` returns a structured error envelope.
 
 ### The Validator Class
 
@@ -706,7 +706,7 @@ Router::post("/api/users", function ($request, $response) {
     $v->required("name")->required("email")->email("email")->minLength("name", 2);
 
     if (!$v->isValid()) {
-        return $response->sendError("VALIDATION_FAILED", $v->errors()[0]["message"], 400);
+        return $response->error("VALIDATION_FAILED", $v->errors()[0]["message"], 400);
     }
 
     // proceed with valid data
@@ -728,10 +728,10 @@ Call `$v->isValid()` to check all rules. Call `$v->errors()` to get the list of 
 
 ### The Error Response Envelope
 
-`$response->sendError()` returns a consistent JSON error envelope:
+`$response->error()` returns a consistent JSON error envelope:
 
 ```php
-return $response->sendError("VALIDATION_FAILED", "Name is required", 400);
+return $response->error("VALIDATION_FAILED", "Name is required", 400);
 ```
 
 This produces:
@@ -783,11 +783,11 @@ Rules:
 
 ```bash
 # Upload
-curl -X POST http://localhost:7146/api/images \
+curl -X POST http://localhost:7145/api/images \
   -F "image=@/path/to/photo.jpg"
 
 # Download
-curl http://localhost:7146/api/images/img_65f3a7b8c1234.jpg --output downloaded.jpg
+curl http://localhost:7145/api/images/img_65f3a7b8c1234.jpg --output downloaded.jpg
 ```
 
 ---
@@ -810,26 +810,26 @@ Router::post("/api/images", function ($request, $response) {
 
     // Validate file type
     $allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!in_array($file->type, $allowedTypes)) {
+    if (!in_array($file["type"], $allowedTypes)) {
         return $response->json([
             "error" => "Invalid file type",
-            "received" => $file->type,
+            "received" => $file["type"],
             "allowed" => $allowedTypes
         ], 400);
     }
 
     // Validate file size (max 2MB)
     $maxSize = 2 * 1024 * 1024;
-    if ($file->size > $maxSize) {
+    if ($file["size"] > $maxSize) {
         return $response->json([
             "error" => "File too large",
-            "size_bytes" => $file->size,
+            "size_bytes" => $file["size"],
             "max_bytes" => $maxSize
         ], 400);
     }
 
     // Generate unique filename preserving extension
-    $extension = pathinfo($file->name, PATHINFO_EXTENSION);
+    $extension = pathinfo($file["filename"], PATHINFO_EXTENSION);
     $savedName = uniqid("img_") . "." . strtolower($extension);
     $uploadDir = __DIR__ . "/../../public/uploads";
     $destination = $uploadDir . "/" . $savedName;
@@ -840,14 +840,14 @@ Router::post("/api/images", function ($request, $response) {
     }
 
     // Move the uploaded file
-    rename($file->tmpPath, $destination);
+    rename($file["tmp_name"], $destination);
 
     return $response->json([
         "message" => "Image uploaded successfully",
-        "original_name" => $file->name,
+        "original_name" => $file["filename"],
         "saved_name" => $savedName,
-        "size_kb" => round($file->size / 1024, 1),
-        "type" => $file->type,
+        "size_kb" => round($file["size"] / 1024, 1),
+        "type" => $file["type"],
         "url" => "/uploads/" . $savedName
     ], 201);
 });
@@ -969,8 +969,8 @@ Router::get("/api/images/{filename}", function ($request, $response) {
 
 **Cause:** Request body exceeds the configured maximum.
 
-**Fix:** Increase `TINA4_MAX_BODY_SIZE` in `.env`. Default is `10mb`. For file upload endpoints, you may need `50mb` or more:
+**Fix:** Increase `TINA4_MAX_UPLOAD_SIZE` in `.env`. Default is `10mb`. For file upload endpoints, you may need `50mb` or more:
 
 ```bash
-TINA4_MAX_BODY_SIZE=50mb
+TINA4_MAX_UPLOAD_SIZE=50mb
 ```

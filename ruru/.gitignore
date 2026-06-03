@@ -1,7 +1,0 @@
-.bundle/
-vendor/
-data/
-logs/
-.env
-Gemfile.lock
-.keys/

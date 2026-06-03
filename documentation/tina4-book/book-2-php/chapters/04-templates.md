@@ -106,7 +106,7 @@ The `~` operator concatenates strings.
 
 ## 3. Template Inheritance
 
-The most powerful feature. Define a base layout once. Extend it everywhere.
+The headline feature. Define a base layout once. Extend it everywhere.
 
 ### Base Layout
 
@@ -797,9 +797,9 @@ $products = [
 ### Test with:
 
 ```
-http://localhost:7146/catalog
-http://localhost:7146/catalog?category=Kitchen
-http://localhost:7146/catalog?category=Fitness
+http://localhost:7145/catalog
+http://localhost:7145/catalog?category=Kitchen
+http://localhost:7145/catalog?category=Fitness
 ```
 
 ---

@@ -71,7 +71,7 @@ Router::get("/visit-counter", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/visit-counter -c cookies.txt -b cookies.txt
+curl http://localhost:7145/visit-counter -c cookies.txt -b cookies.txt
 ```
 
 ```json
@@ -79,7 +79,7 @@ curl http://localhost:7146/visit-counter -c cookies.txt -b cookies.txt
 ```
 
 ```bash
-curl http://localhost:7146/visit-counter -c cookies.txt -b cookies.txt
+curl http://localhost:7145/visit-counter -c cookies.txt -b cookies.txt
 ```
 
 ```json
@@ -87,7 +87,7 @@ curl http://localhost:7146/visit-counter -c cookies.txt -b cookies.txt
 ```
 
 ```bash
-curl http://localhost:7146/visit-counter -c cookies.txt -b cookies.txt
+curl http://localhost:7145/visit-counter -c cookies.txt -b cookies.txt
 ```
 
 ```json
@@ -106,9 +106,9 @@ Multiple servers behind a load balancer need a shared session store. Redis is th
 
 ```bash
 TINA4_SESSION_BACKEND=redis
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
-TINA4_SESSION_PASSWORD=your-redis-password
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
+TINA4_SESSION_REDIS_PASSWORD=your-redis-password
 ```
 
 That is the only change. Your code stays identical. `$request->session` works the same whether backed by files, Redis, MongoDB, or Valkey. The storage backend is invisible to your handlers.
@@ -126,9 +126,9 @@ Sharing a Redis instance with other applications:
 
 ```bash
 TINA4_SESSION_BACKEND=redis
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
-TINA4_SESSION_PREFIX=myapp:sess:
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
+TINA4_SESSION_REDIS_PREFIX=myapp:sess:
 ```
 
 ---
@@ -139,10 +139,10 @@ Already running MongoDB:
 
 ```bash
 TINA4_SESSION_BACKEND=mongodb
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=27017
-TINA4_SESSION_DATABASE=myapp
-TINA4_SESSION_COLLECTION=sessions
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=27017
+TINA4_SESSION_MONGO_DB=myapp
+TINA4_SESSION_MONGO_COLLECTION=sessions
 ```
 
 TTL indexes handle expired session cleanup.
@@ -155,8 +155,8 @@ Valkey is the open-source Redis fork. Wire-compatible. Same client library:
 
 ```bash
 TINA4_SESSION_BACKEND=valkey
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
 ```
 
 ---
@@ -167,7 +167,7 @@ TINA4_SESSION_PORT=6379
 TINA4_SESSION_BACKEND=database
 ```
 
-Stores sessions in the `tina4_session` table using your existing database connection (`DATABASE_URL`). The table is auto-created on first use. Works with all 5 database engines (SQLite, PostgreSQL, MySQL, MSSQL, Firebird).
+Stores sessions in the `tina4_session` table using your existing database connection (`TINA4_DATABASE_URL`). The table is auto-created on first use. Works with all 5 database engines (SQLite, PostgreSQL, MySQL, MSSQL, Firebird).
 
 ---
 
@@ -568,37 +568,37 @@ A cart stored entirely in session data. No database.
 
 ```bash
 # Add first item
-curl -X POST http://localhost:7146/api/cart/add \
+curl -X POST http://localhost:7145/api/cart/add \
   -H "Content-Type: application/json" \
   -d '{"product_id": 1, "name": "Wireless Keyboard", "price": 79.99, "quantity": 1}' \
   -c cookies.txt -b cookies.txt
 
 # Add second item
-curl -X POST http://localhost:7146/api/cart/add \
+curl -X POST http://localhost:7145/api/cart/add \
   -H "Content-Type: application/json" \
   -d '{"product_id": 2, "name": "USB-C Hub", "price": 49.99, "quantity": 2}' \
   -c cookies.txt -b cookies.txt
 
 # Add more of item 1 (increments, no duplicate)
-curl -X POST http://localhost:7146/api/cart/add \
+curl -X POST http://localhost:7145/api/cart/add \
   -H "Content-Type: application/json" \
   -d '{"product_id": 1, "name": "Wireless Keyboard", "price": 79.99, "quantity": 1}' \
   -c cookies.txt -b cookies.txt
 
 # View cart
-curl http://localhost:7146/api/cart -b cookies.txt
+curl http://localhost:7145/api/cart -b cookies.txt
 
 # Update quantity
-curl -X PUT http://localhost:7146/api/cart/2 \
+curl -X PUT http://localhost:7145/api/cart/2 \
   -H "Content-Type: application/json" \
   -d '{"quantity": 5}' \
   -c cookies.txt -b cookies.txt
 
 # Remove item
-curl -X DELETE http://localhost:7146/api/cart/1 -b cookies.txt -c cookies.txt
+curl -X DELETE http://localhost:7145/api/cart/1 -b cookies.txt -c cookies.txt
 
 # Clear cart
-curl -X DELETE http://localhost:7146/api/cart -b cookies.txt -c cookies.txt
+curl -X DELETE http://localhost:7145/api/cart -b cookies.txt -c cookies.txt
 ```
 
 ---

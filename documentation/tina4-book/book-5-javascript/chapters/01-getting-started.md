@@ -55,41 +55,28 @@ npm --version
 
 ## 3. Create a Project
 
-Two ways to scaffold. Pick whichever you have installed:
-
-**Option A: Using the Tina4 CLI** (if you have `tina4` installed):
+The primary way to scaffold is the Tina4 Rust CLI:
 
 ```bash
-tina4 init tina4js my-app
-```
-
-**Option B: Using npx** (no global install needed):
-
-```bash
-npx tina4js create my-app
+tina4 init js my-app
 ```
 
 This scaffolds a complete project with TypeScript, Vite, routing, and a sample page.
 
-Want the optional CSS framework included? Add the `--css` flag:
+> **The `tina4` Rust CLI is the unified installer across all Tina4 frameworks**
+> (Python, PHP, Ruby, Node.js, JS). For npm-only environments where the
+> CLI isn't available, every command has an `npx tina4js …` fallback -- for
+> example `npx tina4js create my-app` is equivalent to `tina4 init js my-app`.
+
+Want the optional CSS framework included? The Rust CLI does not yet accept a `--css` flag on `init`, so scaffold first and then add the dependency:
 
 ```bash
-npx tina4js create my-app --css
+tina4 init js my-app
 ```
 
-This adds `tina4-css` to your dependencies -- a utility CSS library with reset, grid, buttons, forms, tables, cards, and dark mode built in. More on this in Chapter 10.
+To add Tina4 CSS, edit `package.json` to add the `tina4-css` dependency, or use the fallback `npx tina4js create my-app --css` which accepts the flag directly. This adds `tina4-css` to your dependencies -- a utility CSS library with reset, grid, buttons, forms, tables, cards, and dark mode built in. More on this in Chapter 10.
 
-Want PWA support from the start? Add `--pwa`:
-
-```bash
-npx tina4js create my-app --pwa
-```
-
-You can combine them:
-
-```bash
-npx tina4js create my-app --css --pwa
-```
+Want PWA support from the start? The Rust CLI also does not yet expose a `--pwa` flag on `init`. Scaffold with `tina4 init js my-app` and enable PWA manually (see Chapter 9), or use the fallback `npx tina4js create my-app --pwa` to get the PWA preset directly. You can combine the flags on the fallback: `npx tina4js create my-app --css --pwa`.
 
 Now install and run:
 
@@ -134,6 +121,45 @@ The structure is intentional:
 - **`src/public/`** -- Static assets (CSS, images, fonts).
 
 This is a convention, not a requirement. tina4-js does not care where your files live. But this structure scales. Every tina4-js project looks the same, which matters when you onboard new team members or let AI generate code. Consistency compounds.
+
+### The `@/` Import Alias
+
+The scaffold wires up an `@` alias pointing at `src/`, so you import by absolute path instead of counting `../` hops:
+
+```typescript
+// Without the alias — brittle, breaks when you move the file
+import { homePage } from '../pages/home';
+import { user } from '../../store';
+
+// With the alias — always anchored at src/, move files freely
+import { homePage } from '@/pages/home';
+import { user } from '@/store';
+```
+
+It is configured in two places, and **both must agree** — TypeScript uses `tsconfig.json` for editor go-to-definition and type-checking; Vite uses `vite.config.ts` for the actual build:
+
+```jsonc
+// tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": { "@/*": ["src/*"] }
+  }
+}
+```
+
+```typescript
+// vite.config.ts
+import { resolve } from 'path';
+
+export default defineConfig({
+  resolve: {
+    alias: { '@': resolve(__dirname, 'src') },
+  },
+});
+```
+
+`tina4 init js` writes both for you — new projects get `@/` imports out of the box. If you scaffolded before this was the default, add the two blocks above and you're set.
 
 ---
 
@@ -325,9 +351,9 @@ The rest of this book goes deep on each of these. But you already have a working
 
 | What | How |
 |---|---|
-| Create project | `npx tina4js create my-app` |
-| With CSS framework | `npx tina4js create my-app --css` |
-| With PWA | `npx tina4js create my-app --pwa` |
+| Create project | `tina4 init js my-app` (fallback: `npx tina4js create my-app`) |
+| With CSS framework | `tina4 init js my-app` + add `tina4-css` dep (fallback: `npx tina4js create my-app --css`) |
+| With PWA | `tina4 init js my-app` + enable PWA manually (fallback: `npx tina4js create my-app --pwa`) |
 | Dev server | `npm run dev` |
 | Production build | `npm run build` |
 | Reactive state | `signal(initialValue)` |

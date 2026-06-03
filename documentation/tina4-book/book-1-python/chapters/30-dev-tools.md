@@ -19,7 +19,7 @@ TINA4_DEBUG=true
 Restart your server and navigate to:
 
 ```
-http://localhost:7145/__dev
+http://localhost:7146/__dev
 ```
 
 No token or additional environment variables needed. The dashboard runs only when debug mode is on. Set `TINA4_DEBUG=false` in production and the entire dashboard disappears.
@@ -153,35 +153,43 @@ Click "Try It" on any gallery item. Tina4 creates the necessary files in your pr
 
 ## 7. Live Reload
 
-When `TINA4_DEBUG=true`, Tina4 watches your project files for changes and reloads the server. Edit a route file. Save it. The browser refreshes with the new code. No manual restart required.
+When `TINA4_DEBUG=true`, Tina4 watches your project files for changes and refreshes the browser automatically. Edit a route file. Save it. The browser refreshes with the new code. No manual restart required.
 
 ```bash
 tina4 serve
 ```
 
 ```
-  Tina4 Python v3.0.0
-  HTTP server running at http://0.0.0.0:7145
-  Live reload enabled -- watching for changes
+  Tina4 Python v3.11.12
+  HTTP server running at http://0.0.0.0:7146
+  File watcher active — press Ctrl+C to stop
 ```
 
 Live reload watches:
 
-- `src/routes/*.py` -- Route definitions
-- `src/orm/*.py` -- ORM models
-- `src/middleware/*.py` -- Middleware
-- `src/templates/*.html` -- Templates (browser refresh only, no server restart)
+- `src/**` -- Routes, ORM, middleware, templates, SCSS
+- `migrations/` -- SQL migrations
 - `.env` -- Environment variables
 
 ### How It Works
 
-Tina4 uses file system monitoring to detect changes. When a Python file changes, the server restarts. When a template changes, only the browser refreshes (no server restart needed).
+The `tina4` Rust CLI is the sole file watcher for the whole Tina4 stack — Python, PHP, Ruby, and Node.js all share it. There is no framework-side watcher (the old `dev_reload.py` was removed in 3.11.x).
+
+```
+ ┌────────────┐  POST /__dev/api/reload   ┌────────────┐   WS /__dev_reload    ┌─────────┐
+ │ tina4 CLI  │ ─────────────────────────►│ Framework  │ ─────────────────────►│ Browser │
+ │ (watcher)  │                           │ (server)   │   fallback: poll      │         │
+ └────────────┘                           └────────────┘   GET /__dev/api/mtime└─────────┘
+```
+
+1. The CLI watches `src/`, `migrations/`, `.env` using the `notify` crate. Events are filtered to real source changes — metadata/access events, `__pycache__`, `.git`, `node_modules`, `logs`, `.log`/`.db*`/`.pyc`/`.swp` files are ignored. A real mtime check also defeats overlayfs / polling-mode spurious events (Podman, distrobox).
+2. On a real change, the CLI POSTs `/__dev/api/reload` to the framework. The server keeps running.
+3. The framework bumps an in-memory reload counter and broadcasts `{type: "reload"}` over WebSocket at `/__dev_reload`. `GET /__dev/api/mtime` returns the counter for browsers using the polling fallback.
+4. The dev-toolbar script in your page reloads the browser. SCSS/CSS changes are signalled as `type: "css"` and swap the stylesheet without a full reload.
 
 The reload happens in under a second. Edit code. Switch to the browser. The changes are already there.
 
-### Browser Auto-Refresh (DevReload)
-
-When `TINA4_DEBUG=true`, Tina4 Python refreshes the browser when source files change. Save a file and the browser updates on its own. This matches the behavior of the PHP, Ruby, and Node.js implementations.
+If you run without the Rust CLI (e.g. Docker), set `TINA4_OVERRIDE_CLIENT=true` — there is no automatic reload in that mode.
 
 ---
 
@@ -208,7 +216,7 @@ tina4 serve --hot
 
 ```
   Tina4 Python v3.0.0
-  HTTP server running at http://0.0.0.0:7145
+  HTTP server running at http://0.0.0.0:7146
   Hot-patching enabled (jurigged)
 ```
 
@@ -380,7 +388,7 @@ async def buggy_create_user(request, response):
 
 ### Requirements
 
-1. Open the dev dashboard at `http://localhost:7145/__dev`
+1. Open the dev dashboard at `http://localhost:7146/__dev`
 2. Hit the `GET /api/buggy/users` endpoint and find Bug 1 using the error overlay
 3. Hit the `POST /api/buggy/users` endpoint without a body and find Bug 2 using the request inspector
 4. Fix all three bugs:
@@ -482,9 +490,9 @@ The dev tools made each bug visible. The error overlay showed the SQL syntax err
 
 **Problem:** You edited a template but the page still shows the old version.
 
-**Cause:** Template caching is enabled (`TINA4_CACHE_TEMPLATES=true`). The compiled template serves from cache.
+**Cause:** Template caching is enabled (`TINA4_TEMPLATE_CACHE_TTL=true`). The compiled template serves from cache.
 
-**Fix:** In development, set `TINA4_CACHE_TEMPLATES=false` (this is the default when `TINA4_DEBUG=true`). If you enabled template caching manually, disable it for development.
+**Fix:** In development, set `TINA4_TEMPLATE_CACHE_TTL=false` (this is the default when `TINA4_DEBUG=true`). If you enabled template caching manually, disable it for development.
 
 ### 8. Queue Monitor Shows No Jobs
 
@@ -492,4 +500,4 @@ The dev tools made each bug visible. The error overlay showed the SQL syntax err
 
 **Cause:** The queue system is not running. Jobs are enqueued but no worker processes them.
 
-**Fix:** Start a queue worker: `tina4 serve --worker`. The queue monitor reflects the state of the queue storage (database or Redis). If no worker is running, jobs sit in "Pending" and never move to "Active" or "Completed."
+**Fix:** Start a queue worker: `tina4 queue work`. The queue monitor reflects the state of the queue storage (database or Redis). If no worker is running, jobs sit in "Pending" and never move to "Active" or "Completed."

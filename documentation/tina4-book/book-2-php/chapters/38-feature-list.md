@@ -71,7 +71,7 @@ Zero-config development server. Start with one command.
 
 ```bash
 tina4 serve
-# Listening on http://localhost:7146
+# Listening on http://localhost:7145
 ```
 
 ### 7. Request Object
@@ -125,7 +125,7 @@ TINA4_CORS_METHODS=GET,POST,PUT,DELETE
 Built-in `GET /__health`. Returns `{"status":"ok"}`. Ready for load balancer checks.
 
 ```bash
-curl http://localhost:7146/__health
+curl http://localhost:7145/__health
 # {"status":"ok","version":"3.10.55"}
 ```
 
@@ -520,7 +520,7 @@ File, database, Redis, Valkey, and MongoDB backends.
 
 ```bash
 TINA4_SESSION_HANDLER=redis
-TINA4_SESSION_HOST=localhost
+TINA4_SESSION_REDIS_HOST=localhost
 TINA4_SESSION_TTL=3600
 ```
 
@@ -546,7 +546,7 @@ tina4 migrate --rollback
 ```
 
 ```php
-// src/migrations/0001_create_products.php
+// migrations/0001_create_products.php
 return [
     'up'   => "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL)",
     'down' => "DROP TABLE products"
@@ -600,7 +600,7 @@ Debug::message("Payment failed", TINA4_LOG_ERROR, [
 use Tina4\Container;
 
 $container = new Container();
-$container->singleton('db', fn() => new \Tina4\Database(getenv('DATABASE_URL')));
+$container->singleton('db', fn() => new \Tina4\Database(getenv('TINA4_DATABASE_URL')));
 $db = $container->get('db');
 ```
 

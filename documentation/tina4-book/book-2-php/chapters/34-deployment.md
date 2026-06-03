@@ -23,16 +23,15 @@ TINA4_LOG_LEVEL=WARNING
 TINA4_PORT=7145
 
 # Database
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 
 # Security
-CORS_ORIGINS=https://yourdomain.com
-JWT_SECRET=your-long-random-secret-at-least-32-characters
+TINA4_CORS_ORIGINS=https://yourdomain.com
+TINA4_SECRET=your-long-random-secret-at-least-32-characters
 TINA4_RATE_LIMIT=120
 
 # Performance
-TINA4_CACHE_TEMPLATES=true
-TINA4_MINIFY_HTML=true
+TINA4_TEMPLATE_CACHE_TTL=true
 
 ```
 
@@ -43,8 +42,6 @@ TINA4_MINIFY_HTML=true
 | `TINA4_DEBUG` | `true` | `false` | Hides stack traces, disables toolbar |
 | `TINA4_LOG_LEVEL` | `ALL` | `WARNING` | Reduces log noise |
 | `CORS_ORIGINS` | `*` | Your domain | Prevents cross-origin abuse |
-| `TINA4_CACHE_TEMPLATES` | `false` | `true` | Caches compiled templates |
-| `TINA4_MINIFY_HTML` | `false` | `true` | Reduces response size |
 
 ### Sensitive Values
 
@@ -52,7 +49,7 @@ Production secrets never go into version control. The `.env` file is gitignored 
 
 ```bash
 # Docker: pass env vars at runtime
-docker run -e JWT_SECRET=your-secret -e DATABASE_URL=sqlite:///data/app.db my-app
+docker run -e JWT_SECRET=your-secret -e TINA4_DATABASE_URL=sqlite:///data/app.db my-app
 
 # Fly.io: set secrets
 fly secrets set JWT_SECRET=your-secret
@@ -311,7 +308,7 @@ services:
       - TINA4_DEBUG=false
       - TINA4_LOG_LEVEL=WARNING
       - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
     volumes:
       - app-data:/app/data
     restart: unless-stopped
@@ -356,7 +353,7 @@ pm.min_spare_servers = 5
 pm.max_spare_servers = 35
 pm.max_requests = 1000
 
-env[DATABASE_URL] = sqlite:///var/www/tina4-app/data/app.db
+env[TINA4_DATABASE_URL] = sqlite:///var/www/tina4-app/data/app.db
 env[JWT_SECRET] = your-production-secret
 env[TINA4_DEBUG] = false
 env[TINA4_LOG_LEVEL] = WARNING
@@ -689,7 +686,6 @@ volumes:
 FrankenPHP runs multiple worker threads by default. Configure the count in `.env`:
 
 ```bash
-TINA4_WORKERS=4
 ```
 
 A good starting point is the number of CPU cores on your server. For I/O-heavy applications (database queries, API calls), you can go higher -- 2x to 4x the core count.
@@ -890,9 +886,9 @@ services:
     environment:
       - TINA4_DEBUG=false
       - TINA4_LOG_LEVEL=WARNING
-      - TINA4_CACHE_TEMPLATES=true
+      - TINA4_TEMPLATE_CACHE_TTL=true
       - JWT_SECRET=change-this-to-a-real-secret
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
       - CORS_ORIGINS=http://localhost:7145
     volumes:
       - app-data:/app/data
@@ -908,10 +904,9 @@ volumes:
 ```bash
 TINA4_DEBUG=false
 TINA4_LOG_LEVEL=WARNING
-TINA4_CACHE_TEMPLATES=true
-TINA4_MINIFY_HTML=true
+TINA4_TEMPLATE_CACHE_TTL=true
 TINA4_RATE_LIMIT=120
-CORS_ORIGINS=https://yourdomain.com
+TINA4_CORS_ORIGINS=https://yourdomain.com
 ```
 
 **Expected output for health check:**
@@ -952,7 +947,7 @@ CORS_ORIGINS=https://yourdomain.com
 **Fix:** For low-to-medium traffic (under 100 concurrent users), SQLite works fine. For higher traffic, switch to PostgreSQL or MySQL:
 
 ```bash
-DATABASE_URL=postgres://user:pass@localhost:5432/myapp
+TINA4_DATABASE_URL=postgres://user:pass@localhost:5432/myapp
 ```
 
 If you must use SQLite under load, enable WAL mode by adding this to your application startup:
@@ -1027,7 +1022,7 @@ The `start-period` tells Docker to ignore health check failures during the first
 **Fix:** Set `CORS_ORIGINS` to include all domains that need access:
 
 ```bash
-CORS_ORIGINS=https://yourdomain.com,https://admin.yourdomain.com
+TINA4_CORS_ORIGINS=https://yourdomain.com,https://admin.yourdomain.com
 ```
 
 ### 7. SSL Certificate Not Renewing

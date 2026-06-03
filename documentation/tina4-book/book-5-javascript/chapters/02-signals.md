@@ -31,6 +31,30 @@ That is the entire API for basic signals. `.value` to read. `.value =` to write.
 
 When you write a new value, every subscriber -- effects, computed signals, DOM bindings -- fires. Not eventually. Not on the next tick. Synchronously, right now.
 
+### The Three Forms — Read This Before Anything Else
+
+This is the rule that decides whether your UI updates. Everything else in this chapter is detail; this is the part you cannot skip. When you put a signal into an `html` template, there are **three forms**, and they are not interchangeable:
+
+```typescript
+const count = signal(0);
+
+html`<p>${count}</p>`              // ✅ REACTIVE — pass the signal itself
+html`<p>${() => count.value * 2}</p>`  // ✅ REACTIVE — wrap an expression in a function
+html`<p>${count.value}</p>`        // ❌ STATIC — renders "0" once, never updates again
+```
+
+| You write | The template receives | Behaviour |
+|-----------|----------------------|-----------|
+| `${count}` | the signal object | Reactive text node — updates on every change |
+| `${() => count.value > 5}` | a function | Reactive block — re-runs on change; use for expressions, conditionals, lists |
+| `${count.value}` | a plain number | Static — evaluated once, frozen forever |
+
+Why? `${count.value}` is evaluated by JavaScript **before** the template ever sees it. The template gets the number `0` — a dead value with no way to know when `count` changes. `${count}` hands the template the live signal, so it can subscribe. `${() => ...}` hands it a function it can re-run.
+
+**If your UI renders once and never updates, you almost certainly wrote `${signal.value}` where you needed `${signal}` or `${() => ...}`.** This one mistake accounts for the large majority of "my signal isn't working" reports. Burn the three forms into memory now and the rest of this chapter is easy.
+
+> The same split shows up in attributes and properties — `${signal}` is reactive, `${signal.value}` is frozen — covered fully in the next chapter. The principle never changes: **pass the signal, or pass a function. Never pass `.value` into a template.**
+
 ---
 
 ## 2. Why Object.is() Matters
@@ -257,7 +281,88 @@ This is useful for:
 
 ---
 
-## 7. Debug Labels
+## 7. Sharing Signals Across Files -- The Store Pattern
+
+A signal created in one component file is local to that file. To share state across your app -- the logged-in user, the shopping cart, the theme -- you put signals in their own module and import them wherever you need them. That module is your store. There is no `createStore()`, no provider, no context wrapper. **A signal that is exported from a module IS global state.**
+
+### One file, all your app-wide signals
+
+```typescript
+// src/store.ts
+import { signal, computed } from 'tina4js';
+
+// ── Auth ──────────────────────────────────────────────
+export const user      = signal<User | null>(null);
+export const authToken = signal('');
+
+// ── Cart ──────────────────────────────────────────────
+export const cart = signal<CartItem[]>([]);
+
+// ── UI state ──────────────────────────────────────────
+export const theme   = signal<'light' | 'dark'>('light');
+export const sidebar = signal(false);
+
+// ── Derived state -- computed signals belong here too ─
+export const isLoggedIn = computed(() => user.value !== null);
+export const cartCount  = computed(() => cart.value.length);
+export const cartTotal  = computed(() =>
+    cart.value.reduce((sum, i) => sum + i.price * i.qty, 0)
+);
+```
+
+That is the entire store. Every `export const` is a piece of global state. Computed signals go here too -- derived state your whole app reads.
+
+### Import and read in any component
+
+```typescript
+// src/components/Navbar.ts
+import { html } from 'tina4js';
+import { user, isLoggedIn, cartCount } from '../store';
+
+export const Navbar = () => html`
+    <nav>
+        <a href="/cart">Cart (${cartCount})</a>
+        ${() => isLoggedIn.value
+            ? html`<span>Hi, ${user}</span>`
+            : html`<a href="/login">Log in</a>`}
+    </nav>`;
+```
+
+### Import and write from a different component
+
+```typescript
+// src/components/ProductCard.ts
+import { html } from 'tina4js';
+import { cart } from '../store';
+
+export const ProductCard = (product: Product) => html`
+    <button @click=${() => {
+        cart.value = [...cart.value, { ...product, qty: 1 }];
+    }}>Add to cart</button>`;
+```
+
+`ProductCard` writes `cart.value`. `Navbar` read `cartCount` (which reads `cart`). The `Cart (N)` text node updates -- across two files, automatically.
+
+### Why it works
+
+ES modules are singletons. Every file that does `import { cart } from '../store'` gets a reference to the **exact same signal object** -- the module is evaluated once and cached. Write to it from anywhere, every reader updates. That is your entire state-management layer.
+
+### The rules
+
+| Do | Don't |
+|----|-------|
+| Keep app-wide signals in `src/store.ts` | Scatter `signal()` calls across component files |
+| `import { cart } from '../store'` everywhere | `const myCart = signal(cart.value)` -- that is a disconnected **copy**, not the shared signal |
+| Put `computed()` derived state in the store too | Recompute the same derivation in five components |
+| Keep component-local state inside the component | Promote every signal to global "just in case" |
+
+A form's draft fields, a dropdown's open/closed state -- those stay as `signal()` *inside* the component function. Only state that genuinely spans components belongs in `store.ts`.
+
+> **One signal, one source of truth.** The most common store mistake is "copying" a signal -- `signal(user.value)` in a second file. That reads the value once and creates a brand-new, disconnected signal. Always import the original.
+
+---
+
+## 8. Debug Labels
 
 Signals accept an optional second argument -- a debug label:
 
@@ -273,7 +378,7 @@ Add labels to every signal you might need to debug. The overhead is zero when th
 
 ---
 
-## 8. isSignal() -- Type Check
+## 9. isSignal() -- Type Check
 
 ```typescript
 import { isSignal } from 'tina4js';
@@ -290,7 +395,7 @@ Useful when writing utilities that accept either a signal or a plain value.
 
 ---
 
-## 9. Common Mistakes
+## 10. Common Mistakes
 
 ### Mistake 1: Reading .value in Templates
 
@@ -347,7 +452,7 @@ In JavaScript, `false && anything` evaluates to `false`. The template receives t
 
 ---
 
-## 10. Putting It Together -- A Todo List
+## 11. Putting It Together -- A Todo List
 
 Signals. Computed. Effects. Batch. Here they are, working together in a complete todo application:
 
@@ -447,6 +552,104 @@ No mutation. No manual DOM updates. No event bus. Signals handle all of it.
 
 ---
 
+## Persisting Signals Across Refreshes
+
+A signal lives in memory. Refresh the page and it forgets. For values the user picked themselves -- theme, sidebar collapsed state, last-used filter, draft text, guest cart contents -- forgetting is rude.
+
+`tina4js/storage` wraps a signal so its value reads from `localStorage` on creation and writes back on every change. Opt-in per signal. Zero dependencies. Tree-shakeable, so apps that do not import it ship zero bytes.
+
+```typescript
+import { signal } from 'tina4js';
+import { persist, clearPersistedKeys } from 'tina4js/storage';
+
+const theme = persist(signal('light'), { key: 'theme' });
+
+theme.value = 'dark';   // saved to localStorage. Survives a refresh.
+```
+
+The wrapper returns the same signal you passed in, with two extras attached: `.clear()` removes the key from storage, `.dispose()` stops the write effect.
+
+### The Dangers List, Up Front
+
+`localStorage` is XSS-readable. Any script that runs on your origin reads every value. So `persist()` is the right tool for small, safe, user-chosen preferences. It is the wrong tool for the following, no exceptions:
+
+- Auth tokens, JWTs, session IDs, API keys. Use `httpOnly` cookies.
+- Passwords, including ones you think you encrypted client-side.
+- Personal data: names, emails, phone numbers, addresses, IDs.
+- Payment data: card numbers, CVV, expiry.
+- Permission flags, roles, `isAdmin` booleans. The user can edit them in devtools.
+- Encryption keys, OTP seeds, secrets.
+- Server-of-record state: orders, balances, ledger entries. Fetch fresh from the database.
+
+If you ignore this list, the framework warns you in the console. It looks at the key name (`token`, `password`, `secret`, `apikey`, `auth`, `credential`, `jwt`, `bearer`, `otp`, `private_key`, `session_id`) and at the value shape (a JWT, a long base64 string, an object with a credential-shape field). The warning is loud, once per key, and on purpose. See `STORAGE.md` in the tina4-js repo for the full table and the reasoning behind each row.
+
+### Options
+
+```typescript
+persist(signal(0), {
+  key: 'count',                        // required
+  storage: 'local',                    // 'local' (default) or 'session'
+  serializer: { read, write },         // default: JSON
+  version: 1,                          // stored-shape version
+  migrate: (oldValue, oldVersion) => 0,// run when versions disagree
+  syncTabs: false,                     // 'storage' event sync, opt-in
+  silenceCredentialWarning: false,     // for false positives like tokenColor
+});
+```
+
+### Cross-tab Sync
+
+Two tabs of the same app, both running `persist(signal([]), { key: 'cart', syncTabs: true })`. Add an item to the cart in tab A, and tab B sees it without a refresh. The `storage` event fires in tabs that did not write the value, so the framework subscribes there and updates the signal.
+
+It is opt-in per signal. You decide which values cross tabs. No global broadcast.
+
+### Wipe on Logout
+
+When a user logs out, persisted state can leak to the next user on the same machine. The cure is `clearPersistedKeys()` on the logout path:
+
+```typescript
+import { clearPersistedKeys } from 'tina4js/storage';
+
+function logout() {
+  api.post('/auth/logout');
+  clearPersistedKeys(['cart', 'lastFilter', 'draftReply']);
+  window.location.reload();
+}
+```
+
+The function removes only the keys you name. Other persisted state survives.
+
+### Version Migration
+
+A deploy changes the stored shape. Old browsers still hold the old shape. Without `migrate`, the framework discards the stored value and logs a warning. With `migrate`, you convert in place:
+
+```typescript
+// v1 stored: { name: 'Alice' }
+// v2 wants:  { firstName: 'Alice', lastName: '' }
+
+const user = persist(signal({ firstName: '', lastName: '' }), {
+  key: 'user',
+  version: 2,
+  migrate: (old) => ({
+    firstName: (old as { name?: string }).name ?? '',
+    lastName: '',
+  }),
+});
+```
+
+### Safety Guarantees
+
+- **SSR-safe.** No `window` or `localStorage`? `persist()` is a silent no-op. The signal still works in memory.
+- **Quota-safe.** `QuotaExceededError` is logged and skipped; the signal still updates.
+- **No "encrypted" option.** Encryption with a key sitting in the same bundle is theatre. The framework refuses to ship that knob.
+- **Cross-tab sync is opt-in.** Off by default.
+
+### Bundle Cost
+
+`dist/storage.es.js` is 1.67 KB gzipped. Apps that never import from `tina4js/storage` ship zero bytes from this module. The 1.5 KB core promise is untouched.
+
+---
+
 ## Summary
 
 | Concept | API | Purpose |
@@ -460,3 +663,5 @@ No mutation. No manual DOM updates. No event bus. Signals handle all of it.
 | Peek | `sig.peek()` | Read without tracking |
 | Check | `isSignal(x)` | Returns true for tina4 signals |
 | Label | `signal(0, 'name')` | Debug overlay identification |
+| Persist | `persist(sig, { key })` from `tina4js/storage` | Survives a page refresh. Never for credentials. |
+| Clear | `clearPersistedKeys(['k1', 'k2'])` | Wipe a list of keys, e.g. on logout |

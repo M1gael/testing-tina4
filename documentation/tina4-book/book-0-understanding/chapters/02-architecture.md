@@ -266,7 +266,7 @@ src/migrations/
 └── 20260320090000_create_products_table.down.sql
 ```
 
-The `.sql` file runs on `tina4 migrate`. The `.down.sql` file runs on `tina4 migrate:rollback`. Tina4 tracks which migrations have run in a `tina4_migrations` table. Forward and back. Always reversible.
+The `.sql` file runs on `tina4 migrate`. The `.down.sql` file runs on `tina4 migrate --rollback`. Tina4 tracks which migrations have run in a `tina4_migrations` table. Forward and back. Always reversible.
 
 ### `src/seeds/` -- Test Data
 
@@ -319,7 +319,7 @@ One file controls everything. Not YAML. Not TOML. Not JSON config objects. A `.e
 # .env
 TINA4_DEBUG=true
 TINA4_PORT=7145
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 JWT_SECRET=change-me-in-production
 ```
 

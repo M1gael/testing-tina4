@@ -570,7 +570,7 @@ ws.on("message", function (data) {
 
 ### tina4js.min.js -- Reactive Frontend Framework
 
-A standalone reactive framework for building rich client-side applications. Provides signals, computed values, effects, Web Components, client-side routing, and built-in fetch and WebSocket wrappers.
+A standalone reactive framework for building interactive client-side applications. Provides signals, computed values, effects, Web Components, client-side routing, and built-in fetch and WebSocket wrappers.
 
 #### Reactive State
 
@@ -775,7 +775,7 @@ end
 
 **Problem:** You edited `tina4.scss` but the browser shows the old CSS.
 
-**Fix:** Compile SCSS to CSS with `tina4 build:css` or `sass src/public/scss/tina4.scss src/public/css/tina4.css`. The browser loads the compiled CSS file, not the SCSS source.
+**Fix:** Compile SCSS to CSS with `tina4 scss` or `sass src/public/scss/tina4.scss src/public/css/tina4.css`. The browser loads the compiled CSS file, not the SCSS source.
 
 ---
 

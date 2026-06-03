@@ -231,7 +231,7 @@ queue.purge("failed")
 The most common pattern is pushing messages from route handlers:
 
 ```python
-from tina4_python.router import get, post
+from tina4_python.core.router import get, post
 from tina4_python.queue import Queue
 
 queue = Queue(topic="emails")
@@ -355,18 +355,18 @@ Build an email queue system that sends emails in the background, including failu
 
 ```bash
 # Queue an email
-curl -X POST http://localhost:7145/api/emails/send \
+curl -X POST http://localhost:7146/api/emails/send \
   -H "Content-Type: application/json" \
   -d '{"to": "alice@example.com", "subject": "Welcome!", "body": "Thanks for signing up."}'
 
 # Check queue size
-curl http://localhost:7145/api/emails/queue
+curl http://localhost:7146/api/emails/queue
 
 # Check dead letters
-curl http://localhost:7145/api/emails/dead
+curl http://localhost:7146/api/emails/dead
 
 # Retry failed
-curl -X POST http://localhost:7145/api/emails/retry
+curl -X POST http://localhost:7146/api/emails/retry
 ```
 
 ---
@@ -376,7 +376,7 @@ curl -X POST http://localhost:7145/api/emails/retry
 Create `src/routes/email_queue.py`:
 
 ```python
-from tina4_python.router import get, post
+from tina4_python.core.router import get, post
 from tina4_python.queue import Queue
 
 queue = Queue(topic="emails", max_retries=3)

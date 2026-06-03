@@ -16,7 +16,7 @@ async def hello(request, response):
     return response.json({"message": "Hello, World!"})
 ```
 
-Save that as `src/routes/hello.py`, start the server with `tina4 serve`, and visit `http://localhost:7145/hello`:
+Save that as `src/routes/hello.py`, start the server with `tina4 serve`, and visit `http://localhost:7146/hello`:
 
 ```json
 {"message":"Hello, World!"}
@@ -57,7 +57,7 @@ async def delete_product(id, request, response):
 Test each one:
 
 ```bash
-curl http://localhost:7145/products
+curl http://localhost:7146/products
 ```
 
 ```json
@@ -65,7 +65,7 @@ curl http://localhost:7145/products
 ```
 
 ```bash
-curl -X POST http://localhost:7145/products \
+curl -X POST http://localhost:7146/products \
   -H "Content-Type: application/json" \
   -d '{"name": "Widget"}'
 ```
@@ -75,7 +75,7 @@ curl -X POST http://localhost:7145/products \
 ```
 
 ```bash
-curl -X PUT http://localhost:7145/products/42
+curl -X PUT http://localhost:7146/products/42
 ```
 
 ```json
@@ -83,7 +83,7 @@ curl -X PUT http://localhost:7145/products/42
 ```
 
 ```bash
-curl -X PATCH http://localhost:7145/products/42
+curl -X PATCH http://localhost:7146/products/42
 ```
 
 ```json
@@ -91,7 +91,7 @@ curl -X PATCH http://localhost:7145/products/42
 ```
 
 ```bash
-curl -X DELETE http://localhost:7145/products/42
+curl -X DELETE http://localhost:7146/products/42
 ```
 
 ```json
@@ -99,6 +99,56 @@ curl -X DELETE http://localhost:7145/products/42
 ```
 
 `GET` reads. `POST` creates. `PUT` replaces. `PATCH` patches. `DELETE` removes. REST convention. Predictable API.
+
+### HEAD and OPTIONS — automatic, no boilerplate
+
+Tina4 handles `HEAD` and `OPTIONS` for you. **You don't register them.** They follow from your `GET` / `POST` / etc. routes:
+
+- **`HEAD`** is identical to `GET` except the response carries no body (RFC 9110 §9.3.2). Every `GET` route automatically responds to `HEAD` — the framework strips the response body on the way out and preserves `Content-Length` pointing at the byte count the equivalent `GET` would have sent. Cache validators, link checkers, and uptime probes work without you writing anything.
+- **`OPTIONS`** on any registered path returns `204 No Content` with an `Allow:` header listing every method the path supports (RFC 9110 §9.3.7). Useful for clients that need to discover the API surface.
+- **Wrong method on an existing path** returns `405 Method Not Allowed` with the same `Allow:` header (RFC 9110 §15.5.6 + §10.2.1). Sending `PUT` to a `GET`-only route used to return `404` — semantically wrong and confusing for link checkers. Now you get a real `405` that says exactly which methods are allowed.
+- **`TRACE` and `CONNECT`** are rejected with `405` (we never support them — security default for origin servers).
+
+```bash
+# HEAD on a GET route — same headers, empty body
+curl -sI http://localhost:7146/products
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+# Content-Length: 33
+
+# OPTIONS — discover what the path supports
+curl -sI -X OPTIONS http://localhost:7146/products
+# HTTP/1.1 204 No Content
+# Allow: GET, POST, HEAD, OPTIONS
+
+# Wrong method — clear 405 with Allow header
+curl -sI -X PUT http://localhost:7146/products
+# HTTP/1.1 405 Method Not Allowed
+# Allow: GET, POST, HEAD, OPTIONS
+```
+
+### Explicit `head()` and `options()` registration
+
+The automatic behaviour is enough for 95% of apps. When you need custom HEAD or OPTIONS handlers — for example a cheap existence-check endpoint, or a richer OPTIONS payload — register them explicitly:
+
+```python
+from tina4_python.core.router import Router
+
+# A HEAD handler that doesn't run the full GET body — useful for
+# expensive endpoints where the client only needs to check existence
+# or read validators (ETag, Last-Modified).
+Router.head("/expensive/{id}", lambda req, res:
+    res.header("ETag", compute_etag(req.params["id"]))
+)
+
+# An OPTIONS handler that returns more than just Allow — for example
+# a CORS preflight with custom headers, or a discovery endpoint.
+Router.options("/api/discovery", lambda req, res:
+    res.json({"version": "v1", "endpoints": [...]})
+)
+```
+
+The framework still strips the response body for `HEAD` handlers (RFC 9110 §9.3.2 is a MUST), so you can't accidentally leak content even if your handler returns a body.
 
 ---
 
@@ -118,7 +168,7 @@ async def user_post(id, post_id, request, response):
 ```
 
 ```bash
-curl http://localhost:7145/users/5/posts/99
+curl http://localhost:7146/users/5/posts/99
 ```
 
 ```json
@@ -146,7 +196,7 @@ async def get_order(id, request, response):
 ```
 
 ```bash
-curl http://localhost:7145/orders/42
+curl http://localhost:7146/orders/42
 ```
 
 ```json
@@ -156,7 +206,7 @@ curl http://localhost:7145/orders/42
 Pass a non-integer value and the route does not match. A 404:
 
 ```bash
-curl http://localhost:7145/orders/abc
+curl http://localhost:7146/orders/abc
 ```
 
 ```json
@@ -210,7 +260,7 @@ async def serve_file(filepath, request, response):
 
 ```bash
 # Integer route -- matches digits, returns an int
-curl http://localhost:7145/products/42
+curl http://localhost:7146/products/42
 ```
 
 ```json
@@ -219,7 +269,7 @@ curl http://localhost:7145/products/42
 
 ```bash
 # Integer route -- non-integer gives a 404
-curl http://localhost:7145/products/abc
+curl http://localhost:7146/products/abc
 ```
 
 ```json
@@ -228,7 +278,7 @@ curl http://localhost:7145/products/abc
 
 ```bash
 # Path catch-all -- captures everything after /files/
-curl http://localhost:7145/files/images/photos/cat.jpg
+curl http://localhost:7146/files/images/photos/cat.jpg
 ```
 
 ```json
@@ -261,7 +311,7 @@ async def search(request, response):
 ```
 
 ```bash
-curl "http://localhost:7145/search?q=keyboard&page=2&limit=20"
+curl "http://localhost:7146/search?q=keyboard&page=2&limit=20"
 ```
 
 ```json
@@ -302,7 +352,7 @@ async def list_products(request, response):
 These routes register as `/api/v1/users`, `/api/v1/users/{id}`, and `/api/v1/products`. Short paths inside the group. Tina4 prepends the prefix. `Router.group()` is a classmethod that takes a prefix, a callback, and an optional middleware list.
 
 ```bash
-curl http://localhost:7145/api/v1/users
+curl http://localhost:7146/api/v1/users
 ```
 
 ```json
@@ -310,7 +360,7 @@ curl http://localhost:7145/api/v1/users
 ```
 
 ```bash
-curl http://localhost:7145/api/v1/products
+curl http://localhost:7146/api/v1/products
 ```
 
 ```json
@@ -339,7 +389,7 @@ Router.group("/api", lambda: [
 ```
 
 ```bash
-curl http://localhost:7145/api/v1/status
+curl http://localhost:7146/api/v1/status
 ```
 
 ```json
@@ -347,7 +397,7 @@ curl http://localhost:7145/api/v1/status
 ```
 
 ```bash
-curl http://localhost:7145/api/v2/status
+curl http://localhost:7146/api/v2/status
 ```
 
 ```json
@@ -406,7 +456,7 @@ async def secret_data(request, response):
 ```
 
 ```bash
-curl http://localhost:7145/api/secret
+curl http://localhost:7146/api/secret
 ```
 
 ```json
@@ -416,7 +466,7 @@ curl http://localhost:7145/api/secret
 Status: `401 Unauthorized`.
 
 ```bash
-curl http://localhost:7145/api/secret -H "X-API-Key: my-secret-key"
+curl http://localhost:7146/api/secret -H "X-API-Key: my-secret-key"
 ```
 
 ```json
@@ -507,10 +557,10 @@ Router.get("/api/account", get_account).secure()
 ```
 
 ```bash
-curl http://localhost:7145/api/account
+curl http://localhost:7146/api/account
 # 401 Unauthorized
 
-curl http://localhost:7145/api/account -H "Authorization: Bearer eyJhbGci..."
+curl http://localhost:7146/api/account -H "Authorization: Bearer eyJhbGci..."
 # 200 OK
 ```
 
@@ -553,7 +603,7 @@ async def docs_handler(request, response):
 ```
 
 ```bash
-curl http://localhost:7145/docs/getting-started
+curl http://localhost:7146/docs/getting-started
 ```
 
 ```json
@@ -561,7 +611,7 @@ curl http://localhost:7145/docs/getting-started
 ```
 
 ```bash
-curl http://localhost:7145/docs/api/authentication/jwt
+curl http://localhost:7146/docs/api/authentication/jwt
 ```
 
 ```json
@@ -728,29 +778,29 @@ Test with:
 
 ```bash
 # List all
-curl http://localhost:7145/api/products
+curl http://localhost:7146/api/products
 
 # Filter by category
-curl "http://localhost:7145/api/products?category=Fitness"
+curl "http://localhost:7146/api/products?category=Fitness"
 
 # Get one
-curl http://localhost:7145/api/products/3
+curl http://localhost:7146/api/products/3
 
 # Create
-curl -X POST http://localhost:7145/api/products \
+curl -X POST http://localhost:7146/api/products \
   -H "Content-Type: application/json" \
   -d '{"name": "Desk Lamp", "category": "Office", "price": 39.99, "in_stock": true}'
 
 # Update
-curl -X PUT http://localhost:7145/api/products/3 \
+curl -X PUT http://localhost:7146/api/products/3 \
   -H "Content-Type: application/json" \
   -d '{"name": "Burr Coffee Grinder", "category": "Kitchen", "price": 59.99, "in_stock": true}'
 
 # Delete
-curl -X DELETE http://localhost:7145/api/products/3
+curl -X DELETE http://localhost:7146/api/products/3
 
 # Not found
-curl http://localhost:7145/api/products/999
+curl http://localhost:7146/api/products/999
 ```
 
 ---

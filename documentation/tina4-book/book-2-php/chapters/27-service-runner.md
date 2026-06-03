@@ -74,15 +74,13 @@ class EmailQueueWorker extends Service
 <?php
 use Tina4\ServiceRunner;
 
-$runner = new ServiceRunner();
-
 // Register services
-$runner->add(new EmailQueueWorker());
-$runner->add(new ReportGenerator());
-$runner->add(new CacheWarmer());
+ServiceRunner::registerService('email_queue_worker', new EmailQueueWorker());
+ServiceRunner::registerService('report_generator', new ReportGenerator());
+ServiceRunner::registerService('cache_warmer', new CacheWarmer());
 
 // Start all services
-$runner->start();
+ServiceRunner::start();
 ```
 
 `start()` launches each service in its own process or thread (depending on the platform). Services run concurrently and independently.
@@ -175,7 +173,7 @@ class CacheWarmer extends Service
     {
         echo "[CacheWarmer] Warming cache...\n";
 
-        $db = new \Tina4\Database(getenv('DATABASE_URL'));
+        $db = new \Tina4\Database(getenv('TINA4_DATABASE_URL'));
 
         $categories = $db->fetchAll("SELECT * FROM categories ORDER BY name");
         cache_set('categories:all', $categories, $this->ttl);
@@ -259,10 +257,9 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use Tina4\ServiceRunner;
 
-$runner = new ServiceRunner();
-$runner->add(new EmailQueueWorker());
-$runner->add(new ReportGenerator());
-$runner->start();
+ServiceRunner::registerService('email_queue_worker', new EmailQueueWorker());
+ServiceRunner::registerService('report_generator', new ReportGenerator());
+ServiceRunner::start();
 ```
 
 Run it:
@@ -322,14 +319,16 @@ CMD ["php", "src/workers/run.php"]
 services:
   web:
     build: .
-    command: php -S 0.0.0.0:7146 index.php
+    # `tina4 serve` requires the Rust CLI; inside Docker we run the framework
+    # directly with TINA4_OVERRIDE_CLIENT=true so the framework boots without it.
+    command: sh -c "TINA4_OVERRIDE_CLIENT=true php index.php"
 
   workers:
     build: .
     command: php src/workers/run.php
     environment:
-      - DATABASE_URL=sqlite:./data/app.db
-      - SMTP_HOST=mailhog
+      - TINA4_DATABASE_URL=sqlite:./data/app.db
+      - TINA4_MAIL_HOST=mailhog
     depends_on:
       - db
 ```

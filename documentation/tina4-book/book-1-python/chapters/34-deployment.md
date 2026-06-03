@@ -23,7 +23,7 @@ TINA4_LOG_LEVEL=WARNING
 TINA4_PORT=7146
 
 # Database
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 
 # Security
 CORS_ORIGINS=https://yourdomain.com
@@ -31,8 +31,7 @@ JWT_SECRET=your-long-random-secret-at-least-32-characters
 TINA4_RATE_LIMIT=120
 
 # Performance
-TINA4_CACHE_TEMPLATES=true
-TINA4_MINIFY_HTML=true
+TINA4_TEMPLATE_CACHE_TTL=true
 
 ```
 
@@ -43,8 +42,6 @@ TINA4_MINIFY_HTML=true
 | `TINA4_DEBUG` | `true` | `false` | Hides stack traces, disables toolbar |
 | `TINA4_LOG_LEVEL` | `ALL` | `WARNING` | Reduces log noise |
 | `CORS_ORIGINS` | `*` | Your domain | Prevents cross-origin abuse |
-| `TINA4_CACHE_TEMPLATES` | `false` | `true` | Caches compiled templates |
-| `TINA4_MINIFY_HTML` | `false` | `true` | Reduces response size |
 
 ### Sensitive Values
 
@@ -52,7 +49,7 @@ Production secrets never go into version control. The `.env` file is gitignored 
 
 ```bash
 # Docker: pass env vars at runtime
-docker run -e JWT_SECRET=your-secret -e DATABASE_URL=sqlite:///data/app.db my-app
+docker run -e JWT_SECRET=your-secret -e TINA4_DATABASE_URL=sqlite:///data/app.db my-app
 
 # Fly.io: set secrets
 fly secrets set JWT_SECRET=your-secret
@@ -113,9 +110,6 @@ tina4 serve
 Fine-tune uvicorn through environment variables:
 
 ```bash
-TINA4_WORKERS=4
-TINA4_WORKER_TIMEOUT=30
-TINA4_KEEP_ALIVE=5
 ```
 
 Or pass options directly:
@@ -214,7 +208,7 @@ docker run -d \
   --name my-app \
   -p 7146:7146 \
   -e JWT_SECRET=your-production-secret \
-  -e DATABASE_URL=sqlite:///data/app.db \
+  -e TINA4_DATABASE_URL=sqlite:///data/app.db \
   -v $(pwd)/data:/app/data \
   my-tina4-app
 ```
@@ -302,7 +296,7 @@ services:
       - TINA4_DEBUG=false
       - TINA4_LOG_LEVEL=WARNING
       - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
     volumes:
       - app-data:/app/data
     restart: unless-stopped
@@ -603,7 +597,6 @@ A single server handles many applications. When traffic outgrows one server, you
 Uvicorn runs multiple worker processes by default. Configure the count in `.env`:
 
 ```bash
-TINA4_WORKERS=4
 ```
 
 Start with the number of CPU cores on your server. For I/O-heavy applications (database queries, external API calls), double or quadruple the core count. CPU-bound work benefits less from extra workers.
@@ -615,9 +608,9 @@ When you run multiple Tina4 instances, Nginx distributes traffic across them:
 ```nginx
 upstream tina4_backend {
     server 127.0.0.1:7146;
-    server 127.0.0.1:7146;
-    server 127.0.0.1:7147;
-    server 127.0.0.1:7148;
+    server 127.0.0.1:7246;
+    server 127.0.0.1:7346;
+    server 127.0.0.1:7446;
 }
 
 server {
@@ -634,13 +627,13 @@ server {
 }
 ```
 
-Start four instances on different ports:
+Start four instances on different ports. The framework refuses to start without the Rust CLI unless `TINA4_OVERRIDE_CLIENT=true`, so for a multi-process setup either set that override or run each instance through `tina4 serve --port`:
 
 ```bash
-TINA4_PORT=7146 uv run python app.py &
-TINA4_PORT=7146 uv run python app.py &
-TINA4_PORT=7147 uv run python app.py &
-TINA4_PORT=7148 uv run python app.py &
+TINA4_PORT=7146 tina4 serve --port 7146 &
+TINA4_PORT=7246 tina4 serve --port 7246 &
+TINA4_PORT=7346 tina4 serve --port 7346 &
+TINA4_PORT=7446 tina4 serve --port 7446 &
 ```
 
 Nginx distributes requests in round-robin order by default. If a backend goes down, Nginx routes traffic to the remaining instances.
@@ -673,7 +666,7 @@ services:
       - "traefik.http.routers.app.rule=Host(`yourdomain.com`)"
     environment:
       - TINA4_DEBUG=false
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
     volumes:
       - app-data:/app/data
 
@@ -765,9 +758,9 @@ Uptime monitoring tells you the app is running. APM tells you how well it perfor
 
 Since Tina4 Python runs on standard Python, any Python APM agent works:
 
-- **Datadog APM**: `uv add ddtrace` and run with `ddtrace-run uv run python app.py`
-- **New Relic**: `uv add newrelic` and run with `newrelic-admin run-program uv run python app.py`
-- **Elastic APM**: `uv add elastic-apm` and configure in your app startup
+- **Datadog APM**: `uv add ddtrace` and run with `TINA4_OVERRIDE_CLIENT=true ddtrace-run uv run tina4 serve` (the override is required because APM wrappers spawn Python directly rather than going through the Rust CLI)
+- **New Relic**: `uv add newrelic` and run with `TINA4_OVERRIDE_CLIENT=true newrelic-admin run-program uv run tina4 serve`
+- **Elastic APM**: `uv add elastic-apm` and configure in your app startup, then `TINA4_OVERRIDE_CLIENT=true tina4 serve --production`
 
 A basic monitoring stack for a small team: Uptime Robot for availability alerts (free tier covers it), JSON logs shipped to Grafana Loki for debugging, and `docker stats` for resource usage. Add APM when your application serves enough traffic to warrant the cost.
 

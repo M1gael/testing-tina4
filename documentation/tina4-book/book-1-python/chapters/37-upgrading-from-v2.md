@@ -389,7 +389,7 @@ Frond is a singleton. It is created once at startup and reused for every request
 Register filters in `app.py` before calling `run()`:
 
 ```python
-from tina4_python.template import Frond
+from tina4_python.frond import Frond
 
 def money(value):
     return f"${value:,.2f}"
@@ -478,13 +478,14 @@ Password hashing:
 
 ```python
 hashed = Auth.hash_password("my-secret-password")
-matches = Auth.check_password(hashed, "my-secret-password")  # True
+matches = Auth.check_password("my-secret-password", hashed)  # True
+# Signature: check_password(password, hashed) -- plain text first, hash second
 ```
 
 JWT uses HMAC-SHA256. Set the signing key in `.env`:
 
 ```bash
-SECRET=your-long-random-secret-key
+TINA4_SECRET=your-long-random-secret-key
 ```
 
 Token lifetime defaults to 60 minutes. Override with:
@@ -616,7 +617,7 @@ Follow this order. Each step builds on the previous one.
 7. **Update database connections**
    Switch to URL format in `.env`:
    ```bash
-   DATABASE_URL=sqlite:///data/app.db
+   TINA4_DATABASE_URL=sqlite:///data/app.db
    ```
 
 8. **Run migrations**

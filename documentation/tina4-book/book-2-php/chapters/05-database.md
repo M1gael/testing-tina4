@@ -18,28 +18,57 @@ Tina4 supports five database engines: SQLite, PostgreSQL, MySQL, Microsoft SQL S
 TINA4_DEBUG=true
 ```
 
-No explicit `DATABASE_URL` means Tina4 defaults to `sqlite:///data/app.db`. The SQLite file is created automatically the first time Tina4 opens a database connection (for example, when you run a query, execute a migration, or the framework initialises the database layer at startup with a `DATABASE_URL` configured).
+No explicit `TINA4_DATABASE_URL` means Tina4 defaults to `sqlite:///data/app.db`. The SQLite file is created automatically the first time Tina4 opens a database connection (for example, when you run a query, execute a migration, or the framework initialises the database layer at startup with a `TINA4_DATABASE_URL` configured).
 
 ### Connection Strings for Other Databases
 
-Set `DATABASE_URL` in `.env`:
+Set `TINA4_DATABASE_URL` in `.env`:
 
 ```bash
 # SQLite (explicit)
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 
 # PostgreSQL
-DATABASE_URL=postgres://localhost:5432/myapp
+TINA4_DATABASE_URL=postgres://localhost:5432/myapp
 
 # MySQL
-DATABASE_URL=mysql://localhost:3306/myapp
+TINA4_DATABASE_URL=mysql://localhost:3306/myapp
 
 # Microsoft SQL Server
-DATABASE_URL=mssql://localhost:1433/myapp
+TINA4_DATABASE_URL=mssql://localhost:1433/myapp
 
 # Firebird
-DATABASE_URL=firebird://localhost:3050/path/to/database.fdb
+TINA4_DATABASE_URL=firebird://localhost:3050/path/to/database.fdb
 ```
+
+### Firebird URL Forms
+
+Firebird is the awkward one: every other engine has a server-side database name (`postgres://host:port/dbname`), but Firebird wants either an absolute file path on the server, a Windows drive-letter path, or an alias. The classic URI form needs a double slash to keep the leading `/` of an absolute path through `parse_url`, which is unintuitive.
+
+Tina4 normalises five equivalent forms. Pick whichever reads best:
+
+```bash
+# Classic double-slash absolute path -- the URL spec way
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050//firebird/data/app.fdb
+
+# Single-slash absolute path -- what most people instinctively type
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/firebird/data/app.fdb
+
+# Windows drive-letter path (also accepts /C%3A/Data/app.fdb)
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@host:3050/C:/Data/app.fdb
+
+# Firebird alias (single token, no slashes)
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/employee
+```
+
+For ops setups that keep the server URL and database location in separate config layers -- or for Windows backslash paths -- set `TINA4_DATABASE_FIREBIRD_PATH`:
+
+```bash
+TINA4_DATABASE_FIREBIRD_PATH=C:\firebird\data\app.fdb
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/ignored
+```
+
+The env override wins over whatever path is in the URL.
 
 ### Firebird: Dual-Driver Support
 
@@ -50,9 +79,9 @@ The Firebird adapter works with either the `ibase_*` or `fbird_*` PHP functions.
 Keep credentials out of the connection string. Better for production:
 
 ```bash
-DATABASE_URL=postgres://localhost:5432/myapp
-DATABASE_USERNAME=myuser
-DATABASE_PASSWORD=secretpassword
+TINA4_DATABASE_URL=postgres://localhost:5432/myapp
+TINA4_DATABASE_USERNAME=myuser
+TINA4_DATABASE_PASSWORD=secretpassword
 ```
 
 Tina4 merges these at startup. Separate variables take precedence over anything embedded in the URL.
@@ -77,7 +106,7 @@ Pooled connections are thread-safe. Each query is dispatched to the next availab
 Update `.env`. Restart. Check:
 
 ```bash
-curl http://localhost:7146/health
+curl http://localhost:7145/health
 ```
 
 ```json
@@ -110,7 +139,7 @@ Router::get("/api/test-db", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/api/test-db
+curl http://localhost:7145/api/test-db
 ```
 
 ```json
@@ -262,7 +291,7 @@ Router::get("/api/products", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/api/products
+curl http://localhost:7145/api/products
 ```
 
 ```json
@@ -339,7 +368,7 @@ Router::get("/api/products/search", function ($request, $response) {
 ```
 
 ```bash
-curl "http://localhost:7146/api/products/search?q=key&max_price=100"
+curl "http://localhost:7145/api/products/search?q=key&max_price=100"
 ```
 
 ```json
@@ -787,29 +816,29 @@ A notes application backed by SQLite. Migration for the table. Full CRUD API.
 
 ```bash
 # Create
-curl -X POST http://localhost:7146/api/notes \
+curl -X POST http://localhost:7145/api/notes \
   -H "Content-Type: application/json" \
   -d '{"title": "Shopping List", "content": "Milk, eggs, bread", "tag": "personal"}'
 
 # List all
-curl http://localhost:7146/api/notes
+curl http://localhost:7145/api/notes
 
 # Search
-curl "http://localhost:7146/api/notes?search=shopping"
+curl "http://localhost:7145/api/notes?search=shopping"
 
 # Filter by tag
-curl "http://localhost:7146/api/notes?tag=personal"
+curl "http://localhost:7145/api/notes?tag=personal"
 
 # Get one
-curl http://localhost:7146/api/notes/1
+curl http://localhost:7145/api/notes/1
 
 # Update
-curl -X PUT http://localhost:7146/api/notes/1 \
+curl -X PUT http://localhost:7145/api/notes/1 \
   -H "Content-Type: application/json" \
   -d '{"title": "Updated Shopping List", "content": "Milk, eggs, bread, butter"}'
 
 # Delete
-curl -X DELETE http://localhost:7146/api/notes/1
+curl -X DELETE http://localhost:7145/api/notes/1
 ```
 
 ---

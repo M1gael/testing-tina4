@@ -23,16 +23,15 @@ TINA4_LOG_LEVEL=WARNING
 TINA4_PORT=7148
 
 # Database
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 
 # Security
 CORS_ORIGINS=https://yourdomain.com
-TINA4_JWT_SECRET=your-long-random-secret-at-least-32-characters
+TINA4_SECRET=your-long-random-secret-at-least-32-characters
 TINA4_RATE_LIMIT=120
 
 # Performance
-TINA4_CACHE_TEMPLATES=true
-TINA4_MINIFY_HTML=true
+TINA4_TEMPLATE_CACHE_TTL=true
 ```
 
 ### Key Differences from Development
@@ -42,8 +41,6 @@ TINA4_MINIFY_HTML=true
 | `TINA4_DEBUG` | `true` | `false` | Hides stack traces, disables toolbar |
 | `TINA4_LOG_LEVEL` | `ALL` | `WARNING` | Reduces log noise |
 | `CORS_ORIGINS` | `*` | Your domain | Prevents cross-origin abuse |
-| `TINA4_CACHE_TEMPLATES` | `false` | `true` | Caches compiled templates |
-| `TINA4_MINIFY_HTML` | `false` | `true` | Reduces response size |
 
 ### Sensitive Values
 
@@ -51,13 +48,13 @@ Production secrets never go into version control. The `.env` file is gitignored 
 
 ```bash
 # Docker: pass env vars at runtime
-docker run -e TINA4_JWT_SECRET=your-secret -e DATABASE_URL=sqlite:///data/app.db my-app
+docker run -e TINA4_SECRET=your-secret -e TINA4_DATABASE_URL=sqlite:///data/app.db my-app
 
 # Fly.io: set secrets
-fly secrets set TINA4_JWT_SECRET=your-secret
+fly secrets set TINA4_SECRET=your-secret
 
 # Railway: use the dashboard or CLI
-railway variables set TINA4_JWT_SECRET=your-secret
+railway variables set TINA4_SECRET=your-secret
 ```
 
 ---
@@ -104,7 +101,7 @@ RUN npm ci --only=production
 COPY dist/ ./dist/
 COPY src/templates/ ./src/templates/
 COPY src/public/ ./src/public/
-COPY src/migrations/ ./src/migrations/
+COPY migrations/ ./migrations/
 
 # Create directories for data and logs
 RUN mkdir -p data logs
@@ -135,7 +132,7 @@ logs/*.log
 src/
 !src/templates/
 !src/public/
-!src/migrations/
+!migrations/
 ```
 
 ### Building and Running
@@ -149,8 +146,8 @@ docker build -t my-tina4-app .
 docker run -d \
   --name my-app \
   -p 7148:7148 \
-  -e TINA4_JWT_SECRET=your-production-secret \
-  -e DATABASE_URL=sqlite:///data/app.db \
+  -e TINA4_SECRET=your-production-secret \
+  -e TINA4_DATABASE_URL=sqlite:///data/app.db \
   -v $(pwd)/data:/app/data \
   -v $(pwd)/logs:/app/logs \
   my-tina4-app
@@ -171,10 +168,10 @@ services:
     environment:
       - TINA4_DEBUG=false
       - TINA4_LOG_LEVEL=WARNING
-      - TINA4_JWT_SECRET=${TINA4_JWT_SECRET}
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_SECRET=${TINA4_SECRET}
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
       - TINA4_CACHE_BACKEND=redis
-      - TINA4_CACHE_HOST=redis
+      - TINA4_CACHE_URL=redis
     volumes:
       - app-data:/app/data
       - app-logs:/app/logs
@@ -219,14 +216,11 @@ docker compose down
 For multi-core utilization, Tina4 supports Node.js cluster mode:
 
 ```bash
-TINA4_CLUSTER=true
-TINA4_CLUSTER_WORKERS=4
 ```
 
 Or set workers to `auto` to match CPU cores:
 
 ```bash
-TINA4_CLUSTER_WORKERS=auto
 ```
 
 This spawns multiple worker processes. Each handles requests independently. A worker crashes. The cluster master respawns it. No downtime.
@@ -496,7 +490,7 @@ services:
       - "traefik.http.routers.app.tls.certresolver=letsencrypt"
     environment:
       - TINA4_DEBUG=false
-      - TINA4_JWT_SECRET=${TINA4_JWT_SECRET}
+      - TINA4_SECRET=${TINA4_SECRET}
 
 volumes:
   letsencrypt:
@@ -562,7 +556,7 @@ After=network.target
 Type=simple
 User=www-data
 WorkingDirectory=/var/www/my-app
-ExecStart=/usr/local/bin/tina4 queue:work
+ExecStart=/usr/local/bin/tina4 queue work
 Restart=always
 RestartSec=5
 EnvironmentFile=/var/www/my-app/.env.production
@@ -619,8 +613,6 @@ A single server handles many applications. When traffic outgrows one server, you
 Use cluster mode with more workers:
 
 ```bash
-TINA4_CLUSTER=true
-TINA4_CLUSTER_WORKERS=8
 ```
 
 ### Load Balancing with Nginx
@@ -630,9 +622,9 @@ When you run multiple Tina4 instances, Nginx distributes traffic across them:
 ```nginx
 upstream tina4_backend {
     server 127.0.0.1:7148;
-    server 127.0.0.1:7149;
-    server 127.0.0.1:7150;
-    server 127.0.0.1:7151;
+    server 127.0.0.1:7248;
+    server 127.0.0.1:7348;
+    server 127.0.0.1:7448;
 }
 
 server {
@@ -649,13 +641,13 @@ server {
 }
 ```
 
-Start four instances on different ports:
+Start four instances on different ports. Node's framework default is `7148`; use any free ports for the additional instances. Set `TINA4_OVERRIDE_CLIENT=true` so Node can run the build directly without going through `tina4 serve`:
 
 ```bash
-TINA4_PORT=7148 node dist/app.js &
-TINA4_PORT=7149 node dist/app.js &
-TINA4_PORT=7150 node dist/app.js &
-TINA4_PORT=7151 node dist/app.js &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7148 node dist/app.js &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7248 node dist/app.js &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7348 node dist/app.js &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7448 node dist/app.js &
 ```
 
 Nginx distributes requests in round-robin order by default. If a backend goes down, Nginx routes traffic to the remaining instances.

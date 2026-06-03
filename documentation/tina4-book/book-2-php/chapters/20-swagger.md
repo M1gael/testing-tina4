@@ -32,7 +32,7 @@ Tina4 builds this spec from doc-block comments in your PHP. No JSON or YAML by h
 Available out of the box when `TINA4_DEBUG=true`. Navigate to:
 
 ```
-http://localhost:7146/swagger
+http://localhost:7145/swagger
 ```
 
 The Swagger UI appears with all defined routes. No annotations yet means default descriptions.
@@ -40,7 +40,7 @@ The Swagger UI appears with all defined routes. No annotations yet means default
 For production, control it explicitly:
 
 ```bash
-TINA4_SWAGGER=true
+TINA4_SWAGGER_ENABLED=true
 ```
 
 ### The Swagger JSON Endpoint
@@ -48,11 +48,11 @@ TINA4_SWAGGER=true
 Raw OpenAPI spec:
 
 ```
-http://localhost:7146/swagger/openapi.json
+http://localhost:7145/swagger/openapi.json
 ```
 
 ```bash
-curl http://localhost:7146/swagger/openapi.json
+curl http://localhost:7145/swagger/openapi.json
 ```
 
 ```json
@@ -345,9 +345,9 @@ Tina4 auto-detects auth requirements from `@secured` and `@noauth` annotations.
 Configure in `.env`:
 
 ```bash
-SWAGGER_TITLE=My Store API
-SWAGGER_DESCRIPTION=API for managing products, orders, and users
-SWAGGER_VERSION=1.0.0
+TINA4_SWAGGER_TITLE=My Store API
+TINA4_SWAGGER_DESCRIPTION=API for managing products, orders, and users
+TINA4_SWAGGER_VERSION=1.0.0
 ```
 
 This appears in the Swagger UI header and the OpenAPI spec:
@@ -382,13 +382,13 @@ npm install -g @openapitools/openapi-generator-cli
 
 # TypeScript client
 openapi-generator-cli generate \
-  -i http://localhost:7146/swagger/openapi.json \
+  -i http://localhost:7145/swagger/openapi.json \
   -g typescript-fetch \
   -o ./frontend/api-client
 
 # Python client
 openapi-generator-cli generate \
-  -i http://localhost:7146/swagger/openapi.json \
+  -i http://localhost:7145/swagger/openapi.json \
   -g python \
   -o ./python-client
 ```
@@ -553,7 +553,7 @@ Each endpoint needs:
 ### Verify at:
 
 ```
-http://localhost:7146/swagger
+http://localhost:7145/swagger
 ```
 
 ---
@@ -660,7 +660,7 @@ Router::post("/api/users/{id:int}/avatar", function ($request, $response) {
 });
 ```
 
-Visit `http://localhost:7146/swagger`. Verify:
+Visit `http://localhost:7145/swagger`. Verify:
 
 - "Users" section has six endpoints (list, get, create, update, delete, avatar)
 - "Orders" section shows "List user orders" (dual-tagged)
@@ -718,7 +718,7 @@ Visit `http://localhost:7146/swagger`. Verify:
 
 **Cause:** Swagger disabled when `TINA4_DEBUG=false`.
 
-**Fix:** Set `TINA4_SWAGGER=true` in `.env` for staging servers. Be aware that public documentation reveals implementation details.
+**Fix:** Set `TINA4_SWAGGER_ENABLED=true` in `.env` for staging servers. Be aware that public documentation reveals implementation details.
 
 ### 7. SDK Generation Produces Incorrect Types
 

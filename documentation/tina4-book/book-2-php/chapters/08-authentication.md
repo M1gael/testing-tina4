@@ -94,13 +94,13 @@ Tina4 PHP uses **HS256** (HMAC-SHA256) for JWT signing. It uses only the standar
 Set the secret key in `.env`:
 
 ```bash
-SECRET=my-super-secret-key-at-least-32-chars
+TINA4_SECRET=my-super-secret-key-at-least-32-chars
 ```
 
 The `$secret` parameter is **required** on `getToken()` and `validToken()`. Pass it explicitly -- there is no automatic fallback. Read it from your `.env` in your route handler:
 
 ```php
-$secret = $_ENV["SECRET"] ?? getenv("SECRET");
+$secret = $_ENV["TINA4_SECRET"] ?? getenv("TINA4_SECRET");
 ```
 
 `getPayload()` does not take a secret at all -- it decodes without verifying.
@@ -178,7 +178,7 @@ Router::post("/api/register", function ($request, $response) {
 ```
 
 ```bash
-curl -X POST http://localhost:7146/api/register \
+curl -X POST http://localhost:7145/api/register \
   -H "Content-Type: application/json" \
   -d '{"name": "Alice", "email": "alice@example.com", "password": "securePass123"}'
 ```
@@ -248,7 +248,7 @@ Router::post("/api/login", function ($request, $response) {
 The `@noauth` annotation is critical. The login endpoint must be public. You cannot require a token to get a token.
 
 ```bash
-curl -X POST http://localhost:7146/api/login \
+curl -X POST http://localhost:7145/api/login \
   -H "Content-Type: application/json" \
   -d '{"email": "alice@example.com", "password": "securePass123"}'
 ```
@@ -274,7 +274,7 @@ The client stores the token and sends it with subsequent requests.
 The token travels in the `Authorization` header with the `Bearer` prefix:
 
 ```bash
-curl http://localhost:7146/api/profile \
+curl http://localhost:7145/api/profile \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
@@ -327,7 +327,7 @@ Router::get("/api/profile", function ($request, $response) {
 
 ```bash
 # Without token -- 401
-curl http://localhost:7146/api/profile
+curl http://localhost:7145/api/profile
 ```
 
 ```json
@@ -336,7 +336,7 @@ curl http://localhost:7146/api/profile
 
 ```bash
 # With valid token -- 200
-curl http://localhost:7146/api/profile \
+curl http://localhost:7145/api/profile \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 ```
 
@@ -523,22 +523,22 @@ Set the backend in `.env`:
 
 ```bash
 # File-based sessions (default)
-TINA4_SESSION_DRIVER=file
+TINA4_SESSION_BACKEND=file
 
 # Redis
-TINA4_SESSION_DRIVER=redis
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
+TINA4_SESSION_BACKEND=redis
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
 
 # MongoDB
-TINA4_SESSION_DRIVER=mongodb
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=27017
+TINA4_SESSION_BACKEND=mongodb
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=27017
 
 # Valkey
-TINA4_SESSION_DRIVER=valkey
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
+TINA4_SESSION_BACKEND=valkey
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
 ```
 
 File sessions work out of the box. Redis or Valkey for multi-server production deployments where sessions must be shared across instances.
@@ -580,7 +580,7 @@ Router::post("/logout", function ($request, $response) {
 ### Session Options
 
 ```bash
-TINA4_SESSION_LIFETIME=3600       # Expires after 1 hour of inactivity
+TINA4_SESSION_TTL=3600       # Expires after 1 hour of inactivity
 TINA4_SESSION_NAME=tina4_session  # Cookie name for the session ID
 ```
 
@@ -610,35 +610,35 @@ A complete authentication system. Registration, login, profile viewing, password
 
 ```bash
 # Register
-curl -X POST http://localhost:7146/api/register \
+curl -X POST http://localhost:7145/api/register \
   -H "Content-Type: application/json" \
   -d '{"name": "Alice", "email": "alice@example.com", "password": "securePass123"}'
 
 # Login
-curl -X POST http://localhost:7146/api/login \
+curl -X POST http://localhost:7145/api/login \
   -H "Content-Type: application/json" \
   -d '{"email": "alice@example.com", "password": "securePass123"}'
 
 # Save the token, then:
 
 # Get profile
-curl http://localhost:7146/api/profile \
+curl http://localhost:7145/api/profile \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 
 # Update profile
-curl -X PUT http://localhost:7146/api/profile \
+curl -X PUT http://localhost:7145/api/profile \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json" \
   -d '{"name": "Alice Smith"}'
 
 # Change password
-curl -X PUT http://localhost:7146/api/profile/password \
+curl -X PUT http://localhost:7145/api/profile/password \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json" \
   -d '{"current_password": "securePass123", "new_password": "evenMoreSecure456"}'
 
 # No token (should fail)
-curl http://localhost:7146/api/profile
+curl http://localhost:7145/api/profile
 ```
 
 ---
@@ -647,7 +647,7 @@ curl http://localhost:7146/api/profile
 
 ### Migration
 
-Create `src/migrations/20260322160000_create_auth_users_table.sql`:
+Create `migrations/20260322160000_create_auth_users_table.sql`:
 
 ```sql
 -- UP
@@ -878,7 +878,7 @@ Router::put("/api/profile/password", function ($request, $response) {
 
 **Cause:** Each server generated its own `secrets/jwt.key`. Or the key was regenerated during deployment.
 
-**Fix:** Set `SECRET` in `.env` and use the same value across all servers. Store it in your secrets manager. Not in version control. Key change invalidates all tokens. Users must log in again.
+**Fix:** Set `TINA4_SECRET` in `.env` and use the same value across all servers. Store it in your secrets manager. Not in version control. Key change invalidates all tokens. Users must log in again.
 
 ### 3. CORS with Authentication
 

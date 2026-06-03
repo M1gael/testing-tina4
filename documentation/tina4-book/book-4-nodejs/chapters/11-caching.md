@@ -40,7 +40,7 @@ The `"ResponseCache:300"` middleware caches the response for 300 seconds (5 minu
 - After 300 seconds, the cache expires and the next request runs the handler again
 
 ```bash
-curl http://localhost:7145/api/products
+curl http://localhost:7148/api/products
 ```
 
 ```json
@@ -57,7 +57,7 @@ curl http://localhost:7145/api/products
 Call it again within 5 minutes:
 
 ```bash
-curl http://localhost:7145/api/products
+curl http://localhost:7148/api/products
 ```
 
 ```json
@@ -106,9 +106,9 @@ Router.get("/api/products", async (req, res) => {
 ```
 
 ```bash
-curl "http://localhost:7145/api/products?page=1"  # Cache MISS, stores for page=1
-curl "http://localhost:7145/api/products?page=2"  # Cache MISS, stores for page=2
-curl "http://localhost:7145/api/products?page=1"  # Cache HIT
+curl "http://localhost:7148/api/products?page=1"  # Cache MISS, stores for page=1
+curl "http://localhost:7148/api/products?page=2"  # Cache MISS, stores for page=2
+curl "http://localhost:7148/api/products?page=1"  # Cache HIT
 ```
 
 ### What Not to Cache
@@ -153,10 +153,9 @@ For production deployments where you want cache persistence across server restar
 
 ```bash
 TINA4_CACHE_BACKEND=redis
-TINA4_CACHE_HOST=localhost
-TINA4_CACHE_PORT=6379
-TINA4_CACHE_PASSWORD=your-redis-password
-TINA4_CACHE_PREFIX=myapp:cache:
+TINA4_CACHE_URL=localhost
+TINA4_CACHE_URL=6379
+TINA4_CACHE_URL=your-redis-password
 ```
 
 Your code does not change. The `cacheGet`, `cacheSet`, and `ResponseCache` middleware all work the same way. Only the storage backend changes.
@@ -177,7 +176,7 @@ If you want cache persistence but do not have Redis, use file-based caching:
 
 ```bash
 TINA4_CACHE_BACKEND=file
-TINA4_CACHE_PATH=/path/to/cache/directory
+TINA4_CACHE_DIR=/path/to/cache/directory
 ```
 
 File cache stores each cache entry as a file on disk. It is slower than memory or Redis but survives server restarts without extra infrastructure.
@@ -284,7 +283,7 @@ Router.get("/api/products/{id:int}", async (req, res) => {
 ```
 
 ```bash
-curl http://localhost:7145/api/products/42
+curl http://localhost:7148/api/products/42
 ```
 
 First call (cache miss):
@@ -512,7 +511,7 @@ Router.get("/api/cache/stats", async (req, res) => {
 ```
 
 ```bash
-curl http://localhost:7145/api/cache/stats
+curl http://localhost:7148/api/cache/stats
 ```
 
 ```json
@@ -616,24 +615,24 @@ Build a product listing endpoint that uses caching at multiple levels.
 
 ```bash
 # First call -- cache miss, slow
-curl "http://localhost:7145/api/store/products?category=Electronics&page=1"
+curl "http://localhost:7148/api/store/products?category=Electronics&page=1"
 
 # Second call -- cache hit, fast
-curl "http://localhost:7145/api/store/products?category=Electronics&page=1"
+curl "http://localhost:7148/api/store/products?category=Electronics&page=1"
 
 # Different category -- cache miss
-curl "http://localhost:7145/api/store/products?category=Fitness&page=1"
+curl "http://localhost:7148/api/store/products?category=Fitness&page=1"
 
 # Create a product -- should invalidate cache
-curl -X POST http://localhost:7145/api/store/products \
+curl -X POST http://localhost:7148/api/store/products \
   -H "Content-Type: application/json" \
   -d '{"name": "Smart Watch", "category": "Electronics", "price": 299.99}'
 
 # Same query again -- cache miss (invalidated by the POST)
-curl "http://localhost:7145/api/store/products?category=Electronics&page=1"
+curl "http://localhost:7148/api/store/products?category=Electronics&page=1"
 
 # Check cache stats
-curl http://localhost:7145/api/store/cache-stats
+curl http://localhost:7148/api/store/cache-stats
 ```
 
 ---
@@ -758,7 +757,7 @@ Router.get("/api/store/cache-stats", async (req, res) => {
 **Expected output -- first call (cache miss):**
 
 ```bash
-curl "http://localhost:7145/api/store/products?category=Electronics&page=1"
+curl "http://localhost:7148/api/store/products?category=Electronics&page=1"
 ```
 
 ```json

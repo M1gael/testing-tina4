@@ -1,33 +1,16 @@
 [
   {
-    "id": "19d9856249d",
-    "timestamp": "1776377272Z",
-    "message": "Hey, I noticed we have 14 routes without any corresponding tests right now. While the code looks solid, adding some tests will really help us catch regressions as we build out more features, which makes future maintenance so much smoother. Let me know if you want to pair up on writing some of those first!",
-    "category": "untested",
+    "id": "19e8cd9a405",
+    "timestamp": "1780479532Z",
+    "message": "Hey there! I noticed there are 372 uncommitted files in the project. It’s important to keep our commits regular and clean so we don’t lose any work or introduce merge conflicts. Let’s get those files committed and pushed, okay?",
+    "category": "uncommitted",
     "actions": [
       {
-        "label": "Good idea, draft some",
-        "action": "draft_tests"
+        "label": "Let's commit",
+        "action": "commit"
       },
       {
-        "label": "Later",
-        "action": "dismiss"
-      }
-    ],
-    "dismissed": false
-  },
-  {
-    "id": "19d985ab6cc",
-    "timestamp": "1776377572Z",
-    "message": "Hey, I noticed we have 14 routes without any corresponding tests, which is a bit of a risk as the codebase grows. Adding some tests now will really help us catch regressions later and make refactoring much safer down the line. Let me know if you want to pair up on tackling a few of those!",
-    "category": "untested",
-    "actions": [
-      {
-        "label": "Help me write tests",
-        "action": "scaffold_tests"
-      },
-      {
-        "label": "I'll handle it",
+        "label": "I'm on it",
         "action": "dismiss"
       }
     ],

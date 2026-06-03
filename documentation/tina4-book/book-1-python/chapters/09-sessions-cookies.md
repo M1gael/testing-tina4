@@ -34,9 +34,9 @@ TINA4_SESSION_BACKEND=file
 
 ```bash
 TINA4_SESSION_BACKEND=redis
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
-TINA4_SESSION_PASSWORD=
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
+TINA4_SESSION_REDIS_PASSWORD=
 ```
 
 Install the Redis driver:
@@ -49,17 +49,17 @@ uv add redis
 
 ```bash
 TINA4_SESSION_BACKEND=mongodb
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=27017
-TINA4_SESSION_DATABASE=tina4_sessions
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=27017
+TINA4_SESSION_MONGO_DB=tina4_sessions
 ```
 
 ### Valkey Configuration
 
 ```bash
 TINA4_SESSION_BACKEND=valkey
-TINA4_SESSION_HOST=localhost
-TINA4_SESSION_PORT=6379
+TINA4_SESSION_REDIS_HOST=localhost
+TINA4_SESSION_REDIS_PORT=6379
 ```
 
 ### Database Sessions
@@ -68,7 +68,7 @@ TINA4_SESSION_PORT=6379
 TINA4_SESSION_BACKEND=database
 ```
 
-Stores sessions in the `tina4_session` table using your existing database connection (`DATABASE_URL`). The table is auto-created on first use.
+Stores sessions in the `tina4_session` table using your existing database connection (`TINA4_DATABASE_URL`). The table is auto-created on first use.
 
 ### Session Lifetime
 
@@ -458,33 +458,33 @@ PRODUCTS = {
 
 ```bash
 # Add items
-curl -X POST http://localhost:7145/cart/add \
+curl -X POST http://localhost:7146/cart/add \
   -H "Content-Type: application/json" \
   -d '{"product_id": 1, "quantity": 2}' \
   -c cookies.txt -b cookies.txt
 
-curl -X POST http://localhost:7145/cart/add \
+curl -X POST http://localhost:7146/cart/add \
   -H "Content-Type: application/json" \
   -d '{"product_id": 3, "quantity": 1}' \
   -c cookies.txt -b cookies.txt
 
 # View cart
-curl http://localhost:7145/cart/api -b cookies.txt
+curl http://localhost:7146/cart/api -b cookies.txt
 
 # Update quantity
-curl -X POST http://localhost:7145/cart/update \
+curl -X POST http://localhost:7146/cart/update \
   -H "Content-Type: application/json" \
   -d '{"product_id": 1, "quantity": 3}' \
   -c cookies.txt -b cookies.txt
 
 # Remove item
-curl -X POST http://localhost:7145/cart/remove \
+curl -X POST http://localhost:7146/cart/remove \
   -H "Content-Type: application/json" \
   -d '{"product_id": 3}' \
   -c cookies.txt -b cookies.txt
 
 # Clear cart
-curl -X POST http://localhost:7145/cart/clear -c cookies.txt -b cookies.txt
+curl -X POST http://localhost:7146/cart/clear -c cookies.txt -b cookies.txt
 ```
 
 ---
@@ -669,7 +669,7 @@ async def clear_cart(request, response):
 
 ### 3. Cookie not sent on cross-origin requests
 
-**Problem:** Your frontend at `http://localhost:3000` calls your API at `http://localhost:7145`, but cookies are not included.
+**Problem:** Your frontend at `http://localhost:3000` calls your API at `http://localhost:7146`, but cookies are not included.
 
 **Cause:** Browsers do not send cookies cross-origin by default. You need both CORS configuration and explicit `credentials: "include"` in fetch.
 

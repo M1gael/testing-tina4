@@ -17,7 +17,7 @@ Router::get("/hello", function ($request, $response) {
 });
 ```
 
-Save that as `src/routes/hello.php`. Start the server. Visit `http://localhost:7146/hello`:
+Save that as `src/routes/hello.php`. Start the server. Visit `http://localhost:7145/hello`:
 
 ```json
 {"message":"Hello, World!"}
@@ -41,28 +41,30 @@ Router::get("/products", function ($request, $response) {
 
 Router::post("/products", function ($request, $response) {
     return $response->json(["action" => "create a product"], 201);
-});
+})->noAuth();
 
 Router::put("/products/{id}", function ($request, $response) {
     $id = $request->params["id"];
     return $response->json(["action" => "replace product " . $id]);
-});
+})->noAuth();
 
 Router::patch("/products/{id}", function ($request, $response) {
     $id = $request->params["id"];
     return $response->json(["action" => "update product " . $id]);
-});
+})->noAuth();
 
 Router::delete("/products/{id}", function ($request, $response) {
     $id = $request->params["id"];
     return $response->json(["action" => "delete product " . $id]);
-});
+})->noAuth();
 ```
+
+> **Default auth policy.** `POST`, `PUT`, `PATCH`, and `DELETE` are secured by default in Tina4 — without `->noAuth()` the examples below return `401 Unauthorized`. In production leave the defaults alone and send an `Authorization: Bearer <token>` header on write requests. For these Getting Started examples we chain `->noAuth()` so `curl` works without setting up auth first.
 
 Test each one:
 
 ```bash
-curl http://localhost:7146/products
+curl http://localhost:7145/products
 ```
 
 ```json
@@ -70,7 +72,7 @@ curl http://localhost:7146/products
 ```
 
 ```bash
-curl -X POST http://localhost:7146/products \
+curl -X POST http://localhost:7145/products \
   -H "Content-Type: application/json" \
   -d '{"name": "Widget"}'
 ```
@@ -80,7 +82,7 @@ curl -X POST http://localhost:7146/products \
 ```
 
 ```bash
-curl -X PUT http://localhost:7146/products/42
+curl -X PUT http://localhost:7145/products/42
 ```
 
 ```json
@@ -88,7 +90,7 @@ curl -X PUT http://localhost:7146/products/42
 ```
 
 ```bash
-curl -X PATCH http://localhost:7146/products/42
+curl -X PATCH http://localhost:7145/products/42
 ```
 
 ```json
@@ -96,7 +98,7 @@ curl -X PATCH http://localhost:7146/products/42
 ```
 
 ```bash
-curl -X DELETE http://localhost:7146/products/42
+curl -X DELETE http://localhost:7145/products/42
 ```
 
 ```json
@@ -104,6 +106,59 @@ curl -X DELETE http://localhost:7146/products/42
 ```
 
 `GET` reads. `POST` creates. `PUT` replaces. `PATCH` patches. `DELETE` removes. REST convention. Predictable API.
+
+### HEAD and OPTIONS — automatic, no boilerplate
+
+Tina4 handles `HEAD` and `OPTIONS` for you. **You don't register them.** They follow from your `Router::get(...)` / `Router::post(...)` / etc. routes:
+
+- **`HEAD`** is identical to `GET` except the response carries no body (RFC 9110 §9.3.2). Every `GET` route automatically responds to `HEAD` — the framework strips the response body on the way out and preserves `Content-Length` pointing at the byte count the equivalent `GET` would have sent. Cache validators, link checkers, and uptime probes work without you writing anything.
+- **`OPTIONS`** on any registered path returns `204 No Content` with an `Allow:` header listing every method the path supports (RFC 9110 §9.3.7).
+- **Wrong method on an existing path** returns `405 Method Not Allowed` with the same `Allow:` header (RFC 9110 §15.5.6 + §10.2.1). Sending `PUT` to a `GET`-only route used to return `404` — semantically wrong and confusing for link checkers. Now you get a real `405`.
+- **`TRACE` and `CONNECT`** are rejected with `405` (security default for origin servers).
+
+```bash
+# HEAD on a GET route — same headers, empty body
+curl -sI http://localhost:7145/products
+# HTTP/1.1 200 OK
+# Content-Type: application/json
+# Content-Length: 33
+
+# OPTIONS — discover what the path supports
+curl -sI -X OPTIONS http://localhost:7145/products
+# HTTP/1.1 204 No Content
+# Allow: GET, POST, HEAD, OPTIONS
+
+# Wrong method — clear 405 with Allow header
+curl -sI -X PUT http://localhost:7145/products
+# HTTP/1.1 405 Method Not Allowed
+# Allow: GET, POST, HEAD, OPTIONS
+```
+
+### Explicit `Router::head()` and `Router::options()` registration
+
+The automatic behaviour is enough for 95% of apps. When you need custom HEAD or OPTIONS handlers, register them explicitly:
+
+```php
+use Tina4\Router;
+use Tina4\Request;
+use Tina4\Response;
+
+// HEAD handler that doesn't run the full GET body — useful for
+// expensive endpoints where the client only needs to check existence
+// or read validators (ETag, Last-Modified).
+Router::head("/expensive/{id}", function (Request $request, Response $response) {
+    $response->header("ETag", computeEtag($request->params["id"]));
+    return $response;
+});
+
+// OPTIONS handler that returns more than just Allow — for example
+// a discovery endpoint.
+Router::options("/api/discovery", function (Request $request, Response $response) {
+    return $response->json(["version" => "v1", "endpoints" => [...]]);
+});
+```
+
+The framework still strips the response body for `HEAD` handlers (RFC 9110 §9.3.2 is a MUST), so you can't accidentally leak content even if your handler returns a body.
 
 ---
 
@@ -127,7 +182,7 @@ Router::get("/users/{id}/posts/{postId}", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/users/5/posts/99
+curl http://localhost:7145/users/5/posts/99
 ```
 
 ```json
@@ -156,7 +211,7 @@ Router::get("/orders/{id:int}", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/orders/42
+curl http://localhost:7145/orders/42
 ```
 
 ```json
@@ -166,7 +221,7 @@ curl http://localhost:7146/orders/42
 Pass a non-integer and the route does not match. A 404 comes back instead:
 
 ```bash
-curl http://localhost:7146/orders/abc
+curl http://localhost:7145/orders/abc
 ```
 
 ```json
@@ -226,7 +281,7 @@ Router::get("/files/{filepath:path}", function ($request, $response) {
 
 ```bash
 # Integer route -- matches digits, returns an integer
-curl http://localhost:7146/products/42
+curl http://localhost:7145/products/42
 ```
 
 ```json
@@ -235,7 +290,7 @@ curl http://localhost:7146/products/42
 
 ```bash
 # Integer route -- non-integer gives a 404
-curl http://localhost:7146/products/abc
+curl http://localhost:7145/products/abc
 ```
 
 ```json
@@ -244,7 +299,7 @@ curl http://localhost:7146/products/abc
 
 ```bash
 # Path catch-all -- captures everything after /files/
-curl http://localhost:7146/files/images/photos/cat.jpg
+curl http://localhost:7145/files/images/photos/cat.jpg
 ```
 
 ```json
@@ -278,7 +333,7 @@ Router::get("/search", function ($request, $response) {
 ```
 
 ```bash
-curl "http://localhost:7146/search?q=keyboard&page=2&limit=20"
+curl "http://localhost:7145/search?q=keyboard&page=2&limit=20"
 ```
 
 ```json
@@ -321,7 +376,7 @@ Router::group("/api/v1", function () {
 These register as `/api/v1/users`, `/api/v1/users/{id}`, and `/api/v1/products`. Short paths inside the group. Tina4 prepends the prefix.
 
 ```bash
-curl http://localhost:7146/api/v1/users
+curl http://localhost:7145/api/v1/users
 ```
 
 ```json
@@ -329,7 +384,7 @@ curl http://localhost:7146/api/v1/users
 ```
 
 ```bash
-curl http://localhost:7146/api/v1/products
+curl http://localhost:7145/api/v1/products
 ```
 
 ```json
@@ -358,7 +413,7 @@ Router::group("/api", function () {
 ```
 
 ```bash
-curl http://localhost:7146/api/v1/status
+curl http://localhost:7145/api/v1/status
 ```
 
 ```json
@@ -366,7 +421,7 @@ curl http://localhost:7146/api/v1/status
 ```
 
 ```bash
-curl http://localhost:7146/api/v2/status
+curl http://localhost:7145/api/v2/status
 ```
 
 ```json
@@ -430,7 +485,7 @@ Router::get("/api/secret", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/api/secret
+curl http://localhost:7145/api/secret
 ```
 
 ```json
@@ -440,7 +495,7 @@ curl http://localhost:7146/api/secret
 Status: `401 Unauthorized`.
 
 ```bash
-curl http://localhost:7146/api/secret -H "X-API-Key: my-secret-key"
+curl http://localhost:7145/api/secret -H "X-API-Key: my-secret-key"
 ```
 
 ```json
@@ -557,10 +612,10 @@ Router::get("/api/account", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/api/account
+curl http://localhost:7145/api/account
 # 401 Unauthorized
 
-curl http://localhost:7146/api/account -H "Authorization: Bearer eyJhbGci..."
+curl http://localhost:7145/api/account -H "Authorization: Bearer eyJhbGci..."
 # 200 OK
 ```
 
@@ -610,7 +665,7 @@ Router::get("/docs/{path:path}", function ($request, $response) {
 ```
 
 ```bash
-curl http://localhost:7146/docs/getting-started
+curl http://localhost:7145/docs/getting-started
 ```
 
 ```json
@@ -618,7 +673,7 @@ curl http://localhost:7146/docs/getting-started
 ```
 
 ```bash
-curl http://localhost:7146/docs/api/authentication/jwt
+curl http://localhost:7145/docs/api/authentication/jwt
 ```
 
 ```json
@@ -787,29 +842,29 @@ Test with:
 
 ```bash
 # List all
-curl http://localhost:7146/api/products
+curl http://localhost:7145/api/products
 
 # Filter by category
-curl "http://localhost:7146/api/products?category=Fitness"
+curl "http://localhost:7145/api/products?category=Fitness"
 
 # Get one
-curl http://localhost:7146/api/products/3
+curl http://localhost:7145/api/products/3
 
 # Create
-curl -X POST http://localhost:7146/api/products \
+curl -X POST http://localhost:7145/api/products \
   -H "Content-Type: application/json" \
   -d '{"name": "Desk Lamp", "category": "Office", "price": 39.99, "in_stock": true}'
 
 # Update
-curl -X PUT http://localhost:7146/api/products/3 \
+curl -X PUT http://localhost:7145/api/products/3 \
   -H "Content-Type: application/json" \
   -d '{"name": "Burr Coffee Grinder", "category": "Kitchen", "price": 59.99, "in_stock": true}'
 
 # Delete
-curl -X DELETE http://localhost:7146/api/products/3
+curl -X DELETE http://localhost:7145/api/products/3
 
 # Not found
-curl http://localhost:7146/api/products/999
+curl http://localhost:7145/api/products/999
 ```
 
 ---

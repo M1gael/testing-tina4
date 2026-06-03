@@ -4,7 +4,7 @@
 
 Every example so far stored data in Python lists. Restart the server. Data gone. A real application demands persistence.
 
-Tina4 Python makes database access straightforward. Set a `DATABASE_URL` in your `.env`. Create a `Database()` connection. Run SQL. No ORM required (Chapter 6 adds that). The SQL you already know carries over unchanged.
+Tina4 Python makes database access straightforward. Set a `TINA4_DATABASE_URL` in your `.env`. Create a `Database()` connection. Run SQL. No ORM required (Chapter 6 adds that). The SQL you already know carries over unchanged.
 
 Picture a notes application. Users create, edit, and delete notes. Those notes must survive restarts, support searching, and handle concurrent users. A database delivers all three.
 
@@ -12,19 +12,19 @@ Picture a notes application. Users create, edit, and delete notes. Those notes m
 
 ## 2. Configuration
 
-### DATABASE_URL
+### TINA4_DATABASE_URL
 
 Set your database connection in `.env`:
 
 ```bash
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 ```
 
 That is the default -- a SQLite database stored in `data/`. SQLite ships with Python. No install required.
 
 Tina4 supports six database engines:
 
-| Engine | DATABASE_URL Format | Package Required |
+| Engine | TINA4_DATABASE_URL Format | Package Required |
 |--------|-------------------|-----------------|
 | SQLite | `sqlite:///data/app.db` | None (stdlib) |
 | PostgreSQL | `postgresql://user:pass@host:5432/dbname` | `psycopg2` |
@@ -66,7 +66,7 @@ from tina4_python.database.connection import Database
 db = Database()
 ```
 
-One line. `Database()` reads `DATABASE_URL` from your `.env` and connects. If the SQLite file does not exist, the adapter creates one.
+One line. `Database()` reads `TINA4_DATABASE_URL` from your `.env` and connects. If the SQLite file does not exist, the adapter creates one.
 
 You can also pass a URL directly:
 
@@ -96,6 +96,38 @@ Any additional keyword arguments pass through to the underlying driver's `connec
 ```python
 db = Database("firebird://localhost:3050//data/legacy.fdb", charset="ISO8859_1")
 ```
+
+### Firebird URL Forms
+
+Firebird is the awkward one in the stack: every other engine has a server-side database name (`postgres://host:port/dbname`), but Firebird wants either an absolute file path on the server, a Windows drive-letter path, or an alias. The classic URI form needs a double slash to keep the leading `/` of an absolute path through `urlparse`, which is unintuitive.
+
+Tina4 normalises five equivalent forms. Pick whichever reads best:
+
+```python
+# Classic double-slash absolute path -- the URL spec way
+db = Database("firebird://SYSDBA:masterkey@localhost:3050//firebird/data/app.fdb")
+
+# Single-slash absolute path -- what most people instinctively type
+db = Database("firebird://SYSDBA:masterkey@localhost:3050/firebird/data/app.fdb")
+
+# Windows drive-letter path
+db = Database("firebird://SYSDBA:masterkey@host:3050/C:/Data/app.fdb")
+
+# Windows with URL-encoded colon
+db = Database("firebird://SYSDBA:masterkey@host:3050/C%3A/Data/app.fdb")
+
+# Firebird alias (single token, no slashes)
+db = Database("firebird://SYSDBA:masterkey@localhost:3050/employee")
+```
+
+For ops setups that keep the server URL and the database location in separate config layers -- or for Windows backslash paths that fight URL encoding -- set `TINA4_DATABASE_FIREBIRD_PATH`:
+
+```bash
+TINA4_DATABASE_FIREBIRD_PATH=C:\firebird\data\app.fdb
+TINA4_DATABASE_URL=firebird://SYSDBA:masterkey@localhost:3050/ignored
+```
+
+The env override wins over whatever path is in the URL.
 
 ### Firebird Dual-Driver Support
 
@@ -374,7 +406,7 @@ async def import_notes(request, response):
 ```
 
 ```bash
-curl -X POST http://localhost:7145/api/notes/import \
+curl -X POST http://localhost:7146/api/notes/import \
   -H "Content-Type: application/json" \
   -d '{"notes": [{"title": "Note 1", "content": "First"}, {"title": "Note 2", "content": "Second"}, {"title": "Note 3", "content": "Third"}]}'
 ```
@@ -699,33 +731,33 @@ Build a complete notes application API with database persistence.
 
 ```bash
 # Create notes
-curl -X POST http://localhost:7145/api/notes \
+curl -X POST http://localhost:7146/api/notes \
   -H "Content-Type: application/json" \
   -d '{"title": "Shopping List", "content": "Milk, eggs, bread", "category": "personal"}'
 
-curl -X POST http://localhost:7145/api/notes \
+curl -X POST http://localhost:7146/api/notes \
   -H "Content-Type: application/json" \
   -d '{"title": "Sprint Planning", "content": "Review backlog, assign tasks", "category": "work", "pinned": true}'
 
 # List all
-curl http://localhost:7145/api/notes
+curl http://localhost:7146/api/notes
 
 # Filter by category
-curl "http://localhost:7145/api/notes?category=work"
+curl "http://localhost:7146/api/notes?category=work"
 
 # Filter by pinned
-curl "http://localhost:7145/api/notes?pinned=true"
+curl "http://localhost:7146/api/notes?pinned=true"
 
 # Get categories
-curl http://localhost:7145/api/notes/categories
+curl http://localhost:7146/api/notes/categories
 
 # Update
-curl -X PUT http://localhost:7145/api/notes/1 \
+curl -X PUT http://localhost:7146/api/notes/1 \
   -H "Content-Type: application/json" \
   -d '{"title": "Updated Shopping List", "content": "Milk, eggs, bread, butter"}'
 
 # Delete
-curl -X DELETE http://localhost:7145/api/notes/2
+curl -X DELETE http://localhost:7146/api/notes/2
 ```
 
 ---

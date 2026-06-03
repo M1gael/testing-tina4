@@ -1,5 +1,14 @@
 # Environment Variables
 
+> **⚠️ BREAKING CHANGE — Tina4 v3.12.0**
+>
+> Every framework env var now requires the `TINA4_` prefix. The legacy un-prefixed names (`DATABASE_URL`, `SECRET`, `SMTP_HOST`, `HOST_NAME`, etc.) no longer work. Setting them at startup makes the framework refuse to boot with a list of renames.
+>
+> Run `tina4 env --migrate` to rewrite your existing `.env` automatically, or rename manually using the table below. The runtime guard prints the same mapping if it detects legacy names.
+>
+> **Conventional names stay un-prefixed:** `PORT`, `HOST`, `NODE_ENV`, `RACK_ENV`, `RUBY_ENV`, `ENVIRONMENT`. These are runtime/PaaS conventions, not framework config.
+
+
 Tina4 Python is configured through environment variables, read from `.env` at the project root. Every variable has a sensible default — most projects set three or four values and leave the rest alone.
 
 This chapter lists every variable the Python framework reads, grouped by subsystem. Start with the minimum-config examples at the end, then come back here when you need to tune something specific.
@@ -11,11 +20,15 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `HOST` | `0.0.0.0` | Bind address. `0.0.0.0` listens on every interface. `127.0.0.1` restricts to localhost. |
-| `PORT` | `7145` | HTTP server port. The Rust CLI prefers `TINA4_PORT` but falls back to `PORT`. |
+| `TINA4_HOST` | _(inherits `HOST`)_ | Explicit Tina4-specific bind address override. Takes precedence over `HOST` when both are set. |
+| `PORT` | `7146` | HTTP server port. The Rust CLI prefers `TINA4_PORT` but falls back to `PORT`. |
 | `TINA4_PORT` | _(inherits `PORT`)_ | Explicit Tina4-specific port override. Takes precedence over `PORT` when both are set. |
-| `HOST_NAME` | `localhost:7145` | Fully-qualified host used in generated absolute URLs (Swagger, OAuth redirects, emails). |
+| `TINA4_HOST_NAME` | `localhost:7146` | Fully-qualified host used in generated absolute URLs (Swagger, OAuth redirects, emails). |
 | `TINA4_DEBUG` | `false` | Master debug toggle. Enables Swagger UI, dev dashboard, live reload, template dump filter, error overlay. Never set to `true` in production. |
 | `TINA4_ENV` | `development` | Runtime environment label. Values like `development`, `staging`, `production` control dev-only features. |
+| `TINA4_ENV_FILE` | `.env` | Alternative `.env` path. Read at boot before any other framework config — point at `.env.staging` or `.env.production` to switch the whole config tree. |
+| `TINA4_SUPPRESS` | `false` | Suppresses the framework startup banner. Useful in CI runs or systemd units where stdout is parsed by another process. |
+| `TINA4_HEALTH_PATH` | `/__health` | URL for the built-in liveness/readiness endpoint. The legacy `/health` path is kept as an alias. |
 | `TINA4_NO_BROWSER` | `false` | Stops `tina4 serve` from opening your browser on every restart. Recommended during active development. |
 | `TINA4_OPEN_BROWSER` | `true` | Alternative flag — set to `false` to prevent the browser opening on start. |
 | `TINA4_NO_RELOAD` | `false` | Disables the dev hot-reload signal from the Rust CLI. Use when you want a stable server for debugging. |
@@ -28,11 +41,11 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SECRET` | `tina4-default-secret` | JWT signing secret. Must be long, random, and unique per environment. **Never commit.** |
+| `TINA4_SECRET` | `tina4-default-secret` | JWT signing secret. Must be long, random, and unique per environment. **Never commit.** |
 | `TINA4_TOKEN_LIMIT` | `60` | JWT token lifetime in minutes. |
 | `TINA4_TOKEN_EXPIRES_IN` | _(inherits `TOKEN_LIMIT`)_ | Alias for `TINA4_TOKEN_LIMIT`. |
 | `TINA4_API_KEY` | _(empty)_ | Static API key used by `Auth.validate_api_key()` as a fallback to JWT. |
-| `API_KEY` | _(empty)_ | Legacy alias for `TINA4_API_KEY`. |
+| `TINA4_API_KEY` | _(empty)_ | Legacy alias for `TINA4_API_KEY`. |
 
 ---
 
@@ -40,12 +53,14 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DATABASE_URL` | `sqlite:///data/app.db` | Connection URL. Scheme selects the driver: `sqlite`, `postgres`, `mysql`, `firebird`. |
-| `DATABASE_USERNAME` | _(empty)_ | Overrides the username embedded in `DATABASE_URL`. |
-| `DATABASE_PASSWORD` | _(empty)_ | Overrides the password embedded in `DATABASE_URL`. |
+| `TINA4_DATABASE_URL` | `sqlite:///data/app.db` | Connection URL. Scheme selects the driver: `sqlite`, `postgres`, `mysql`, `firebird`. |
+| `TINA4_DATABASE_USERNAME` | _(empty)_ | Overrides the username embedded in `TINA4_DATABASE_URL`. |
+| `TINA4_DATABASE_PASSWORD` | _(empty)_ | Overrides the password embedded in `TINA4_DATABASE_URL`. |
+| `TINA4_DATABASE_FIREBIRD_PATH` | _(empty)_ | Overrides the database path/alias parsed from `TINA4_DATABASE_URL` for Firebird. Useful for Windows backslash paths and split-config setups. |
 | `TINA4_DB_CACHE` | `false` | Enables in-memory query-result caching for read queries. |
 | `TINA4_DB_CACHE_TTL` | `60` | Query cache TTL in seconds when `TINA4_DB_CACHE=true`. |
-| `ORM_PLURAL_TABLE_NAMES` | `true` | When `true`, the ORM pluralises class names into table names (`User` → `users`). Set `false` to keep them singular. |
+| `TINA4_DB_POOL` | `0` | Default `pool` size for `Database(url)` when the caller doesn't pass `pool=` explicitly. `0` disables pooling and uses a single connection. Set to a positive integer (e.g. `4`) to enable round-robin connection pooling. |
+| `TINA4_ORM_PLURAL_TABLE_NAMES` | `true` | When `true`, the ORM pluralises class names into table names (`User` → `users`). Set `false` to keep them singular. |
 
 ---
 
@@ -55,6 +70,14 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 |----------|---------|-------------|
 | `TINA4_CORS_ORIGINS` | `*` | Comma-separated allowed origins. Lock down to real domains in production. |
 | `TINA4_CORS_MAX_AGE` | `600` | Preflight cache lifetime in seconds. |
+
+---
+
+## Routing
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TINA4_TRAILING_SLASH_REDIRECT` | `false` | When truthy, requests to `/foo/` are 301-redirected to `/foo` so search engines and clients only see one canonical URL per route. The root `/` is exempt. |
 
 ---
 
@@ -87,7 +110,9 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 | `TINA4_SESSION_TTL` | `1800` | Session expiry in seconds (30 minutes). |
 | `TINA4_SESSION_SAMESITE` | `Lax` | SameSite cookie attribute. Options: `Strict`, `Lax`, `None`. |
 | `TINA4_SESSION_PATH` | `data/sessions` | Filesystem path for the file backend. |
-| `TINA4_SESSION` | `PY_SESS` | Name of the session cookie. |
+| `TINA4_SESSION_NAME` | `tina4_session` | Name of the session cookie sent to the browser. |
+| `TINA4_SESSION_HTTPONLY` | `true` | Sets the `HttpOnly` cookie attribute so JavaScript on the page cannot read the session ID. |
+| `TINA4_SESSION_SECURE` | `false` | Sets the `Secure` cookie attribute so the session cookie is only sent over HTTPS. Turn on in production. |
 
 ### Redis/Valkey session backend
 
@@ -109,6 +134,14 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 | `TINA4_SESSION_MONGO_URL` | `mongodb://localhost:27017` | MongoDB connection string. |
 | `TINA4_SESSION_MONGO_DB` | `tina4` | MongoDB database name. |
 | `TINA4_SESSION_MONGO_COLLECTION` | `sessions` | MongoDB collection name. |
+
+---
+
+## Templates
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TINA4_TEMPLATE_CACHE_TTL` | `0` | Frond template compile-cache TTL in seconds. `0` keeps compiled templates in memory permanently — set to a positive value if you want the engine to recompile after N seconds (rarely needed; `tina4 serve` invalidates the cache automatically on file change). |
 
 ---
 
@@ -186,19 +219,29 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 | `TINA4_MAIL_ENCRYPTION` | `tls` | Connection encryption. Options: `tls`, `ssl`, `none`. |
 | `TINA4_MAIL_IMAP_HOST` | _(none)_ | IMAP server for inbound mail. |
 | `TINA4_MAIL_IMAP_PORT` | `993` | IMAP server port. |
+| `TINA4_MAIL_IMAP_ENCRYPTION` | `tls` | IMAP transport encryption. Options: `tls`, `starttls`, `none`. Invalid values fall back to `tls` so a typo can't accidentally disable encryption. |
 | `TINA4_MAILBOX_DIR` | `data/mailbox` | Dev mailbox directory. All outbound mail lands here when `TINA4_DEBUG=true`. |
 
-> `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_FROM_NAME`, `IMAP_HOST`, `IMAP_PORT` are accepted as legacy aliases. New projects should use the `TINA4_MAIL_*` names.
+> `TINA4_MAIL_HOST`, `TINA4_MAIL_PORT`, `TINA4_MAIL_USERNAME`, `TINA4_MAIL_PASSWORD`, `TINA4_MAIL_FROM`, `TINA4_MAIL_FROM_NAME`, `TINA4_MAIL_IMAP_HOST`, `TINA4_MAIL_IMAP_PORT` are accepted as legacy aliases. New projects should use the `TINA4_MAIL_*` names.
 
 ---
 
 ## Logging
 
+Logs default to stdout in `text` format. Set `TINA4_LOG_OUTPUT=file` plus `TINA4_LOG_FILE=app.log` to write to disk; the framework rotates at `TINA4_LOG_ROTATE_SIZE` bytes and keeps `TINA4_LOG_ROTATE_KEEP` backups (`app.log.1` … `app.log.N`). Switch `TINA4_LOG_FORMAT=json` for one structured record per line — perfect for shipping to Loki, Datadog, or any JSON-aware log aggregator.
+
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `TINA4_LOG_LEVEL` | `ERROR` | Minimum log level written to files. Options: `ALL`, `DEBUG`, `INFO`, `WARNING`, `ERROR`. |
-| `TINA4_LOG_MAX_SIZE` | `10485760` | Per-file log size limit in bytes (10 MB). Rotated when exceeded. |
-| `TINA4_LOG_KEEP` | `5` | Number of rotated log files to retain. |
+| `TINA4_LOG_FILE` | _(empty — stdout only)_ | Path to a log file. Empty leaves logs on stdout. Relative paths are resolved against `TINA4_LOG_DIR`; absolute paths are used verbatim. |
+| `TINA4_LOG_DIR` | `logs` | Directory for log files. Joined with `TINA4_LOG_FILE` when the latter is a relative path. |
+| `TINA4_LOG_FORMAT` | `text` | Output format. `text` writes the human-readable `[INFO   ] message` form; `json` writes one structured JSON record per line. |
+| `TINA4_LOG_OUTPUT` | `stdout` | Where logs go. Options: `stdout`, `file`, `both`. |
+| `TINA4_LOG_CRITICAL` | `false` | Enables the `Log.critical(...)` level above `error`. When off, calls to `Log.critical()` are silent no-ops. |
+| `TINA4_LOG_ROTATE_SIZE` | `10485760` | Bytes per file before rotation (default 10 MB). `0` disables rotation entirely. |
+| `TINA4_LOG_ROTATE_KEEP` | `5` | Number of rotated files to keep (`app.log.1` … `app.log.N`). Older files are deleted on the next rotation. |
+| `TINA4_LOG_MAX_SIZE` | `10485760` | Legacy alias for `TINA4_LOG_ROTATE_SIZE`. Per-file log size limit in bytes (10 MB). Rotated when exceeded. |
+| `TINA4_LOG_KEEP` | `5` | Legacy alias for `TINA4_LOG_ROTATE_KEEP`. Number of rotated log files to retain. |
 
 ---
 
@@ -229,12 +272,17 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 
 ## AI and MCP Tooling
 
+The dashboard AI chat and the framework's RAG-based code search both default to a **local qwen2.5-coder model served via Ollama**. Nothing leaves your machine unless you point `TINA4_AI_URL` at a remote endpoint.
+
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `TINA4_AI_URL` | `http://localhost:11434` | OpenAI-compatible HTTP endpoint for the chat/completion model. Ollama by default; can point at any compatible provider (vLLM, LM Studio, an OpenAI proxy). |
+| `TINA4_AI_MODEL` | `qwen2.5-coder` | Model identifier the endpoint should serve. |
+| `TINA4_RAG_URL` | _(inherits `TINA4_AI_URL`)_ | Embedding endpoint for the framework RAG index. Override only if embeddings live on a different host. |
+| `TINA4_AI_MODEL` | `nomic-embed-text` | Embedding model used to index `tina4_python/` and `src/`. |
 | `TINA4_NO_AI_PORT` | `false` | Disables the MCP port listener in dev mode. |
-| `TINA4_OVERRIDE_CLIENT` | _(none)_ | Forces a specific AI client ID in `/__dev/api/ai`. Used for testing. |
-| `ANTHROPIC_API_KEY` | _(none)_ | Anthropic API key for built-in AI integrations. |
-| `OPENAI_API_KEY` | _(none)_ | OpenAI API key for built-in AI integrations. |
+| `TINA4_MCP_REMOTE` | `false` | Allow the MCP server to bind on non-localhost interfaces. **Never enable in production.** |
+| `TINA4_OVERRIDE_CLIENT` | `false` | Allow the framework to start without the Rust CLI (`tina4 serve`). Used in Docker images and CI runners; bypasses SCSS compilation, the file watcher, and live reload. |
 
 ---
 
@@ -242,9 +290,30 @@ This chapter lists every variable the Python framework reads, grouped by subsyst
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SWAGGER_TITLE` | `Tina4 API` | OpenAPI spec title. |
-| `SWAGGER_DESCRIPTION` | _(empty)_ | OpenAPI spec description. |
-| `SWAGGER_VERSION` | `1.0.0` | OpenAPI spec version. |
+| `TINA4_SWAGGER_TITLE` | `Tina4 API` | OpenAPI spec title. |
+| `TINA4_SWAGGER_DESCRIPTION` | _(empty)_ | OpenAPI spec description. |
+| `TINA4_SWAGGER_VERSION` | `1.0.0` | OpenAPI spec version. |
+| `TINA4_SWAGGER_ENABLED` | _(inherits `TINA4_DEBUG`)_ | Toggle the Swagger UI on or off independently of debug mode. Set `true` in production to keep API docs available without enabling the rest of the dev surface. |
+| `TINA4_SWAGGER_CONTACT_EMAIL` | _(empty)_ | Contact email rendered in the OpenAPI spec's `info.contact.email` field. |
+| `TINA4_SWAGGER_LICENSE` | _(empty)_ | License name in the OpenAPI spec's `info.license.name` field (e.g. `MIT`, `Apache-2.0`). |
+
+---
+
+## GraphQL
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TINA4_GRAPHQL_ENDPOINT` | `/graphql` | URL path the GraphQL handler is mounted on. POST serves queries, GET serves the GraphiQL IDE. |
+| `TINA4_GRAPHQL_AUTO_SCHEMA` | `true` | When `true`, the framework auto-builds the GraphQL schema from every registered ORM model on boot. Set `false` if you want to define the schema manually with `gql.schema.add_type(...)`. |
+
+---
+
+## MCP (Model Context Protocol)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `TINA4_MCP` | _(inherits `TINA4_DEBUG`)_ | Toggle the built-in MCP dev-tools server. Set explicitly to keep the MCP endpoint exposed in a debug-disabled deployment (e.g. for a remote AI assistant). |
+| `TINA4_MCP_PORT` | _(framework port + 2000)_ | TCP port for the MCP server. The default offset keeps it clear of both the main server (default `7145`) and the AI test port (`+1000`). |
 
 ---
 
@@ -263,8 +332,8 @@ Debug mode lights up the Swagger UI, the dev dashboard, detailed error pages, an
 ## Minimal `.env` for Production
 
 ```bash
-SECRET=your-long-random-secret-here
-DATABASE_URL=postgresql://user:password@db-host:5432/myapp
+TINA4_SECRET=your-long-random-secret-here
+TINA4_DATABASE_URL=postgresql://user:password@db-host:5432/myapp
 TINA4_CORS_ORIGINS=https://myapp.com,https://www.myapp.com
 TINA4_HSTS=31536000
 TINA4_MAIL_HOST=smtp.example.com

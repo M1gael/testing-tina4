@@ -151,29 +151,39 @@ Click "Try It" on any gallery item. Tina4 creates the necessary files in your pr
 
 ## 7. Live Reload
 
-When `TINA4_DEBUG=true`, Tina4 watches your project files for changes and reloads the server. Edit a route file. Save it. The browser refreshes with the new code. No manual restart required.
+When `TINA4_DEBUG=true`, Tina4 watches your project files for changes and refreshes the browser automatically. Edit a route file. Save it. The browser refreshes with the new code. No manual restart required.
 
 ```bash
 tina4 serve
 ```
 
 ```
-  Tina4 Ruby v3.0.0
+  Tina4 Ruby v3.11.12
   HTTP server running at http://0.0.0.0:7147
-  Live reload enabled -- watching for changes
+  File watcher active — press Ctrl+C to stop
 ```
 
 Live reload watches:
 
-- `src/routes/*.rb` -- Route definitions
-- `src/orm/*.rb` -- ORM models
-- `src/middleware/*.rb` -- Middleware
-- `src/templates/*.html` -- Templates (browser refresh only, no server restart)
+- `src/**` -- Routes, ORM, middleware, templates, SCSS
+- `migrations/` -- SQL migrations
 - `.env` -- Environment variables
 
 ### How It Works
 
-Tina4 uses file system monitoring to detect changes. When a Ruby file changes, the server restarts. When a template changes, only the browser refreshes (no server restart needed).
+The `tina4` Rust CLI is the sole file watcher for the whole Tina4 stack. There is no framework-side watcher (the `listen`-gem based `dev_reload.rb` was removed in 3.11.x).
+
+```
+ ┌────────────┐  POST /__dev/api/reload   ┌────────────┐   WS /__dev_reload    ┌─────────┐
+ │ tina4 CLI  │ ─────────────────────────►│ Ruby server│ ─────────────────────►│ Browser │
+ │ (watcher)  │                           │            │   fallback: poll      │         │
+ └────────────┘                           └────────────┘   GET /__dev/api/mtime└─────────┘
+```
+
+1. The CLI watches `src/`, `migrations/`, `.env` with the `notify` crate. Events are filtered to real source changes — metadata/access events, `__pycache__`, `.git`, `node_modules`, `vendor`, `logs`, `.log`/`.db*`/`.swp` files are ignored. A real mtime check defeats overlayfs / polling-mode spurious events (Podman, distrobox).
+2. On a real change, the CLI POSTs `/__dev/api/reload` to the running Ruby server. The server keeps running.
+3. `Tina4::DevAdmin` bumps its `@reload_mtime` counter and broadcasts `{type: "reload"}` over WebSocket at `/__dev_reload`. `GET /__dev/api/mtime` returns the counter for browsers using the polling fallback.
+4. The dev-toolbar script reloads the browser. SCSS/CSS changes are signalled as `type: "css"` and swap the stylesheet without a full reload.
 
 The reload happens in under a second. Edit code. Switch to the browser. The changes are already there.
 
@@ -471,9 +481,9 @@ The dev tools made each bug visible. The error overlay showed the SQL syntax err
 
 **Problem:** You edited a template but the page still shows the old version.
 
-**Cause:** Template caching is enabled (`TINA4_CACHE_TEMPLATES=true`). The compiled template serves from cache.
+**Cause:** Template caching is enabled (`TINA4_TEMPLATE_CACHE_TTL=true`). The compiled template serves from cache.
 
-**Fix:** In development, set `TINA4_CACHE_TEMPLATES=false` (this is the default when `TINA4_DEBUG=true`). If you enabled template caching manually, disable it for development.
+**Fix:** In development, set `TINA4_TEMPLATE_CACHE_TTL=false` (this is the default when `TINA4_DEBUG=true`). If you enabled template caching manually, disable it for development.
 
 ### 7. Log Files Growing Without Bound
 
@@ -481,7 +491,7 @@ The dev tools made each bug visible. The error overlay showed the SQL syntax err
 
 **Cause:** No log rotation is configured.
 
-**Fix:** Set `TINA4_LOG_MAX_SIZE=10mb` and `TINA4_LOG_MAX_FILES=5` in `.env` to rotate logs automatically.
+**Fix:** Set `TINA4_LOG_MAX_SIZE=10mb` and `TINA4_LOG_KEEP=5` in `.env` to rotate logs automatically.
 
 ### 8. Queue Monitor Shows No Jobs
 
@@ -489,7 +499,7 @@ The dev tools made each bug visible. The error overlay showed the SQL syntax err
 
 **Cause:** The queue system is not running. Jobs are enqueued but no worker processes them.
 
-**Fix:** Start a queue worker: `tina4 worker`. The queue monitor reflects the state of the queue storage (database or Redis). If no worker is running, jobs sit in "Pending" and never move to "Active" or "Completed."
+**Fix:** Start a queue worker: `tina4 queue work`. The queue monitor reflects the state of the queue storage (database or Redis). If no worker is running, jobs sit in "Pending" and never move to "Active" or "Completed."
 
 ### 9. Memory Usage Grows During Development
 

@@ -23,7 +23,7 @@ TINA4_LOG_LEVEL=WARNING
 TINA4_PORT=7147
 
 # Database
-DATABASE_URL=sqlite:///data/app.db
+TINA4_DATABASE_URL=sqlite:///data/app.db
 
 # Security
 CORS_ORIGINS=https://yourdomain.com
@@ -31,8 +31,7 @@ JWT_SECRET=your-long-random-secret-at-least-32-characters
 TINA4_RATE_LIMIT=120
 
 # Performance
-TINA4_CACHE_TEMPLATES=true
-TINA4_MINIFY_HTML=true
+TINA4_TEMPLATE_CACHE_TTL=true
 
 ```
 
@@ -43,8 +42,6 @@ TINA4_MINIFY_HTML=true
 | `TINA4_DEBUG` | `true` | `false` | Hides stack traces, disables toolbar |
 | `TINA4_LOG_LEVEL` | `ALL` | `WARNING` | Reduces log noise |
 | `CORS_ORIGINS` | `*` | Your domain | Prevents cross-origin abuse |
-| `TINA4_CACHE_TEMPLATES` | `false` | `true` | Caches compiled templates |
-| `TINA4_MINIFY_HTML` | `false` | `true` | Reduces response size |
 
 ### Sensitive Values
 
@@ -52,7 +49,7 @@ Production secrets never go into version control. The `.env` file is gitignored 
 
 ```bash
 # Docker: pass env vars at runtime
-docker run -e JWT_SECRET=your-secret -e DATABASE_URL=sqlite:///data/app.db my-app
+docker run -e JWT_SECRET=your-secret -e TINA4_DATABASE_URL=sqlite:///data/app.db my-app
 
 # Fly.io: set secrets
 fly secrets set JWT_SECRET=your-secret
@@ -76,8 +73,8 @@ port ENV.fetch("TINA4_PORT", 7147)
 # Workers (processes) -- set to number of CPU cores
 workers ENV.fetch("WEB_CONCURRENCY", 2)
 
-# Threads per worker
-threads_count = ENV.fetch("TINA4_MAX_THREADS", 5)
+# Threads per worker — Puma's own config var, not a Tina4 setting.
+threads_count = ENV.fetch("PUMA_MAX_THREADS", 5)
 threads threads_count, threads_count
 
 # Environment
@@ -192,9 +189,9 @@ services:
       - TINA4_DEBUG=false
       - TINA4_LOG_LEVEL=WARNING
       - JWT_SECRET=${JWT_SECRET}
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
       - TINA4_CACHE_BACKEND=redis
-      - TINA4_CACHE_HOST=redis
+      - TINA4_CACHE_URL=redis
     volumes:
       - app-data:/app/data
       - app-logs:/app/logs
@@ -209,9 +206,9 @@ services:
 
   worker:
     build: .
-    command: tina4 queue:work
+    command: tina4 queue work
     environment:
-      - DATABASE_URL=sqlite:///data/app.db
+      - TINA4_DATABASE_URL=sqlite:///data/app.db
     volumes:
       - app-data:/app/data
     depends_on:
@@ -573,7 +570,7 @@ After=network.target tina4-app.service
 Type=simple
 User=deploy
 WorkingDirectory=/app
-ExecStart=/usr/local/bin/tina4 queue:work
+ExecStart=/usr/local/bin/tina4 queue work
 Restart=always
 RestartSec=5
 Environment=RACK_ENV=production
@@ -612,9 +609,9 @@ When you run multiple Tina4 instances, Nginx distributes traffic across them:
 ```nginx
 upstream tina4_backend {
     server 127.0.0.1:7147;
-    server 127.0.0.1:7148;
-    server 127.0.0.1:7149;
-    server 127.0.0.1:7150;
+    server 127.0.0.1:7247;
+    server 127.0.0.1:7347;
+    server 127.0.0.1:7447;
 }
 
 server {
@@ -631,13 +628,13 @@ server {
 }
 ```
 
-Start four instances on different ports:
+Start four instances on different ports. Ruby's framework default is `7147`; use any free ports for the additional instances. Set `TINA4_OVERRIDE_CLIENT=true` so Puma can run without going through `tina4 serve`:
 
 ```bash
-TINA4_PORT=7147 bundle exec puma -C config/puma.rb &
-TINA4_PORT=7148 bundle exec puma -C config/puma.rb &
-TINA4_PORT=7149 bundle exec puma -C config/puma.rb &
-TINA4_PORT=7150 bundle exec puma -C config/puma.rb &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7147 bundle exec puma -C config/puma.rb &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7247 bundle exec puma -C config/puma.rb &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7347 bundle exec puma -C config/puma.rb &
+TINA4_OVERRIDE_CLIENT=true TINA4_PORT=7447 bundle exec puma -C config/puma.rb &
 ```
 
 ### Docker Scaling
@@ -702,7 +699,6 @@ Services that ingest JSON logs:
 Enable metrics in `.env`:
 
 ```bash
-TINA4_METRICS=true
 ```
 
 Metrics are available at `/metrics` in Prometheus format:

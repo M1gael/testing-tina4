@@ -34,7 +34,7 @@ Tina4 builds this spec from Python decorators on your routes. No JSON or YAML by
 When `TINA4_DEBUG=true`, the Swagger UI appears at:
 
 ```
-http://localhost:7145/swagger
+http://localhost:7146/swagger
 ```
 
 Open it in your browser. You see all registered routes, organized by tags, with request and response details.
@@ -42,13 +42,13 @@ Open it in your browser. You see all registered routes, organized by tags, with 
 The underlying OpenAPI JSON spec lives at:
 
 ```
-http://localhost:7145/swagger/json
+http://localhost:7146/swagger/json
 ```
 
 This raw JSON feeds tools that import API definitions. Postman, Insomnia, and code generators all consume it.
 
 ```bash
-curl http://localhost:7145/swagger/json
+curl http://localhost:7146/swagger/json
 ```
 
 ```json
@@ -275,10 +275,10 @@ Tina4 auto-detects auth requirements from `@secured` and `@noauth` decorators. S
 The Swagger UI header and OpenAPI spec carry metadata about your API. Configure this metadata through environment variables in `.env`:
 
 ```bash
-SWAGGER_TITLE=My Store API
-SWAGGER_DESCRIPTION=REST API for managing products, orders, and users
-SWAGGER_VERSION=1.0.0
-SWAGGER_DEV_URL=http://localhost:7145
+TINA4_SWAGGER_TITLE=My Store API
+TINA4_SWAGGER_DESCRIPTION=REST API for managing products, orders, and users
+TINA4_SWAGGER_VERSION=1.0.0
+SWAGGER_DEV_URL=http://localhost:7146
 ```
 
 These values appear in the OpenAPI spec under the `info` block:
@@ -293,7 +293,7 @@ These values appear in the OpenAPI spec under the `info` block:
   },
   "servers": [
     {
-      "url": "http://localhost:7145"
+      "url": "http://localhost:7146"
     }
   ]
 }
@@ -301,12 +301,12 @@ These values appear in the OpenAPI spec under the `info` block:
 
 | Variable | Purpose | Default |
 |----------|---------|---------|
-| `SWAGGER_TITLE` | API name shown in the UI header | `Tina4 API` |
-| `SWAGGER_DESCRIPTION` | Brief description below the title | (empty) |
-| `SWAGGER_VERSION` | API version number | `1.0.0` |
-| `SWAGGER_DEV_URL` | Server URL for the spec | `http://localhost:7145` |
+| `TINA4_SWAGGER_TITLE` | API name shown in the UI header | `Tina4 API` |
+| `TINA4_SWAGGER_DESCRIPTION` | Brief description below the title | (empty) |
+| `TINA4_SWAGGER_VERSION` | API version number | `1.0.0` |
+| `SWAGGER_DEV_URL` | Server URL for the spec | `http://localhost:7146` |
 
-When you version your API, update `SWAGGER_VERSION` so consumers know which version they target. The title and description give context -- a developer who opens your Swagger page should know what the API does before scrolling.
+When you version your API, update `TINA4_SWAGGER_VERSION` so consumers know which version they target. The title and description give context -- a developer who opens your Swagger page should know what the API does before scrolling.
 
 ---
 
@@ -321,13 +321,13 @@ npm install -g @openapitools/openapi-generator-cli
 
 # TypeScript client
 openapi-generator-cli generate \
-  -i http://localhost:7145/swagger/json \
+  -i http://localhost:7146/swagger/json \
   -g typescript-fetch \
   -o ./frontend/api-client
 
 # Python client
 openapi-generator-cli generate \
-  -i http://localhost:7145/swagger/json \
+  -i http://localhost:7146/swagger/json \
   -g python \
   -o ./python-client
 ```
@@ -487,9 +487,9 @@ Control Swagger behavior in `.env`:
 TINA4_DEBUG=true
 
 # Custom API title and version shown in Swagger UI
-SWAGGER_TITLE=My Store API
-SWAGGER_VERSION=1.0.0
-SWAGGER_DESCRIPTION=REST API for the My Store e-commerce platform
+TINA4_SWAGGER_TITLE=My Store API
+TINA4_SWAGGER_VERSION=1.0.0
+TINA4_SWAGGER_DESCRIPTION=REST API for the My Store e-commerce platform
 ```
 
 ---
@@ -509,7 +509,7 @@ Take the authentication routes from Chapter 8 (register, login, profile, update 
 
 ### Expected Result
 
-Open `http://localhost:7145/swagger`. You should see:
+Open `http://localhost:7146/swagger`. You should see:
 
 - An "Auth" section with 5 endpoints
 - Each endpoint carries a summary and description

@@ -119,7 +119,7 @@ Creating Tina4 project in ./my-store ...
   Created .gitignore
   Created src/routes/
   Created src/orm/
-  Created src/migrations/
+  Created migrations/
   Created src/seeds/
   Created src/templates/
   Created src/templates/errors/
@@ -211,10 +211,10 @@ my-store/
 ├── Gemfile                 # Gem dependencies
 ├── Gemfile.lock            # Locked dependency versions
 ├── app.rb                  # Application entry point
+├── migrations/             # SQL migration files (project root)
 ├── src/
 │   ├── routes/             # Your route handlers go here
 │   ├── orm/                # Your ORM model classes go here
-│   ├── migrations/         # SQL migration files
 │   ├── seeds/              # Database seed files
 │   ├── templates/          # Frond/Twig templates
 │   │   └── errors/         # Custom 404.html, 500.html
@@ -259,6 +259,8 @@ end
 ```
 
 Save the file. The dev server picks up the change. If not, restart with `tina4 serve`.
+
+> **Cross-language note.** Ruby, PHP, and Node read path parameters from `request.params` / `$request->params` / `req.params`. Python passes them as function arguments instead. Same concept, two shapes — pick the chapter that matches your runtime.
 
 ### Test It
 
@@ -518,7 +520,7 @@ The defaults that matter:
 | Variable | Default Value | What It Means |
 |----------|---------------|---------------|
 | `TINA4_PORT` | `7147` | Server runs on port 7147 |
-| `DATABASE_URL` | `sqlite:///data/app.db` | SQLite database in `data/` |
+| `TINA4_DATABASE_URL` | `sqlite:///data/app.db` | SQLite database in `data/` |
 | `TINA4_LOG_LEVEL` | `ALL` | All log messages output |
 | `CORS_ORIGINS` | `*` | All origins allowed (fine for dev) |
 | `TINA4_RATE_LIMIT` | `100` | 100 requests per minute per IP |
@@ -554,11 +556,11 @@ Restart the server. It now runs on 8080.
 1. **CLI flag** (highest priority): `tina4 serve --port 8080`
 2. **`.env` file**: `TINA4_PORT=8080`
 3. **Environment variable**: `PORT=8080`
-4. **Framework default** (Python: 7145, PHP: 7146, Ruby: 7147, Node.js: 7143)
+4. **Framework default** (PHP: 7145, Python: 7146, Ruby: 7147, Node.js: 7148)
 
 The CLI reads your `.env` file and checks for `TINA4_PORT` (and falls back to `PORT`). The resolved port is passed to the Ruby server. All three methods work -- use whichever fits your workflow.
 
-For the complete `.env` reference with all 68 variables, see [Book 0, Chapter 4: Environment Variables](../../book-0-understanding/chapters/04-environment-variables.md).
+For the complete `.env` reference with all 68 variables, see [Environment Variables](./33-environment-variables.md).
 
 ---
 
@@ -621,7 +623,7 @@ bundle install
 
 ::: warning Two dependencies you must declare
 - **`webrick`** — Tina4's dev server uses WEBrick. Ruby 3.0 dropped WEBrick from the standard library, so you must list it in your `Gemfile` or `tina4 serve` fails with `LoadError: cannot load such file -- webrick`.
-- **`sqlite3`** — the default `DATABASE_URL` points to SQLite. Without this gem the server restarts in a loop with `LoadError: cannot load such file -- sqlite3`.
+- **`sqlite3`** — the default `TINA4_DATABASE_URL` points to SQLite. Without this gem the server restarts in a loop with `LoadError: cannot load such file -- sqlite3`.
 
 `tina4 init ruby` adds both gems automatically. You only need to add them by hand when bootstrapping an empty project.
 :::
@@ -669,10 +671,12 @@ TINA4_DEBUG=true
 ### Step 5: Run It
 
 ```bash
-ruby app.rb
+tina4 serve
 ```
 
 The server starts on `http://localhost:7147`. You should see the Tina4 welcome page. From here, add route files in `src/routes/` and templates in `src/templates/` — the same way as a CLI-scaffolded project.
+
+> **Note:** Tina4 Ruby refuses to start without the Rust CLI. To bypass it (for example inside a Docker image that already wraps the framework) set `TINA4_OVERRIDE_CLIENT=true` in `.env` and run `bundle exec ruby app.rb` directly.
 
 ---
 
