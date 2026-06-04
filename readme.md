@@ -167,6 +167,59 @@ Keep snippets minimal — the chapter code + the framework's complaint, nothing 
 pytest's headers, the full traceback, and any internal inspection. The stance is "we
 copy-pasted from the docs, here's the wall we hit."
 
+**Upstream filing — title and label convention.** Every GitHub issue or comment we file
+upstream is prefixed with the local finding ID in square brackets so the mapping between
+our log and the upstream thread is unambiguous:
+
+```
+[PY-18-04] Chapter 18 — documented "tina4 test" output format doesn't match actual output
+[PY-18-02] Chapter 18 — "No external packages" wrong; pytest required but tina4 init doesn't install it
+```
+
+If multiple findings are filed together in one comment, list all IDs:
+`[PY-01-01, PY-01-03] Getting Started — top section structurally confused + cargo prereq missing`.
+
+Maintainers can grep upstream by the ID and trace it back to a row in our Known Issues
+Log without us having to cross-link manually. The bracket prefix is also short enough
+not to bloat the title.
+
+**Upstream filing — body template.** Keep the body tight. Three sections, no preamble.
+For **comments on an existing issue** the title becomes a `##` header on the first line
+of the same block (since comments have no separate title field). For **new issues** the
+title goes in the title field and the body starts directly with "Documentation shows:".
+
+Use clinical, actor-free language. No "we" / "I" / "us" — let the docs and error speak.
+
+````
+## [<ID>] <short title>
+
+**Documentation shows:**
+
+```<lang>
+<verbatim snippet from the chapter>
+```
+
+**Actual output:**
+
+```
+<minimal error output>
+```
+
+**Issues:**
+- one bullet per concrete observation
+- factual, short
+````
+
+**No "Suggested fix" sections for logical issues** — e.g. if the symptom is "missing
+import", do not write "add the import." The fix is obvious to the maintainer and the
+prose just bloats the issue. Suggested fixes are reserved for non-obvious structural
+recommendations (naming, restructuring, renames) and live in the local Suggested Fixes
+section of `readme.md`, not in the upstream filing.
+
+Consolidated findings in the local log may need to be **split into multiple smaller
+filings** upstream. Each filing tackles one symptom so maintainers can react to them
+individually. Title each split with a sub-letter, e.g. `[PY-18-07a]`, `[PY-18-07b]`.
+
 ## Evaluation Progress
 
 | Language | Chapter | Status | Key Issues Found |

@@ -12,11 +12,12 @@
 from src.orm.product import Product
 
 # PATCH [PY-18-07b]: the chapter claims `tina4 test` auto-binds a separate test
-# database at `data/test.db` and resets it between runs. Neither happens — no DB
-# is bound by default and no schema is created. The three lines below set the
-# DB URL via env var, ensure the data/ dir exists, and create the products table
-# so ProductTest can save/load/delete. Without these, every test fails with
-# `RuntimeError: No database bound. Call orm_bind(db) or set TINA4_DATABASE_URL`.
+# database at `data/test.db` and resets it between runs. Empirically confirmed
+# false on two counts: (1) tina4 test does not load .env (test files importing
+# Product.create_table() at module-load time fail with "No database bound"
+# even when TINA4_DATABASE_URL is set in .env), and (2) even when the env var
+# is set manually to a dev DB like app.db, the framework writes test data
+# directly to that dev DB — no auto-swap to test.db ever happens.
 import os
 os.environ.setdefault("TINA4_DATABASE_URL", "sqlite:///data/test.db")
 os.makedirs("data", exist_ok=True)
