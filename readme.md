@@ -1,8 +1,8 @@
 # Tina4 Framework Evaluation
 
-A documentation-fidelity QA harness for the **Tina4** web framework. We implement the official
-docs verbatim across multiple languages, run them, and log every place the framework's actual
-behavior deviates from what the docs say.
+A documentation-fidelity QA harness for the **Tina4** web framework. The official docs are
+implemented verbatim across multiple languages, run, and every place the framework's actual
+behavior deviates from what the docs say is logged.
 
 ## Goal
 
@@ -30,9 +30,12 @@ The ASSISTANT MUST follow these rules without exception:
     correct language workspace (`pypy/`, `phph/`, `ruru/`).
 4.  **No Proactive Fixes** — do NOT patch framework bugs or "improve" the documented code.
     The goal is to verify the docs work as-is.
-5.  **Blind Implementation** — do NOT consult the Known Issues Log while implementing.
-    Discover bugs the way a new user would. Cross-reference the log only *after* a bug is
-    observed and documented, to classify it as known or new.
+5.  **Verbatim First, Then Diagnose** — the implementation pass always runs the chapter's
+    code as written, even when a bug is already known or suspected. Discover the symptom
+    fresh first; cross-reference the Known Issues Log after. Findings can land via any
+    route (the verbatim run, source-code reading, a coworker question, a passing
+    observation) — discovery path doesn't matter, what matters is that the finding is
+    genuinely a framework or documentation issue and is empirically confirmed.
 6.  **Strict Structural Testing** — all work happens inside the standard Tina4 project
     structure (`src/routes`, `src/orm`, `src/templates`, `migrations/`, `seeds/`).
     Throwaway scripts next to `app.py` are prohibited unless a feature genuinely cannot be
@@ -51,7 +54,15 @@ The ASSISTANT MUST follow these rules without exception:
 | `ruru/` | Ruby | `tina4 init ruby .` |
 
 Every workspace follows the same layout: `src/{routes,orm,templates}/`, `migrations/`,
-`seeds/`. Always bootstrap via the `tina4` CLI — never hand-create the structure.
+`seeds/`, plus a `tests/` directory for chapter test files. Always bootstrap via the
+`tina4` CLI — never hand-create the structure.
+
+**Test filename prefix is non-negotiable.** `tina4 test` is a thin pytest wrapper
+(see [PY-18-04](#known-issues-log)) and inherits pytest's default discovery rules:
+files must be named `test_*.py` or `*_test.py` to be collected. A file named
+`ch18_basic.py` is silently skipped (`collected 0 items`, no warning). Combine the
+required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
+`tests/test_ch10_middleware.py`, etc.
 
 ## Standard Implementation Workflow
 
@@ -68,11 +79,11 @@ Every workspace follows the same layout: `src/{routes,orm,templates}/`, `migrati
 
 ## Patching Convention
 
-**Patching is user-triggered, not automatic.** Default behavior is verbatim implementation
-(per Protocol rules 3, 4, and 5 — implement as documented, no proactive fixes, blind to
-the Known Issues Log). When the user explicitly asks to patch — typically because we
-need a broken snippet to run so we can keep evaluating subsequent sections — we apply
-the following convention.
+**Patching is user-triggered, not automatic.** Default behaviour is verbatim implementation
+(per Protocol rules 3, 4, and 5 — implement as documented, no proactive fixes, verbatim
+first then diagnose). When the user explicitly asks to patch — typically because a
+broken snippet must run so evaluation can continue into subsequent sections — the
+following convention applies.
 
 The convention exists so that patches can be reverted later to verify the original docs
 bugs are still present in future framework versions.
@@ -80,8 +91,8 @@ bugs are still present in future framework versions.
 **Rules (apply only when the USER has asked to patch):**
 
 1.  **Every patch references an existing finding ID** in the Known Issues Log. If no
-    finding exists yet, log it first (per the Protocol's rule 4 — discover bugs first,
-    then patch).
+    finding exists yet, log it first (per Protocol rules 4 and 5 — no proactive fixes,
+    verbatim first then diagnose).
 2.  **Inline patch marker** — single-line changes use a `# PATCH [<finding-ID>]: ...`
     comment immediately above the patched line, and preserve the original line below it
     as a `# OLD: ...` comment so reversion is one-step:
@@ -110,13 +121,14 @@ bugs are still present in future framework versions.
     # VERBATIM from the chapter. No code patches required for this snippet to pass.
     ```
 
-**Why this matters.** The protocol's blind-implementation rule (Protocol rule 5) means
-we don't consult the Known Issues Log while writing tests — we hit bugs fresh. But once
-a bug is documented, we still need to (a) verify the framework works *around* the bug so
-we can test subsequent features, AND (b) retain the ability to confirm the bug is still
-present in future framework versions. Without PATCH markers, a future re-test would
-either re-hit all known bugs (slow) or assume our patched version represents reality
-(false). With them, the file is both runnable and reversible.
+**Why this matters.** Protocol rule 5 ("Verbatim First, Then Diagnose") requires every
+implementation pass to run the chapter's code as written, even when a bug is suspected.
+But once a bug is documented, two things still need to be possible: (a) verifying that
+the framework works *around* the bug so subsequent features can be tested, AND (b)
+retaining the ability to confirm the bug is still present in future framework versions.
+Without PATCH markers, a future re-test would either re-hit all known bugs (slow) or
+assume the patched version represents reality (false). With them, the file is both
+runnable and reversible.
 
 ### Newest file stays verbatim
 
@@ -128,8 +140,8 @@ patches needed" header if the docs-as-written code happens to work).
 asks to move on → patch A → create file B (verbatim) → test → patch B when moving to C
 → and so on.
 
-**Why:** when we run `tina4 test`, we want the only "interesting" failures in the output
-to be from the file currently under evaluation. If every prior file still hits its
+**Why:** when `tina4 test` runs, the only "interesting" failures in the output should be
+from the file currently under evaluation. If every prior file still hits its
 documented bugs on every run, the signal-to-noise ratio collapses and it's hard to spot
 new issues in the newest snippet. Patching previous files isolates the current focus.
 
@@ -149,27 +161,48 @@ When you find a discrepancy, append a row to the Known Issues Log using this for
 - **Status** — `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
 - **Description** — what the docs say vs. what actually happens. Include the smallest repro
   hint (file/line, function name, or exact error).
+- **Sub-letter notation** (e.g. `PY-18-08b`, `PY-18-07a`) refers to *bullets within* a single
+  finding row — informal pointers used in PATCH comments and upstream filing titles to
+  isolate one of several symptoms grouped under one ID. Sub-letters are **not** separate
+  rows in this table. Search by the parent ID (`PY-18-08`) to find the row.
 
 **Terminal-output snippet format.** When the finding is about code that doesn't run, add
-a subsection under the "Observed terminal output" heading in the format:
+a subsection under the `### Observed terminal output` heading (h3, nested inside
+`## Known Issues Log`) using the canonical neutral format below — same format used in
+the upstream filing body template further down, only the heading level changes:
+
+````
+#### <ID> — <short title>
+
+Documentation shows:
+
+```<lang>
+<verbatim chapter snippet>
+```
+
+Actual output:
 
 ```
-We used this from the docs:
-
-    <verbatim chapter snippet>
-
-It didn't work and said:
-
-    <minimal error output — usually just the `E       ...` line>
+<minimal error output — usually just the `E       ...` line>
 ```
+
+Issues:
+- one bullet per concrete observation
+- factual, short
+````
 
 Keep snippets minimal — the chapter code + the framework's complaint, nothing else. Skip
-pytest's headers, the full traceback, and any internal inspection. The stance is "we
-copy-pasted from the docs, here's the wall we hit."
+pytest's headers, the full traceback, and any internal inspection. The stance is clinical:
+this is what the docs literally show, this is what the framework literally returned.
 
-**Upstream filing — title and label convention.** Every GitHub issue or comment we file
+**Legacy entries.** Some earlier evidence sections in this file (e.g. PY-18-04, PY-18-07,
+PY-18-08) still use the older `We used this from the docs: / It didn't work and said:`
+template. They predate this convention and are preserved as filed. All new entries use
+the neutral form above.
+
+**Upstream filing — title and label convention.** Every GitHub issue or comment filed
 upstream is prefixed with the local finding ID in square brackets so the mapping between
-our log and the upstream thread is unambiguous:
+the local log and the upstream thread is unambiguous:
 
 ```
 [PY-18-04] Chapter 18 — documented "tina4 test" output format doesn't match actual output
@@ -179,14 +212,17 @@ our log and the upstream thread is unambiguous:
 If multiple findings are filed together in one comment, list all IDs:
 `[PY-01-01, PY-01-03] Getting Started — top section structurally confused + cargo prereq missing`.
 
-Maintainers can grep upstream by the ID and trace it back to a row in our Known Issues
-Log without us having to cross-link manually. The bracket prefix is also short enough
-not to bloat the title.
+Maintainers can grep upstream by the ID and trace it back to a row in the local Known
+Issues Log without manual cross-linking. The bracket prefix is also short enough not to
+bloat the title.
 
-**Upstream filing — body template.** Keep the body tight. Three sections, no preamble.
-For **comments on an existing issue** the title becomes a `##` header on the first line
-of the same block (since comments have no separate title field). For **new issues** the
-title goes in the title field and the body starts directly with "Documentation shows:".
+**Upstream filing — body template.** Same three-section neutral format as the
+Terminal-output snippet above; only the heading level changes (h2 here because GitHub
+comments don't have a separate title field, h4 in the local log because it nests under
+`### Observed terminal output` which nests under `## Known Issues Log`). For **comments
+on an existing issue**, the title becomes the `##` header on the first line of the
+comment body. For **new issues**, the title goes in the title field and the body starts
+directly with "Documentation shows:".
 
 Use clinical, actor-free language. No "we" / "I" / "us" — let the docs and error speak.
 
@@ -220,11 +256,37 @@ Consolidated findings in the local log may need to be **split into multiple smal
 filings** upstream. Each filing tackles one symptom so maintainers can react to them
 individually. Title each split with a sub-letter, e.g. `[PY-18-07a]`, `[PY-18-07b]`.
 
+## Convention Recap
+
+Quick-reference summary of the conventions established across this protocol. Each
+links back to where it's fully described.
+
+| Convention | One-line rule |
+|---|---|
+| *— Finding scope & evidence —* | |
+| **One code block = one finding ID** | Each distinct code block in a chapter that has issues gets its own row in the Known Issues Log. Don't lump issues from two separate code blocks under one ID, even if they're in the same section. Use sub-letters (`PY-18-07a`, `PY-18-07b`) for splitting upstream filings within a single finding — see [Issue Report Format](#issue-report-format). |
+| **Probe pattern as evidence** | When a code-block-level claim is ambiguous or hard to argue from prose alone, write a small test file that pits the doc's claim against the framework's actual API — each `test_doc_*` asserts the chapter's wording verbatim, each `test_real_*` asserts the framework's truth. The PASS/FAIL split is the receipt. Example: `pypy/tests/test_ch18_response_object_probe.py` for `PY-18-10`. |
+| *— Filing cadence & labels —* | |
+| **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (Known Issues Log row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
+| **Upstream label** | Every upstream issue/comment title prefixed with `[<finding-id>]`, e.g. `[PY-18-10] Section 5 — Response Object reference doesn't match TestResponse`. |
+| *— Test files —* | |
+| **Newest stays verbatim, older patched** | Within a chapter, only the most-recently-created test file stays unpatched. When moving to the next file, the USER triggers the patch on the previous one (see [Patching Convention](#patching-convention)). |
+| *— Voice —* | |
+| **Neutral voice** | No "we" / "I" / "us" in prose. Local logs, detailed evidence sections, and upstream filings all use clinical, actor-free phrasing: "the chapter shows", "the framework returned", "the snippet fails because…". See [Issue Report Format](#issue-report-format) for the canonical wording. |
+
 ## Evaluation Progress
 
-| Language | Chapter | Status | Key Issues Found |
-| :--- | :--- | :--- | :--- |
-| Python | 01 | Example | Example row — replace once a real chapter is evaluated. |
+Refreshed whenever a new test file is added or a finding ID is logged. Status values:
+`in-progress` (some sections touched) | `complete` (all sections implemented) | `not-started`.
+
+| Language | Chapter | Sections covered | Status | Findings |
+| :--- | :--- | :--- | :--- | :--- |
+| Python | 01 — Getting Started | (whole chapter, narrative) | in-progress | PY-01-01, PY-01-03, PY-01-05, PY-01-06, PY-01-07, PY-01-08 |
+| Python | 10 — Middleware & Security | §3, §4, §9, §10, §12 (source + coworker incident — not yet implemented verbatim) | findings logged, impl pending | PY-10-01, PY-10-02, PY-10-03 |
+| Python | 18 — Testing | §2, §3, §4, §5, §6 (of 13) | in-progress | PY-18-01, PY-18-02, PY-18-03, PY-18-04, PY-18-07, PY-18-08, PY-18-10 |
+| Python | 02–09, 11–17, 19–38 | — | not-started | — |
+| PHP | all | — | not-started (workspace not bootstrapped) | — |
+| Ruby | all | — | not-started (workspace not bootstrapped) | — |
 
 ## Known Issues Log
 
@@ -232,7 +294,8 @@ All confirmed framework bugs and documentation discrepancies are tracked here.
 Status values: `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
 
 **Upstream tracking:**
-- [tina4stack/tina4-book#140](https://github.com/tina4stack/tina4-book/issues/140) — Testing chapter issues (covers PY-18-01..PY-18-06).
+- [tina4stack/tina4-book#140](https://github.com/tina4stack/tina4-book/issues/140) — Testing chapter issues. Comments filed so far: `[PY-18-04]`, `[PY-18-07a]`, `[PY-18-08]`. Other PY-18-* findings are queued for the next EOD batch.
+- [tina4stack/tina4-book#141](https://github.com/tina4stack/tina4-book/issues/141) — Middleware chapter issues. Comments filed so far: `[PY-10-01]`, `[PY-10-02]`, `[PY-10-03]`.
 
 | ID | Language | Chapter | Status | Date Found | Description |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -248,6 +311,10 @@ Status values: `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
 | PY-18-04 | Python | 18 | open | 2026-06-03 | **Tina4's "inline testing framework" is actually a thin pytest wrapper, and the chapter misrepresents it as standalone.** Three concrete symptoms a reader hits: (a) Section 1 frames it as *"an inline testing framework. No external packages. No configuration."* — but it's pytest underneath, requiring pytest to be installed (see PY-18-02) and inheriting all of pytest's discovery/config/output behavior. (b) Section 2's claim *"Every `.py` file in that directory is auto-discovered when you run `tina4 test`"* is false — pytest's default requires `test_*.py` or `*_test.py` prefix; a file named `ch18_basic.py` is silently skipped (`collected 0 items`, no warning). (c) Every output example in the chapter (Sections 1, 2, 4, 8 PASS examples, 8 FAIL example) shows a fictional Tina4-styled format (`Running tests...`, `BasicTest`, `[PASS] test_addition`, `N tests, N passed, 0 failed (Ns)`). Actual output is raw pytest (`================ test session starts ================`, dots, `N passed in Ns`). Recommend: rewrite Section 1 to acknowledge `tina4 test` is a pytest wrapper, state that pytest's discovery rules / config / output format apply, and reframe Tina4's value-add as the `Test` base class (with `self.get`/`self.post`/etc.) plus the `assert_*` helpers. Either replace every output example with real pytest output, or implement a custom output formatter to match what the docs show. |
 | PY-18-07 | Python | 18 | open | 2026-06-03 | **Section 4 (Testing ORM Models) is broken end-to-end as written.** A reader copy-pasting the snippet hits a cascade of failures: (1) `NameError: name 'Product' is not defined` — `Product` is used throughout but never imported; the chapter only imports `Test` and `assert_*` from `tina4_python.test`. (2) After adding `from src.orm.product import Product`, the next failure is `RuntimeError: No database bound. Call orm_bind(db) or set TINA4_DATABASE_URL in .env` — but Section 4 explicitly promises *"By default, `tina4 test` uses a separate test database... created at `data/test.db` (SQLite) and is reset before each test run."* That default does not exist. `tina4 init` does not set `TINA4_DATABASE_URL`. The chapter frames the env var as optional ("If you want to use a different database for tests, set it in `.env`") but it's actually required. (3) Even with both fixed, the snippet relies on ORM APIs the section never documents: `Product.find(id)` returns model-or-None (contract not stated), `Product.where(sql, params)` returns the unusual tuple `(records, count)` (no explanation), `product.in_stock = True` assumes a boolean field type but Chapter 6 documents no `BooleanField`, and `save()`/`delete()` return semantics aren't specified anywhere. (4) Reset-between-runs claim is also unverified — even with a bound DB there's no evidence the framework wipes it. **Recommend: rewrite Section 4 to be self-contained.** Include the `Product` import, show the required `.env` line, define the Product model inline (or recap from Ch 6), and document each ORM method's contract. Or, alternatively, make the framework actually deliver the "auto test DB, just write a test" experience the section promises. |
 | PY-18-08 | Python | 18 | open | 2026-06-03 | **Section 5 (Testing Routes) documents a test client API that doesn't match what the framework actually exposes.** Three concrete mismatches a reader hits when copy-pasting the snippet: (a) **Body argument is keyword-only, docs show positional.** Docs example: `self.post("/api/products", {"name": "Widget", ...})`. Actual signature: `Test.post(self, path: str, *, json=None, body=None, headers=None)` — the body must be passed as `json=` or `body=`, never positionally. Result: every `self.post(path, dict)` call in the chapter raises `TypeError: Test.post() takes 2 positional arguments but 3 were given`. Same applies to `self.put()` and `self.patch()`. (b) **`TestResponse` has no `status_code` attribute.** Section 5's "Response Object" subsection explicitly lists `resp.status_code` as a property. Real attribute is `resp.status`. Every `assert_equal(resp.status_code, 200, ...)` from the docs raises `AttributeError: 'TestResponse' object has no attribute 'status_code'`. (c) **Two undocumented convenience attributes exist.** Real `TestResponse` exposes `resp.json` (parsed JSON body) and `resp.text` — the chapter never mentions them. Readers manually do `json.loads(resp.body)` when `resp.json` would be simpler. Recommend: rewrite Section 5 to match the real API — (1) show keyword form `self.post("/api/products", json={...})`, (2) replace every `resp.status_code` with `resp.status`, (3) document `resp.json` and `resp.text` alongside the other Response Object attributes. |
+| PY-10-01 | Python | 10 | open | 2026-06-04 | **Function-based middleware is documented but not implemented.** Section 3 ("Writing Custom Middleware") states *"Tina4 Python supports two styles of middleware: function-based and class-based"* and shows the canonical signature `async def fn(request, response, next_handler): ... result = await next_handler(request, response); return result`. The chapter has 8+ examples using this pattern across §3, §4, §6, §7, §8, §10 (`log_middleware`, `require_json`, `maintenance_mode`, `require_api_key`, `inject_user_agent`, `add_security_headers`, `api_key_middleware`, `auth_middleware`). Empirically the framework dispatcher (`server.py:1154-1185`) only handles class-based middleware — it iterates `dir(instance)` looking for attributes starting with `before_` / `after_`. A function passed to `@middleware(fn)` is stored in `route["middleware"]` but its body never executes because `dir(fn)` returns no `before_*` attributes. `grep -rn next_handler tina4_python/` returns 0 hits across the entire framework. Recommend either implementing the documented function-based path or removing §3 "Function-Based Middleware" + all `next_handler` examples from the chapter. Source: framework read + coworker incident (a developer wrote a JWT auth middleware following §3 verbatim; the body never ran, the route was silently unauthenticated). |
+| PY-10-02 | Python | 10 | open | 2026-06-04 | **`@middleware(...)` silently disables the framework's built-in Bearer-token gate.** `router.py:689-704` — when `@middleware(...)` decorates a POST/PUT/PATCH/DELETE route, the decorator sets `route["auth_required"] = False` *"unless @secured() was explicitly set"*, on the assumption that "developer handles auth — disable built-in gate." This is undocumented in the chapter. Combined with PY-10-01, applying a function-based middleware intended to enforce auth produces a route with **zero authentication**: neither the custom middleware (never runs, per PY-10-01) nor the framework default (disabled by the decorator). A developer reading Ch10 alone would not know to add `@secured()` to restore the default gate. Recommend either documenting this behaviour explicitly in §4 ("The @middleware Decorator") with a security-implications callout, or making the auth-required default sticky unless explicitly overridden with `@noauth()`. |
+| PY-10-03 | Python | 10 | open | 2026-06-04 | **Header-key casing mismatch in chapter examples.** `request.py:55` stores all incoming headers under lowercase keys: `req.headers[name.decode().lower()] = value.decode()`. So `request.headers.get("Authorization")` returns `None` — the key is actually `"authorization"`. Several chapter examples use mixed-case keys against this dict — §9 line 500 uses `"authorization"` (correct), §10 line 546 + §12 line 677 use `"X-API-Key"` (broken — returns None), §12 line 664 uses `"Authorization"` (broken — returns None). The chapter never states that `request.headers` is lowercase-keyed, nor mentions the convenience helpers: `request.header(name)` does case-insensitive lookup (`request.py:128`), and `request.bearer_token()` extracts the raw token (`request.py:132`). Recommend: (a) add a one-line callout in §3 or §8 that `request.headers` is lowercase-keyed, (b) normalise all chapter examples to either lowercase keys or the `request.header()` helper, (c) document `request.bearer_token()` as the canonical way to read the auth header. |
+| PY-18-10 | Python | 18 | open | 2026-06-04 | **Section 5 "Response Object" subsection (`18-testing.md:384-393`) reference table doesn't match `TestResponse`.** The code block lists four properties — `resp.status_code`, `resp.body` (string), `resp.headers`, `resp.content_type`. Empirically verified against `tina4_python.test_client.TestResponse` (`__slots__ = ("status", "body", "headers", "content_type")`) via probe in `pypy/tests/test_ch18_response_object_probe.py`: (a) `resp.status_code` does not exist — the real attribute is `resp.status`. Probe `test_doc_resp_status_code_attribute_exists` fails with `AttributeError`. (b) `resp.body` documented as "string" — actual type is `bytes`. Probe `test_doc_resp_body_is_a_string` fails; `test_real_resp_body_is_bytes` passes. Side-effect: chapter's `json.loads(resp.body)` calls work by luck (since Python 3.6 `json.loads` accepts bytes), but any user who does `resp.body.startswith(...)` or string-concatenates the body will hit `TypeError`. (c) Helper methods `resp.json()` and `resp.text()` exist on the class but are absent from the reference table. (Note: PY-18-08(b) and PY-18-08(c) overlap with parts of this finding — they were lumped under the test-client signature filing before the "one code block = one finding" convention was set. PY-18-10 is the canonical row for the Response Object code block; PY-18-08 keeps the test-client methods block.) |
 
 ### Observed terminal output
 
@@ -405,6 +472,53 @@ It didn't work and said:
 E       TypeError: Test.post() takes 2 positional arguments but 3 were given
 ```
 
+#### PY-18-10 — Response Object reference doesn't match `TestResponse`
+
+Documentation shows (`18-testing.md:384-393`):
+
+```python
+resp.status_code   # HTTP status code (200, 201, 404, etc.)
+resp.body          # Response body as a string
+resp.headers       # Response headers as a dict
+resp.content_type  # Content-Type header value
+```
+
+Framework reality (`tina4_python/test_client/__init__.py:28-52`):
+
+```python
+class TestResponse:
+    __slots__ = ("status", "body", "headers", "content_type")
+    self.status: int = response.status_code
+    self.body: bytes = response.content
+    self.content_type: str = response.content_type
+    self.headers: dict = {...}
+    def json(self): ...
+    def text(self): ...
+```
+
+Probe (`pypy/tests/test_ch18_response_object_probe.py`):
+
+```
+tests/test_ch18_response_object_probe.py::ResponseObjectProbe::test_doc_resp_status_code_attribute_exists FAILED
+tests/test_ch18_response_object_probe.py::ResponseObjectProbe::test_real_resp_status_attribute_works     PASSED
+tests/test_ch18_response_object_probe.py::ResponseObjectProbe::test_doc_resp_body_is_a_string            FAILED
+tests/test_ch18_response_object_probe.py::ResponseObjectProbe::test_real_resp_body_is_bytes              PASSED
+tests/test_ch18_response_object_probe.py::ResponseObjectProbe::test_undocumented_text_helper_exists      PASSED
+tests/test_ch18_response_object_probe.py::ResponseObjectProbe::test_undocumented_json_helper_exists      PASSED
+```
+
+Failure details:
+
+```
+E       AttributeError: 'TestResponse' object has no attribute 'status_code'
+E       AssertionError: docs claim resp.body is a string
+```
+
+Issues:
+- `resp.status_code` documented; real attribute is `resp.status`.
+- `resp.body` documented as string; real type is `bytes`.
+- `resp.json()` and `resp.text()` methods exist on the class; not listed in the reference.
+
 ## Suggested Fixes
 
 Proposed remedies for entries in the Known Issues Log. Each fix tags one or more issue IDs
@@ -420,7 +534,7 @@ to them unless there's a specific reason not to:
 1. **Tina4 docs are not install guides for other people's tools.** Prerequisites
    (Python, uv, Rust/Cargo, Ruby, PHP, Composer, Node, etc.) get listed and linked
    out — never embedded as platform-specific install snippets. The owners of those
-   tools maintain better install docs than we ever will, and trying to mirror them
+   tools maintain better install docs than the Tina4 docs ever can, and trying to mirror them
    creates drift and bloats every page.
 2. **Required vs. optional prereqs are marked as such.** If a tool is needed only
    for one specific path (e.g. Cargo for `cargo install tina4`), label it optional
