@@ -4,7 +4,7 @@
 # test_ch18_routes.py can hit real handlers.
 
 from tina4_python.core.router import get, post, delete
-from src.orm.product import Product
+from src.orm.Product import Product
 
 
 def _to_dict(product):

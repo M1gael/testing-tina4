@@ -1,32 +1,30 @@
 # ch18 section 4 — Testing ORM Models
-# This snippet is broken end-to-end as written (see PY-18-07). The PATCHES block
-# below works around two doc bugs so the tests can run. To reproduce the original
-# bugs, delete the entire PATCHES block and the `from src.orm.product import
-# Product` line just below it — the verbatim-from-chapter code starts at the
-# `from tina4_python.test import ...` line.
+# Verbatim chapter import block is now correct (PY-18-07a fixed in v3.13.4 — the
+# `from src.orm.Product import Product` line is now in S4 of the chapter). Two
+# PY-18-07 sub-symptoms are still patched here because the chapter docs still
+# claim them and the framework still doesn't deliver them:
 #
 # ============================== PATCHES ==============================
 #
-# PATCH [PY-18-07a]: the chapter NEVER imports `Product`. Without this line,
-# every test fails with `NameError: name 'Product' is not defined`.
-from src.orm.product import Product
-
-# PATCH [PY-18-07b]: the chapter claims `tina4 test` auto-binds a separate test
-# database at `data/test.db` and resets it between runs. Empirically confirmed
-# false on two counts: (1) tina4 test does not load .env (test files importing
-# Product.create_table() at module-load time fail with "No database bound"
-# even when TINA4_DATABASE_URL is set in .env), and (2) even when the env var
-# is set manually to a dev DB like app.db, the framework writes test data
-# directly to that dev DB — no auto-swap to test.db ever happens.
+# PATCH [PY-18-07b]: S4 "Test Database" subsection still claims `tina4 test`
+# auto-binds a separate test DB at `data/test.db` and resets it between runs.
+# Empirically false on two counts: (1) tina4 test does not load .env (test
+# files importing Product.create_table() at module-load time fail with "No
+# database bound" even when TINA4_DATABASE_URL is set in .env), and (2) even
+# when the env var is set manually to a dev DB like app.db, the framework
+# writes test data directly to that dev DB — no auto-swap to test.db ever
+# happens.
 import os
 os.environ.setdefault("TINA4_DATABASE_URL", "sqlite:///data/test.db")
 os.makedirs("data", exist_ok=True)
+from src.orm.Product import Product
 Product.create_table()
 #
 # ============================ END PATCHES ============================
 
 # Verbatim chapter code starts here:
 from tina4_python.test import Test, assert_equal, assert_true, assert_not_none
+from src.orm.Product import Product   # assumes src/orm/Product.py exists
 
 class ProductTest(Test):
 

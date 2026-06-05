@@ -1,5 +1,181 @@
 # Chapter 35: Release Notes
 
+## v3.13.4 (2026-06-04)
+
+Three middleware/header bug fixes across all four frameworks, plus Python chapter 10 + 18 docs rewrites. Reported in tina4-book#140 and tina4-book#141 by MichaelC8E.
+
+### PY-10-02 — `@middleware()` no longer silently disables auth (SECURITY)
+
+**Before**: Applying `@middleware(...)` to a POST/PUT/PATCH/DELETE route silently flipped `auth_required = false`, removing the framework's built-in Bearer-token gate. A developer adding custom logging or rate-limiting middleware to an admin endpoint would, with no warning, open it to unauthenticated callers.
+
+**After**: Middleware is purely additive. Write routes stay Bearer-token-gated by default. Use `@noauth()` to open a write route, `@secured()` to lock a read route. Same rule across all four frameworks.
+
+This is a **behaviour change** — if your code relied on the old auto-disable to handle auth in custom middleware, add `@noauth()` (and have your middleware enforce auth on its own).
+
+### PY-10-03 — `request.headers` is now case-insensitive
+
+**Before**: `request.headers["Content-Type"]` returned `None`/`undefined`/`nil`. The dict was lowercase-only; mixed-case lookups silently failed. Six chapter 10 examples (`Content-Type`, `X-API-Key`, `Authorization`, `User-Agent`) were broken.
+
+**After**: HTTP headers are case-insensitive per RFC 7230 §3.2. Same is true in every framework:
+
+| Framework | Implementation |
+|---|---|
+| Python | `CaseInsensitiveDict` (dict subclass, normalises string keys to lowercase on read/write) |
+| PHP | `Tina4\CaseInsensitiveArray` (ArrayAccess + IteratorAggregate + Countable) |
+| Ruby | `Tina4::CaseInsensitiveHash < Hash` (overrides `[]`, `[]=`, `key?`, `delete`, etc.) |
+| Node | Proxy wrapper around `http.IncomingHttpHeaders` |
+
+`request.headers.get("Content-Type")`, `request.headers.get("content-type")`, and `request.headers.get("CONTENT-TYPE")` all return the same value. Existing lowercase code keeps working unchanged.
+
+### PY-10-01 — Function-based middleware now runs
+
+**Before**: Chapter 10 taught Express-style `async def mw(req, resp, next_handler)` in 8+ examples, but the Python framework's dispatcher only looked for class-based `before_*`/`after_*` methods. Function-style middleware was silently inert — body never executed. PHP and Ruby had similar gaps (closures ran but no `next` continuation).
+
+**After**: Express-style continuation chain is implemented across the family. Python adds `_is_function_middleware()` + `_invoke_handler_with_middleware()`. PHP wraps closures with `array_reverse` continuation. Ruby uses lambdas + `reverse_each`. Node already had `next()` continuation — added a regression test to keep it green.
+
+```python
+@middleware(my_mw)
+@post("/api/orders")
+async def create_order(req, resp):
+    ...
+
+async def my_mw(req, resp, next_handler):
+    if not authorised(req):
+        return resp.json({"error": "forbidden"}, 403)
+    result = await next_handler(req, resp)   # continue the chain
+    return result
+```
+
+First-declared middleware is the outermost layer; calling `next_handler` descends to the next layer (or the route handler if last). Omitting the `next_handler` call short-circuits the chain.
+
+### Python chapter rewrites — book + docs
+
+- **Chapter 18 (Testing)** — Fixed PY-18-04 (test runner output now shows real pytest output, not the fictional `[PASS] test_addition` format), PY-18-07a (added missing `from src.orm.Product import Product` import), PY-18-08 (`resp.status_code` → `resp.status` across 14+ call sites, positional body `self.post(path, dict)` → keyword `self.post(path, json=dict)`).
+- **Chapter 10 (Middleware)** — Added two callouts: headers are case-insensitive in v3.13.4+; `@middleware()` is purely additive (does not change auth_required). Existing mixed-case header examples now work against v3.13.4.
+
+### Test count
+
+| Framework | Before | After | New |
+|---|---|---|---|
+| Python | 2,725 | 2,741 | +16 |
+| PHP | 2,844 | 2,858 | +14 |
+| Ruby | 2,887 | 2,906 | +19 |
+| Node.js | 3,477 | 3,508 | +31 |
+| **Total** | **11,933** | **12,013** | **+80** |
+
+### Upgrade
+
+PY-10-02 is a behaviour change with a security implication. Audit routes that use `@middleware()` on POST/PUT/PATCH/DELETE: if you rely on custom middleware to handle auth, add `@noauth()` above `@middleware()` (and make sure your middleware enforces auth). Otherwise, no action — your write routes were always supposed to require Bearer tokens.
+
+PY-10-01 and PY-10-03 are purely additive — no breaking changes.
+
+## v3.13.3 (2026-06-03)
+
+Two reporter-driven ergonomic additions, shipped across all four frameworks with full parity per `feedback_parity`.
+
+### `Env` typed env-var helpers (tina4-python#43)
+
+Reading env vars by hand gets old fast: every boolean flag becomes a `os.getenv("TINA4_DEBUG", "false").lower() in ("1", "true", "on", "yes")` incantation. Every numeric tuning knob needs a try/except around `int()`. `Env` centralises it:
+
+```python
+from tina4_python import Env
+
+debug   = Env.bool("TINA4_DEBUG", default=False)
+workers = Env.int("WORKERS", default=4)
+rate    = Env.float("RATE_LIMIT", default=10.0)
+region  = Env.str("AWS_REGION", default="us-east-1")
+```
+
+Same API across all four frameworks:
+
+- **Python** — `from tina4_python import Env`
+- **PHP** — `Tina4\Env::bool / int / float / str`
+- **Ruby** — `Tina4::Env.bool / int / float / str`
+- **Node.js** — `import { Env } from "@tina4/core"`
+
+Truthy tokens (case-insensitive after `strip`/`trim`): `1`, `true`, `on`, `yes`, `y`, `t`. Falsy: `0`, `false`, `off`, `no`, `n`, `f`, empty string. Anything else returns the `default` — never raises. `int`/`float` parse failures log a warning via `Log` and fall back to default.
+
+### Function-name in log lines (tina4-python#41)
+
+Opt-in via `TINA4_LOG_FUNC=true`. When enabled, the calling function name is injected into every log line so a `tail -f` gives you free context:
+
+```
+2026-06-03T14:22:18.341Z [INFO   ] [super_trooper] Hello from inside the function
+```
+
+Or in JSON mode:
+
+```json
+{"timestamp":"...","level":"INFO","function":"super_trooper","message":"Hello..."}
+```
+
+Default off — zero overhead unless opted in. When on, ~5% per-call cost from the stack walk.
+
+Per-framework implementation:
+
+- **Python** — `inspect.currentframe()` walk past Log's own frames
+- **PHP** — `debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)` + `{closure}` filter
+- **Ruby** — `caller_locations(2, 16)` + block-noise regex
+- **Node.js** — `new Error().stack` regex parse + anonymous filter
+
+Anonymous frames (`<lambda>`, `<module>`, `{closure}`, anonymous IIFEs) are filtered as noise — showing `[<lambda>]` would be uglier than nothing.
+
+### Test count
+
+| Framework | Before | After | New |
+|---|---|---|---|
+| Python | 2,675 | 2,725 | +50 |
+| PHP | 2,780 | 2,844 | +64 |
+| Ruby | 2,839 | 2,887 | +49 (+1 pre-existing rack_app fail unchanged) |
+| Node.js | 3,420 | 3,477 | +57 |
+| **Total** | **11,714** | **11,933** | **+220** |
+
+### Upgrade
+
+Drop-in patch. No breaking changes. Two new exports (`Env`, plus one new env var `TINA4_LOG_FUNC`). Existing logs and existing code keep working unchanged.
+
+## v3.13.2 (2026-06-03)
+
+Bug-fix patch — three field reports, fixed with full cross-framework parity audit per `feedback_crosscheck_bugs`.
+
+### SCSS calc() with mixed units (tina4-python#42, tina4-php#116, tina4-nodejs#1)
+
+The SCSS math evaluator silently folded mixed-unit arithmetic by keeping operand 1's unit and dropping operand 2's, producing wrong CSS:
+
+- `max-height: calc(100vh - 170px)` → `calc(-70vh)` (negative, layout-breaking)
+- `width: 100% - 20px` → `80%` (pixel term silently lost)
+- `padding: 1rem + 4px` → `5rem`
+
+Fixed in Python, PHP, and Node — the evaluator now captures both operand units, only folds when units match (or one side is unitless for `*`/`/`), and masks `calc(...)` ranges so the browser computes them as intended. Ruby unaffected (delegates to libsass).
+
+### Router.group docs taught a crashing pattern (tina4-python#44)
+
+The Python book and docs site showed `Router.group("/api/v1", lambda: [...])` with a zero-arg lambda. Source intentionally passes a `RouteGroup` instance to the callback, so users hit `TypeError: <lambda>() takes 0 positional arguments but 1 was given`. Docs rewritten to `lambda group: [group.get(...), group.post(...)]` matching the real contract (Node has always taught this correctly; PHP and Ruby use ambient state, no group arg needed).
+
+### DATABASE_URL → TINA4_DATABASE_URL drift (tina4-python#45)
+
+Three real bugs:
+
+- **Python ORM error message** told users to "set DATABASE_URL in .env" — but the v3.12 boot guard rejects that bare name. Users following the error message hit a hard stop.
+- **Python dev-admin `.env` writer** stripped the `TINA4_` prefix when updating existing rows, actively corrupting the config every time the user saved a new connection through the dashboard.
+- **Node `Database.fromEnv()`** defaulted to `"DATABASE_URL"` as the env-var key, missing the project's actual connection. The ORM error message had the same drift.
+
+All fixed. PHP and Ruby audited — already correct in both.
+
+### Test count
+
+| Framework | Before | After | New |
+|---|---|---|---|
+| Python | 2,665 | 2,675 | +10 |
+| PHP | 2,774 | 2,780 | +6 |
+| Ruby | 2,839 | 2,839 | 0 (parity bump only) |
+| Node.js | 3,406 | 3,420 | +14 |
+| **Total** | **11,684** | **11,714** | **+30** |
+
+### Upgrade
+
+Drop-in patch. No breaking changes. No new public API.
+
 ## v3.13.1 (2026-06-02)
 
 Cross-framework parity patch. Closes the remaining audit-flagged docs-vs-code gaps that didn't make 3.13.0 — the documentation claimed APIs across PHP / Ruby / Node that only Python had. This release ships those APIs everywhere and rewrites the PHP chapters that referenced fictional symbols.

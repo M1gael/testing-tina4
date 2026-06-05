@@ -16,7 +16,7 @@ The loop is:
 1. Take a chapter from `documentation/tina4-book/`.
 2. Implement its code examples verbatim in the language's workspace (`pypy/`, `phph/`, `ruru/`).
 3. Run via the `tina4` CLI and observe.
-4. Log discrepancies in `readme.md` § Known Issues Log.
+4. Log discrepancies in the Known Issues Log inside `readme.md`.
 
 This is **documentation-fidelity testing**: the work verifies whether a new user
 following the docs would succeed. The harness *is* the new user.
@@ -94,7 +94,7 @@ Seven "books", chapters as markdown under `book-N-*/chapters/NN-topic.md`:
 - `plan/` — API reference, brand guide, parity matrices. `plan/parity/` has per-subsystem
   parity audits (auth, database, orm, queue, router, session, sse, template, websocket).
 - The **live site at https://tina4.com is the actual source of truth**; this local copy is a
-  fallback (refreshable with `tina4 books`). See `readme.md` § Source of Truth.
+  fallback (refreshable with `tina4 books`). See the Source of Truth section in `readme.md`.
 
 ## Other directories in the tree (background)
 
@@ -112,5 +112,5 @@ Not part of the harness's workflow, but present in the repo:
 - Remote: `git@github.com:M1gael/testing-tina4.git`, default branch `main` (single branch).
 - Commit messages in history are conventional-ish (`test(python):`, `docs:`, `chore:`,
   `feat(php):`) and frequently reference the tina4 version and issue IDs being verified.
-- Before any user-requested `/commit`, follow `readme.md` § Issue Report Format for any
-  finding being introduced in the commit.
+- Before any user-requested `/commit`, follow the Issue Report Format in `readme.md` for
+  any finding being introduced in the commit.

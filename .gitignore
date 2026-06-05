@@ -1,1 +1,9 @@
 .agents/
+
+# `tina4 books` extracts to ./tina4-book/ at the cwd. Ignore stray root pulls.
+/tina4-book/
+
+# Documentation books are downloaded per-workspace via `tina4 books`. The dir
+# exists as a target; contents stay untracked (use .gitkeep to preserve dir).
+/documentation/tina4-book/*
+!/documentation/tina4-book/.gitkeep
