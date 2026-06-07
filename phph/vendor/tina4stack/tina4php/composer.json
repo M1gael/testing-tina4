@@ -1,0 +1,45 @@
+{
+    "name": "tina4stack/tina4php",
+    "description": "Tina4 for PHP \u2014 54 built-in features, zero dependencies",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tina4\\": "Tina4/",
+            "Tina4\\Database\\": "Tina4/Database/",
+            "Tina4\\Middleware\\": "Tina4/Middleware/",
+            "Tina4\\Queue\\": "Tina4/Queue/",
+            "Tina4\\Session\\": "Tina4/Session/"
+        },
+        "files": [
+            "Tina4/Constants.php",
+            "Tina4/MCP.php"
+        ]
+    },
+    "require": {
+        "php": ">=8.2",
+        "ext-openssl": "*",
+        "ext-json": "*"
+    },
+    "scripts": {
+        "serve": "@php bin/tina4php serve",
+        "start": "@php bin/tina4php serve",
+        "test": "./vendor/bin/phpunit tests --color",
+        "lint": "vendor/bin/phplint --exclude=vendor"
+    },
+    "config": {
+        "process-timeout": 0
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10 || ^11"
+    },
+    "bin": [
+        "bin/tina4php"
+    ],
+    "suggest": {
+        "ext-sqlite3": "Required for SQLite3 database support",
+        "ext-pdo": "Required for MySQL/PostgreSQL/MSSQL database support",
+        "ext-curl": "Required for external API calls",
+        "ext-fileinfo": "Required for file type detection",
+        "ext-zip": "Required for ZIP file handling"
+    }
+}
