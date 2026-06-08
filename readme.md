@@ -634,6 +634,46 @@ Issues:
 - `resp.body` documented as string; real type is `bytes`.
 - `resp.json()` and `resp.text()` methods exist on the class; not listed in the reference.
 
+## Bug Hunt
+
+Distinct from the Known Issues Log above. The KI Log records what the
+documentation-fidelity protocol surfaces while walking chapters
+sequentially. **Bug Hunt** is the log of bugs the user *assigned* —
+typically a reproduction request against an existing GitHub issue on
+the framework repo, where the work is "go investigate this, dig with
+tests and theories until root cause is nailed down." The work
+happens on the `bug-hunting` branch so `main` stays silver-lined;
+this section is the index of what was investigated and what was
+found.
+
+**ID convention:** `BH-<n>` where `<n>` is the upstream GitHub issue
+number on the framework repo (e.g. `BH-46` ↔
+[`tina4stack/tina4-python#46`](https://github.com/tina4stack/tina4-python/issues/46)).
+Direct numeric mapping — no chapter-prefix translation as with the
+`PY-NN-NN` doc-fidelity IDs.
+
+**Layout per finding:**
+- One row in the table below — same column shape as the KI Log
+  (`ID | Language | Issue # | Status | Date | Description`).
+- A deep-dive analysis file under `bug-hunting/issue-<n>-<slug>.md`
+  on the `bug-hunting` branch — root cause, source-line evidence,
+  adversarial verification, recommended fix, and a draft upstream
+  comment ready to paste.
+- One or more probe files under `pypy/tests/test_issue_<n>_*.py` —
+  bug-direction assertions PASS in the buggy steady state and FAIL
+  once the upstream fix lands (regression sentinel, same pattern
+  as the `PY-NN-NN` probes).
+
+**Upstream tracking:** all Bug Hunt findings link to a real GitHub
+issue on [`tina4stack/tina4-python`](https://github.com/tina4stack/tina4-python/issues).
+The issue thread itself is the "official log" of the framework
+defect; this section is the local evidence map pointing at it.
+
+| ID | Language | Issue # | Status | Date | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| BH-46 | Python | [#46](https://github.com/tina4stack/tina4-python/issues/46) | open, root-caused, live-reproduced, **patches drafted + adversarially tested** | 2026-06-08 | **`PostgreSQLAdapter.fetch()` count-probe (`tina4_python/database/postgres.py:148-152`) swallows exceptions without rollback or savepoint, poisoning the PG connection's transaction.** The bare `try: ... except Exception: total = 0` discards the original cause (e.g. `operator does not exist: boolean = integer` when the reporter's `is_deleted = 0` filter hits a `BOOLEAN` column) and leaves `_conn.autocommit=False` (`postgres.py:70`) sitting on an aborted transaction. The next line's paginated query then raises `InFailedSqlTransaction` — *that* is the *"current transaction is aborted"* message the reporter sees, with the original cause already gone. Visibility gap: `grep -rn "Log\." tina4_python/database/ tina4_python/orm/` returns zero matches across the entire DB+ORM stack, and `Database.get_error()` returns `None` after the cascade — the framework simply doesn't preserve the cause anywhere. **Fix series drafted** at `bug-hunting/fix-issue-46-patches/`: (01) SAVEPOINT-wrap both the count probe AND the paginated query in postgres.py — mirroring the framework's own pattern for issue #38 at lines 99-122 — plus `Log.error` with original cause; (02) `Log.error` in `Database.execute()`'s swallow; (03) `Log.error` in ORM `save`/`delete`/`force_delete`/`restore` swallow points. All three patches are pure-additive on the visibility side and use SAVEPOINT recovery shape on the flow side so existing callers are unaffected. **Adversarial verification:** 10/10 hostile-input tests pass (repeated failures, alternating pass/fail, failures inside user transactions, savepoint name collisions, credential-leak check, long SQL, ORM contract preservation, paginated-query failure propagation, broken-logger isolation, normal-query correctness). **Suite:** 69 passed, 2 skipped — no regressions on the 50 pre-existing tests. Two adjacent bugs surfaced during adversarial testing: (a) `SQLTranslator.boolean_to_int` (adapter.py:538-542) unconditionally rewrites `TRUE`/`FALSE` → `1`/`0` on PG, re-introducing the boolean/integer hazard in framework-generated SQL; (b) framework's SAVEPOINT names (`_t4_count_probe`, `_t4_paginated`) can collide with user-named savepoints. Both flagged in `bug-hunting/fix-issue-46-patches/README.md` for separate filings. Evidence: `bug-hunting/issue-46-pg-silent-abort.md` (analysis + draft upstream comment), `bug-hunting/fix-issue-46-patches/` (3 patches + README), `pypy/tests/test_issue_46_live_repro.py` (5 live PG tests), `pypy/tests/test_issue_46_pg_silent_abort_probe.py` (4 mock-cursor tests), `pypy/tests/test_issue_46_fix_adversarial.py` (10 hostile-input tests). |
+| BH-47 | Python | [#47](https://github.com/tina4stack/tina4-python/issues/47) | open, doc gap | 2026-06-08 | **`psycopg2-binary` is required for PostgreSQL but not installed by `tina4 init python .`.** The packaging is already correct — `tina4-python 3.13.4` declares PEP 621 extras for `postgres`, `mysql`, `mssql`, `firebird`, `mongo`, `odbc`, `memcache`, `redis`, and `all-db` (verified in `.venv/Lib/site-packages/tina4_python-3.13.4.dist-info/METADATA`). Three gaps make it invisible: (a) `tina4 init python .` does not install any DB extra, so only SQLite works out of the box; (b) the lazy-import error at `postgres.py:54-58` recommends `pip install psycopg2-binary` rather than `pip install 'tina4-python[postgres]'` — the bare install bypasses the project's lockfile; (c) Chapter 6 (Database) on tina4.com shows connection URLs for all 5 engines without a prerequisites callout. Author already commented "by design — just needs documentation." Recommend: one-paragraph extras callout at the top of Chapter 6, plus updating the five lazy-import `ImportError` messages (postgres/mysql/mssql/firebird/mongodb) to recommend the extras syntax. Evidence: `bug-hunting/issue-47-psycopg2-dep-gap.md` (full analysis + draft upstream comment). No probe — pure doc gap. |
+
 ## Suggested Fixes
 
 Proposed remedies for entries in the Known Issues Log. Each fix tags one or more issue IDs

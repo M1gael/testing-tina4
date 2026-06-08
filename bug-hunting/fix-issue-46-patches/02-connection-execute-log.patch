@@ -1,0 +1,23 @@
+--- a/tina4_python/database/connection.py
++++ b/tina4_python/database/connection.py
+@@ -410,7 +410,20 @@
+                 return result
+             return True
+         except Exception as e:
++            # Issue #46: previously this just stored the error string
++            # in ``last_error`` and returned False — no log, so callers
++            # had no trace of what failed. Now we also Log.error so the
++            # cause is preserved in the structured log. Rollback is
++            # intentionally NOT called here — callers managing their
++            # own transactions (e.g. ORM.save / explicit
++            # start_transaction blocks) own the recovery decision.
+             self.last_error = str(e)
++            try:
++                from tina4_python.debug import Log
++                Log.error("Database.execute() failed",
++                          error=str(e), sql=sql)
++            except Exception:
++                pass  # logging must never break the data path
+             return False
+ 
+     def execute_many(self, sql: str, params_list: list[list] = None) -> DatabaseResult:
