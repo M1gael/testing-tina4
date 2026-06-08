@@ -634,6 +634,227 @@ Issues:
 - `resp.body` documented as string; real type is `bytes`.
 - `resp.json()` and `resp.text()` methods exist on the class; not listed in the reference.
 
+## Bug Hunt
+
+Distinct from the Known Issues Log above. The KI Log records what the
+documentation-fidelity protocol surfaces while walking chapters
+sequentially. **Bug Hunt** is the log of bugs the user *assigned* —
+typically a reproduction request against an existing GitHub issue on
+the framework repo, where the work is "go investigate this, dig with
+tests and theories until root cause is nailed down."
+
+**Where the code lives.** Investigation artifacts (probes, repro
+models, fix patches, draft upstream comments) are committed to the
+`bug-hunting` branch, NOT to `main`. This keeps `main` silver-lined
+for documentation-fidelity work. This section on `main` is the
+narrative log + index pointing at the `bug-hunting` branch.
+
+**ID convention:** `BH-<n>` where `<n>` is the upstream GitHub issue
+number on the framework repo (e.g. `BH-46` ↔
+[`tina4stack/tina4-python#46`](https://github.com/tina4stack/tina4-python/issues/46)).
+Direct numeric mapping — no chapter-prefix translation as with the
+`PY-NN-NN` doc-fidelity IDs.
+
+**Upstream tracking.** All Bug Hunt findings link to a real GitHub
+issue on [`tina4stack/tina4-python`](https://github.com/tina4stack/tina4-python/issues).
+The issue thread itself is the "official log" of the framework
+defect; this section is the local evidence map pointing at it.
+
+### Tracking table
+
+| ID | Language | Issue # | Status | Date | Description |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| BH-46 | Python | [#46](https://github.com/tina4stack/tina4-python/issues/46) | open upstream, root-caused, live-reproduced, patches drafted + adversarially verified, comment posted to upstream | 2026-06-08 | **`PostgreSQLAdapter.fetch()` count-probe (`tina4_python/database/postgres.py:146-152` pristine 3.13.4) swallows exceptions without rollback or savepoint, poisoning the PG connection's transaction.** The bare `try: ... except Exception: total = 0` discards the original cause (e.g. `operator does not exist: boolean = integer` when a filter like `is_deleted = 0` hits a `BOOLEAN` column) and leaves `_conn.autocommit=False` (`postgres.py:70`) sitting on an aborted transaction. The next line's paginated SELECT then raises `InFailedSqlTransaction` ("current transaction is aborted, commands ignored until end of transaction block") — that cascade message is the only thing the caller sees. Visibility gap: `grep -rn "Log\." tina4_python/database/ tina4_python/orm/` returns zero matches in 3.13.4, and `Database.get_error()` returns `None` after a `fetch()` failure (only `Database.execute()` writes to `last_error`). Framework already has the fix pattern in-tree at `postgres.py:99-122` (`SAVEPOINT _t4_lastval_probe`, added for [#38](https://github.com/tina4stack/tina4-python/issues/38)) — the COUNT query needs the same wrapper. **See "BH-46 investigation log" below for the full narrative + continuation pointers.** |
+| BH-47 | Python | [#47](https://github.com/tina4stack/tina4-python/issues/47) | open, doc gap, comment not yet posted | 2026-06-08 | **`psycopg2-binary` required for PostgreSQL but not installed by `tina4 init python .`.** Packaging is correct (`tina4-python` 3.13.4 METADATA declares PEP 621 extras for `postgres`, `mysql`, `mssql`, `firebird`, `mongo`, `odbc`, `memcache`, `redis`, `all-db`), but three things make this invisible: (a) `tina4 init python .` does not install any DB extra — scaffolded `pyproject.toml` adds bare `tina4-python`; (b) lazy-import error at `postgres.py:54-58` recommends `pip install psycopg2-binary` rather than `pip install 'tina4-python[postgres]'` — bare install bypasses lockfile; (c) Chapter 6 (Database) on tina4.com shows connection URLs for all 5 engines without a prerequisites callout. Author commented "by design — just needs documentation" on the upstream issue. Draft comment ready at `bug-hunting/issue-47-psycopg2-dep-gap.md`; not yet posted. |
+
+### BH-46 — investigation log
+
+Filed upstream by **`SAB13711`** on the framework repo as
+[`tina4stack/tina4-python#46`](https://github.com/tina4stack/tina4-python/issues/46),
+title *"No database error visibility"*. Investigated **2026-06-08**;
+findings comment posted to the upstream thread the same day by
+**`MichaelC8E`** (not the original reporter — investigation done on
+their behalf). Patches drafted, adversarially verified locally, not
+yet opened as a PR; the comment ends with a code snippet showing
+the fix shape that a maintainer can implement directly.
+
+#### Reporter's symptom (verbatim from issue body)
+
+```
+2026-06-08T09:16:47.722Z [ERROR  ] [b83e41207149e7ea80c873ca9353e0dd]
+  [get_gift_cards_for_user] returning failed result:
+  code:500, msg:Could not get gift cards for user,
+  error:current transaction is aborted, commands ignored until end of transaction block
+2026-06-08T09:16:47.718Z [DEBUG  ] Getting created gift cards for user
+  {"email": "schalk@codeinfinity.co.za"}
+```
+
+> *"There are no logs after that point and it is the first point that a
+> database call is made. It seems the very first call is already
+> saying that the database connection is blocked."*
+
+Triggering call: `GiftCard.where("created_by_email = ? AND is_deleted = 0", [email])`.
+
+#### Investigation timeline
+
+1. **Source-read of `tina4_python/database/postgres.py`** — identified
+   the bare `try/except: total = 0` at lines 146-152 (pristine 3.13.4)
+   wrapping the COUNT query inside `PostgreSQLAdapter.fetch()`. No
+   rollback, no savepoint, no log call.
+2. **Source-read of connection setup** — confirmed `_conn.autocommit = False`
+   at `postgres.py:70`. Combined with the swallow path, the cascade
+   mechanism was clear: a failed COUNT poisons the transaction, the
+   next statement raises `InFailedSqlTransaction`, the original cause
+   is gone.
+3. **Adversarial verification of the hypothesis (4 disproof angles, all failed):**
+   - Searched for a `rollback()` call inside `Database.execute()`'s except block — none.
+   - `grep -rn "Log\." tina4_python/database/ tina4_python/orm/` — returned zero matches; the entire DB+ORM layer has no structured-log calls on swallow paths.
+   - Verified `TINA4_AUTOCOMMIT=true` does NOT escape the cascade — the env var only flips the adapter's Python-side `_autocommit` flag (`adapter.py:307`); `_conn.autocommit` is hardcoded `False` at `postgres.py:70` so PG remains in implicit-txn mode.
+   - Re-read `postgres.py:148-152` for any SAVEPOINT/rollback the patch series might have missed — none present; SAVEPOINT only exists at `postgres.py:99-122` for the `lastval()` query (added for upstream issue #38).
+4. **Local infrastructure setup** — installed PostgreSQL 18.4 via
+   `winget install PostgreSQL.PostgreSQL.18 --silent` with
+   `--superpassword tina4test`, added `psycopg2-binary==2.9.12` to
+   the `pypy/` venv via `uv add psycopg2-binary`, created
+   `tina4_bug46` database with a `gift_cards` table whose
+   `is_deleted` column is `BOOLEAN` (matching the typical PG idiom
+   inferred from the reporter's filter).
+5. **Live reproduction** — ran the reporter's filter via `Model.where()`
+   against the live DB; captured byte-identical `InFailedSqlTransaction:
+   current transaction is aborted, commands ignored until end of
+   transaction block` message. Raw psycopg2 call against the same DB
+   raised `psycopg2.errors.UndefinedFunction: operator does not exist:
+   boolean = integer` with line/column pointer at the failing filter.
+   Bottom-layer string matches the reporter's log byte-for-byte.
+   `Database.get_error()` returned `None` after the failure — confirmed
+   the visibility gap is total (no log, no `last_error`, no preserved
+   trace).
+6. **Fix design** — cloned the existing #38 pattern at `postgres.py:99-122`
+   (`SAVEPOINT _t4_lastval_probe` → ROLLBACK TO on failure) and applied
+   the same shape to the COUNT query. Decision to also wrap the
+   paginated SELECT in its own SAVEPOINT was made after adversarial
+   testing exposed a paginated-query cascade gap (see step 9).
+7. **Patches applied to the venv copy of the framework (3 files):**
+   - `postgres.py` — SAVEPOINT around both the COUNT and the paginated SELECT; `Log.error` on count-probe failure with cause + outer SQL.
+   - `connection.py` — `Log.error` before the existing `return False` in `Database.execute()`'s except (no flow change).
+   - `orm/model.py` — `Log.error` in 4 ORM CRUD except blocks (`save` / `delete` / `force_delete` / `restore`). No contract change — `save()` still returns `False`; the others still re-raise.
+   - Every `from tina4_python.debug import Log; Log.error(...)` call is itself wrapped in `try / except Exception: pass` so a broken/absent logger cannot break the data path.
+8. **Probe development (3 files, 19 tests total, all gated to skip when PG infrastructure is absent):**
+   - **Live PG repro** (5 tests) — psycopg2 raw error capture, framework-surfaced cascade capture, `Log.error` capture via `capfd`, baseline fixture sanity, `db.last_error` is None check.
+   - **Mock-cursor source-read probe** (4 tests) — synthetic psycopg2 cursor that mimics aborted-txn semantics; exercises the real `PostgreSQLAdapter.fetch()` code path without needing a live PG. Asserts SAVEPOINT issued, ROLLBACK TO on failure, paginated query proceeds, `Log.error` emitted.
+   - **Adversarial sweep** (10 tests, see step 10).
+9. **First adversarial run revealed a real fix gap.** 4 of 10 attacks
+   failed against the count-probe-only fix because the paginated SELECT
+   was still running raw — its own failure poisoned the connection on
+   the way out. Expanded the postgres.py patch to wrap the paginated
+   SELECT in its own SAVEPOINT too. Second adversarial run: 10/10 pass.
+   This is documented in the patch commit message: *"adversarial finding
+   — count-probe SAVEPOINT alone left paginated failures poisoning the
+   conn for subsequent statements."*
+10. **Adversarial attacks tried (the fix-breaking sweep):**
+    - Repeated identical failures — must not compound.
+    - Alternating valid/invalid queries — must leave no residue.
+    - Failures inside a user-driven `start_transaction()` block — outer transaction must survive (verified by INSERT + rollback() after the failure).
+    - SAVEPOINT name collision with a user-named SAVEPOINT of the same name — informational; framework's `_t4_count` is unlikely to collide in practice, flagged as a separate adjacent finding.
+    - Credential leak check — connection-string password must not appear in any Log payload.
+    - Very long SQL (50-clause OR chain) — Log line must not crash or truncate.
+    - `ORM.save()` contract preservation — must return `False`, not raise, after the Log.error addition.
+    - Paginated-query failure on an unrelated bad table — must still propagate (no over-eager swallow).
+    - Sabotaged `Log.error` (monkeypatched to raise) — data path must not break because logging broke.
+    - Healthy non-failing queries — must still report correct counts (the SAVEPOINT must not always trigger the fallback).
+11. **Adjacent bugs surfaced during adversarial testing (NOT yet filed
+    upstream — separate issues recommended):**
+    - **`SQLTranslator.boolean_to_int`** (`tina4_python/database/adapter.py:538-542`)
+      unconditionally rewrites `\bTRUE\b` → `1` and `\bFALSE\b` → `0` on
+      the PG translation path. Against a real `BOOLEAN` column this
+      reintroduces the BOOLEAN-vs-integer mismatch in framework-generated
+      SQL — a caller writing `is_deleted = FALSE` to dodge this issue
+      still hits the operator error, because the translator rewrites the
+      literal before psycopg2 sees it. Translator should skip the
+      rewrite on engines with native boolean support.
+    - **SAVEPOINT name collision** — the proposed fix uses fixed names
+      (`_t4_count`, `_t4_paginated`). If a caller has an outer
+      SAVEPOINT with the same name, the framework's `RELEASE SAVEPOINT`
+      will end the caller's SAVEPOINT too. Low practical impact;
+      trivially fixed with a unique-per-call suffix (e.g. `id(cursor)`).
+12. **Final suite state on `bug-hunting` branch:** 69 passed, 2 skipped.
+    19 new tests (5 live PG + 4 mock probe + 10 adversarial) pass against
+    the patched framework; the same tests' bug-direction assertions FAIL
+    against pristine 3.13.4 — regression-sentinel pattern works as
+    designed. No regressions on the 50 pre-existing chapter-fidelity
+    tests.
+13. **Upstream comment posted** to issue #46 on 2026-06-08 by
+    `MichaelC8E`. Structure: 5 numbered findings (bug location, cascade
+    mechanism, reproduction output, visibility gap, fix-pattern-already-in-tree),
+    "Worth noting" with the BOOLEAN/integer trigger framing + the
+    boolean_to_int adjacent bug, and a "Potential fix" code block
+    showing the count-probe SAVEPOINT shape. Final comment text saved
+    at `bug-hunting/issue-46-comment.md` on the `bug-hunting` branch.
+14. **Patches NOT yet attached to the upstream thread or opened as a
+    PR.** Three unified diffs ready at
+    `bug-hunting/fix-issue-46-patches/` that `git apply --check`-pass
+    cleanly against a pristine 3.13.4 checkout. If the maintainer
+    requests them, attach or open a PR referencing #46.
+
+#### Where the code lives (`bug-hunting` branch)
+
+| Path | Purpose |
+|---|---|
+| `bug-hunting/README.md` | Branch-purpose index, pointers to the canonical Bug Hunt section here |
+| `bug-hunting/issue-46-pg-silent-abort.md` | Long-form analysis (root cause, adversarial verification, recommended fix shape) |
+| `bug-hunting/issue-46-comment.md` | Final upstream-posted comment text — what was pasted into #46 on 2026-06-08 |
+| `bug-hunting/fix-issue-46-patches/01-postgres-savepoint-count-and-paginated.patch` | Primary fix — both SAVEPOINTs + Log.error |
+| `bug-hunting/fix-issue-46-patches/02-connection-execute-log.patch` | `Log.error` in `Database.execute()` swallow |
+| `bug-hunting/fix-issue-46-patches/03-model-orm-log.patch` | `Log.error` in 4 ORM CRUD swallows |
+| `bug-hunting/fix-issue-46-patches/README.md` | Patch series overview + apply instructions |
+| `pypy/tests/test_issue_46_live_repro.py` | 5 live PG reproduction tests |
+| `pypy/tests/test_issue_46_pg_silent_abort_probe.py` | 4 mock-cursor source-read tests |
+| `pypy/tests/test_issue_46_fix_adversarial.py` | 10 hostile-input fix-breaking tests |
+| `pypy/src/orm/GiftCard.py` | Repro ORM model (mirrors the reporter's column layout) |
+| `pypy/pyproject.toml` + `uv.lock` | Adds `psycopg2-binary` as a dev dep (NOT brought to `main`) |
+
+#### Continuation pointers (for any LLM picking this up)
+
+If you need to revisit BH-46:
+
+1. **Check upstream status first.** `gh issue view 46 --repo tina4stack/tina4-python --comments` — see if the issue has progressed (closed, merge linked, maintainer response, etc.). The state recorded here is as of 2026-06-08.
+2. **To re-run the tests / reproduce locally:** `git checkout bug-hunting`. This restores all artifacts. Requirements: PostgreSQL 18.4+ reachable on `localhost:5432` with superuser `postgres` / password `tina4test`, a database named `tina4_bug46` with the `gift_cards` schema in step 4 of the timeline above, and `psycopg2-binary` in the `pypy/` venv. Tests skip cleanly when these are missing (gated via `pytest.importorskip("psycopg2")` + a PG-reachability probe).
+3. **Schema for the fixture** (recreate if lost):
+   ```sql
+   CREATE DATABASE tina4_bug46;
+   \c tina4_bug46
+   CREATE TABLE gift_cards (
+       id SERIAL PRIMARY KEY,
+       created_by_email VARCHAR(200) NOT NULL,
+       owned_by_email VARCHAR(200),
+       amount NUMERIC(10,2) NOT NULL,
+       is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   INSERT INTO gift_cards (created_by_email, owned_by_email, amount, is_deleted) VALUES
+   ('schalk@codeinfinity.co.za', 'alice@example.com', 100.00, FALSE),
+   ('schalk@codeinfinity.co.za', 'bob@example.com',   50.00, FALSE),
+   ('alice@example.com',        'schalk@codeinfinity.co.za', 25.00, TRUE);
+   ```
+4. **To switch between pre- and post-fix states for verification:**
+   - **Pristine baseline (bug-active):** from `pypy/`, run
+     `uv pip install --force-reinstall --no-deps tina4-python==3.13.4`.
+     Bug-direction assertions in `test_issue_46_live_repro.py` should
+     FAIL (cascade message + zero log emitted), proving the bug exists
+     in the released framework.
+   - **Patched (bug-closed):** from project root, run
+     ```
+     git apply --directory=pypy/.venv/Lib/site-packages/ bug-hunting/fix-issue-46-patches/01-postgres-savepoint-count-and-paginated.patch
+     git apply --directory=pypy/.venv/Lib/site-packages/ bug-hunting/fix-issue-46-patches/02-connection-execute-log.patch
+     git apply --directory=pypy/.venv/Lib/site-packages/ bug-hunting/fix-issue-46-patches/03-model-orm-log.patch
+     ```
+     Then all 19 BH-46 tests should PASS (regression-sentinel flip).
+   - The patches are line-ending-clean as committed in the git tree; if `git apply` complains about CRLF on Windows, `tr -d '\r' < file.patch > tmp && mv tmp file.patch` normalises it.
+5. **Open follow-up work to consider:**
+   - File the two adjacent bugs (boolean_to_int translator + SAVEPOINT name collision) as separate upstream issues if the maintainer hasn't already addressed them via the BH-46 fix.
+   - If the upstream maintainer wants patches, the patches in `bug-hunting/fix-issue-46-patches/` are ready to attach or open as a PR. Suggested PR title: `Fix #46: SAVEPOINT around COUNT probe and paginated SELECT + Log.error on swallow paths`.
+   - The other DB adapters (`mysql.py`, `mssql.py`, `firebird.py`, `mongodb.py`) have analogous `except Exception` swallow patterns that were NOT investigated. Whether they cascade the same way depends on the underlying driver's transaction semantics — worth a follow-up sweep if cross-driver parity matters.
+   - Doc-fidelity work (PY-NN-NN findings on `main`) continues independently of this bug. Ch18 S11/S12 auth-flow scaffold was paused mid-investigation per the user's "we will come back to 11" directive and remains the natural resume point on `main`.
+
 ## Suggested Fixes
 
 Proposed remedies for entries in the Known Issues Log. Each fix tags one or more issue IDs
