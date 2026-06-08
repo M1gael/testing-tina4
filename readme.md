@@ -286,7 +286,7 @@ Refreshed whenever a new test file is added or a finding ID is logged. Status va
 | :--- | :--- | :--- | :--- | :--- |
 | Python | 01 — Getting Started | (whole chapter, narrative) | in-progress | PY-01-01, PY-01-03, PY-01-05, PY-01-06, PY-01-07, PY-01-08 |
 | Python | 10 — Middleware & Security | S3, S4, S9, S10, S12 (source + coworker incident — not yet implemented verbatim) | findings logged, impl pending | ✅ PY-10-01, ✅ PY-10-02, ✅ PY-10-03 (all fixed in 3.13.4) |
-| Python | 18 — Testing | S2, S3, S4, S5, S6, S7, S8, S9, S10 (of 13) | in-progress | PY-18-01, PY-18-02, PY-18-03 (re-verified open across S8 + S9), ✅ PY-18-04, PY-18-07 (-07a fixed; -07b/-07c open), ✅ PY-18-08, ✅ PY-18-10, PY-18-11, PY-18-12 (✅ fixed in 3.13.4 where shown). S10 clean — three "Good" patterns implemented verbatim in `tests/test_ch18_best_practices.py`, all pass. |
+| Python | 18 — Testing | S2, S3, S4, S5, S6, S7, S8, S9, S10, S11/S12 (of 13) | in-progress | PY-18-01, PY-18-02, PY-18-03 (re-verified open across S8 + S9), ✅ PY-18-04, PY-18-07 (-07a fixed; -07b/-07c open), ✅ PY-18-08, ✅ PY-18-10, PY-18-11, PY-18-12, PY-18-13 (5 sub-symptoms a–e). S10 clean. S11/S12 user model exercise: 5/5 pass after 4 PATCH blocks. |
 | Python | 02–09, 11–17, 19–38 | — | not-started | — |
 | PHP | all | — | not-started (workspace not bootstrapped) | — |
 | Ruby | all | — | not-started (workspace not bootstrapped) | — |
@@ -321,6 +321,7 @@ Status values: `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
 | PY-10-03 | Python | 10 | fixed | 2026-06-04 | **Fixed in tina4-python 3.13.4 (2026-06-05) — `request.headers` is now a `CaseInsensitiveDict` (`request.py:18`). `headers.get("Content-Type")`, `headers.get("content-type")`, `headers.get("CONTENT-TYPE")` all return the same value. The 6 mixed-case chapter examples now work as written. Verified by the existing probe assertion `test_docs_pattern_capital_A_returns_None` flipping from PASS to FAIL (regression sentinel).** Originally: **Header-key casing mismatch in chapter examples.** `request.py:55` stores all incoming headers under lowercase keys: `req.headers[name.decode().lower()] = value.decode()`. So `request.headers.get("Authorization")` returns `None` — the key is actually `"authorization"`. Several chapter examples use mixed-case keys against this dict — S9 line 500 uses `"authorization"` (correct), S10 line 546 + S12 line 677 use `"X-API-Key"` (broken — returns None), S12 line 664 uses `"Authorization"` (broken — returns None). The chapter never states that `request.headers` is lowercase-keyed, nor mentions the convenience helpers: `request.header(name)` does case-insensitive lookup (`request.py:128`), and `request.bearer_token()` extracts the raw token (`request.py:132`). Recommend: (a) add a one-line callout in S3 or S8 that `request.headers` is lowercase-keyed, (b) normalise all chapter examples to either lowercase keys or the `request.header()` helper, (c) document `request.bearer_token()` as the canonical way to read the auth header. |
 | PY-18-12 | Python | 18 | open | 2026-06-05 | **S7 (Setup and Teardown) example references `User` with no import and no model definition — same defect class as PY-18-07a in S4 before the 3.13.4 fix.** S7 snippet uses `User()`, `User.find(self.user_id)`, `user.save()`, `user.delete()` across `set_up`, `tear_down`, and both test methods. Chapter imports only `Test, assert_equal, assert_not_none` from `tina4_python.test`. No `User` ORM model defined in Ch18 or referenced from Ch06. Empirically: `NameError: name 'User' is not defined` on every test before any framework code runs. The 3.13.4 fix for PY-18-07a added `from src.orm.Product import Product` to S4; the parallel fix is missing for S7. Recommend: add `from src.orm.User import User   # assumes src/orm/User.py exists` to the snippet, mirroring the S4 fix. (Combined with the broader scaffold-gap pattern PY-18-11: a one-line callout that S7 assumes Ch06 ORM territory would also help.) |
 | PY-18-11 | Python | 18 | open | 2026-06-05 | **S6 (Testing Authentication) assumes prior-chapter scaffold with no callout.** S6 test code references `/api/auth/login` POST + `/api/profile` GET, hardcoded credentials `admin@example.com` / `correct-password`, and expects a JWT in the response. None of these routes/users/credentials are shown in Ch18 or earlier sections of Ch18. A reader following the chapter top-down hits 6 consecutive 404s with no hint why. S5 has the same shape gap (`/api/products` not shown) but at least appears alongside S4's ORM model, which makes the link to Ch06 implicit. S6 has no equivalent anchor — the auth setup lives in Ch08 (not yet read by a sequential reader). Recommend: add a one-paragraph callout at the top of S6 stating "this section assumes Ch08 (Authentication) has been implemented and the `/api/auth/login` + `/api/profile` routes exist; minimal setup below," followed by a 10-line auth route + user fixture. Verified locally: building a minimal `src/routes/ch18_auth.py` using `Auth.get_token()` / `@secured()` flips all 6 S6 tests from 404 to PASS, confirming the framework is fine — only the chapter scaffolding is missing. |
+| PY-18-13 | Python | 18 | open | 2026-06-08 | **S11 exercise + S12 solution (`tests/test_user_model.py`) broken in 5 independent ways before the first assertion runs.** (a) **PY-18-13a — missing `User` import.** S12 `test_user_model.py` uses `User()` throughout but imports only `Test, assert_equal, assert_true, assert_not_none, assert_raises`. `NameError: name 'User' is not defined` on every test. Same defect class as PY-18-07a (Product) and PY-18-12 (S7 User). Fix: add `from src.orm.User import User`. (b) **PY-18-13b — no DB binding or table creation.** S12 never calls `orm_bind()`, sets `TINA4_DATABASE_URL`, or runs DDL. `RuntimeError: No database bound` on first `user.save()`. Same defect class as PY-18-07b. Fix: `os.environ.setdefault("TINA4_DATABASE_URL", "sqlite:///data/test.db")` + `User.create_table()`. (c) **PY-18-13c — `StringField` has no `unique` kwarg; no uniqueness mechanism shown.** S11 requirement 2 + S12 `test_duplicate_email` expects an exception or error on duplicate email save. `Field.__init__` (fields.py:19-34) accepts no `unique` parameter — verified. The chapter shows no migration, no `save()` override, and no mechanism to enforce uniqueness. A UNIQUE INDEX must be created manually (e.g. `db.execute("CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users(email)")`), but this is not in the chapter. (d) **PY-18-13d — `User.where("1=1")` unpacked as 2-tuple raises `ValueError`.** S12 line 808: `users, count = User.where("1=1")`. `Model.where()` returns `list[Self]` by default; `(list, int)` tuple requires `with_count=True` (model.py:624). As written: `ValueError: too many values to unpack (expected 2)`. Fix: `User.where("1=1", with_count=True)`. Same defect class as PY-18-07c. (e) **PY-18-13e — `assert_raises(create_duplicate, Exception, ...)` cannot fire; `ORM.save()` swallows all exceptions.** `ORM.save()` (model.py:336-338) wraps every insert/update in `except Exception: db.rollback(); return False`. A UNIQUE constraint violation is caught internally and returns `False` — it never propagates. S12's `assert_raises` test therefore always fails with `AssertionError: Should reject duplicate email` even when a UNIQUE INDEX is present. The framework's actual contract is "duplicate save returns `False`"; the test must assert `assert_false(user2.save(), ...)` not `assert_raises(...)`. Recommend: S11/S12 rewrite to (1) include `from src.orm.User import User` and DB-setup lines, (2) either add `unique=True` to `StringField` or show the migration/index step, (3) fix the `where()` call to use `with_count=True`, (4) fix `test_duplicate_email` to assert `save()` returns `False` rather than raises. Evidence: `pypy/tests/test_user_model.py` — 4 PATCH markers (PY-18-13a–e) required to reach 5/5 pass. |
 | PY-18-10 | Python | 18 | fixed | 2026-06-04 | **Fixed in tina4-python 3.13.4 (2026-06-05) via doc update — bundled into the PY-18-08 release. New S5 "Response Object" subsection (refreshed `18-testing.md:379-386`) correctly lists `resp.status`, `resp.body` (raw bytes), `resp.text()`, `resp.json()`, lowercased headers, `resp.content_type`. The framework itself is unchanged — the docs were brought into line with the real `TestResponse` class.** Originally: **Section 5 "Response Object" subsection (`18-testing.md:384-393`) reference table doesn't match `TestResponse`.** The code block lists four properties — `resp.status_code`, `resp.body` (string), `resp.headers`, `resp.content_type`. Empirically verified against `tina4_python.test_client.TestResponse` (`__slots__ = ("status", "body", "headers", "content_type")`) via probe in `pypy/tests/test_ch18_response_object_probe.py`: (a) `resp.status_code` does not exist — the real attribute is `resp.status`. Probe `test_doc_resp_status_code_attribute_exists` fails with `AttributeError`. (b) `resp.body` documented as "string" — actual type is `bytes`. Probe `test_doc_resp_body_is_a_string` fails; `test_real_resp_body_is_bytes` passes. Side-effect: chapter's `json.loads(resp.body)` calls work by luck (since Python 3.6 `json.loads` accepts bytes), but any user who does `resp.body.startswith(...)` or string-concatenates the body will hit `TypeError`. (c) Helper methods `resp.json()` and `resp.text()` exist on the class but are absent from the reference table. (Note: PY-18-08(b) and PY-18-08(c) overlap with parts of this finding — they were lumped under the test-client signature filing before the "one code block = one finding" convention was set. PY-18-10 is the canonical row for the Response Object code block; PY-18-08 keeps the test-client methods block.) |
 
 ### Observed terminal output
@@ -540,6 +541,51 @@ Issues:
 - `User` referenced in `set_up`, `tear_down`, and both test methods. Not imported anywhere in the chapter.
 - No `User` ORM model defined or shown in Ch18.
 - Same defect class as PY-18-07a (S4 Product) before the 3.13.4 fix; the parallel fix was not applied to S7.
+
+#### PY-18-13 — S12 `test_user_model.py` broken in 5 independent ways
+
+Documentation shows (`18-testing.md:744-811`):
+
+```python
+import uuid
+from tina4_python.test import Test, assert_equal, assert_true, assert_not_none, assert_raises
+
+class UserModelTest(Test):
+
+    def test_duplicate_email(self):
+        ...
+        assert_raises(create_duplicate, Exception, "Should reject duplicate email")
+
+    def test_select_users(self):
+        ...
+        users, count = User.where("1=1")
+        assert_true(len(users) >= 3, "Should have at least 3 users")
+```
+
+Actual output (verbatim, sequential — each error reached after patching the previous):
+
+```
+# PY-18-13a — on collection before any test runs:
+NameError: name 'User' is not defined
+
+# PY-18-13b — after adding import, on first test:
+RuntimeError: No database bound. Call orm_bind(db) or set TINA4_DATABASE_URL in .env
+
+# PY-18-13d — test_select_users (reaches this after a/b patched):
+ValueError: too many values to unpack (expected 2)
+tests\test_user_model.py:82: ValueError
+
+# PY-18-13e — test_duplicate_email (with UNIQUE index manually applied):
+AssertionError: Should reject duplicate email
+.venv\Lib\site-packages\tina4_python\test\__init__.py:387: AssertionError
+```
+
+Issues:
+- `User` never imported — `NameError` before any test runs (PY-18-13a).
+- No `TINA4_DATABASE_URL`, no `create_table()` — `RuntimeError` on first `user.save()` (PY-18-13b).
+- No `unique` kwarg on `StringField`, no migration/index shown — chapter mandates duplicate rejection with no mechanism (PY-18-13c).
+- `User.where("1=1")` returns `list`, not `(list, int)` — needs `with_count=True` (PY-18-13d).
+- `ORM.save()` swallows all exceptions (model.py:336-338) — `assert_raises` can never fire; real contract is `save()` returns `False` (PY-18-13e).
 
 #### PY-18-10 — Response Object reference doesn't match `TestResponse`
 
