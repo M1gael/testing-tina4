@@ -56,7 +56,7 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `pypy/` | Python (primary workspace) | tina4-python **3.13.2** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `pypy/` | Python (primary workspace) | tina4-python **3.13.12** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
 | `phph/` | PHP | *not yet bootstrapped* | (will be `index.php`) | composer | empty dir; run `tina4 init php .` before working |
 | `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
 
@@ -76,6 +76,45 @@ Ruby:    TBD — workspace not bootstrapped (run `tina4 init ruby .` in ruru/ fi
 ```
 
 Watch `logs/tina4.log` for registration/execution errors while testing.
+
+## Local Postgres fixture (live-PG probes)
+
+The live-PG probes (`pypy/tests/test_issue_46_*.py`, `hello_pg.py`) connect to a local Postgres on `localhost:5432`, user `postgres` / password `tina4test`. Two databases:
+
+| DB | Purpose | Schema |
+|---|---|---|
+| `tina4_bug46` | BH-46 reproduction fixture | `gift_cards (id SERIAL, created_by_email VARCHAR, owned_by_email VARCHAR, amount NUMERIC, is_deleted BOOLEAN, created_at TIMESTAMP)` |
+| `tina4testingdb` | General doc verification | `items (id SERIAL, name TEXT, created_at TIMESTAMP)` |
+
+Probes auto-skip (`pytest.mark.skipif`) when the instance is unreachable — a machine without the fixture still runs the mocked probes cleanly.
+
+**Rebuild:**
+
+```powershell
+$env:PGPASSWORD = "tina4test"
+$psql = "C:\Program Files\PostgreSQL\18\bin\psql.exe"
+
+& $psql -h localhost -U postgres -c "CREATE DATABASE tina4_bug46;"
+& $psql -h localhost -U postgres -d tina4_bug46 -c @"
+CREATE TABLE gift_cards (
+    id SERIAL PRIMARY KEY,
+    created_by_email VARCHAR(200) NOT NULL,
+    owned_by_email VARCHAR(200),
+    amount NUMERIC(10,2) NOT NULL,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+INSERT INTO gift_cards (created_by_email, amount)
+VALUES ('schalk@codeinfinity.co.za', 100.00), ('schalk@codeinfinity.co.za', 50.00);
+"@
+
+& $psql -h localhost -U postgres -c "CREATE DATABASE tina4testingdb;"
+& $psql -h localhost -U postgres -d tina4testingdb -c "CREATE TABLE items (id SERIAL PRIMARY KEY, name TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP); INSERT INTO items (name) VALUES ('apple'), ('banana'), ('cherry');"
+```
+
+**Verify:** `& $psql -h localhost -U postgres -c "\l"` lists both DBs; `cd pypy; uv run python tests/hello_pg.py` round-trips.
+
+**Runtime:** currently native Windows install (`postgresql-x64-18` service). Docker switch pending — update this section with the docker-compose stanza when it lands.
 
 ## Documentation source — `documentation/tina4-book/`
 

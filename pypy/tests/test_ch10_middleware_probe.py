@@ -1,3 +1,4 @@
+# Probe — covers PY-10-01 / PY-10-02 / PY-10-03. Middleware dispatcher regression sentinel.
 # ch10 sections 3 + 4 — middleware dispatcher probe
 # Originally demonstrated PY-10-01/02/03 against tina4-python 3.13.2.
 # All three findings fixed in 3.13.4 — probe retained as regression sentinel.
