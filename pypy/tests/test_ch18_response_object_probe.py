@@ -1,3 +1,4 @@
+# Probe — covers PY-18-10. Response Object reference regression sentinel.
 # ch18 section 5 — Response Object probe
 # Originally demonstrated PY-18-10 against tina4-python 3.13.2.
 # Fixed in 3.13.4 via DOCS UPDATE (the framework was unchanged — the chapter

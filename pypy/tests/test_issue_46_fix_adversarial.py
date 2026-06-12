@@ -1,3 +1,4 @@
+# Probe — covers BH-46 (issue #46). Adversarial sentinel for the drafted fix patches.
 # Adversarial tests for the DRAFTED issue #46 patches at
 # `bug-hunting/fix-issue-46-patches/`. The drafted fix had three
 # patches:

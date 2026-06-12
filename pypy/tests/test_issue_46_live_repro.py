@@ -1,3 +1,4 @@
+# Probe — covers BH-46 (issue #46). Live PG reproduction of reporter's exact call shape.
 # Live reproduction for tina4stack/tina4-python issue #46
 # https://github.com/tina4stack/tina4-python/issues/46
 #

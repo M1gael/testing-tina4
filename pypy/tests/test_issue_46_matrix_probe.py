@@ -1,3 +1,4 @@
+# Probe — covers BH-46 + BH-49 (issues #46, #49). 13-test matrix over {fetch,execute} × {outside/inside txn} × {fresh/poisoned}.
 # Comprehensive matrix probe for tina4stack/tina4-python issue #46
 # https://github.com/tina4stack/tina4-python/issues/46
 #

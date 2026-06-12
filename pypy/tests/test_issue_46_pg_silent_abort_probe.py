@@ -1,3 +1,4 @@
+# Probe — covers BH-46 (issue #46). Source-read sentinel for the SAVEPOINT count-probe fix.
 # Probe for tina4stack/tina4-python issue #46
 # https://github.com/tina4stack/tina4-python/issues/46
 #
