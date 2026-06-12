@@ -196,14 +196,21 @@ def test_orm_where_surfaces_original_cause_not_cascade():
     )
 
 
-def test_count_probe_logs_original_cause(capfd):
-    """Fix-direction: the count-probe failure must emit a Log.error
-    with the original cause + the SQL fragment. Captures the
-    visibility half of issue #46.
+def test_failure_logs_original_cause_with_sql_and_params(capfd):
+    """Fix-direction: a Log.error line surfaces the original cause
+    with sql + params context. Captures the visibility half of #46.
 
-    `tina4_python.debug.Log` writes via direct `print()` to stdout
-    (debug/__init__.py:418), not through stdlib `logging`. So we
-    use `capfd` (file-descriptor-level capture) rather than `caplog`.
+    Implementation note (v3.13.6 actual): the log fires via
+    ``_on_query_error`` on the PAGINATED query, not the count probe.
+    By the time the wrapper sees it, the count probe has already
+    swallowed-and-rolled-back, the conn is clean, and the paginated
+    query re-encounters the same underlying PG error. So the log line
+    is emitted at paginated-query time. The user-visible outcome is
+    the same: original cause + sql + params reach the log.
+
+    ``tina4_python.debug.Log`` writes via direct ``print()`` to stdout
+    (debug/__init__.py:418), not through stdlib ``logging``. So we
+    use ``capfd`` (file-descriptor-level capture) rather than ``caplog``.
     """
     try:
         GiftCard.where(
@@ -211,35 +218,27 @@ def test_count_probe_logs_original_cause(capfd):
             [REPORTER_EMAIL],
         )
     except Exception:
-        pass  # we know it raises; we're testing the side-effect log
+        pass
 
     out, err = capfd.readouterr()
-    log_stream = out + err  # tina4 Log writes to stdout but be safe
+    log_stream = out + err
 
-    print(f"\n[captured log stream length] {len(log_stream)} chars")
-    # Find the ERROR line(s) about the count probe.
-    error_lines = [
-        ln for ln in log_stream.splitlines()
-        if "[ERROR" in ln and "count probe" in ln.lower()
-    ]
-    print(f"[count-probe ERROR lines] {len(error_lines)}")
-    for ln in error_lines:
-        print(f"  - {ln}")
-
-    assert error_lines, (
-        "Expected at least one ERROR log line mentioning the count "
-        "probe after the fix. tina4 Log prints to stdout — capfd "
-        "should have seen it. Full stream tail:\n"
-        f"{log_stream[-800:]}"
+    # Log.error wraps to multiple lines (LINE / HINT / structured
+    # payload all follow the [ERROR] header). Check the full stream
+    # rather than filtering to header lines only.
+    assert "PostgreSQL query failed" in log_stream, (
+        f"_on_query_error did not fire. Stream tail:\n{log_stream[-800:]}"
     )
-
-    # The original psycopg2 cause must be embedded in the log
-    # (Log.error serialises structured kwargs as JSON after the
-    # message — debug/__init__.py:400-401).
-    joined = "\n".join(error_lines)
-    assert "boolean = integer" in joined or "operator does not exist" in joined, (
-        "The original psycopg2 cause was not captured in the log "
-        f"payload. Log line was: {joined}"
+    assert ("boolean = integer" in log_stream
+            or "operator does not exist" in log_stream), (
+        f"Original cause missing from log. Stream tail:\n{log_stream[-800:]}"
+    )
+    # sql + params structured payload (debug/__init__.py:400-401)
+    assert '"sql":' in log_stream, (
+        f"sql key missing from log. Stream tail:\n{log_stream[-800:]}"
+    )
+    assert REPORTER_EMAIL in log_stream, (
+        f"params not in log. Stream tail:\n{log_stream[-800:]}"
     )
 
 

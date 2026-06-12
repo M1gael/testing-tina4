@@ -1,20 +1,29 @@
-# Adversarial tests for the issue #46 fix.
-#
-# The fix has three patches:
+# Adversarial tests for the DRAFTED issue #46 patches at
+# `bug-hunting/fix-issue-46-patches/`. The drafted fix had three
+# patches:
 #   (1) postgres.py:148-152 — wrap count probe in SAVEPOINT, log
 #       Log.error with original cause on failure.
 #   (2) connection.py:412-414 — Log.error on Database.execute() failure.
 #   (3) model.py:336/364/384/405 — Log.error on ORM save/delete/
 #       force_delete/restore failure paths.
 #
-# This file tries to BREAK them. Every test below is shaped as
-# "what's the worst input / state we can hand the framework that
-# the fix might mishandle?" — and asserts the framework still does
-# the right thing.
+# IMPORTANT: maintainer SHIPPED a DIFFERENT fix shape in v3.13.6 +
+# v3.13.8 (see bug-hunting/issue-46-pg-silent-abort.md):
+#   - Count probe: full self._conn.rollback() instead of SAVEPOINT
+#   - Log routing: through new _exec_with_handling wrapper, fires on
+#     paginated query path, not count-probe path
+#   - ORM-layer Log.error (drafted patch 3): NOT shipped — ORM still
+#     swallows silently
+#   - Inside-explicit-txn auto-rollback: DEFERS by design
 #
-# Each test runs against the LIVE PostgreSQL fixture (tina4_bug46)
-# so the assertions exercise real psycopg2 semantics, not a mock.
-# Skipped automatically when psycopg2 / PG is unavailable.
+# So 4 of the 10 assertions below check patch-specific shapes that
+# maintainer chose not to ship. Those are marked xfail with a pointer
+# to `test_issue_46_matrix_probe.py` which captures the canonical
+# post-fix behaviour empirically.
+#
+# Each remaining test runs against the LIVE PostgreSQL fixture
+# (tina4_bug46) so the assertions exercise real psycopg2 semantics,
+# not a mock. Skipped automatically when psycopg2 / PG is unavailable.
 
 import os
 import sys
@@ -117,6 +126,12 @@ def test_attack_alternating_pass_fail(_bind_pg):
 
 # ── ATTACK 3: failure inside an explicit user transaction ──────────
 
+@pytest.mark.xfail(
+    reason="Maintainer's v3.13.6+v3.13.8 fix defers inside explicit txn by "
+           "design (postgres.py:127-130). Drafted patch behaviour not shipped. "
+           "See test_gap_fetch_inside_explicit_txn_cascades in matrix probe.",
+    strict=False,
+)
 def test_attack_failure_inside_user_transaction(_bind_pg):
     """Caller has called db.start_transaction() before the failing
     fetch. The SAVEPOINT must NEST inside the user txn, not commit
@@ -168,6 +183,13 @@ def test_attack_failure_inside_user_transaction(_bind_pg):
 
 # ── ATTACK 4: SAVEPOINT name collision ──────────────────────────────
 
+@pytest.mark.xfail(
+    reason="Maintainer chose full conn.rollback() instead of SAVEPOINT for "
+           "count probe (postgres.py:288-292), so no savepoint name to "
+           "clash with at the count-probe site. Lastval probe still uses "
+           "fixed name _t4_lastval_probe (postgres.py:240-248).",
+    strict=False,
+)
 def test_attack_savepoint_name_does_not_clash_with_user_savepoint(_bind_pg):
     """If the user has their own SAVEPOINT named `_t4_count_probe`,
     the framework's SAVEPOINT must not stomp on it. Probe via raw
@@ -236,6 +258,12 @@ def test_attack_log_does_not_leak_credentials(_bind_pg, capfd):
 
 # ── ATTACK 6: Long SQL doesn't break the log payload ────────────────
 
+@pytest.mark.xfail(
+    reason="Drafted patch logged full SQL; maintainer's _on_query_error "
+           "truncates to first line, 200 chars (postgres.py:145). Test "
+           "asserts against drafted-patch log content shape.",
+    strict=False,
+)
 def test_attack_long_sql_does_not_crash_log(_bind_pg, capfd):
     """A failing query with a huge IN-list or repeated clauses must
     still produce a parseable log line — Log shouldn't truncate or
@@ -260,6 +288,13 @@ def test_attack_long_sql_does_not_crash_log(_bind_pg, capfd):
 
 # ── ATTACK 7: ORM.save() failure logs cause + still returns False ──
 
+@pytest.mark.xfail(
+    reason="Drafted patch 3 added Log.error('ORM.save() failed', ...) — not "
+           "shipped. ORM layer still swallows silently. Adapter does emit "
+           "'PostgreSQL query failed' via _on_query_error, but the test "
+           "specifically checks the ORM-layer wording.",
+    strict=False,
+)
 def test_attack_orm_save_logs_violation_and_returns_false(_bind_pg, capfd):
     """save() contract: rollback + return False, never raise. The
     fix added a Log.error before the return — must NOT have
