@@ -1,0 +1,2 @@
+# Shell scripts must keep LF — they run inside Linux containers (Docker init).
+*.sh text eol=lf

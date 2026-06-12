@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: tina4_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tina4test
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - tina4_pg_data:/var/lib/postgresql
+      - ./dev/postgres-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  tina4_pg_data:

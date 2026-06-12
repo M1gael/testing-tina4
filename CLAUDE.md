@@ -88,33 +88,22 @@ The live-PG probes (`pypy/tests/test_issue_46_*.py`, `hello_pg.py`) connect to a
 
 Probes auto-skip (`pytest.mark.skipif`) when the instance is unreachable — a machine without the fixture still runs the mocked probes cleanly.
 
-**Rebuild:**
+**Runtime: Docker** (`postgres:18`). `docker-compose.yml` at the repo root defines the `tina4_pg` service; `dev/postgres-init/init.sh` runs once on first start and creates + seeds both DBs above. Note the data volume mounts at `/var/lib/postgresql` (not `/data`) — required by `postgres:18`.
 
 ```powershell
-$env:PGPASSWORD = "tina4test"
-$psql = "C:\Program Files\PostgreSQL\18\bin\psql.exe"
-
-& $psql -h localhost -U postgres -c "CREATE DATABASE tina4_bug46;"
-& $psql -h localhost -U postgres -d tina4_bug46 -c @"
-CREATE TABLE gift_cards (
-    id SERIAL PRIMARY KEY,
-    created_by_email VARCHAR(200) NOT NULL,
-    owned_by_email VARCHAR(200),
-    amount NUMERIC(10,2) NOT NULL,
-    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-INSERT INTO gift_cards (created_by_email, amount)
-VALUES ('schalk@codeinfinity.co.za', 100.00), ('schalk@codeinfinity.co.za', 50.00);
-"@
-
-& $psql -h localhost -U postgres -c "CREATE DATABASE tina4testingdb;"
-& $psql -h localhost -U postgres -d tina4testingdb -c "CREATE TABLE items (id SERIAL PRIMARY KEY, name TEXT NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP); INSERT INTO items (name) VALUES ('apple'), ('banana'), ('cherry');"
+docker compose up -d          # start (from repo root)
+docker compose down           # stop, keep data
+docker compose down -v        # stop + wipe volume → init.sh re-seeds on next up
+docker compose logs postgres  # watch init / readiness
 ```
 
-**Verify:** `& $psql -h localhost -U postgres -c "\l"` lists both DBs; `cd pypy; uv run python tests/hello_pg.py` round-trips.
+**Bring-up from zero:** `docker compose up -d`, wait for `(healthy)` in `docker compose ps`. The init script seeds `gift_cards` (2 rows) + `items` (3 rows).
 
-**Runtime:** currently native Windows install (`postgresql-x64-18` service). Docker switch pending — update this section with the docker-compose stanza when it lands.
+**Verify:** `docker compose exec postgres psql -U postgres -c "\l"` lists both DBs; `cd pypy; uv run python tests/hello_pg.py` round-trips.
+
+**`init.sh` line endings must stay LF** (it runs in a Linux container) — pinned via `.gitattributes` (`*.sh text eol=lf`). CRLF breaks the shebang.
+
+A native Windows install (`postgresql-x64-18` service) was the original runtime; it's now stopped + set to Manual start. To fall back to it, stop the container (`docker compose down`) and `Start-Service postgresql-x64-18` — same port/creds/DBs, so probes don't care which is serving.
 
 ## Documentation source — `documentation/tina4-book/`
 
@@ -148,7 +137,15 @@ Not part of the harness's workflow, but present in the repo:
 
 ## Git
 
-- Remote: `git@github.com:M1gael/testing-tina4.git`, default branch `main` (single branch).
+- Remote: `git@github.com:M1gael/testing-tina4.git`, default branch `main`.
+- **Two-branch workflow.** `main` holds the refined state: chapter implementations,
+  probes (doc-fidelity and bug-hunt alike, each tagged with a `# Probe — covers <ID>`
+  header line), fixtures, and the readme logs. `bug-hunting` is the scratch branch for
+  nasty/rough investigation work — draft comments, dead-end patches, multi-attempt
+  iteration, and the `bug-hunting/` evidence directory (which never merges to `main`).
+  When an investigation stabilises, its refined probes + readme rows are consolidated
+  onto `main`; compare the branches at the end of an investigation to see what still
+  needs cleaning up.
 - Commit messages in history are conventional-ish (`test(python):`, `docs:`, `chore:`,
   `feat(php):`) and frequently reference the tina4 version and issue IDs being verified.
 - Before any user-requested `/commit`, follow the Issue Report Format in `readme.md` for
