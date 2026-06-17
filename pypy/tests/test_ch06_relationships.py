@@ -1,59 +1,87 @@
-# ch06 section 6 — Relationships (has_many / has_one / belongs_to)
-#
-# See test_ch06_note_crud.py header for the DB-connection reminder.
-#
-# Patched pass: the chapter (S6) defines Author + BlogPost and uses
-# has_many/belongs_to with NO create_table or migration shown for either model
-# (S3 shows create_table only for Note). The verbatim run hits UndefinedTable
-# (logged PY-06-02); this file PATCHES in the table creation so the documented
-# S6 relationship API itself — has_many / belongs_to — can be exercised.
-from tina4_python.test import Test, assert_equal, assert_true, assert_not_none
+# Verbatim-impl test — Chapter 6 ORM, S6 "Relationships" (imperative style).
+# Exercises has_many / belongs_to / has_one on the documented Author + BlogPost
+# models (src/orm/author.py, src/orm/blog_post.py) the way the S6 route
+# handlers (src/routes/ch06_blog.py) call them.
+import os
+
+import psycopg2
+import pytest
+
 from src.orm.author import Author
 from src.orm.blog_post import BlogPost
 
 
-class RelationshipsTest(Test):
+def _drop(*tables):
+    conn = psycopg2.connect(os.environ["TINA4_DATABASE_URL"])
+    conn.autocommit = True
+    cur = conn.cursor()
+    for t in tables:
+        cur.execute(f'DROP TABLE IF EXISTS {t} CASCADE')
+    cur.close()
+    conn.close()
 
-    # ============================== PATCHES ==============================
-    # PATCH [PY-06-02]: S6 defines Author + BlogPost and queries them with no
-    # create_table/migration shown (S3 shows create_table only for Note). Without
-    # this, every save raises UndefinedTable: relation "authors"/"posts" does not
-    # exist. Create the tables so the relationship API can be exercised.
-    def set_up(self):
-        Author.create_table()
-        BlogPost.create_table()
-    # ============================ END PATCHES ============================
 
-    def test_has_many(self):
-        author = Author()
-        author.name = "Alice"
-        author.email = "alice@example.com"
-        author.bio = "Tech writer"
-        author.save()
+@pytest.fixture(autouse=True, scope="module")
+def _schema():
+    _drop("posts", "authors")
+    Author.create_table()
+    BlogPost.create_table()
+    yield
+    _drop("posts", "authors")
 
-        p1 = BlogPost()
-        p1.author_id = author.id
-        p1.title = "Getting Started with Tina4"
-        p1.slug = "getting-started"
-        p1.status = "published"
-        p1.save()
 
-        posts = author.has_many(BlogPost, "author_id")
-        assert_true(len(posts) >= 1, "author should have at least one post")
+@pytest.fixture(autouse=True)
+def _clean():
+    for p in BlogPost.all():
+        p.delete()
+    for a in Author.all():
+        a.delete()
+    yield
 
-    def test_belongs_to(self):
-        author = Author()
-        author.name = "Bob"
-        author.email = "bob@example.com"
-        author.save()
 
-        post = BlogPost()
-        post.author_id = author.id
-        post.title = "Advanced Routing"
-        post.slug = "advanced-routing"
-        post.save()
+def _author(name="Alice", email="alice@example.com"):
+    return Author.create(name=name, email=email, bio="Tech writer")
 
-        loaded = BlogPost.find_by_id(post.id)
-        owner = loaded.belongs_to(Author, "author_id")
-        assert_not_none(owner, "post should resolve its author")
-        assert_equal(owner.name, "Bob", "belongs_to should return the right author")
+
+def _post(author_id, title, slug, status="published"):
+    return BlogPost.create(
+        author_id=author_id, title=title, slug=slug,
+        content="...", status=status,
+    )
+
+
+# --- has_many ---
+def test_has_many_returns_authors_posts():
+    a = _author()
+    _post(a.id, "Getting Started with Tina4", "getting-started")
+    _post(a.id, "Advanced Routing", "advanced-routing", status="draft")
+    posts = a.has_many(BlogPost, "author_id")
+    assert len(posts) == 2
+    assert {p.title for p in posts} == {"Getting Started with Tina4", "Advanced Routing"}
+
+
+def test_has_many_empty():
+    a = _author(name="Loner", email="loner@example.com")
+    assert a.has_many(BlogPost, "author_id") == []
+
+
+# --- belongs_to ---
+def test_belongs_to_returns_parent_author():
+    a = _author()
+    p = _post(a.id, "Post One", "post-one")
+    author = p.belongs_to(Author, "author_id")
+    assert author is not None
+    assert author.id == a.id
+    assert author.name == "Alice"
+
+
+# --- has_one ---
+def test_has_one_returns_single_or_none():
+    a = _author(name="Solo", email="solo@example.com")
+    _post(a.id, "Only Post", "only-post")
+    one = a.has_one(BlogPost, "author_id")
+    assert one is not None
+    assert one.title == "Only Post"
+
+    b = _author(name="None", email="none@example.com")
+    assert b.has_one(BlogPost, "author_id") is None

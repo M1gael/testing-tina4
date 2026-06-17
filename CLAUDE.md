@@ -49,9 +49,15 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 
 - **Wait for direction** — don't start a chapter until the user names it.
 - **One language per conversation** — never drift between `pypy/` / `phph/` / `ruru/`.
-- **Implement verbatim first** — even when a bug is already known, the implementation
-  pass runs the chapter's code as written; cross-reference the log after.
-- **No proactive fixes** — verifying the docs, not patching the framework.
+- **Documentation ONLY, nothing else** — implement exactly what the chapter literally
+  shows. Not framework source, not the dev guide / CLAUDE.md, not other chapters, not
+  prior knowledge. The simulated reader knows nothing beyond the page.
+- **No workarounds — if it doesn't work, it DOESN'T WORK** — never reach for an
+  adjustment the chapter doesn't show (different signature, missing import, alternate
+  object, extra setup). Record the failure and stop. The only verbatim deviation is a
+  **USER-triggered patch** to unblock *other* sections (see Patching Convention).
+- **Log the symptom; don't investigate** — capture the literal output/error and move on.
+  Root-cause investigation happens ONLY when the USER explicitly asks for it.
 - **Stay inside `src/{routes,orm,templates}/`, `migrations/`, `seeds/`, `tests/`** —
   no throwaway scripts next to `app.py`.
 - **A database must be connected before ORM-backed tests run** (Ch06, Ch07, Ch18, and

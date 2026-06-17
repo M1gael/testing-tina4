@@ -1,5 +1,5 @@
-# ch06 section 6 — "has_many" (Author model)
-# VERBATIM from the chapter (06-orm.md S6).
+# ch06 section 6 — "Relationships" / has_many
+# VERBATIM from the chapter (Create src/orm/author.py, lines 536-547).
 from tina4_python.orm import ORM, IntegerField, StringField, DateTimeField
 
 class Author(ORM):

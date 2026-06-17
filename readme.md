@@ -26,16 +26,29 @@ The ASSISTANT MUST follow these rules without exception:
 1.  **Wait for Direction** — do NOT start any chapter until the USER explicitly names it
     (e.g., "Work on Python Chapter 3").
 2.  **Strict Sequencing** — implement chapters only in the order requested. No skipping ahead.
-3.  **Implementation Fidelity** — implement the documented example *exactly as written* in the
-    correct language workspace (`pypy/`, `phph/`, `ruru/`).
-4.  **No Proactive Fixes** — do NOT patch framework bugs or "improve" the documented code.
-    The goal is to verify the docs work as-is.
-5.  **Verbatim First, Then Diagnose** — the implementation pass always runs the chapter's
-    code as written, even when a bug is already known or suspected. Discover the symptom
-    fresh first; cross-reference the Known Issues Log after. Findings can land via any
-    route (the verbatim run, source-code reading, a coworker question, a passing
-    observation) — discovery path doesn't matter, what matters is that the finding is
-    genuinely a framework or documentation issue and is empirically confirmed.
+3.  **Implementation Fidelity — documentation ONLY, nothing else** — implement the
+    documented example *exactly as written* in the correct language workspace (`pypy/`,
+    `phph/`, `ruru/`). Use **only what the chapter literally shows** — not framework source,
+    not the framework's dev guide / CLAUDE.md, not other chapters, not prior knowledge,
+    not "the API the framework actually exposes." If the chapter shows a handler signature,
+    an import, a method call, a config value — that is what gets written, character for
+    character. The reader being simulated knows nothing beyond the page in front of them.
+4.  **No Proactive Fixes — NO WORKAROUNDS** — do NOT patch framework bugs, "improve" the
+    documented code, or reach for any adjustment the chapter doesn't show (a different
+    method signature, a missing import, reading a value off a different object, an extra
+    setup step, etc.). **If the documented code doesn't work, it DOESN'T WORK** — record
+    the failure and stop. Making it work is not the job; verifying the docs as-is is. The
+    *only* permitted deviation from verbatim is a **USER-triggered patch** (see Patching
+    Convention) whose sole purpose is to unblock *other* sections held up by an
+    already-logged bug — never to "complete" the section that revealed the bug.
+5.  **Verbatim First, Log the Symptom — diagnose only on instruction** — the implementation
+    pass always runs the chapter's code as written, even when a bug is already known or
+    suspected. When output or code doesn't work as expected, **log the observed symptom**
+    (the literal output / error) and move on — do NOT investigate root causes, read
+    framework source, or build proof harnesses proactively. Deep cause investigation
+    happens **only when the USER explicitly instructs it** (typically while reviewing
+    logged issues). Discovery path doesn't matter; what matters is the finding is a real
+    framework or documentation discrepancy, empirically observed, and logged plainly.
 6.  **Strict Structural Testing** — all work happens inside the standard Tina4 project
     structure (`src/routes`, `src/orm`, `src/templates`, `migrations/`, `seeds/`).
     Throwaway scripts next to `app.py` are prohibited unless a feature genuinely cannot be
@@ -166,7 +179,14 @@ context as the issue needs; Suggested fix may be `—`.
   use `BH-<n>` instead, where `<n>` is the upstream `tina4-python` issue number — same table,
   same schema, just a different ID prefix.
 - **Status** — `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
-- **Filed** — the upstream GitHub issue/PR link, or `no` if not yet filed.
+- **Filed** — the upstream GitHub issue/PR link, or `no` if not yet filed. **Filing
+  destination depends on the ID type:** doc-fidelity findings (`PY-`/`PH-`/`RB-`) are filed
+  against the book repo **[`tina4stack/tina4-book`](https://github.com/tina4stack/tina4-book/issues)**
+  (e.g. [#142](https://github.com/tina4stack/tina4-book/issues/142)); bug-hunt
+  investigations (`BH-<n>`) are filed against the framework repo
+  **[`tina4stack/tina4-python`](https://github.com/tina4stack/tina4-python/issues)** — the
+  issue number *is* the `<n>`. The USER files (see *Local-first, upstream-at-EOD* in the
+  Convention Recap); the assistant only records the link here once it's filed.
 - **Found** — `<YYYY-MM-DD>` the issue was logged · the framework version it was found on
   (e.g. `2026-06-17 · 3.13.30`). Version may be omitted only for pre-convention rows where it
   wasn't recorded. A logged issue's *fix* is tracked by its probe/test, not by re-verifying on
@@ -270,7 +290,7 @@ Use clinical, actor-free language. No "we" / "I" / "us" — let the docs and err
 import", do not write "add the import." The fix is obvious to the maintainer and the
 prose just bloats the issue. Suggested fixes are reserved for non-obvious structural
 recommendations (naming, restructuring, renames) and live in the local Suggested Fixes
-section of `readme.md`, not in the upstream filing.
+section of [`findings-log.md`](findings-log.md), not in the upstream filing.
 
 Consolidated findings in the local log may need to be **split into multiple smaller
 filings** upstream. Each filing tackles one symptom so maintainers can react to them
@@ -285,7 +305,7 @@ links back to where it's fully described.
 |---|---|
 | *— Finding scope & evidence —* | |
 | **One code block = one finding ID** | Each distinct code block in a chapter that has issues gets its own row in the Known Issues Log. Don't lump issues from two separate code blocks under one ID, even if they're in the same section. Use sub-letters (`PY-18-07a`, `PY-18-07b`) for splitting upstream filings within a single finding — see [Issue Report Format](#issue-report-format). |
-| **Probe pattern as evidence + regression sentinel** | Write a `tests/test_chNN_<topic>_probe.py` for every finding whose framework characteristic is testable in code. "Where possible" carves out narrative / structural findings (not expressible as an assertion). **Assert the CORRECT framework state, not the buggy state.** The probe FAILS before the fix (bug visible) and PASSES after (fix confirmed) without any edit. After the fix lands the probe stays live in the active suite — a steady-state PASS that flips to FAIL the moment the framework regresses. Existing patterns: trace-list inspection via direct dispatcher invocation (`pypy/tests/test_ch10_middleware_probe.py` for `PY-10-01/02/03`), positive contract assertions on framework objects (`pypy/tests/test_ch18_response_object_probe.py` for `PY-18-10`). One assertion = one observation; reference the probe filename from the KI Log row. File header records finding history + fix version, and the **first line is always a one-line tag stating what the probe covers** — `# Probe — covers <ID(s)>. <one-line purpose>.` — so doc-fidelity probes (`PY-NN-NN`) and bug-hunt probes (`BH-NN`, named `test_issue_<n>_*.py`) are distinguishable at a glance while living together in `tests/`. |
+| **Probe pattern as evidence + regression sentinel** | Write a `tests/test_chNN_<topic>_probe.py` for every finding whose framework characteristic is testable in code. "Where possible" carves out narrative / structural findings (not expressible as an assertion). **Assert the CORRECT framework state, not the buggy state.** A probe *tries to trigger the bug*; if it succeeds in triggering it, the probe outcome must read as a FAIL (the functionality goal is unmet). So the probe FAILS before the fix (bug visible) and PASSES after (fix confirmed) without any edit. After the fix lands the probe stays live in the active suite — a steady-state PASS that flips to FAIL the moment the framework regresses. Existing patterns: trace-list inspection via direct dispatcher invocation (`pypy/tests/test_ch10_middleware_probe.py` for `PY-10-01/02/03`), positive contract assertions on framework objects (`pypy/tests/test_ch18_response_object_probe.py` for `PY-18-10`). One assertion = one observation; reference the probe filename from the KI Log row. File header records finding history + fix version, and the **first line is always a one-line tag stating what the probe covers** — `# Probe — covers <ID(s)>. <one-line purpose>.` — so doc-fidelity probes (`PY-NN-NN`) and bug-hunt probes (`BH-NN`, named `test_issue_<n>_*.py`) are distinguishable at a glance while living together in `tests/`. |
 | **Adversarial verification before filing** | Before any finding is filed upstream, actively try to disprove the claim across multiple angles — check for alternative code paths, hidden helpers, version-specific behaviour, framework's own internal docs, and inconsistent chapter usage that might excuse the symptom. Only file if every disproof attempt fails. The verification trail (what was tried, what was confirmed) goes into the upstream comment as part of the evidence. |
 | *— Filing cadence & labels —* | |
 | **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (Known Issues Log row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
