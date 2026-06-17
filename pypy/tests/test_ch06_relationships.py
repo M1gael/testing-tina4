@@ -2,11 +2,11 @@
 #
 # See test_ch06_note_crud.py header for the DB-connection reminder.
 #
-# VERBATIM pass: the chapter (S6) defines Author + BlogPost and immediately uses
+# Patched pass: the chapter (S6) defines Author + BlogPost and uses
 # has_many/belongs_to with NO create_table or migration shown for either model
-# (S3 shows create_table only for Note). This runs the documented S6 flow as
-# written — save an author, save posts, read author.has_many(BlogPost,
-# "author_id") — to discover what a reader copying S6 hits.
+# (S3 shows create_table only for Note). The verbatim run hits UndefinedTable
+# (logged PY-06-02); this file PATCHES in the table creation so the documented
+# S6 relationship API itself — has_many / belongs_to — can be exercised.
 from tina4_python.test import Test, assert_equal, assert_true, assert_not_none
 from src.orm.author import Author
 from src.orm.blog_post import BlogPost

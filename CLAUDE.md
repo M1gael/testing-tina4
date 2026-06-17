@@ -1,8 +1,10 @@
 # CLAUDE.md
 
-Orientation for new collaborators (human or LLM). This file is a map — the
-authoritative spec lives in `readme.md`. Read this first to know *where* things
-are; read `readme.md` to know *what* the rules are.
+Orientation for new collaborators (human or LLM). This file is a map. The stable
+conventions/protocol live in `readme.md`; the mutable record — chapter coverage,
+the Known Issues Log, the Bug Hunt index, and Suggested Fixes — lives in
+`findings-log.md`. Read this first to know *where* things are; read `readme.md`
+for the rules and `findings-log.md` for the data.
 
 ## What this repo is
 
@@ -16,28 +18,29 @@ The loop is:
 1. Take a chapter from `documentation/tina4-book/`.
 2. Implement its code examples verbatim in the language's workspace (`pypy/`, `phph/`, `ruru/`).
 3. Run via the `tina4` CLI and observe.
-4. Log discrepancies in the Known Issues Log inside `readme.md`.
+4. Log discrepancies in the Known Issues Log inside `findings-log.md`.
 
 This is **documentation-fidelity testing**: the work verifies whether a new user
 following the docs would succeed. The harness *is* the new user.
 
-## Where canonical info lives — `readme.md`
+## Where canonical info lives
 
-The authoritative spec for everything below is `readme.md`. This file is intentionally
-thin and does not duplicate. If anything below seems to disagree with `readme.md`,
-**`readme.md` wins.**
+Two files. **`readme.md`** holds the stable conventions/protocol — the spec; if anything
+disagrees with it, **`readme.md` wins**. **`findings-log.md`** holds the mutable record
+(coverage, findings, fixes). This file (CLAUDE.md) is the thin map and duplicates neither.
 
-| Topic | Section in `readme.md` |
+| Topic | Where |
 |---|---|
-| Protocol rules (8 non-negotiable rules) | `## Protocol: Chapter-Based Evaluation` |
-| File / naming conventions (chapter prefix, test prefix, probe prefix, migrations, seeds) | `## Standard Implementation Workflow` + `## Workspaces` (test-prefix paragraph) |
-| Patching convention (PATCH markers, OLD lines, newest-stays-verbatim) | `## Patching Convention` |
-| Issue reporting (KI Log row format + terminal-output snippet format + sub-letter notation) | `## Issue Report Format` |
-| Upstream filing format (title prefix, body template, splitting findings) | `## Issue Report Format` → "Upstream filing — …" subsections |
-| Quick-reference summary of all conventions | `## Convention Recap` |
-| Current chapter coverage and findings filed | `## Evaluation Progress` |
-| All confirmed findings | `## Known Issues Log` |
-| Proposed fixes for findings | `## Suggested Fixes` |
+| Protocol rules (8 non-negotiable rules) | `readme.md` → `## Protocol: Chapter-Based Evaluation` |
+| File / naming conventions (chapter prefix, test prefix, probe prefix, migrations, seeds) | `readme.md` → `## Standard Implementation Workflow` + `## Workspaces` |
+| Patching convention (PATCH markers, OLD lines, newest-stays-verbatim) | `readme.md` → `## Patching Convention` |
+| Issue reporting (KI Log six-column schema + terminal-output snippet format + sub-letter notation) | `readme.md` → `## Issue Report Format` |
+| Upstream filing format (title prefix, body template, splitting findings) | `readme.md` → `## Issue Report Format` → "Upstream filing — …" |
+| Quick-reference summary of all conventions | `readme.md` → `## Convention Recap` |
+| Current chapter coverage | `findings-log.md` → `## Evaluation Progress` |
+| All confirmed findings (Known Issues Log) | `findings-log.md` → `## Known Issues Log` |
+| Assigned bug investigations (`BH-<n>` rows) | `findings-log.md` → `## Known Issues Log` (the rows) + `## Bug Hunt` (what they are) |
+| Proposed fixes for findings (long-form) | `findings-log.md` → `## Suggested Fixes` |
 
 ## Non-negotiables to be aware of up front
 
