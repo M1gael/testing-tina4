@@ -51,6 +51,10 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 - **No proactive fixes** — verifying the docs, not patching the framework.
 - **Stay inside `src/{routes,orm,templates}/`, `migrations/`, `seeds/`, `tests/`** —
   no throwaway scripts next to `app.py`.
+- **A database must be connected before ORM-backed tests run** (Ch06, Ch07, Ch18, and
+  any chapter that touches the ORM). Start Postgres (`docker compose up -d`) — the rest
+  is wired via `pypy/.env` + `pypy/conftest.py`. Symptom if not: `RuntimeError: No
+  database bound`. Full setup in *Running / testing* below.
 
 ## Language project directories
 
@@ -66,6 +70,22 @@ independently — update with `tina4 update` (CLI) and `uv pip install --upgrade
 tina4-python` / `composer update` / `bundle update` (frameworks).
 
 ## Running / testing
+
+**Before running the Python suite: a database must be connected.** Most ORM-backed
+tests (Ch06, Ch18, etc.) raise `RuntimeError: No database bound. Call bind_database(db)
+or set TINA4_DATABASE_URL in .env` on the first ORM call if none is. The workspace is
+wired so this is normally automatic:
+
+1. **Start Postgres** — `docker compose up -d` from the repo root (see *Local Postgres
+   fixture* below). Confirm `docker compose ps` shows `tina4_pg` healthy.
+2. **`pypy/.env` sets `TINA4_DATABASE_URL`** → `postgresql://postgres:tina4test@localhost:5432/tina4testingdb`.
+3. **`pypy/conftest.py` loads `.env` into `os.environ`** before any test (the framework
+   itself only reads `.env` under `tina4 serve`, not under pytest). The ORM reads
+   `TINA4_DATABASE_URL` lazily, so this binds the whole suite.
+
+If tests raise "No database bound": container down, `.env` missing the URL, or running
+pytest from outside `pypy/` (so conftest didn't load). To target a different DB, edit
+`pypy/.env`.
 
 ```
 Python:  uv run tina4 serve              # dev server with watcher/reload
@@ -84,7 +104,7 @@ The live-PG probes (`pypy/tests/test_issue_46_*.py`, `hello_pg.py`) connect to a
 | DB | Purpose | Schema |
 |---|---|---|
 | `tina4_bug46` | BH-46 reproduction fixture | `gift_cards (id SERIAL, created_by_email VARCHAR, owned_by_email VARCHAR, amount NUMERIC, is_deleted BOOLEAN, created_at TIMESTAMP)` |
-| `tina4testingdb` | General doc verification | `items (id SERIAL, name TEXT, created_at TIMESTAMP)` |
+| `tina4testingdb` | **Default suite DB** (`.env` `TINA4_DATABASE_URL`) — all ORM-backed chapter tests bind here | `items` (seed) + chapter tables created by tests at runtime (`notes`, `users`, `products`, …) |
 
 Probes auto-skip (`pytest.mark.skipif`) when the instance is unreachable — a machine without the fixture still runs the mocked probes cleanly.
 
