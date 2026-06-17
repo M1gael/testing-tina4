@@ -287,7 +287,7 @@ Refreshed whenever a new test file is added or a finding ID is logged. Status va
 | Python | 01 — Getting Started | (whole chapter, narrative) | in-progress | PY-01-01, PY-01-03, PY-01-05, PY-01-06, PY-01-07, PY-01-08 |
 | Python | 10 — Middleware & Security | S3, S4, S9, S10, S12 (source + coworker incident — not yet implemented verbatim) | findings logged, impl pending | ✅ PY-10-01, ✅ PY-10-02, ✅ PY-10-03 (all fixed in 3.13.4) |
 | Python | 18 — Testing | S2, S3, S4, S5, S6, S7, S8, S9, S10, S11/S12 (of 13) | in-progress | PY-18-01, PY-18-02, PY-18-03 (re-verified open across S8 + S9), ✅ PY-18-04, PY-18-07 (-07a fixed; -07b/-07c open), ✅ PY-18-08, ✅ PY-18-10, PY-18-11, PY-18-12, PY-18-13 (5 sub-symptoms a–e). S10 clean. S11/S12 user model exercise: 5/5 pass after 4 PATCH blocks. |
-| Python | 06 — ORM | S2, S3, S4, S6 (of 15) | in-progress | PY-06-01 (no DB-binding callout), PY-06-02 (no create_table shown past S3). S2–S4 CRUD 7/7; S6 has_many/belongs_to 2/2 — all pass once DB bound + tables created. |
+| Python | 06 — ORM | S2, S3, S4, S6 (of 15) | in-progress | PY-06-01 (no DB-binding callout), PY-06-02 (no create_table shown past S3), PY-06-03 (multi-language content in the Python book). S2–S4 CRUD 7/7; S6 has_many/belongs_to 2/2 — all pass once DB bound + tables created. |
 | Python | 02–05, 07–09, 11–17, 19–38 | — | not-started | — |
 | PHP | all | — | not-started (workspace not bootstrapped) | — |
 | Ruby | all | — | not-started (workspace not bootstrapped) | — |
@@ -325,6 +325,7 @@ Status values: `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
 | PY-18-13 | Python | 18 | open | 2026-06-08 | **S11 exercise + S12 solution (`tests/test_user_model.py`) broken in 5 independent ways before the first assertion runs.** (a) **PY-18-13a — missing `User` import.** S12 `test_user_model.py` uses `User()` throughout but imports only `Test, assert_equal, assert_true, assert_not_none, assert_raises`. `NameError: name 'User' is not defined` on every test. Same defect class as PY-18-07a (Product) and PY-18-12 (S7 User). Fix: add `from src.orm.User import User`. (b) **PY-18-13b — no DB binding or table creation.** S12 never calls `orm_bind()`, sets `TINA4_DATABASE_URL`, or runs DDL. `RuntimeError: No database bound` on first `user.save()`. Same defect class as PY-18-07b. Fix: `os.environ.setdefault("TINA4_DATABASE_URL", "sqlite:///data/test.db")` + `User.create_table()`. (c) **PY-18-13c — `StringField` has no `unique` kwarg; no uniqueness mechanism shown.** S11 requirement 2 + S12 `test_duplicate_email` expects an exception or error on duplicate email save. `Field.__init__` (fields.py:19-34) accepts no `unique` parameter — verified. The chapter shows no migration, no `save()` override, and no mechanism to enforce uniqueness. A UNIQUE INDEX must be created manually (e.g. `db.execute("CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users(email)")`), but this is not in the chapter. (d) **PY-18-13d — `User.where("1=1")` unpacked as 2-tuple raises `ValueError`.** S12 line 808: `users, count = User.where("1=1")`. `Model.where()` returns `list[Self]` by default; `(list, int)` tuple requires `with_count=True` (model.py:624). As written: `ValueError: too many values to unpack (expected 2)`. Fix: `User.where("1=1", with_count=True)`. Same defect class as PY-18-07c. (e) **PY-18-13e — `assert_raises(create_duplicate, Exception, ...)` cannot fire; `ORM.save()` swallows all exceptions.** `ORM.save()` (model.py:336-338) wraps every insert/update in `except Exception: db.rollback(); return False`. A UNIQUE constraint violation is caught internally and returns `False` — it never propagates. S12's `assert_raises` test therefore always fails with `AssertionError: Should reject duplicate email` even when a UNIQUE INDEX is present. The framework's actual contract is "duplicate save returns `False`"; the test must assert `assert_false(user2.save(), ...)` not `assert_raises(...)`. Recommend: S11/S12 rewrite to (1) include `from src.orm.User import User` and DB-setup lines, (2) either add `unique=True` to `StringField` or show the migration/index step, (3) fix the `where()` call to use `with_count=True`, (4) fix `test_duplicate_email` to assert `save()` returns `False` rather than raises. Evidence: `pypy/tests/test_user_model.py` — 4 PATCH markers (PY-18-13a–e) required to reach 5/5 pass. |
 | PY-06-01 | Python | 06 | open | 2026-06-17 | **Chapter 6 (ORM) shows no database-binding step anywhere — a reader exercising the chapter in isolation hits `RuntimeError: No database bound. Call bind_database(db) or set TINA4_DATABASE_URL in .env` on the first ORM call (`Note.create_table()`, S3).** Grep of `06-orm.md`: zero mentions of `TINA4_DATABASE_URL`, `Database(`, `.env`, `bind_database`, or `orm_bind`. Binding is established only in Ch05 (`05-database.md:20` sets `TINA4_DATABASE_URL=sqlite:///data/app.db`; L7 notes *"No ORM required (Chapter 6 adds that)"*). So Ch06 silently assumes the reader completed Ch05's `.env` setup — same scaffold-dependency-callout class as PY-18-11, not the false "auto test DB" promise of PY-18-07b. Once a DB is bound (verified via `os.environ.setdefault("TINA4_DATABASE_URL", "sqlite:///data/test.db")`), the full S2–S4 documented API works: model definition, `create_table()`, `save()`, `create()` (dict + kwargs), `find_by_id()`, `find()` filter dict, `where()`, `count()`, `delete()` — 7/7 pass (`pypy/tests/test_ch06_note_crud.py`). Recommend a one-line callout at the top of S2 or S3: *"This chapter assumes a database is configured per Chapter 5 (`TINA4_DATABASE_URL` in `.env`). The ORM auto-binds to it."* Evidence: `pypy/tests/test_ch06_note_crud.py` — 1 PATCH block (PY-06-01) to bind the DB. |
 | PY-06-02 | Python | 06 | open | 2026-06-17 | **Chapter 6 shows `create_table()` only once (for `Note`, S3 line 255) — every later section then defines a model and immediately queries/saves it with no table-creation step.** The ORM requires the backing table to exist (named by `table_name` or the lowercased class name); `save()` does not auto-create it. Affected: S6 (`Author`/`BlogPost` relationships), S8 (`Task` soft delete), S12 (`Product` validation), and the S13/14 blog exercise + solution (`src/routes/blog.py` saves `Author`/`BlogPost`/`Comment` with no `create_table` or migration anywhere). Empirically: running S6 verbatim raises `UndefinedTable: relation "authors" does not exist` on the first `author.save()` (PG), `no such table: authors` (SQLite). Once the tables are created (`Author.create_table()` + `BlogPost.create_table()`), the documented relationship API works — `has_many`/`belongs_to` 2/2 pass (`pypy/tests/test_ch06_relationships.py`). Recommend: either a one-line note at S3 that `create_table()` (or a migration) must be run for every model before use, or a per-section "assuming the `<x>` table exists" callout, or fold the table-creation step into each section's example. Same defect family as PY-06-01 (chapter omits its own DB setup). Evidence: `pypy/tests/test_ch06_relationships.py` — 1 PATCH block (PY-06-02). |
+| PY-06-03 | Python | 06 | open | 2026-06-17 | **The Python ORM chapter carries multi-language content that doesn't belong in the Python book.** The "ORM at a Glance: Four Languages, One Shape" section (`06-orm.md:13-98`) shows the same model in Python, PHP (native typed properties), Ruby (DSL), and Node.js (TypeScript config objects), plus a "Common Query Operations" comparison table (`06-orm.md:85-94`) with PHP/Ruby/Node columns and prose like *"PHP needs `(new Post())` for instance methods"* and *"Ruby methods drop the parentheses"*. A reader in the Python book gets ~85 lines of PHP/Ruby/Node code and cross-language caveats before the Python material proper (S2) begins. Recommend: strip the chapter to Python only — drop the PHP/Ruby/Node code blocks and the four-language table (or reduce it to the Python column). The cross-language parity story, if wanted, belongs in a shared/overview page, not inside each language's chapter. (Worth checking whether the same multi-language interludes appear in other Python chapters.) Documentation-only; no code to run. |
 | PY-18-10 | Python | 18 | fixed | 2026-06-04 | **Fixed in tina4-python 3.13.4 (2026-06-05) via doc update — bundled into the PY-18-08 release. New S5 "Response Object" subsection (refreshed `18-testing.md:379-386`) correctly lists `resp.status`, `resp.body` (raw bytes), `resp.text()`, `resp.json()`, lowercased headers, `resp.content_type`. The framework itself is unchanged — the docs were brought into line with the real `TestResponse` class.** Originally: **Section 5 "Response Object" subsection (`18-testing.md:384-393`) reference table doesn't match `TestResponse`.** The code block lists four properties — `resp.status_code`, `resp.body` (string), `resp.headers`, `resp.content_type`. Empirically verified against `tina4_python.test_client.TestResponse` (`__slots__ = ("status", "body", "headers", "content_type")`) via probe in `pypy/tests/test_ch18_response_object_probe.py`: (a) `resp.status_code` does not exist — the real attribute is `resp.status`. Probe `test_doc_resp_status_code_attribute_exists` fails with `AttributeError`. (b) `resp.body` documented as "string" — actual type is `bytes`. Probe `test_doc_resp_body_is_a_string` fails; `test_real_resp_body_is_bytes` passes. Side-effect: chapter's `json.loads(resp.body)` calls work by luck (since Python 3.6 `json.loads` accepts bytes), but any user who does `resp.body.startswith(...)` or string-concatenates the body will hit `TypeError`. (c) Helper methods `resp.json()` and `resp.text()` exist on the class but are absent from the reference table. (Note: PY-18-08(b) and PY-18-08(c) overlap with parts of this finding — they were lumped under the test-client signature filing before the "one code block = one finding" convention was set. PY-18-10 is the canonical row for the Response Object code block; PY-18-08 keeps the test-client methods block.) |
 
 ### Observed terminal output
@@ -1239,3 +1240,97 @@ per-file time but 3 decimals (per-test rule above).
   finishes if the file completes in under 100 ms — the flicker reads as
   glitchy. Batch updates at 100 ms minimum cadence, or render the file
   row only on file completion if the whole file ran under that threshold.
+
+---
+
+### FIX-05 — Chapter 6 (ORM) should set up its own database
+
+**Tags:** PY-06-01, PY-06-02
+**Type:** Documentation
+**Page:** `https://tina4.com/python/06-orm.html`
+**Status:** proposed
+
+**The problem in one sentence.** Chapter 6 teaches the ORM but never shows the
+two things every example silently depends on — a connected database (PY-06-01)
+and an existing table per model (PY-06-02) — so a reader who lands on this
+chapter, or copies any section past S3, hits `No database bound` then
+`relation "<table>" does not exist`.
+
+**Proposed structure.** Add a short setup block at the very top of the chapter
+(before S2 "Defining a Model"), then a one-line per-section reminder where new
+models appear.
+
+1. **Top-of-chapter setup section** — demonstrate the connection the chapter
+   assumes, pointing back to Chapter 5:
+
+   > **Before you start.** The ORM needs a database connection. Set
+   > `TINA4_DATABASE_URL` in your `.env` (see Chapter 5) — the ORM auto-binds to
+   > it. Each model maps to a table; create it with `Model.create_table()` (shown
+   > below) or a migration before you query or save.
+
+2. **Per-section table reminder** — every section that introduces a model
+   (S6 Author/BlogPost, S8 Task, S12 Product, S13/14 blog) opens with a single
+   line, e.g.:
+
+   > *Assuming a database is connected and the `authors` and `posts` tables exist
+   > (`Author.create_table()`, `BlogPost.create_table()`).*
+
+3. **Self-contained exercise/solution.** The S14 solution (`src/routes/blog.py`)
+   should either include the `create_table()` calls (app startup) or ship a
+   migration for `authors`, `posts`, `comments` — as written it saves to three
+   tables that no chapter step creates.
+
+**Rationale.**
+
+- Mirrors the actual dependency chain: connect DB → create table → query.
+- Fixes both PY-06-01 (binding) and PY-06-02 (tables) at their root — the chapter
+  omitting its own setup — rather than patching each example.
+- A reader can follow Chapter 6 top-down, or jump to any section, and reach a
+  working result without inferring the missing setup.
+
+**Acceptance criteria.**
+
+- A reader who has only completed Chapter 5 can run any Chapter 6 section's code
+  and have it succeed (no `No database bound`, no `relation does not exist`).
+- Every section that defines a model names the table it needs and how to create it.
+- The S14 solution is runnable as shipped — the three tables it writes to are
+  created by the chapter (startup `create_table()` or migration).
+
+---
+
+### FIX-06 — Strip Chapter 6 (ORM) to Python only
+
+**Tags:** PY-06-03
+**Type:** Documentation
+**Page:** `https://tina4.com/python/06-orm.html`
+**Status:** proposed
+
+**The problem in one sentence.** The Python ORM chapter carries ~85 lines of
+non-Python content — PHP/Ruby/Node.js model definitions and a four-language
+comparison table (`06-orm.md:13-98`) — before the Python material proper begins.
+
+**Proposed change.**
+
+- Remove the PHP, Ruby, and Node.js code blocks from the "ORM at a Glance"
+  section (`06-orm.md:37-78`).
+- Drop the four-language "Common Query Operations" table (`06-orm.md:85-94`), or
+  reduce it to the Python column only.
+- Remove cross-language caveats in the surrounding prose (e.g. *"PHP needs
+  `(new Post())`…"*, *"Ruby methods drop the parentheses"*).
+- If the cross-language parity story is worth telling, move it to a shared
+  overview page that sits above the per-language books — not inside the Python
+  chapter.
+
+**Rationale.**
+
+- A reader in the Python book wants Python. Other-language code is noise that
+  pushes the actual Python material down the page.
+- The same applies to every Python chapter — check for and strip the same
+  multi-language interludes elsewhere (this fix is scoped to Ch06; others get
+  their own findings as they're walked).
+
+**Acceptance criteria.**
+
+- Chapter 6 contains only Python code and Python-relevant prose.
+- No PHP/Ruby/Node.js code blocks or N-language comparison tables remain in the
+  chapter body.
