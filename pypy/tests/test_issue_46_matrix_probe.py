@@ -65,7 +65,8 @@ pytestmark = pytest.mark.skipif(
 
 
 from tina4_python.database import Database
-from tina4_python.orm import orm_bind
+# 3.13.30 renamed orm_bind -> bind_database; alias keeps call sites stable.
+from tina4_python.orm import bind_database as orm_bind
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from orm.GiftCard import GiftCard

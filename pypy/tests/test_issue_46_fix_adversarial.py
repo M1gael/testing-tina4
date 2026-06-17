@@ -54,7 +54,8 @@ pytestmark = pytest.mark.skipif(
 
 
 from tina4_python.database import Database
-from tina4_python.orm import orm_bind
+# 3.13.30 renamed orm_bind -> bind_database; alias keeps call sites stable.
+from tina4_python.orm import bind_database as orm_bind
 
 PG_URL = "postgresql://postgres:tina4test@localhost:5432/tina4_bug46"
 

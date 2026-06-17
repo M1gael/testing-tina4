@@ -56,7 +56,7 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `pypy/` | Python (primary workspace) | tina4-python **3.13.12** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `pypy/` | Python (primary workspace) | tina4-python **3.13.30** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
 | `phph/` | PHP | *not yet bootstrapped* | (will be `index.php`) | composer | empty dir; run `tina4 init php .` before working |
 | `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
 
