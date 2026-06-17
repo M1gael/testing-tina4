@@ -57,7 +57,7 @@ def _schema():
     User.create_table()
     Account.create_table()
     yield
-    _drop("user_accounts", '"ACCOUNTS"', "accounts")
+    # No teardown drop — leave tables + rows visible after the run.
 
 
 @pytest.fixture(autouse=True)

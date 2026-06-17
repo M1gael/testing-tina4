@@ -27,7 +27,7 @@ def _schema():
     Author.create_table()
     BlogPost.create_table()
     yield
-    _drop("posts", "authors")
+    # No teardown drop — leave tables + rows visible after the run.
 
 
 @pytest.fixture(autouse=True)

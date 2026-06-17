@@ -26,7 +26,8 @@ def _schema():
     _drop("notes")
     Note.create_table()        # S3 — schema from the model
     yield
-    _drop("notes")
+    # No teardown drop — leave tables + rows visible after the run. Re-runs stay
+    # idempotent via the setup _drop above + per-test row cleanup.
 
 
 @pytest.fixture(autouse=True)

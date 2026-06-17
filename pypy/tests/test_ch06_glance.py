@@ -28,7 +28,7 @@ def _schema():
     _drop("posts")
     Post.create_table()
     yield
-    _drop("posts")
+    # No teardown drop — leave tables + rows visible after the run.
 
 
 @pytest.fixture(autouse=True)
