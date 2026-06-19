@@ -35,7 +35,7 @@ disagrees with it, **`readme.md` wins**. **`findings-log.md`** holds the mutable
 | File / naming conventions (chapter prefix, test prefix, probe prefix, migrations, seeds) | `readme.md` → `## Standard Implementation Workflow` + `## Workspaces` |
 | Patching convention (PATCH markers, OLD lines, newest-stays-verbatim) | `readme.md` → `## Patching Convention` |
 | Issue reporting (KI Log six-column schema + terminal-output snippet format + sub-letter notation) | `readme.md` → `## Issue Report Format` |
-| Upstream filing format (title prefix, body template, splitting findings) | `readme.md` → `## Issue Report Format` → "Upstream filing — …" |
+| Upstream filing format (plain `<ID> — title` opening line, location/Issue/Origin body, splitting findings) | `readme.md` → `## Issue Report Format` → "Upstream filing — …" |
 | Quick-reference summary of all conventions | `readme.md` → `## Convention Recap` |
 | Current chapter coverage | `findings-log.md` → `## Evaluation Progress` |
 | All confirmed findings (Known Issues Log) | `findings-log.md` → `## Known Issues Log` |

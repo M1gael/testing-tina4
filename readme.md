@@ -185,7 +185,11 @@ context as the issue needs; Suggested fix may be `—`.
   (e.g. [#142](https://github.com/tina4stack/tina4-book/issues/142)); bug-hunt
   investigations (`BH-<n>`) are filed against the framework repo
   **[`tina4stack/tina4-python`](https://github.com/tina4stack/tina4-python/issues)** — the
-  issue number *is* the `<n>`. The USER files (see *Local-first, upstream-at-EOD* in the
+  issue number *is* the `<n>`. **Chapter-evaluation findings all live on the chapter's
+  `tina4-book` thread — a `PY-`/`PH-`/`RB-` finding that turns out to be a *framework*
+  defect (not just a doc gap) still files there, not on `tina4-python`. `BH-<n>` is
+  reserved for standalone framework bug-hunts opened directly against `tina4-python`.**
+  The USER files (see *Local-first, upstream-at-EOD* in the
   Convention Recap); the assistant only records the link here once it's filed.
 - **Found** — `<YYYY-MM-DD>` the issue was logged · the framework version it was found on
   (e.g. `2026-06-17 · 3.13.30`). Version may be omitted only for pre-convention rows where it
@@ -240,61 +244,72 @@ PY-18-08) still use the older `We used this from the docs: / It didn't work and 
 template. They predate this convention and are preserved as filed. All new entries use
 the neutral form above.
 
-**Upstream filing — title and label convention.** Every GitHub issue or comment filed
-upstream is prefixed with the local finding ID in square brackets so the mapping between
-the local log and the upstream thread is unambiguous:
+**Upstream filing — title / opening line.** Every report opens with a plain
+`<ID> — <short title>` line: the finding ID, an em-dash, a short descriptive title.
+No square brackets, no `##` heading marks, no bold — no decorations. The ID still leads,
+so maintainers can grep upstream by `PY-06-08` and trace it back to a row in the local
+Known Issues Log without manual cross-linking.
 
 ```
-[PY-18-04] Chapter 18 — documented "tina4 test" output format doesn't match actual output
-[PY-18-02] Chapter 18 — "No external packages" wrong; pytest required but tina4 init doesn't install it
+PY-06-01 — Chapter 6 shows no database-binding step
+PY-06-08 — BooleanField documented as INTEGER, native BOOLEAN on PostgreSQL
 ```
 
-If multiple findings are filed together in one comment, list all IDs:
-`[PY-01-01, PY-01-03] Getting Started — top section structurally confused + cargo prereq missing`.
+For a comment on an existing chapter thread, this line is the first line of the comment
+body. For a brand-new issue, it goes in the title field. If several findings are filed
+together, list the IDs: `PY-01-01, PY-01-03 — Getting Started — top section confused + cargo prereq missing`.
 
-Maintainers can grep upstream by the ID and trace it back to a row in the local Known
-Issues Log without manual cross-linking. The bracket prefix is also short enough not to
-bloat the title.
+(The older `[PY-NN-NN]`-in-brackets + `##`-heading title style is legacy — preserved on
+already-filed threads, not used for new reports.)
 
-**Upstream filing — body template.** Same three-section neutral format as the
-Terminal-output snippet above; only the heading level changes (h2 here because GitHub
-comments don't have a separate title field, h4 in the local log because it nests under
-`### Observed terminal output` which nests under `## Known Issues Log`). For **comments
-on an existing issue**, the title becomes the `##` header on the first line of the
-comment body. For **new issues**, the title goes in the title field and the body starts
-directly with "Documentation shows:".
-
-Use clinical, actor-free language. No "we" / "I" / "us" — let the docs and error speak.
+**Upstream filing — body template.** After the title line comes a one-line documentation
+location, then an `Issue:` paragraph, then — for framework defects only — an `Origin:`
+paragraph. Clinical, actor-free voice. No "we" / "I" / "us" — let the docs and error speak.
 
 ````
-## [<ID>] <short title>
+PY-06-08 — BooleanField documented as INTEGER, native BOOLEAN on PostgreSQL
 
-**Documentation shows:**
+Ch6 ORM. S2 "Defining a Model" Field Types table lists BooleanField as "INTEGER (0/1)"; S4 "CRUD Operations" SQL-first example passes an integer for the boolean column.
 
-```<lang>
-<verbatim snippet from the chapter>
+Issue: <docs-say vs. actual, in prose>. Verbatim calls, SQL, and error/log output go in their own code blocks:
+
+```python
+notes = Note.select("SELECT * FROM notes WHERE pinned = ? ORDER BY created_at DESC", [1], ...)
 ```
 
-**Actual output:**
-
-```
-<minimal error output>
+```text
+operator does not exist: boolean = integer
 ```
 
-**Issues:**
-- one bullet per concrete observation
-- factual, short
+For a documentation gap, close the Issue paragraph with a one-line corrective action and STOP.
+
+Origin: <framework defects ONLY — a short paragraph narrowing the cause for the maintainer, with framework source file:line. Omit entirely for a plain documentation gap.>
 ````
 
-**No "Suggested fix" sections for logical issues** — e.g. if the symptom is "missing
-import", do not write "add the import." The fix is obvious to the maintainer and the
-prose just bloats the issue. Suggested fixes are reserved for non-obvious structural
-recommendations (naming, restructuring, renames) and live in the local Suggested Fixes
-section of [`findings-log.md`](findings-log.md), not in the upstream filing.
+Three rules govern the shape:
+
+- **Doc references** — name the location as `Ch<N> <Chapter Name>, S<n> "<Section Name>"`.
+  No line numbers, no "book", no `.md` filename (they shift and add noise). Framework source
+  `file:line` *is* used — but only inside the `Origin:` paragraph; the no-line-numbers rule
+  is about documentation references.
+- **Match depth to finding type** — a plain documentation gap (framework behaves correctly,
+  docs just omit/misstate) is short: location + `Issue:` + one-line corrective action, no
+  `Origin:`. A genuine framework defect adds the `Origin:` paragraph narrowing where the cause
+  lies in the source.
+- **Code and logs in their own blocks** — verbatim calls, SQL, and error/log output go in
+  fenced code blocks (inline backticks for short tokens). The prose explains; the block
+  carries the verbatim text.
+
+**No standalone "Suggested fix" sections for obvious logical issues** — e.g. if the symptom
+is "missing import", do not write "add the import." (A documentation gap is the exception —
+its one-line corrective action, e.g. "change `[1]` to `[True]`" or "qualify the field-types
+row per engine", IS the finding and belongs at the close of the `Issue:` paragraph.)
+Non-obvious structural recommendations (naming, restructuring, renames) live in the local
+Suggested Fixes section of [`findings-log.md`](findings-log.md), not in the upstream filing.
 
 Consolidated findings in the local log may need to be **split into multiple smaller
 filings** upstream. Each filing tackles one symptom so maintainers can react to them
-individually. Title each split with a sub-letter, e.g. `[PY-18-07a]`, `[PY-18-07b]`.
+individually. Open each split with its sub-lettered ID, e.g. `PY-18-07a — …`, `PY-18-07b — …`.
 
 ## Convention Recap
 
@@ -309,11 +324,11 @@ links back to where it's fully described.
 | **Adversarial verification before filing** | Before any finding is filed upstream, actively try to disprove the claim across multiple angles — check for alternative code paths, hidden helpers, version-specific behaviour, framework's own internal docs, and inconsistent chapter usage that might excuse the symptom. Only file if every disproof attempt fails. The verification trail (what was tried, what was confirmed) goes into the upstream comment as part of the evidence. |
 | *— Filing cadence & labels —* | |
 | **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (Known Issues Log row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
-| **Upstream label** | Every upstream issue/comment title prefixed with `[<finding-id>]`, e.g. `[PY-10-01] Chapter 10 S3 — function-based middleware documented but not implemented`. |
+| **Report opening line** | Every report opens with a plain `<ID> — <short title>` line — no brackets, no `##` heading, no bold, no decorations. The ID leads so it stays greppable upstream. The legacy `[<id>]`-bracket style is preserved on filed threads only. See [Issue Report Format](#issue-report-format). |
 | **Section notation: `S<n>` not `§<n>`** | When referring to chapter sections inline, use plain `S3`, `S12` (capital S + number). Never the `§` symbol. The spelled-out word *"Section"* is fine when starting a sentence or in a title that names a section. Applies to local logs, detailed evidence, and upstream filings. |
 | *— Test files —* | |
 | **Newest stays verbatim, older patched** | Within a chapter, only the most-recently-created test file stays unpatched. When moving to the next file, the USER triggers the patch on the previous one (see [Patching Convention](#patching-convention)). |
 | *— Voice & shape of upstream reports —* | |
 | **Neutral voice** | No "we" / "I" / "us" in prose. Local logs, detailed evidence sections, and upstream filings all use clinical, actor-free phrasing: "the chapter shows", "the framework returned", "the snippet fails because…". See [Issue Report Format](#issue-report-format) for the canonical wording. |
-| **Tight reports — evidence over prose** | Upstream comments stick to three sections: **Documentation shows / Actual behaviour / Issues**. No fourth section. No narration around the evidence — the chapter snippet, source line, and observed output speak for themselves. Tables for repeated evidence (e.g. "6 broken lines"). Smallest source quote that shows the bug. "Issues" bullets are one observation each, factual, no extrapolation unless the consequence isn't obvious. |
+| **Report shape — location / Issue / Origin** | After the `<ID> — title` line: a one-line doc location (`Ch<N> <Name>, S<n> "<Section>"` — no line numbers, no "book", no `.md`), an `Issue:` paragraph (docs-say vs. actual), and an `Origin:` paragraph **only for framework defects** (narrows the cause with source `file:line`). A plain doc gap stops after a one-line corrective action — no `Origin:`. Verbatim calls/SQL/error output each go in their own code block; prose explains, the block carries the literal text. No narration, clinical actor-free voice. The older three-section *Documentation shows / Actual output / Issues* template is legacy. See [Issue Report Format](#issue-report-format). |
 
