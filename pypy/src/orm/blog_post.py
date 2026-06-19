@@ -21,3 +21,20 @@ class BlogPost(ORM):
     # S7 descriptors
     author   = belongs_to("Author", foreign_key="author_id")
     comments = has_many("Comment", foreign_key="post_id")
+
+    # S11 scopes (06-orm.md:989-1002) — verbatim. recent() uses SQLite
+    # datetime('now', ?); on PostgreSQL it raises UndefinedFunction (PY-06-23).
+    @classmethod
+    def published(cls):
+        return cls.where("status = ?", ["published"])
+
+    @classmethod
+    def drafts(cls):
+        return cls.where("status = ?", ["draft"])
+
+    @classmethod
+    def recent(cls, days=7):
+        return cls.where(
+            "created_at > datetime('now', ?)",
+            [f"-{days} days"]
+        )
