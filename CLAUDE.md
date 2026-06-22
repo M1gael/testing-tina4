@@ -69,12 +69,12 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `pypy/` | Python (primary workspace) | tina4-python **3.13.30** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `pypy/` | Python (primary workspace) | tina4-python **3.13.39** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
 | `phph/` | PHP | *not yet bootstrapped* | (will be `index.php`) | composer | empty dir; run `tina4 init php .` before working |
 | `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
 
 The global `tina4` CLI (Rust binary at `~/AppData/Local/tina4/tina4.exe` on Windows)
-is currently **3.8.28**. The CLI and the per-language frameworks are versioned
+is currently **3.8.51**. The CLI and the per-language frameworks are versioned
 independently — update with `tina4 update` (CLI) and `uv pip install --upgrade
 tina4-python` / `composer update` / `bundle update` (frameworks).
 

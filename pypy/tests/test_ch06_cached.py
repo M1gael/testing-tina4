@@ -11,24 +11,19 @@
 #   - PY-06-21 (minor, doc-completeness): ORM writes (.save()) auto-invalidate the
 #     query cache. The chapter never mentions this — it frames clear_cache() as the
 #     handler for "when data changes".
-#   - PY-06-22 (framework defect, verified + reframed 2026-06-18): at the documented
-#     API level, Note.clear_cache() does NOT make a subsequent cached() reflect changed
-#     data — contradicting S10. Accurate root cause (adversarial pass): there are TWO
-#     cache layers. clear_cache() DOES clear the module-level ORM cache
-#     (_query_cache.clear_tag, orm/model.py:882-884). But cached() reads through
-#     cls.select() -> Database.fetch(), which has its OWN request-scoped cache
-#     (db._query_cache, default-on, mode='request', ttl=5s, database/connection.py:521-548)
-#     that clear_cache() never touches. Proof: clearing BOTH clear_cache()+db.cache_clear()
-#     -> fresh; clear_cache() alone -> stale; cached() serves rows even after DROP TABLE.
-#     Explains PY-06-21: insert/update/delete call db._cache_invalidate(), so .save()
-#     refreshes — a different path. Severity nuance: under `tina4 serve` the DB cache is
-#     cleared per-request (cache_new_request), so staleness is bounded to within one
-#     handler + the 5s TTL; a reader calling clear_cache() then cached() in the same
-#     handler still gets stale data. These tests run in a single sync process (no request
-#     boundary), so the 5s TTL holds for the sub-second test window.
-#
-# The two divergent tests below assert the ACTUAL (buggy) behaviour so they stay
-# green as sentinels; they flip red when the framework starts honouring clear_cache().
+#   - PY-06-22 (framework defect, found 3.13.30; FIXED in 3.13.39, verified 2026-06-22):
+#     On 3.13.30, at the documented API level Note.clear_cache() did NOT make a subsequent
+#     cached() reflect changed data — contradicting S10. Root cause then: TWO cache layers.
+#     clear_cache() cleared the module-level ORM cache (_query_cache.clear_tag,
+#     orm/model.py) but cached() reads through cls.select() -> Database.fetch(), which has
+#     its OWN request-scoped cache (db._query_cache, default-on, mode='request', ttl=5s)
+#     that clear_cache() never touched. On 3.13.39 clear_cache() now invalidates the
+#     DB-layer cache too: after an out-of-band insert + clear_cache(), cached() returns the
+#     fresh row count, and after clear_cache() + DROP TABLE, cached() re-hits the DB and
+#     raises UndefinedTable (it no longer serves stale rows). The two tests below now
+#     assert that corrected behaviour; they were the red sentinels that flagged the fix.
+#   - PY-06-21 (still observed 3.13.39): ORM writes (.save()) auto-invalidate the cache —
+#     undocumented; insert/update/delete call db._cache_invalidate().
 import os
 
 import psycopg2
@@ -98,23 +93,23 @@ def test_orm_save_auto_invalidates_cache():
     assert len(Note.cached(SQL, [True], ttl=60, limit=20)) == 3   # auto-dropped by .save()
 
 
-# PY-06-22: clear_cache() does not refresh cached(). Doc (06-orm.md:968-971) says it
-# clears "when data changes"; cached() still returns stale because it depends on the
-# DB-layer cache (db._query_cache) that clear_cache() does not invalidate. Sentinel
-# asserts the buggy behaviour so it flips red when the framework starts honouring it.
-def test_clear_cache_does_not_refresh_cached():
+# PY-06-22 (FIXED 3.13.39): clear_cache() now refreshes cached(), honouring the doc
+# (06-orm.md:968-971) "clear the cache when data changes". After an out-of-band insert
+# and clear_cache(), cached() reflects the new row. (On 3.13.30 this returned the stale 2.)
+def test_clear_cache_refreshes_cached():
     assert len(Note.cached(SQL, [True], ttl=60, limit=20)) == 2
     _exec("INSERT INTO notes (title, pinned, content, category) VALUES ('D', true, '', 'g')")
     Note.clear_cache()
     after = Note.cached(SQL, [True], ttl=60, limit=20)
-    assert len(after) == 2                          # BUG: still stale; doc claims fresh (3)
+    assert len(after) == 3                          # FIXED: fresh; clear_cache invalidated the DB-layer cache
 
 
-# Strongest proof clear_cache() never re-hits the DB: drop the table after
-# clear_cache() and cached() STILL returns the cached rows instead of erroring.
-def test_clear_cache_does_not_rehit_db():
+# Strongest proof clear_cache() now re-hits the DB: drop the table after clear_cache()
+# and cached() raises instead of serving stale rows. (On 3.13.30 it returned the cached
+# rows with no DB error, proving clear_cache() was a no-op for cached().)
+def test_clear_cache_rehits_db():
     assert len(Note.cached(SQL, [True], ttl=60, limit=20)) == 2
     Note.clear_cache()
     _exec("DROP TABLE notes CASCADE")
-    served = Note.cached(SQL, [True], ttl=60, limit=20)
-    assert len(served) == 2                          # served from cache; no DB error -> clear_cache no-op
+    with pytest.raises(psycopg2.errors.UndefinedTable):
+        Note.cached(SQL, [True], ttl=60, limit=20)   # FIXED: re-hits DB -> UndefinedTable
