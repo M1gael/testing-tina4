@@ -31,7 +31,7 @@ disagrees with it, **`readme.md` wins**. **`findings-log.md`** holds the mutable
 
 | Topic | Where |
 |---|---|
-| Protocol rules (8 non-negotiable rules) | `readme.md` → `## Protocol: Chapter-Based Evaluation` |
+| Protocol rules (9 non-negotiable rules) | `readme.md` → `## Protocol: Chapter-Based Evaluation` |
 | File / naming conventions (chapter prefix, test prefix, probe prefix, migrations, seeds) | `readme.md` → `## Standard Implementation Workflow` + `## Workspaces` |
 | Patching convention (PATCH markers, OLD lines, newest-stays-verbatim) | `readme.md` → `## Patching Convention` |
 | Issue reporting (KI Log six-column schema + terminal-output snippet format + sub-letter notation) | `readme.md` → `## Issue Report Format` |

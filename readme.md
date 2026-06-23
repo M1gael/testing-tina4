@@ -57,6 +57,16 @@ The ASSISTANT MUST follow these rules without exception:
     stays Python; it never drifts to Ruby or PHP.
 8.  **Issue Reporting** — report each discrepancy in the plain-text block format below for
     the USER to track.
+9.  **Exhaustive Option Coverage — exercise every named option** — when the documentation
+    says a feature supports options a, b, c (multiple database engines, queue backends,
+    session/cache stores, auth modes, field types, transports, etc.), **each one is
+    actually used** — not just the default or one representative. "Selectable" /
+    "constructible" never substitutes for "works": if the docs say a backend is supported,
+    drive a real end-to-end round-trip through it (stand up the broker/engine/service if
+    that's what it takes). A section is **covered** only when every option it names has
+    been exercised for real. If an option genuinely cannot be stood up in this environment,
+    that is a **logged blocker** with its own note — never a silent skip, and never counted
+    as covered. (Sharpens *Coverage bar*: every snippet AND every named option.)
 
 ## Workspaces
 
@@ -89,6 +99,15 @@ required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
     Watch `logs/tina4.log` (or equivalent) for registration and execution errors.
 5.  **Reporting** — when behavior diverges from docs, capture it in the Known Issues Log
     using the format below.
+6.  **Live per-section mock** — alongside the verbatim tests, **every implemented section
+    ships a navigable mock served under `tina4 serve`** that the USER can open in a browser
+    and exercise by hand. The mock is built **only from what that section's docs teach** —
+    it runs the section's actual documented code live (real endpoints where the section
+    defines them; an interactive demo page where the section is library-level). One page
+    per chapter, a block per section, each block showing the verbatim snippet and its live
+    result so the USER physically sees whether the taught code works. Pattern reference:
+    `src/routes/queue_explorer.py` → `GET /queue`. This is a deliverable, not optional
+    polish — a section isn't done until its mock is reachable.
 
 ## Patching Convention
 
@@ -318,6 +337,9 @@ links back to where it's fully described.
 
 | Convention | One-line rule |
 |---|---|
+| *— Coverage & live mocks —* | |
+| **Exhaustive option coverage** | Docs name options a/b/c (engines, queue backends, cache/session stores, auth modes, …) → exercise **all** of them end-to-end, not just one. "Selectable" ≠ "works" — drive a real round-trip, standing up the broker/engine if needed. Can't stand one up → **logged blocker**, never a silent skip or a "covered". See [Protocol](#protocol-chapter-based-evaluation) rule 9. |
+| **Live per-section mock** | Each implemented section also ships a browser-navigable mock under `tina4 serve`, built from that section's docs, so the USER tests it by hand. One chapter page, a block per section, verbatim snippet + live result. A section isn't done until its mock is reachable. Ref: `src/routes/queue_explorer.py` → `/queue`. See [Workflow](#standard-implementation-workflow) step 6. |
 | *— Finding scope & evidence —* | |
 | **One code block = one finding ID** | Each distinct code block in a chapter that has issues gets its own row in the Known Issues Log. Don't lump issues from two separate code blocks under one ID, even if they're in the same section. Use sub-letters (`PY-18-07a`, `PY-18-07b`) for splitting upstream filings within a single finding — see [Issue Report Format](#issue-report-format). |
 | **Probe pattern as evidence + regression sentinel** | Write a `tests/test_chNN_<topic>_probe.py` for every finding whose framework characteristic is testable in code. "Where possible" carves out narrative / structural findings (not expressible as an assertion). **Assert the CORRECT framework state, not the buggy state.** A probe *tries to trigger the bug*; if it succeeds in triggering it, the probe outcome must read as a FAIL (the functionality goal is unmet). So the probe FAILS before the fix (bug visible) and PASSES after (fix confirmed) without any edit. After the fix lands the probe stays live in the active suite — a steady-state PASS that flips to FAIL the moment the framework regresses. Existing patterns: trace-list inspection via direct dispatcher invocation (`pypy/tests/test_ch10_middleware_probe.py` for `PY-10-01/02/03`), positive contract assertions on framework objects (`pypy/tests/test_ch18_response_object_probe.py` for `PY-18-10`). One assertion = one observation; reference the probe filename from the KI Log row. File header records finding history + fix version, and the **first line is always a one-line tag stating what the probe covers** — `# Probe — covers <ID(s)>. <one-line purpose>.` — so doc-fidelity probes (`PY-NN-NN`) and bug-hunt probes (`BH-NN`, named `test_issue_<n>_*.py`) are distinguishable at a glance while living together in `tests/`. |
