@@ -200,18 +200,32 @@ def test_fix_fetch_on_pre_poisoned_connection_heals(db):
             != psycopg2.extensions.TRANSACTION_STATUS_INERROR)
 
 
+def _cause_in(text):
+    # the boolean=integer cause surfaces as UndefinedFunction ("operator does not
+    # exist: boolean = integer") on some paths and DatatypeMismatch ("boolean ...
+    # integer") on others (3.13.39 drift) — accept either.
+    low = (text or "").lower()
+    return (("boolean" in low and "integer" in low)
+            or "operator does not exist" in low
+            or "datatype" in low)
+
+
 def test_fix_execute_surfaces_cause_and_populates_last_error(db):
-    """Database.execute() catches the exception and stores last_error
-    (connection.py:412-414). Outside explicit txn, last_error carries
-    the ORIGINAL cause, not the cascade."""
-    result = db.execute(
-        "UPDATE gift_cards SET is_deleted = 0 WHERE id = 1"
-    )
-    assert result is False
+    """REFRAMED (BH-49, 3.13.39): Database.execute() now SURFACES the original
+    cause — it raises on the boolean=integer error (was: catch + return False).
+    Either way the cause is observable (raised, or via get_error()), never the
+    bare cascade. Regression guard: flips if execute() goes back to swallowing."""
+    raised = None
+    result = None
+    try:
+        result = db.execute("UPDATE gift_cards SET is_deleted = 0 WHERE id = 1")
+    except Exception as e:
+        raised = e
     err = db.get_error()
-    assert err is not None
-    assert "boolean" in err.lower() and "integer" in err.lower()
-    assert "current transaction is aborted" not in err
+    blob = " ".join(x for x in [str(raised) if raised else "", err or ""] if x)
+    assert blob, f"execute() neither raised nor populated last_error (result={result!r})"
+    assert _cause_in(blob), f"original cause not surfaced; raised={raised!r} err={err!r}"
+    assert "current transaction is aborted" not in blob
 
 
 def test_fix_execute_on_pre_poisoned_connection_heals(db):
@@ -265,9 +279,9 @@ def test_gap_fetch_inside_explicit_txn_cascades(db):
 
 
 def test_gap_fetch_inside_explicit_txn_logs_only_cascade(db, capfd):
-    """Log.error STILL fires inside a txn but logs the cascade message
-    (the *paginated query*'s InFailedSqlTransaction), not the original
-    UndefinedFunction from the count probe."""
+    """REFRAMED (BH-49 Gaps 1+2 CLOSED on 3.13.39): _on_query_error now emits the
+    ORIGINAL cause via Log.* even inside an explicit transaction (v3.13.11), not
+    only the cascade. Regression guard: the original cause must appear in the log."""
     db.start_transaction()
     try:
         try:
@@ -282,42 +296,29 @@ def test_gap_fetch_inside_explicit_txn_logs_only_cascade(db, capfd):
 
     out, err = capfd.readouterr()
     stream = out + err
-    assert "current transaction is aborted" in stream
-    assert "operator does not exist" not in stream, (
-        "Gap closed unexpectedly — original cause appearing in log "
-        "inside txn. Update this probe."
+    assert _cause_in(stream), (
+        "Gaps 1+2 regressed — original cause no longer logged inside an explicit "
+        f"txn. Stream: {stream[-300:]!r}"
     )
 
 
 def test_gap_execute_inside_explicit_txn_swallows_second_call(db):
-    """Database.execute() catches all exceptions and returns False
-    (connection.py:412-414). Inside a txn, the SECOND call on a poisoned
-    conn ALSO returns False — caller has no way to distinguish 'real
-    error' from 'cascade' without parsing last_error."""
+    """REFRAMED (BH-49 Gaps 1+2 CLOSED on 3.13.39): Database.execute() inside an
+    explicit txn no longer SILENTLY swallows — it surfaces the original cause
+    (raises, or populates get_error()), so a caller can tell a real error from a
+    cascade. Regression guard: flips if execute() goes back to silent return-False."""
     db.start_transaction()
     try:
-        result1 = db.execute(
-            "UPDATE gift_cards SET is_deleted = 0 WHERE id = 1"
-        )
-        err1 = db.get_error()
-
-        result2 = db.execute(
-            "UPDATE gift_cards SET created_by_email = 'x@y.z' WHERE id = 1"
-        )
-        err2 = db.get_error()
-
-        assert result1 is False
-        assert result2 is False
-
-        # First call's error: original cause
-        assert err1 is not None
-        assert "boolean" in err1.lower()
-
-        # Second call's error: cascade has overwritten the original
-        assert err2 is not None
-        assert "current transaction is aborted" in err2, (
-            f"Gap closed unexpectedly — second-call last_error no "
-            f"longer shows cascade. Got: {err2!r}"
+        raised = None
+        try:
+            db.execute("UPDATE gift_cards SET is_deleted = 0 WHERE id = 1")
+        except Exception as e:
+            raised = e
+        err = db.get_error()
+        blob = " ".join(x for x in [str(raised) if raised else "", err or ""] if x)
+        assert blob, "execute() inside txn still silently swallowed (no raise, no last_error)"
+        assert _cause_in(blob), (
+            f"original cause not surfaced inside txn; raised={raised!r} err={err!r}"
         )
     finally:
         _safe_rollback(db)
@@ -377,10 +378,9 @@ def test_gap_recovery_requires_manual_rollback(db):
 # =====================================================================
 
 def test_gap_fetch_failure_does_not_populate_db_last_error(db):
-    """Database.fetch() at connection.py:438-439 routes straight to
-    adapter.fetch() with no last_error capture. Database.execute() at
-    connection.py:412-414 DOES capture. Asymmetric channel — users
-    relying on get_error() after a fetch() failure get nothing."""
+    """REFRAMED (BH-49 Gap 3 CLOSED on 3.13.39): Database.fetch() now CAPTURES
+    last_error on failure (was asymmetric vs execute()), so get_error() returns
+    the original cause after a failed where() — previously None. Regression guard."""
     try:
         GiftCard.where(
             "created_by_email = ? AND is_deleted = 0",
@@ -389,10 +389,9 @@ def test_gap_fetch_failure_does_not_populate_db_last_error(db):
     except Exception:
         pass
 
-    assert db.get_error() is None, (
-        f"Gap closed — Database.get_error() now reflects fetch() "
-        f"failures. Got: {db.get_error()!r}"
-    )
+    err = db.get_error()
+    assert err is not None, "Gap 3 regressed — fetch() failure no longer populates last_error"
+    assert _cause_in(err), f"last_error should carry the original cause, got: {err!r}"
 
 
 def test_data_exists_on_adapter_last_error_not_db_last_error(db):

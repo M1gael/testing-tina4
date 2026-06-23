@@ -52,6 +52,17 @@ class Ch06NotesRouteTest(Test):
         with pytest.raises(TypeError):
             self.get("/api/notes/1")
 
+    # PY-06-06 — get_author / get_post carry the identical positional signature
+    # (id, request, response); the same flat client dispatch raises TypeError.
+    # (The header named all three as victims; now demonstrated, not just claimed.)
+    def test_get_author_path_param_py_06_06(self):
+        with pytest.raises(TypeError):
+            self.get("/api/authors/1")
+
+    def test_get_post_path_param_py_06_06(self):
+        with pytest.raises(TypeError):
+            self.get("/api/posts/1")
+
     # PY-06-13 — the Test client bypasses the Bearer gate that `tina4 serve`
     # enforces: same POST is 401 over HTTP (PY-06-07) but 201 here. Asserting the
     # Test-client reality — a sentinel that flips if the client is ever aligned

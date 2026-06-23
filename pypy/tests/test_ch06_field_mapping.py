@@ -12,6 +12,7 @@ import psycopg2
 import pytest
 
 from tina4_python.orm import ORM, Field, IntegerField, StringField
+from tina4_python.orm import IntField, StrField, BoolField, BooleanField
 from tina4_python.orm.model import snake_to_camel, camel_to_snake
 
 
@@ -41,6 +42,15 @@ class Account(ORM):
     credit_limit = Field(float, default=0.0)
 
 
+# S2 "Field Types" (06-orm.md:142): "Short aliases (IntField, StrField, BoolField)
+# also work." Verbatim model using ONLY the short aliases, to verify the claim.
+class AliasModel(ORM):
+    table_name = "alias_demo"
+    id = IntField(primary_key=True, auto_increment=True)
+    name = StrField(required=True)
+    active = BoolField(default=False)
+
+
 def _drop(*tables):
     conn = psycopg2.connect(os.environ["TINA4_DATABASE_URL"])
     conn.autocommit = True
@@ -53,9 +63,10 @@ def _drop(*tables):
 
 @pytest.fixture(autouse=True, scope="module")
 def _schema():
-    _drop("user_accounts", '"ACCOUNTS"', "accounts")
+    _drop("user_accounts", '"ACCOUNTS"', "accounts", "alias_demo")
     User.create_table()
     Account.create_table()
+    AliasModel.create_table()
     yield
     # No teardown drop — leave tables + rows visible after the run.
 
@@ -123,3 +134,19 @@ def test_where_uses_db_column_names():
 # --- auto_map flag exists on the ORM base (documented no-op in Python) ---
 def test_auto_map_flag_present():
     assert hasattr(User, "auto_map")
+
+
+# --- S2 short field aliases "also work" (06-orm.md:142) ---
+def test_short_field_aliases_resolve_to_verbose():
+    # the doc presents them as aliases; confirm they are the same field classes
+    assert IntField is IntegerField
+    assert StrField is StringField
+    assert BoolField is BooleanField
+
+
+def test_short_field_aliases_round_trip():
+    # a model declared entirely with IntField/StrField/BoolField behaves identically
+    m = AliasModel.create(name="aliased", active=True)
+    got = AliasModel.find_by_id(m.id)
+    assert got.name == "aliased"
+    assert got.active is True

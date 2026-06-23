@@ -251,10 +251,13 @@ def test_db_last_error_does_not_capture_the_original_cause(_bind_pg):
     the original UndefinedFunction. Confirms the visibility gap goes
     beyond `Log.*` calls — the framework simply doesn't have the
     information anywhere by the time the cascade surfaces."""
+    # REFRAMED (BH-49 Gap 3 CLOSED on 3.13.39): Database.fetch() now captures
+    # last_error, so get_error() returns the ORIGINAL cause after a failing
+    # where() — previously None / cascade-only. Regression guard. (Original test
+    # name kept for traceability.)
     db = _bind_pg  # the fixture's PG database
 
-    # last_error should start clean
-    assert db.get_error() is None
+    assert db.get_error() is None  # clean to start
 
     try:
         GiftCard.where(
@@ -262,12 +265,12 @@ def test_db_last_error_does_not_capture_the_original_cause(_bind_pg):
             [REPORTER_EMAIL],
         )
     except Exception:
-        pass  # we know it raises; we care about last_error after
+        pass
 
     err = db.get_error()
     print(f"\n[db.last_error after where()] {err!r}")
-    # The framework's own diagnostic channel: empty (fetch() never
-    # touches last_error) or — at best — the cascade message, never
-    # the original cause.
-    if err is not None:
-        assert "operator does not exist" not in err
+    assert err is not None, "Gap 3 regressed — fetch() failure no longer populates last_error"
+    low = err.lower()
+    assert (("boolean" in low and "integer" in low)
+            or "operator does not exist" in low
+            or "datatype" in low), f"last_error should carry the original cause, got: {err!r}"

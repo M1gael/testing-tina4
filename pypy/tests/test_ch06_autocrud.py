@@ -61,10 +61,36 @@ class AutoCrudTaskTest(Test):
         assert_true("data" in body, "paginated payload has 'data'")
         assert_true("total" in body, "paginated payload has 'total'")
 
+    # GET /api/tasks — payload reflects actual rows (06-orm.md:909-923), not just key-presence
+    def test_list_reflects_rows(self):
+        self.post("/api/tasks", json={"title": "L1"})
+        self.post("/api/tasks", json={"title": "L2"})
+        body = json.loads(self.get("/api/tasks").body)
+        assert_equal(body["total"], 2, "total reflects row count")
+        assert_equal(len(body["data"]), 2, "data carries the rows")
+
     # POST /api/tasks — create (06-orm.md:925-931)
     def test_create(self):
         resp = self.post("/api/tasks", json={"title": "Auto Task"})
         assert_equal(resp.status, 201, "auto-crud create should 201")
+        assert_equal(len(Task.all()), 1, "create persisted a row")
+
+    # GET /api/tasks/{id} — get one by PK (documented route table 06-orm.md:878-884)
+    def test_get_one_by_id(self):
+        self.post("/api/tasks", json={"title": "Fetch Me"})
+        t = Task.all()[0]
+        resp = self.get(f"/api/tasks/{t.id}")
+        assert_equal(resp.status, 200, "auto-crud get-one should 200")
+        assert_true("Fetch Me" in json.dumps(json.loads(resp.body)),
+                    "get-one returns the record")
+
+    # PUT /api/tasks/{id} — update (documented route table 06-orm.md:878-884)
+    def test_update_by_id(self):
+        self.post("/api/tasks", json={"title": "Before"})
+        t = Task.all()[0]
+        resp = self.put(f"/api/tasks/{t.id}", json={"title": "After"})
+        assert_true(resp.status in (200, 201), "auto-crud update should 200/201")
+        assert_equal(Task.find_by_id(t.id).title, "After", "update persisted")
 
     # POST validation failure -> 400 (06-orm.md:933-937)
     def test_create_validation_400(self):

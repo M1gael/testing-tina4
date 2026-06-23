@@ -45,7 +45,7 @@ def test_save_insert_sets_pk():
     note.category = "personal"
     note.pinned = False
     result = note.save()
-    assert result is not False
+    assert result is note  # doc (06-orm.md:288): save() returns self on success
     assert note.id is not None
 
 
@@ -65,11 +65,15 @@ def test_create_dict():
         "category": "general",
     })
     assert note.id is not None
+    assert (note.title, note.content, note.category) == \
+        ("Quick Note", "Created in one step", "general")  # values round-trip
 
 
 def test_create_kwargs():
     note = Note.create(title="Quick Note", content="One step", category="general")
     assert note.id is not None
+    assert (note.title, note.content, note.category) == \
+        ("Quick Note", "One step", "general")
 
 
 # --- S4 find_by_id ---
@@ -105,10 +109,18 @@ def test_find_filter_dict():
 
 
 def test_find_pagination_and_order():
-    for i in range(3):
-        Note.create(title=f"t{i}", pinned=True)
+    # explicit out-of-order created_at so DESC ordering is actually provable —
+    # a len-only check would pass even if order_by were silently ignored.
+    for i, ts in enumerate(["2026-01-01 00:00:00",
+                            "2026-01-03 00:00:00",
+                            "2026-01-02 00:00:00"]):
+        Note.create(title=f"t{i}", pinned=True, created_at=ts)
     recent = Note.find({"pinned": True}, limit=10, order_by="created_at DESC")
     assert len(recent) == 3
+    stamps = [str(n.created_at) for n in recent]
+    assert stamps == sorted(stamps, reverse=True)        # genuinely DESC
+    assert stamps[0].startswith("2026-01-03")            # newest first
+    assert stamps[-1].startswith("2026-01-01")           # oldest last
 
 
 def test_find_no_filter_returns_all():
