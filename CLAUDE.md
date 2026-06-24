@@ -3,8 +3,9 @@
 Orientation for new collaborators (human or LLM). This file is a map. The stable
 conventions/protocol live in `readme.md`; the mutable record — chapter coverage,
 the Known Issues Log, the Bug Hunt index, and Suggested Fixes — lives in
-`findings-log.md`. Read this first to know *where* things are; read `readme.md`
-for the rules and `findings-log.md` for the data.
+`findings-log.md`; per-section **coverage ledgers** (✓/⛔/⏸ per snippet+option, with
+version-stamped sign-offs) live in **`coverage-ledger/`**, one markdown per chapter. Read this
+first to know *where* things are; read `readme.md` for the rules and `findings-log.md` for the data.
 
 ## What this repo is
 
@@ -12,6 +13,11 @@ A **QA / evaluation harness for the Tina4 web framework**, not an app and not th
 framework itself. The job is to implement the official Tina4 documentation *exactly
 as written*, in real Tina4 projects, and record every place the framework's actual
 behaviour deviates from the docs.
+
+The assistant acts as an **independent QA Auditor**: the framework is **read-only** (never
+patched/fixed, even on a severe bug), every test **traces to a quoted documented claim** (no
+speculative edge cases), and tests are **never rigged** — a genuine framework divergence stays
+red and is reported, not papered over.
 
 The loop is:
 
@@ -31,13 +37,14 @@ disagrees with it, **`readme.md` wins**. **`findings-log.md`** holds the mutable
 
 | Topic | Where |
 |---|---|
-| Protocol rules (9 non-negotiable rules) | `readme.md` → `## Protocol: Chapter-Based Evaluation` |
+| Protocol rules (12 non-negotiable rules) | `readme.md` → `## Protocol: Chapter-Based Evaluation` |
 | File / naming conventions (chapter prefix, test prefix, probe prefix, migrations, seeds) | `readme.md` → `## Standard Implementation Workflow` + `## Workspaces` |
 | Patching convention (PATCH markers, OLD lines, newest-stays-verbatim) | `readme.md` → `## Patching Convention` |
 | Issue reporting (KI Log six-column schema + terminal-output snippet format + sub-letter notation) | `readme.md` → `## Issue Report Format` |
 | Upstream filing format (plain `<ID> — title` opening line, location/Issue/Origin body, splitting findings) | `readme.md` → `## Issue Report Format` → "Upstream filing — …" |
 | Quick-reference summary of all conventions | `readme.md` → `## Convention Recap` |
 | Current chapter coverage | `findings-log.md` → `## Evaluation Progress` |
+| Per-section coverage ledgers (✓/⛔/⏸ per snippet+option, version-stamped sign-offs) | `coverage-ledger/<lang>-ch<NN>-<topic>.md` (e.g. `coverage-ledger/py-ch12-queues.md`) |
 | All confirmed findings (Known Issues Log) | `findings-log.md` → `## Known Issues Log` |
 | Assigned bug investigations (`BH-<n>` rows) | `findings-log.md` → `## Known Issues Log` (the rows) + `## Bug Hunt` (what they are) |
 | Proposed fixes for findings (long-form) | `findings-log.md` → `## Suggested Fixes` |
@@ -64,12 +71,26 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
   any chapter that touches the ORM). Start Postgres (`docker compose up -d`) — the rest
   is wired via `pypy/.env` + `pypy/conftest.py`. Symptom if not: `RuntimeError: No
   database bound`. Full setup in *Running / testing* below.
+- **Read-only framework — never edit framework source** — the installed `tina4_python`
+  package (`pypy/.venv/Lib/site-packages/tina4_python/`), the `tina4` CLI, and any vendored
+  framework code are **off-limits**: no patch, shim, or monkey-patch, even for a severe bug.
+  Only OUR files get written (tests, probes, fixtures, mocks, logs). `readme.md` rule 10.
+- **Strict traceability — every test cites the doc** — each test/demo carries the exact
+  quoted claim + documentation file path it verifies; no test without a documented claim, no
+  speculative edge cases the docs don't state. `readme.md` rule 11.
+- **No test rigging** — when the framework diverges from a faithful test, the test FAILS and
+  stays red (record it). Never weaken/`xfail`/skip/`try-except` a test to go green; edit a
+  test only to read the doc more faithfully. `readme.md` rule 12.
+- **Coverage ledger — never tag a bare "complete"** — before a section is marked done, enumerate
+  every snippet + every named option and mark each `tested` / `blocked` / `deferred`; the progress
+  status names the open dimensions (e.g. "file-backend complete; rabbitmq/kafka/mongo open"), never
+  just "complete". `readme.md` Workflow step 7.
 
 ## Language project directories
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `pypy/` | Python (primary workspace) | tina4-python **3.13.39** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `pypy/` | Python (primary workspace) | tina4-python **3.13.43** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
 | `phph/` | PHP | *not yet bootstrapped* | (will be `index.php`) | composer | empty dir; run `tina4 init php .` before working |
 | `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
 

@@ -1,21 +1,11 @@
-# Verbatim-impl test — Chapter 12 Queues, S3 "Creating a Queue and Pushing
-# Messages", implemented as an ignorant new reader following the page literally.
+# QA-audit test — Chapter 12 Queues, S3 "Creating a Queue and Pushing Messages".
 #
-# S3 is library-level (the Queue API); it shows no HTTP routes (routes first
-# appear at S7/S11), so these run as pytest sentinels. The served path for the
-# same snippets is exercised live by src/routes/queue_explorer.py under
-# `tina4 serve` (GET /queue).
+# Doc under test : documentation/tina4-book/book-1-python/chapters/12-queues.md
+# Framework      : tina4_python.queue (READ-ONLY — never modified)
 #
-# Doc claims under test (12-queues.md S3):
-#   - `Queue(topic="emails")` — "The topic argument names the queue."
-#   - `message_id = queue.push({...})` — returns a message id; "The payload is
-#     any dictionary that can be serialized to JSON."
-#   - `queue.produce("invoices", {...})` — "pushes to a specific topic without
-#     creating a separate Queue instance."
-#   - `count = queue.size()` — "how many pending messages are in the queue".
-#
-# PY-12-01 (S3 blockquote: backend "selected via environment variables, not
-# constructor parameters") is covered by test_ch12_queue_config.py.
+# Per Protocol rule 11 (strict traceability) every test opens with the EXACT
+# quoted claim it verifies plus that doc file path. S3 is library-level (no HTTP
+# routes); the served path is exercised by the live mock (GET /chapter/12).
 import os
 import glob
 import json
@@ -41,7 +31,10 @@ def tmp_queue_path(monkeypatch):
 # ---- push -------------------------------------------------------------------
 
 def test_push_returns_a_message_id(tmp_queue_path):
-    """Verbatim S3: message_id = queue.push({...})."""
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S3 Creating a Queue and Pushing Messages, code block): verbatim
+    `message_id = queue.push({...})` — push returns a message id.
+    """
     queue = Queue(topic="emails")
     message_id = queue.push({
         "to": "alice@example.com",
@@ -53,8 +46,12 @@ def test_push_returns_a_message_id(tmp_queue_path):
 
 
 def test_topic_argument_names_the_queue(tmp_queue_path):
-    """Doc S3: "The topic argument names the queue." — the named topic gets its
-    own storage directory under the queue path."""
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S3 Creating a Queue and Pushing Messages): "The `topic` argument names the
+    queue."
+
+    The named topic gets its own storage directory under the queue path.
+    """
     Queue(topic="emails").push({"to": "a@b.com", "subject": "x", "body": "y"})
     assert os.path.isdir(os.path.join(tmp_queue_path, "emails")), (
         "the topic should name a per-topic storage dir"
@@ -62,9 +59,13 @@ def test_topic_argument_names_the_queue(tmp_queue_path):
 
 
 def test_payload_is_any_json_serializable_dict(tmp_queue_path):
-    """Doc S3: "The payload is any dictionary that can be serialized to JSON."
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S3 Creating a Queue and Pushing Messages): "The payload is any dictionary
+    that can be serialized to JSON."
+
     A rich nested/typed payload pushes and persists faithfully (peeked at the
-    stored job file — not via the consume API, which is S4)."""
+    stored job file — not via the consume API, which is S4).
+    """
     payload = {
         "to": "alice@example.com",
         "order_id": 1234,
@@ -88,7 +89,10 @@ def test_payload_is_any_json_serializable_dict(tmp_queue_path):
 # ---- size -------------------------------------------------------------------
 
 def test_size_reflects_pending_count(tmp_queue_path):
-    """Doc S3: count = queue.size() — pending message count."""
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S3 Queue Size): "Check how many pending messages are in the queue:" with
+    verbatim `count = queue.size()`.
+    """
     queue = Queue(topic="emails")
     assert queue.size() == 0
     for i in range(3):
@@ -99,8 +103,10 @@ def test_size_reflects_pending_count(tmp_queue_path):
 # ---- produce ----------------------------------------------------------------
 
 def test_produce_pushes_to_a_named_topic(tmp_queue_path):
-    """Verbatim S3: queue.produce("invoices", {...}) pushes to another topic
-    without constructing a separate Queue."""
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S3 Convenience Method: produce): "The `produce` method pushes to a specific
+    topic without creating a separate Queue instance:"
+    """
     queue = Queue(topic="emails")
     queue.produce("invoices", {"order_id": 101, "format": "pdf"})
 

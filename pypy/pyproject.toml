@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "A Tina4 Python project"
 requires-python = ">=3.12"
 dependencies = [
+    "confluent-kafka>=2.14.2",
+    "pika>=1.4.1",
     "psycopg2-binary>=2.9.12",
+    "pymongo>=4.17.0",
     "tina4-python>=3.1.0",
 ]
 
