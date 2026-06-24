@@ -155,6 +155,25 @@ docker compose logs postgres  # watch init / readiness
 
 A native Windows install (`postgresql-x64-18` service) was the original runtime; it's now stopped + set to Manual start. To fall back to it, stop the container (`docker compose down`) and `Start-Service postgresql-x64-18` — same port/creds/DBs, so probes don't care which is serving.
 
+## Local queue brokers (Chapter 12 queue backend probes)
+
+The queue backend-parity / lifecycle tests (`pypy/tests/test_ch12_queue_backend_parity.py`, `test_ch12_queue_backend_lifecycle.py`, `test_ch12_queue_kafka_semantics.py`, `test_ch12_queue_mongo_clear_probe.py`) round-trip against real brokers. Stood up with plain `docker run` (not in `docker-compose.yml`):
+
+```bash
+docker run -d --name tina4_rabbit -p 5672:5672 rabbitmq:3
+docker run -d --name tina4_mongo  -p 27017:27017 mongo:7
+docker run -d --name tina4_kafka  -p 9092:9092 apache/kafka:3.7.0   # KRaft single-node, defaults
+```
+
+Drivers per Chapter 12 S2 (`uv add pika pymongo confluent-kafka`): `pika` 1.4.1, `pymongo` 4.17.0, `confluent-kafka` 2.14.2. The tests are **broker-gated** — each `socket`-checks its port and SKIPS if the broker is down (a logged blocker, never a false pass). Env per backend: `TINA4_QUEUE_BACKEND` + `TINA4_QUEUE_URL` (`amqp://guest:guest@localhost:5672` / `mongodb://localhost:27017/tina4`) or `TINA4_KAFKA_BROKERS=localhost:9092`.
+
+```bash
+docker stop tina4_rabbit tina4_mongo tina4_kafka     # free resources
+docker start tina4_rabbit tina4_mongo tina4_kafka    # bring back for re-runs
+```
+
+Note: kafka/rabbitmq have raw-socket fallbacks (driver optional); **only mongodb hard-requires its driver** (`pymongo`) at construction. RabbitMQ guest/guest works from localhost only. Kafka first delivery lags ~16s (consumer-group join) — drain-once/immediate `pop()` return nothing (PY-12-02).
+
 ## Documentation source — `documentation/tina4-book/`
 
 Seven "books", chapters as markdown under `book-N-*/chapters/NN-topic.md`:
