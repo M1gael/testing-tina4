@@ -379,22 +379,185 @@ def build_ch12(demo):
              run_lang="python", run_code=delay_run),
     ]
 
+    # ---- S6: Job lifecycle -----------------------------------------------
+    def p_lifecycle(ns, sb):
+        return [f'fail("boom") → size={ns.get("after_fail")} (re-enqueued under the limit), attempts={ns.get("attempts")}',
+                f"complete() → size={ns.get('after_complete')} (terminal: removed, never comes back)",
+                'reject(reason) is an alias for fail().']
+
+    def p_claimed_on_pop(ns, sb):
+        return [f"after a bare pop() with no complete()/fail(): size={ns.get('size')}, next pop()={ns.get('nxt')!r}",
+                "the job was claimed on pop and is NOT retried."]
+
+    def p_job_retry_dup(ns, sb):
+        return [f"dead-lettered, then dead.retry(): pending={ns.get('pending')}, dead={ns.get('dead')}",
+                f"PY-12-05 · the SAME job id is now in BOTH pending and dead_letters() = {ns.get('dup')}",
+                '"re-queue" should move the job, not leave a dead-letter duplicate.']
+
+    lifecycle_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=3)\n'
+        'queue.push({"job": "a"})\n'
+        'queue.pop().fail("boom")\n'
+        'after_fail = queue.size()\n'
+        'attempts = queue.pop().attempts\n'
+        'queue.push({"job": "b"})\n'
+        'job = queue.pop(); job.complete()\n'
+        'after_complete = queue.size()')
+
+    claimed_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails")\n'
+        'queue.push({"job": "a"})\n'
+        'job = queue.pop()  # claimed; neither complete() nor fail() called\n'
+        'size = queue.size()\n'
+        'nxt = queue.pop()')
+
+    job_retry_dup_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=1)\n'
+        'queue.push({"job": "dup"})\n'
+        'queue.pop().fail("boom")  # dead-lettered\n'
+        'dead = queue.dead_letters()[0]; dead_id = dead.id\n'
+        'dead.retry()\n'
+        'pending = queue.size()\n'
+        'dead_ids = [j.id for j in queue.dead_letters()]\n'
+        'dead = len(dead_ids)\n'
+        'dup = (dead_id in dead_ids) and pending == 1')
+
+    s6 = [
+        demo("S6", "complete() is terminal; fail() increments attempts and re-enqueues; reject() aliases fail()",
+             "text",
+             '"job.complete() -- mark the job as done. Terminal: the job is removed and never comes back."\n'
+             '"job.fail(reason) -- record a failed attempt. Increments attempts and either re-enqueues the job or dead-letters it."\n'
+             '"job.reject(reason) -- alias for fail."',
+             p_lifecycle, run_lang="python", run_code=lifecycle_run),
+        demo("S6", "Neither complete() nor fail() -> the job was claimed on pop and is not retried",
+             "text",
+             '"If you call neither, the job has already left the queue (it was claimed on pop) and will not be retried."',
+             p_claimed_on_pop, run_lang="python", run_code=claimed_run),
+        demo("S6", "PY-12-05 · job.retry() re-queues but leaves a dead-letter duplicate",
+             "text",
+             '"job.retry(delay_seconds=0) -- manually re-queue the job, optionally after a delay. Bypasses the retry limit."',
+             p_job_retry_dup, run_lang="python", run_code=job_retry_dup_run,
+             diverge_marker="= True"),
+    ]
+
+    # ---- S7: Automatic retry and dead letters ----------------------------
+    def p_deadletter(ns, sb):
+        return [f'max_retries=3 → failed {ns.get("fails")} times → dead_letters()={ns.get("dead")}',
+                f"a dead Job exposes id/payload/attempts/error: attempts={ns.get('d_attempts')}, error={ns.get('d_error')!r}"]
+
+    def p_failed_vs_dead(ns, sb):
+        return [f"after one fail under the limit: failed()={ns.get('failed')} (still retrying, plain dicts)",
+                f"dead_letters()={ns.get('dead')} (none yet — not exhausted)"]
+
+    def p_retry_byid(ns, sb):
+        return [f"two dead, retry(job_id) on one → pending={ns.get('pending')}, dead={ns.get('dead')}",
+                "retry(job_id) re-queues exactly that one job."]
+
+    def p_retry_every(ns, sb):
+        return [f"three dead, queue.retry() (no arg) → pending={ns.get('pending')}, dead={ns.get('dead')}",
+                f'PY-12-04 · doc says "re-queue EVERY dead-letter job"; only {ns.get("pending")} of 3 revived.']
+
+    def p_size_failed(ns, sb):
+        return [f"after one fail under the limit: failed()={ns.get('failed')}, size('failed')={ns.get('size_failed')}",
+                f"PY-12-06 · size('failed') does not count the job failed() reports (mismatch={ns.get('mismatch')})."]
+
+    deadletter_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=3)\n'
+        'queue.push({"to": "bad@example.com"})\n'
+        'fails = 0\n'
+        'for _ in range(10):\n'
+        '    job = queue.pop()\n'
+        '    if job is None: break\n'
+        '    job.fail("SMTP connection refused"); fails += 1\n'
+        'dl = queue.dead_letters(); dead = len(dl)\n'
+        'd_attempts = dl[0].attempts if dl else None\n'
+        'd_error = dl[0].error if dl else None')
+
+    failed_vs_dead_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=3)\n'
+        'queue.push({"job": "a"})\n'
+        'queue.pop().fail("boom")\n'
+        'failed = len(queue.failed())\n'
+        'dead = len(queue.dead_letters())')
+
+    retry_byid_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=1)\n'
+        'queue.push({"n": 1}); queue.push({"n": 2})\n'
+        'for _ in range(2): queue.pop().fail("boom")\n'
+        'target = queue.dead_letters()[0].id\n'
+        'queue.retry(target)\n'
+        'pending = queue.size("pending"); dead = len(queue.dead_letters())')
+
+    retry_every_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=1)\n'
+        'for n in range(3): queue.push({"n": n})\n'
+        'for _ in range(3): queue.pop().fail("boom")\n'
+        'queue.retry()  # doc: re-queue EVERY dead-letter job\n'
+        'pending = queue.size("pending"); dead = len(queue.dead_letters())')
+
+    size_failed_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=3)\n'
+        'queue.push({"job": "a"})\n'
+        'queue.pop().fail("boom")\n'
+        'failed = len(queue.failed()); size_failed = queue.size("failed")\n'
+        'mismatch = failed != size_failed')
+
+    s7 = [
+        demo("S7", "max_retries=3 -> attempted 3 times -> dead letter (Job with id/payload/attempts/error)",
+             "python",
+             'queue = Queue(topic="emails", max_retries=3)\n\n'
+             'for job in queue.consume("emails"):\n'
+             '    try:\n'
+             '        send_email(job.payload)\n'
+             '        job.complete()\n'
+             '    except Exception as e:\n'
+             '        job.fail(str(e))   # retried up to 3 times, then dead-lettered',
+             p_deadletter, run_lang="python", run_code=deadletter_run),
+        demo("S7", "failed() lists still-retrying jobs; dead_letters() lists exhausted ones",
+             "python",
+             'retrying = queue.failed()\n'
+             'dead_jobs = queue.dead_letters()',
+             p_failed_vs_dead, run_lang="python", run_code=failed_vs_dead_run),
+        demo("S7", "retry(job_id) re-queues one specific dead-letter job",
+             "python", 'queue.retry(job_id)', p_retry_byid,
+             run_lang="python", run_code=retry_byid_run),
+        demo("S7", "PY-12-04 · queue.retry() re-queues only ONE, not every dead-letter job",
+             "python", 'queue.retry()   # Re-queue every dead-letter job',
+             p_retry_every, run_lang="python", run_code=retry_every_run,
+             diverge_marker="PY-12-04"),
+        demo("S7", "PY-12-06 · size('failed') returns 0 while failed() lists the job",
+             "python", 'queue.size("dead")       # dead-letter jobs',
+             p_size_failed, run_lang="python", run_code=size_failed_run,
+             diverge_marker="PY-12-06"),
+    ]
+
     return [
         {"id": "S2", "title": "Queue configuration", "demos": s2},
         {"id": "S3", "title": "Creating a queue and pushing messages", "demos": s3},
         {"id": "S4", "title": "Consuming messages", "demos": s4},
         {"id": "S5", "title": "Priority ordering", "demos": s5},
+        {"id": "S6", "title": "Job lifecycle", "demos": s6},
+        {"id": "S7", "title": "Automatic retry and dead letters", "demos": s7},
     ]
 
 
 register(
     12, "Queues", build_ch12, prepare_env=_ch12_prepare_env,
-    blurb="Background jobs: configuration, push/produce, consume, priority ordering.",
+    blurb="Background jobs: configuration, push/produce, consume, priority, job lifecycle, retry & dead letters.",
     interactive={
         "title": "Try it yourself · push a message",
         "note": "the same Queue.push() the chapter teaches — writes to the real data/queue tree shown below",
         "push_url": "/api/queue/push",
         "topics_url": "/api/queue/topics",
+        "matrix_url": "/queue/backends",
         "default_topic": "emails",
         "default_payload": {
             "to": "alice@example.com",
@@ -553,7 +716,10 @@ function demoHtml(d){
   return html;
 }
 function interactiveHtml(it){
-  return '<div class="card"><div class="claim">'+esc(it.title)+'</div>'+
+  return (it.matrix_url?'<div class="card"><div class="claim">Backend parity matrix</div>'+
+     '<p class="secnote">run the full documented queue API live against every backend (file / RabbitMQ / MongoDB / Kafka) and see S2\\'s "work identically" claim hold or diverge per backend</p>'+
+     '<a href="'+esc(it.matrix_url)+'"><button>Open the live backend matrix →</button></a></div>':'')+
+   '<div class="card"><div class="claim">'+esc(it.title)+'</div>'+
    '<p class="secnote">'+esc(it.note||"")+'</p>'+
    '<label for="topic">topic</label><input id="topic" value="'+esc(it.default_topic||"")+'">'+
    '<label for="payload">payload (JSON)</label><textarea id="payload">'+esc(JSON.stringify(it.default_payload||{},null,2))+'</textarea>'+

@@ -222,3 +222,27 @@ def test_purge_pending(name):
     ret = q.purge("pending")
     assert ret == PURGE_RET[name]
     assert q.size() == 0
+
+
+# ── S4 consume(job_id) — file-only via pop_by_id (PY-12-07) ─────────────────
+# file yields the target job; every broker yields nothing because pop_by_id() is
+# hardcoded LiteBackend-only.
+CONSUME_BYID_YIELD = {"file": [{"pick": "me"}], "mongodb": [], "rabbitmq": []}
+
+
+@pytest.mark.parametrize("name", ALL)
+def test_consume_job_id_file_only(name):
+    """DOC S4 (12-queues.md:163-171) "Consume a Single Job by ID ... Pass job_id
+    to process one specific job. It yields that job once, then returns" — shown
+    with NO backend caveat. DIVERGENCE (PY-12-07): consume(job_id=) routes through
+    Queue.pop_by_id(), which is hardcoded file-only (`if not isinstance(
+    self._backend, LiteBackend): return None`), so on every broker consume(job_id=)
+    yields nothing. Sentinel: file yields the job, brokers yield []; flips when a
+    broker delivers the targeted job."""
+    q = _queue(name, topic=f"life_byid_{name}_{_uid()}")
+    q.purge("pending")
+    mid = q.push({"pick": "me"})
+    q.push({"pick": "no"})
+    got = [j.payload for j in q.consume(q.get_topic(), job_id=mid)]
+    assert got == CONSUME_BYID_YIELD[name]
+    q.purge("pending")

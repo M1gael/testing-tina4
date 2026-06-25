@@ -15,5 +15,311 @@
       }
     ],
     "dismissed": false
+  },
+  {
+    "id": "19efe66926b",
+    "timestamp": "1782384594Z",
+    "message": "Hey there! Just wanted to check in – I noticed there are 9 uncommitted files in the project. It’s really important to keep our commits regular so we don’t lose any hard work and can easily track changes. Let’s make sure to commit those soon, okay?",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Let's commit",
+        "action": "commit"
+      },
+      {
+        "label": "I'm on it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe6b272f",
+    "timestamp": "1782384894Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This is a bit concerning because it increases the risk of losing work if something goes wrong. Let's make sure to commit these changes soon to keep our project safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe6fbe5e",
+    "timestamp": "1782385194Z",
+    "message": "Hey there, I just took a look at the project and noticed there are 11 uncommitted files. This is starting to get a bit urgent, as we risk losing changes if something goes wrong. Let’s make sure to commit those changes soon to keep everything safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe744d5e",
+    "timestamp": "1782385494Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This is a bit concerning because it increases the risk of losing work if something goes wrong. Let's make sure to commit those changes soon to keep everything safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe78ff50",
+    "timestamp": "1782385794Z",
+    "message": "Hey there! I just took a quick look at the project and noticed there are 11 uncommitted files. This could really cause some issues if we lose any changes or if multiple people try to work on the same files. Let's get those committed and pushed to the remote repo ASAP to avoid any potential headaches.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe7d8815",
+    "timestamp": "1782386094Z",
+    "message": "Hey there, I took a quick look at the project and noticed there are 11 uncommitted files. This is a bit concerning because it increases the risk of losing work if something goes wrong. Let’s make sure to commit these changes soon to keep our project safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe820954",
+    "timestamp": "1782386394Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This is starting to get urgent because we risk losing changes and it could really mess things up if someone else works on those files. Let’s make sure to commit those changes soon, okay?",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe86a199",
+    "timestamp": "1782386694Z",
+    "message": "Hey there! Just wanted to check in – I noticed there are 11 uncommitted files in the project. This could really impact our ability to track changes and collaborate effectively, so it might be a good idea to commit those changes soon to avoid any potential risks.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe8b3602",
+    "timestamp": "1782386994Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This is a bit urgent, as it increases the risk of losing work and makes it harder for the team to collaborate smoothly. Let’s make sure to commit those changes soon to keep everything in sync and safe.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe8fc4da",
+    "timestamp": "1782387294Z",
+    "message": "Hey there! Just wanted to check in – I noticed there are 11 uncommitted files in the project. This could be risky since we might lose important changes if something goes wrong. Let’s make sure to commit those changes soon to keep everything safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe945a82",
+    "timestamp": "1782387594Z",
+    "message": "Hey there! Just wanted to flag that there are 11 uncommitted files in the project. This is starting to get urgent because uncommitted changes can lead to a lot of headaches, especially if someone else needs to work on those files or if there's a need to revert to a previous state. Let's make sure to commit those changes soon to avoid any potential conflicts or data loss.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe98eccb",
+    "timestamp": "1782387894Z",
+    "message": "Hey there! Just wanted to flag that there are 11 uncommitted files in the project. This is a bit urgent because it increases the risk of losing important work if something goes wrong. Let's make sure to commit those changes soon to keep everything safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efe9d8080",
+    "timestamp": "1782388194Z",
+    "message": "Hey there, I just noticed there are 11 uncommitted files in the project. This could be risky since we might lose important changes if something happens to the local machine. Let’s make sure to commit these changes soon to keep our project safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efea213fc",
+    "timestamp": "1782388494Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This could really cause some issues if any changes get lost, so let’s make sure to commit those changes soon to keep our project safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efea6a9ed",
+    "timestamp": "1782388794Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This is a bit concerning because it increases the risk of losing work if something goes wrong. Let’s make sure to commit those changes soon to keep our project safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efead20d8",
+    "timestamp": "1782389217Z",
+    "message": "Hey there! I noticed there are 11 uncommitted files in the project, which is a bit concerning. Uncommitted changes can really increase the risk of losing important work, so let’s make sure to commit those changes soon to keep everything safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efeb1b232",
+    "timestamp": "1782389517Z",
+    "message": "Hey there, I noticed there are 11 uncommitted files in the project. This could be risky since we might lose changes if something goes wrong. Let’s make sure to commit these changes soon to keep our project safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19efeb64679",
+    "timestamp": "1782389817Z",
+    "message": "Hey there! I just took a look at the project, and it seems like there are 11 uncommitted files. This could be risky as we might lose important changes if something goes wrong. Let's get those committed soon to keep our work safe and organized.",
+    "category": "uncommitted",
+    "actions": [
+      {
+        "label": "Create backup branch",
+        "action": "create_branch"
+      },
+      {
+        "label": "Not now",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
   }
 ]

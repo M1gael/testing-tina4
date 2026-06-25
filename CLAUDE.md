@@ -4,7 +4,9 @@ Orientation for new collaborators (human or LLM). This file is a map. The stable
 conventions/protocol live in `readme.md`; the mutable record — chapter coverage,
 the Known Issues Log, the Bug Hunt index, and Suggested Fixes — lives in
 `findings-log.md`; per-section **coverage ledgers** (✓/⛔/⏸ per snippet+option, with
-version-stamped sign-offs) live in **`coverage-ledger/`**, one markdown per chapter. Read this
+version-stamped sign-offs) live in **`coverage-ledger/`**, one markdown per chapter. The
+cross-session **work backlog** (asked-for-but-not-yet-done) lives in **`outstanding-tasks.md`**
+at the repo root — check it when resuming. Read this
 first to know *where* things are; read `readme.md` for the rules and `findings-log.md` for the data.
 
 ## What this repo is
@@ -90,7 +92,7 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `pypy/` | Python (primary workspace) | tina4-python **3.13.43** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `pypy/` | Python (primary workspace) | tina4-python **3.13.47** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
 | `phph/` | PHP | *not yet bootstrapped* | (will be `index.php`) | composer | empty dir; run `tina4 init php .` before working |
 | `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
 
@@ -173,6 +175,8 @@ docker start tina4_rabbit tina4_mongo tina4_kafka    # bring back for re-runs
 ```
 
 Note: kafka/rabbitmq have raw-socket fallbacks (driver optional); **only mongodb hard-requires its driver** (`pymongo`) at construction. RabbitMQ guest/guest works from localhost only. Kafka first delivery lags ~16s (consumer-group join) — drain-once/immediate `pop()` return nothing (PY-12-02).
+
+**Live backend showcase (USER-requested visual):** with all brokers up + `tina4 serve`, open `GET /queue/backends` (`src/routes/queue_backend_matrix.py`, linked from the Chapter-12 page `/chapter/12`). It runs the full documented queue API (20 ops) against file/RabbitMQ/MongoDB/Kafka live and renders a per-claim parity grid — the visual proof of S2's "work identically" claim. Backend selection is process-global env, so runs are lock-serialised; each op runs in a daemon thread with a timeout so Kafka's non-delivery can't hang serve.
 
 ## Documentation source — `documentation/tina4-book/`
 
