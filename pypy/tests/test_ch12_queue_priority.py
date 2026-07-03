@@ -44,6 +44,35 @@ def test_priority_then_oldest_first(tmp_queue_path):
     assert queue.pop().payload["label"] == "also normal"
 
 
+# ---- consume() honours priority too (audit gap B3) --------------------------
+
+def test_consume_returns_highest_priority_first(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S5 Priority Ordering): "`pop` and `consume` do not return jobs in plain
+    insert order. They return the **highest-priority** available job first. When
+    two jobs share the same priority, the **older** one wins."
+
+    The verbatim worked example only exercises pop(). The headline names BOTH
+    pop and consume — this drains the same arrangement through consume() and
+    asserts the identical ordering, so the "consume" half of the claim is
+    covered, not just pop.
+    """
+    queue = Queue(topic="tasks")
+
+    queue.push({"label": "normal"})                  # priority 0
+    queue.push({"label": "urgent"}, priority=10)     # priority 10
+    queue.push({"label": "also normal"})             # priority 0
+
+    order = []
+    for job in queue.consume("tasks", poll_interval=0):  # drain-once
+        order.append(job.payload["label"])
+        job.complete()
+
+    assert order == ["urgent", "normal", "also normal"], (
+        "consume() returns highest-priority first, then oldest-first on ties"
+    )
+
+
 # ---- delayed jobs stay hidden regardless of priority ------------------------
 
 def test_delayed_high_priority_job_stays_hidden(tmp_queue_path):

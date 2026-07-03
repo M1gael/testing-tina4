@@ -16,6 +16,7 @@
 #     so the same job ends up in BOTH pending and dead (duplicate delivery).
 import shutil
 import tempfile
+import time
 
 import pytest
 
@@ -103,6 +104,39 @@ def test_job_retry_requeues_bypassing_limit(tmp_queue_path):
     assert queue.size() == 1, "the dead job is manually re-queued to pending"
 
 
+# ---- retry(delay_seconds=N) holds the revived job (audit gap B4) --------------
+
+def test_job_retry_delay_seconds_holds_then_releases(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S6 Job Methods): "job.retry(delay_seconds=0) -- manually re-queue the job,
+    optionally after a delay." with (S3) "The file backend honors the delay; the
+    job stays hidden until the time arrives."
+
+    The existing retry() test only uses the no-arg form. This passes the delay
+    argument and asserts the "optionally after a delay" half: the manually
+    re-queued job stays hidden for delay_seconds, then becomes available. A
+    short delay stands in for the documented value — the held-then-released
+    SEMANTIC is identical.
+
+    (The dead-letter copy left behind by retry() is the separate PY-12-05
+    divergence; this test only asserts the delay timing of the revived job, and
+    pops by the topic so the still-dead copy is never in play.)
+    """
+    queue = Queue(topic="emails", max_retries=1)
+    queue.push({"job": "a"})
+    queue.pop().fail("boom")  # max_retries=1 -> dead-lettered on first fail
+    assert len(queue.dead_letters()) == 1
+
+    queue.dead_letters()[0].retry(delay_seconds=2)  # manual re-queue, held 2s
+
+    assert queue.pop() is None, "the re-queued job is held during the delay window"
+
+    time.sleep(2.3)
+    job = queue.pop()
+    assert job is not None, "after the delay the manually re-queued job is available"
+    assert job.payload == {"job": "a"}
+
+
 # ---- payload / id / attempts / error fields ----------------------------------
 
 def test_job_exposes_payload_id_attempts_error(tmp_queue_path):
@@ -167,3 +201,27 @@ def test_job_retry_leaves_duplicate_in_dead_PY_12_05(tmp_queue_path):
     # Documented intent: re-queued (move). Actual: duplicated (pending AND dead).
     assert revived is not None and revived.id == dead_id
     assert dead_id in still_dead_ids, "PY-12-05: dead-letter copy was NOT removed"
+
+
+# ---- retry() default delay_seconds=0: immediately poppable (audit gap AUD-12-L)
+
+def test_job_retry_default_no_delay_is_immediately_poppable(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S6 Job Methods): "job.retry(delay_seconds=0) -- manually re-queue the job,
+    optionally after a delay."
+
+    The default (no delay argument, delay_seconds=0) means NO hold: the
+    re-queued job must be poppable immediately. The delayed half is pinned by
+    test_job_retry_delay_seconds_holds_then_releases; this pins the default by
+    poppability, with no sleep.
+    """
+    queue = Queue(topic="emails", max_retries=1)
+    queue.push({"job": "a"})
+    queue.pop().fail("boom")  # max_retries=1 -> dead-lettered
+    dead = queue.dead_letters()[0]
+
+    dead.retry()  # no delay argument — the documented default delay_seconds=0
+
+    job = queue.pop()
+    assert job is not None, "default retry() imposes no hold — immediately poppable"
+    assert job.id == dead.id, "and it is the revived job itself"

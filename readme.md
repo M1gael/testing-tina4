@@ -146,10 +146,10 @@ required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
     "complete". Before marking it done, write a ledger that lists **every snippet** and **every
     named option** the section contains, each marked `✓ tested` (with the test/probe name or the
     live-mock demo), `⛔ blocked` (with the reason — e.g. broker not stood up, driver not
-    installed), or `⏸ deferred` (USER-deferred, with a pointer). The ledgers live in
+    installed), `⚠ diverges` (framework differs from the doc — cite the finding ID; its sentinel test is the coverage), `⏸ deferred` (USER-deferred, with a pointer), or `n/a` (nothing to test — concept-only prose). The ledgers live in
     **`coverage-ledger/`**, one markdown per chapter — `coverage-ledger/<lang>-ch<NN>-<topic>.md`
-    (e.g. `py-ch12-queues.md`). The Evaluation Progress table in `findings-log.md` carries only a
-    one-line status + a link to the ledger, and that status must name the open dimensions
+    (e.g. `py-ch12-queues.md`). **The Evaluation Progress table in `findings-log.md` MUST carry ONLY a one-line status + a link
+    to the ledger — NEVER per-section narrative (all coverage detail belongs in the ledger).** That status must name the open dimensions
     explicitly — e.g. "file-backend complete; rabbitmq/kafka/mongo open", never just "complete".
     **Every sign-off is version-stamped:** each section records the date and the tina4 versions it
     was verified on — `tina4-python <framework> · CLI <cli>` — so it is always clear *when* and
@@ -157,6 +157,25 @@ required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
     re-run on a newer version. This closes the gap where coverage is asserted from memory and an
     option or a hard-to-test snippet silently slips. (Operationalises rule 9 + *Coverage bar* —
     turns the principle into a checklist that can't be skipped.)
+
+## Probes
+
+For every finding whose framework characteristic is testable in code, write a probe
+(`tests/test_chNN_<topic>_probe.py`; bug-hunt probes are named `test_issue_<n>_*.py`). Narrative /
+structural findings that can't be expressed as an assertion are carved out ("where possible").
+
+- **Assert the CORRECT framework state, not the buggy state.** A probe *tries to trigger the bug*;
+  if it still triggers, the probe reads as a FAIL. So it FAILS before the fix (bug visible) and
+  PASSES after (fix confirmed) with no edit, then stays live in the suite — a steady-state PASS
+  that flips to FAIL the moment the framework regresses.
+- **First line is always a one-line tag:** `# Probe — covers <ID(s)>. <one-line purpose>.` — so
+  doc-fidelity probes (`PY-NN-NN`) and bug-hunt probes (`BH-NN` / `test_issue_<n>_*.py`) are
+  distinguishable at a glance while living together in `tests/`. The header also records finding
+  history + fix version.
+- One assertion = one observation; reference the probe filename from the KI Log row. Patterns:
+  trace-list inspection via direct dispatcher invocation (`pypy/tests/test_ch10_middleware_probe.py`
+  → `PY-10-01/02/03`); positive contract assertions on framework objects
+  (`pypy/tests/test_ch18_response_object_probe.py` → `PY-18-10`).
 
 ## Patching Convention
 
@@ -407,20 +426,20 @@ links back to where it's fully described.
 | **Discrepancy Report** | Test-run output per failing test: `Documented Claim (quote+path)` / `Expected` / `Actual`. Report only, then stop — no fixes. Confirmed ones graduate to the KI Log. See [Issue Report Format](#issue-report-format). |
 | **Certainty first (verdict > cause)** | The deliverable is an ironclad **works / doesn't-work** verdict — deterministic, reproduced, sentineled (flips when behavior changes). Rule out TEST artifacts on **both** sides (works-by-luck / in-isolation-only isn't *works*; a self-inflicted test bug isn't *broken*). Root cause / `Origin` is an optional bonus that never gates or delays the verdict; if the cause is unknown, still log the certain verdict. |
 | *— Coverage & live mocks —* | |
-| **Coverage ledger** | A section is never tagged a bare "complete". Before marking it done, enumerate **every snippet + every named option** and mark each `✓ tested` (test/probe/demo name) · `⛔ blocked` (reason) · `⏸ deferred` (pointer). Ledgers live in **`coverage-ledger/`**, one markdown per chapter (`<lang>-ch<NN>-<topic>.md`); the progress table carries only a one-line status + link. **Every sign-off is version-stamped** (`tina4-python <v> · CLI <v>` + date). See [Workflow](#standard-implementation-workflow) step 7. |
+| **Coverage ledger** | Never a bare "complete": enumerate every snippet + named option, mark each `✓`/`⚠ diverges`/`⛔ blocked`/`⏸ deferred`/`n/a`, version-stamp each sign-off; one ledger per chapter in `coverage-ledger/`, progress table links to it. See [Workflow](#standard-implementation-workflow) step 7. |
 | **Exhaustive option coverage** | Docs name options a/b/c (engines, queue backends, cache/session stores, auth modes, …) → exercise **all** of them end-to-end, not just one. "Selectable" ≠ "works" — drive a real round-trip, standing up the broker/engine if needed. Can't stand one up → **logged blocker**, never a silent skip or a "covered". See [Protocol](#protocol-chapter-based-evaluation) rule 9. |
-| **Live per-section mock** | Each implemented section also ships a browser-navigable mock under `tina4 serve`, built from that section's docs, so the USER tests it by hand. One chapter page, a block per section, verbatim snippet + live result. A section isn't done until its mock is reachable. Ref: `src/routes/chapter_explorer.py` → `/chapters` (index) + `/chapter/{num}`; registry-driven, one `build(demo)` fn per chapter (`/queue` → ch12). See [Workflow](#standard-implementation-workflow) step 6. |
+| **Live per-section mock** | Each implemented section ships a browser-navigable mock under `tina4 serve` (verbatim snippet + live result), reachable before the section is "done". Ref `src/routes/chapter_explorer.py` → `/chapters` + `/chapter/{num}`. See [Workflow](#standard-implementation-workflow) step 6. |
 | *— Finding scope & evidence —* | |
 | **One code block = one finding ID** | Each distinct code block in a chapter that has issues gets its own row in the Known Issues Log. Don't lump issues from two separate code blocks under one ID, even if they're in the same section. Use sub-letters (`PY-18-07a`, `PY-18-07b`) for splitting upstream filings within a single finding — see [Issue Report Format](#issue-report-format). |
-| **Probe pattern as evidence + regression sentinel** | Write a `tests/test_chNN_<topic>_probe.py` for every finding whose framework characteristic is testable in code. "Where possible" carves out narrative / structural findings (not expressible as an assertion). **Assert the CORRECT framework state, not the buggy state.** A probe *tries to trigger the bug*; if it succeeds in triggering it, the probe outcome must read as a FAIL (the functionality goal is unmet). So the probe FAILS before the fix (bug visible) and PASSES after (fix confirmed) without any edit. After the fix lands the probe stays live in the active suite — a steady-state PASS that flips to FAIL the moment the framework regresses. Existing patterns: trace-list inspection via direct dispatcher invocation (`pypy/tests/test_ch10_middleware_probe.py` for `PY-10-01/02/03`), positive contract assertions on framework objects (`pypy/tests/test_ch18_response_object_probe.py` for `PY-18-10`). One assertion = one observation; reference the probe filename from the KI Log row. File header records finding history + fix version, and the **first line is always a one-line tag stating what the probe covers** — `# Probe — covers <ID(s)>. <one-line purpose>.` — so doc-fidelity probes (`PY-NN-NN`) and bug-hunt probes (`BH-NN`, named `test_issue_<n>_*.py`) are distinguishable at a glance while living together in `tests/`. |
+| **Probe pattern as evidence + regression sentinel** | For every code-testable finding, write a probe that asserts the CORRECT state (FAILs pre-fix, PASSes post-fix, stays live as a regression sentinel); first line `# Probe — covers <ID>. <purpose>.`. See [Probes](#probes). |
 | **Adversarial verification before filing** | Before any finding is filed upstream, actively try to disprove the claim across multiple angles — check for alternative code paths, hidden helpers, version-specific behaviour, framework's own internal docs, and inconsistent chapter usage that might excuse the symptom. Only file if every disproof attempt fails. The verification trail (what was tried, what was confirmed) goes into the upstream comment as part of the evidence. |
 | *— Filing cadence & labels —* | |
 | **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (Known Issues Log row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
-| **Report opening line** | Every report opens with a plain `<ID> — <short title>` line — no brackets, no `##` heading, no bold, no decorations. The ID leads so it stays greppable upstream. The legacy `[<id>]`-bracket style is preserved on filed threads only. See [Issue Report Format](#issue-report-format). |
+| **Report opening line** | Every report opens with a plain `<ID> — <short title>` line — no brackets/heading/bold; the ID leads so it stays greppable. Legacy `[<id>]` on filed threads only. See [Issue Report Format](#issue-report-format). |
 | **Section notation: `S<n>` not `§<n>`** | When referring to chapter sections inline, use plain `S3`, `S12` (capital S + number). Never the `§` symbol. The spelled-out word *"Section"* is fine when starting a sentence or in a title that names a section. Applies to local logs, detailed evidence, and upstream filings. |
 | *— Test files —* | |
 | **Newest stays verbatim, older patched** | Within a chapter, only the most-recently-created test file stays unpatched. When moving to the next file, the USER triggers the patch on the previous one (see [Patching Convention](#patching-convention)). |
 | *— Voice & shape of upstream reports —* | |
 | **Neutral voice** | No "we" / "I" / "us" in prose. Local logs, detailed evidence sections, and upstream filings all use clinical, actor-free phrasing: "the chapter shows", "the framework returned", "the snippet fails because…". See [Issue Report Format](#issue-report-format) for the canonical wording. |
-| **Report shape — location / Issue / Origin** | After the `<ID> — title` line: a one-line doc location (`Ch<N> <Name>, S<n> "<Section>"` — no line numbers, no "book", no `.md`), an `Issue:` paragraph (docs-say vs. actual), and an `Origin:` paragraph **only for framework defects** (narrows the cause with source `file:line`). A plain doc gap stops after a one-line corrective action — no `Origin:`. Verbatim calls/SQL/error output each go in their own code block; prose explains, the block carries the literal text. No narration, clinical actor-free voice. The older three-section *Documentation shows / Actual output / Issues* template is legacy. See [Issue Report Format](#issue-report-format). |
+| **Report shape — location / Issue / Origin** | After the `<ID> — title` line: a one-line doc location, an `Issue:` paragraph, and `Origin:` **only for framework defects**; a doc gap stops at a one-line corrective action. Code/SQL/errors in their own blocks; clinical no-"we" voice. Full spec + legacy-format note in [Issue Report Format](#issue-report-format). |
 

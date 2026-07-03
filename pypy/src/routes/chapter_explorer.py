@@ -539,6 +539,202 @@ def build_ch12(demo):
              diverge_marker="PY-12-06"),
     ]
 
+    # ---- S8: Queue in route handlers -------------------------------------
+    def p_s8(ns, sb):
+        return [
+            "the documented POST /api/orders handler ran its queue calls:",
+            f"  push order_confirmation → emails        size {Queue(topic='emails').size()}",
+            f"  produce('invoices', …)  → invoices      size {Queue(topic='invoices').size()}",
+            f"  produce('warehouse_sync', …) → warehouse_sync size {Queue(topic='warehouse_sync').size()}",
+            "the served route returns 201 instantly; the three jobs run in the background.",
+            "NOTE PY-12-10 · the live POST /api/orders is secured-by-default → 401 "
+            "without a Bearer token; the chapter shows no token (verified on the served path).",
+        ]
+
+    s8_doc = (
+        'queue = Queue(topic="emails")\n\n'
+        '@post("/api/orders")\n'
+        'async def create_order(request, response):\n'
+        '    body = request.body\n'
+        '    order_id = 101  # Simulated\n'
+        '    queue.push({"type": "order_confirmation", "to": body["email"],\n'
+        '                "order_id": order_id, "total": body["total"]})\n'
+        '    queue.produce("invoices", {"order_id": order_id, "format": "pdf"})\n'
+        '    queue.produce("warehouse_sync", {"order_id": order_id, "items": body["items"]})\n'
+        '    return response.json({"message": "Order created", "order_id": order_id}, 201)')
+
+    s8_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails")\n'
+        'order_id = 101\n'
+        'queue.push({"type": "order_confirmation", "to": "alice@example.com",\n'
+        '            "order_id": order_id, "total": 42.5})\n'
+        'queue.produce("invoices", {"order_id": order_id, "format": "pdf"})\n'
+        'queue.produce("warehouse_sync", {"order_id": order_id, "items": [{"sku": "A1", "qty": 2}]})')
+
+    s8 = [
+        demo("S8", "A route handler pushes/produces onto topics, returns instantly",
+             "python", s8_doc, p_s8, run_lang="python", run_code=s8_run,
+             diverge_marker="PY-12-10"),
+    ]
+
+    # ---- S9: Switching backends via .env ---------------------------------
+    def p_s9(ns, sb):
+        m = ns.get("results") or {}
+        return [f"TINA4_QUEUE_BACKEND={k:<9} → {v}" for k, v in m.items()] + [
+            "the SAME Queue(topic=\"emails\") call selects each backend purely from "
+            "the env var — switching backend is a config change, not a code change.",
+            "(selection only; no broker is contacted here.)"]
+
+    s9_run = (
+        'import os\n'
+        'from tina4_python.queue import Queue\n'
+        'results = {}\n'
+        'for b in ["file", "rabbitmq", "kafka", "mongodb"]:\n'
+        '    os.environ["TINA4_QUEUE_BACKEND"] = b\n'
+        '    results[b] = type(Queue(topic="emails")._backend).__name__\n'
+        'os.environ.pop("TINA4_QUEUE_BACKEND", None)')
+
+    s9_doc = (
+        '# .env — switch backend with config, not code\n'
+        'TINA4_QUEUE_BACKEND=rabbitmq\n'
+        'TINA4_QUEUE_URL=amqp://user:pass@rabbitmq.internal:5672\n'
+        '# file (default) | rabbitmq | kafka | mongodb;\n'
+        '# TINA4_QUEUE_PATH (file), TINA4_QUEUE_URL (broker), TINA4_KAFKA_BROKERS (kafka)')
+
+    s9 = [
+        demo("S9", "The env var selects the backend — your queue code does not change",
+             "bash", s9_doc, p_s9, run_lang="python", run_code=s9_run),
+    ]
+
+    # ---- S10: Produce and consume across topics --------------------------
+    def p_s10(ns, sb):
+        return [f'Queue(topic="default").produce("emails", …) then consume("emails") → {ns.get("seen")}',
+                f'the construction topic "default" stays empty = {Queue(topic="default").size() == 0}',
+                "produce() pushes onto any named topic; consume() yields from a named topic."]
+
+    s10_doc = (
+        'queue = Queue(topic="default")\n'
+        'queue.produce("emails", {"to": "alice@example.com", "subject": "Hello"})\n'
+        'for job in queue.consume("emails"):\n'
+        '    process(job)\n'
+        '    job.complete()')
+
+    s10_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="default")\n'
+        'queue.produce("emails", {"to": "alice@example.com", "subject": "Hello"})\n'
+        'seen = []\n'
+        'for job in queue.consume("emails", poll_interval=0):\n'
+        '    seen.append(job.payload)\n'
+        '    job.complete()')
+
+    s10 = [
+        demo("S10", "produce() onto a topic, consume() from it (cross-topic)",
+             "python", s10_doc, p_s10, run_lang="python", run_code=s10_run),
+    ]
+
+    # ---- S11/S12: Email queue exercise + solution ------------------------
+    def p_s12(ns, sb):
+        dead = ns.get("dead_to")
+        return [f"worker drained the queue: sent {ns.get('sent')}",
+                f"bad@example.com failed → dead_letters() = {dead} after {ns.get('attempts')} attempts",
+                "the consume loop retries on its own; after max_retries it dead-letters.",
+                "NOTE PY-12-09 · the verbatim worker at src/workers/email_worker.py HANGS "
+                "`tina4 serve` (auto-discover imports its infinite consume loop at boot).",
+                "NOTE PY-12-10 · the S11 `curl` POSTs carry no token → 401 (auth-by-default)."]
+
+    s12_doc = (
+        '# src/routes/email_queue.py — POST /api/emails/send, GET /queue, GET /dead, POST /retry\n'
+        '# src/workers/email_worker.py — the consumer:\n'
+        'for job in queue.consume("emails"):\n'
+        '    payload = job.payload\n'
+        '    try:\n'
+        '        if payload["to"] == "bad@example.com":\n'
+        '            raise Exception("SMTP connection refused")\n'
+        '        job.complete()\n'
+        '    except Exception as e:\n'
+        '        job.fail(str(e))')
+
+    s12_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=3)\n'
+        'queue.push({"to": "alice@example.com", "subject": "Welcome", "body": "hi"})\n'
+        'queue.push({"to": "bad@example.com", "subject": "Welcome", "body": "hi"})\n'
+        'sent, guard = [], 0\n'
+        'for job in queue.consume("emails", poll_interval=0):\n'
+        '    p = job.payload\n'
+        '    try:\n'
+        '        if p["to"] == "bad@example.com":\n'
+        '            raise Exception("SMTP connection refused")\n'
+        '        sent.append(p["to"]); job.complete()\n'
+        '    except Exception as e:\n'
+        '        job.fail(str(e))\n'
+        '    guard += 1\n'
+        '    if guard >= 10: break\n'
+        'dl = queue.dead_letters()\n'
+        'dead_to = dl[0].payload["to"] if dl else None\n'
+        'attempts = dl[0].attempts if dl else None')
+
+    s12 = [
+        demo("S12", "The email worker: good mail sent, bad address dead-lettered after 3 tries",
+             "python", s12_doc, p_s12, run_lang="python", run_code=s12_run,
+             diverge_marker="PY-12-09"),
+    ]
+
+    # ---- S13: Gotchas ----------------------------------------------------
+    def p_s13_topic(ns, sb):
+        return [f'pushed to "emails", consumed "reports" → {ns.get("wrong")} (mismatch picks up nothing)',
+                f'consumed the matching "emails" → {ns.get("right")}',
+                "Gotcha 2 · the push topic must match the consume topic."]
+
+    def p_s13_dead(ns, sb):
+        return [f'dead-lettered one job → dead_letters()={ns.get("dead")}, size("dead")={ns.get("size_dead")}',
+                f'purge("dead") → size("dead")={ns.get("after_purge")}',
+                "Gotcha 4 · monitor with dead_letters()/size('dead'); clear with purge('dead')."]
+
+    def p_s13_prefix(ns, sb):
+        return [f'Queue(topic="dev_emails") vs Queue(topic="emails") sizes = {ns.get("dev")} / {ns.get("prod")}',
+                "Gotcha 6 · prefix topics per environment so they don't process each other's messages."]
+
+    s13_topic_run = (
+        'from tina4_python.queue import Queue\n'
+        'Queue(topic="emails").push({"to": "a@b.com"})\n'
+        'wrong = [j.payload for j in Queue(topic="reports").consume("reports", poll_interval=0)]\n'
+        'right = []\n'
+        'for job in Queue(topic="emails").consume("emails", poll_interval=0):\n'
+        '    right.append(job.payload["to"]); job.complete()')
+
+    s13_dead_run = (
+        'from tina4_python.queue import Queue\n'
+        'queue = Queue(topic="emails", max_retries=1)\n'
+        'queue.push({"to": "bad@example.com"})\n'
+        'queue.pop().fail("SMTP connection refused")\n'
+        'dead = len(queue.dead_letters()); size_dead = queue.size("dead")\n'
+        'queue.purge("dead"); after_purge = queue.size("dead")')
+
+    s13_prefix_run = (
+        'from tina4_python.queue import Queue\n'
+        'Queue(topic="dev_emails").push({"env": "dev"})\n'
+        'Queue(topic="emails").push({"env": "prod"})\n'
+        'dev = Queue(topic="dev_emails").size(); prod = Queue(topic="emails").size()')
+
+    s13 = [
+        demo("S13", "Gotcha 2 · push topic must match consume topic",
+             "text",
+             '"Check that the topic name in queue.push() matches the topic name in queue.consume()."',
+             p_s13_topic, run_lang="python", run_code=s13_topic_run),
+        demo("S13", "Gotcha 4 · monitor and clear dead letters",
+             "text",
+             '"Monitor dead letters with queue.dead_letters() or queue.size(\\"dead\\"); '
+             'call queue.retry() to revive them or queue.purge(\\"dead\\") to clear them."',
+             p_s13_dead, run_lang="python", run_code=s13_dead_run),
+        demo("S13", "Gotcha 6 · prefix topics per environment to avoid collisions",
+             "text",
+             '"prefix topic names with the environment: Queue(topic=\\"dev_emails\\")."',
+             p_s13_prefix, run_lang="python", run_code=s13_prefix_run),
+    ]
+
     return [
         {"id": "S2", "title": "Queue configuration", "demos": s2},
         {"id": "S3", "title": "Creating a queue and pushing messages", "demos": s3},
@@ -546,6 +742,11 @@ def build_ch12(demo):
         {"id": "S5", "title": "Priority ordering", "demos": s5},
         {"id": "S6", "title": "Job lifecycle", "demos": s6},
         {"id": "S7", "title": "Automatic retry and dead letters", "demos": s7},
+        {"id": "S8", "title": "Queue in route handlers", "demos": s8},
+        {"id": "S9", "title": "Switching backends via .env", "demos": s9},
+        {"id": "S10", "title": "Produce and consume across topics", "demos": s10},
+        {"id": "S12", "title": "Exercise & solution — email queue + worker", "demos": s12},
+        {"id": "S13", "title": "Gotchas", "demos": s13},
     ]
 
 
@@ -565,6 +766,138 @@ register(
             "body": "Your order #1234 has been confirmed.",
         },
     },
+)
+
+
+# ===================== Chapter 7 — QueryBuilder ==============================
+# Verbatim snippets from documentation/.../book-1-python/chapters/07-query-builder.md.
+# This chapter continues the ORM thread from Ch06. Implemented S1+S2 (of 11) per
+# the USER directive. Demos run against the live PG bound by serve from .env.
+
+_QB_SETUP = (
+    'import os\n'
+    'from tina4_python.database import Database\n'
+    'from tina4_python.query_builder import QueryBuilder\n'
+    'db = Database(os.environ["TINA4_DATABASE_URL"])\n'
+)
+
+S1_FACTORY_DOC = (
+    'from tina4_python.query_builder import QueryBuilder\n'
+    '\n'
+    'qb = QueryBuilder.from_table("users", db)'
+)
+
+S1_FALLBACK_DOC = (
+    '"If you omit the database, QueryBuilder will fall back to the global ORM '
+    'database (set via bind_database()). If neither exists, it raises a '
+    'RuntimeError when you try to execute."'
+)
+
+S2_NARROW_DOC = (
+    'qb = QueryBuilder.from_table("users", db) \\\n'
+    '    .select("id", "name", "email")'
+)
+
+S2_REPLACE_DOC = (
+    '# This selects only "email", not "id", "name", "email"\n'
+    'qb = QueryBuilder.from_table("users", db) \\\n'
+    '    .select("id", "name") \\\n'
+    '    .select("email")'
+)
+
+
+def build_ch7(demo):
+    # ---- S1: The Factory: from_table() -----------------------------------
+    def p_s1_factory(ns, sb):
+        return [
+            f'QueryBuilder.from_table("users", db) → {type(ns.get("qb")).__name__}',
+            f"two from_table() calls are distinct objects (a fresh instance each) = {ns.get('fresh')}",
+            f"qb.select('id') is qb — every method returns the same instance, so you can chain = {ns.get('chained')}",
+            f"a fresh chain renders qb.to_sql() = {ns.get('sql')!r}",
+        ]
+
+    def p_s1_fallback(ns, sb):
+        return [
+            'QueryBuilder.from_table("users")  # NO db argument, after bind_database(db)',
+            f"executed via the global ORM database fallback → returned {type(ns.get('rows')).__name__} (not None = {ns.get('got')})",
+            f"qb.to_sql() = {ns.get('sql')!r}",
+            "with NEITHER an explicit db NOR a global bound, .get() raises "
+            "RuntimeError: 'QueryBuilder: No database connection provided.' — not shown "
+            "here (this server has a global bound); verified in "
+            "test_ch07_querybuilder_s1_factory.py via a clean unbound subprocess.",
+        ]
+
+    s1_factory_run = (
+        _QB_SETUP +
+        'qb = QueryBuilder.from_table("users", db)\n'
+        'qb2 = QueryBuilder.from_table("users", db)\n'
+        'fresh = qb is not qb2\n'
+        'chained = qb.select("id") is qb\n'
+        'sql = QueryBuilder.from_table("users", db).to_sql()'
+    )
+
+    s1_fallback_run = (
+        _QB_SETUP +
+        'from tina4_python.orm.model import bind_database\n'
+        'bind_database(db)\n'
+        'qb = QueryBuilder.from_table("users")  # no db argument → global fallback\n'
+        'rows = qb.select("id").limit(3).get()\n'
+        'got = rows is not None\n'
+        'sql = qb.to_sql()'
+    )
+
+    s1 = [
+        demo("S1", "from_table() returns a fresh QueryBuilder instance; every method returns the same instance (chainable)",
+             "python", S1_FACTORY_DOC, p_s1_factory,
+             run_lang="python", run_code=s1_factory_run),
+        demo("S1", "Omit the db → falls back to the global ORM database; neither → RuntimeError on execute",
+             "text", S1_FALLBACK_DOC, p_s1_fallback,
+             run_lang="python", run_code=s1_fallback_run),
+    ]
+
+    # ---- S2: Choosing Columns: select() ----------------------------------
+    def p_s2_narrow(ns, sb):
+        return [
+            f"default — no select() → {ns.get('default_sql')!r}   (QueryBuilder selects all columns, *)",
+            f'select("id", "name", "email") → {ns.get("narrow_sql")!r}',
+            "pass column names as separate arguments, not a list.",
+        ]
+
+    def p_s2_replace(ns, sb):
+        return [
+            f'.select("id", "name").select("email") → {ns.get("replace_sql")!r}',
+            "each call to select() REPLACES the previous selection — only 'email' remains.",
+        ]
+
+    s2_narrow_run = (
+        _QB_SETUP +
+        'default_sql = QueryBuilder.from_table("users", db).to_sql()\n'
+        'narrow_sql = QueryBuilder.from_table("users", db).select("id", "name", "email").to_sql()'
+    )
+
+    s2_replace_run = (
+        _QB_SETUP +
+        'replace_sql = QueryBuilder.from_table("users", db).select("id", "name").select("email").to_sql()'
+    )
+
+    s2 = [
+        demo("S2", "Default is SELECT * ; select() narrows to the named columns (separate args, not a list)",
+             "python", S2_NARROW_DOC, p_s2_narrow,
+             run_lang="python", run_code=s2_narrow_run),
+        demo("S2", "Each select() replaces the previous column selection",
+             "python", S2_REPLACE_DOC, p_s2_replace,
+             run_lang="python", run_code=s2_replace_run),
+    ]
+
+    return [
+        {"id": "S1", "title": "The Factory: from_table()", "demos": s1},
+        {"id": "S2", "title": "Choosing Columns: select()", "demos": s2},
+    ]
+
+
+register(
+    7, "QueryBuilder", build_ch7,
+    blurb="Fluent SQL builder — continues the ORM thread from Ch06. S1 from_table() factory + S2 select() column choice (S1–S2 of 11).",
 )
 
 

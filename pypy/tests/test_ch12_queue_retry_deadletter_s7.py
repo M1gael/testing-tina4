@@ -10,7 +10,7 @@
 # is that retry_backoff "applies to the file backend", so the file backend IS the
 # reference for everything else here.
 #
-# The documented happy path holds on the file backend (green). Two DIVERGENCES
+# The documented happy path holds on the file backend (green). Three DIVERGENCES
 # found while implementing S7 verbatim are captured as labelled sentinels (assert
 # the actual behaviour + cite the contradicted line; flip when the framework
 # converges):
@@ -18,6 +18,11 @@
 #     "every" one as documented.
 #   * PY-12-06 — size("failed") returns 0 even while failed() lists a still-
 #     retrying job, contradicting "size accepts a status: pending, failed, dead".
+#   * PY-12-08 — purge("failed") does NOT drop the failed (retrying) jobs that
+#     failed() reports; it targets the dead-letter store instead (same status-
+#     taxonomy conflation as PY-12-06: the backend maps "failed" onto the
+#     dead-letter dir, while failed() reads still-retrying jobs from the queue
+#     dir). Found closing audit gap B5.
 import shutil
 import tempfile
 import time
@@ -207,6 +212,72 @@ def test_size_and_purge_dead(tmp_queue_path):
     assert len(queue.dead_letters()) == 0
 
 
+# ---- consume loop retries on its own, no retry_failed() (audit gap B5) -------
+
+def test_consume_loop_auto_retries_until_dead(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S7 How Retry Works): "This means a normal consume loop retries failed jobs
+    on its own. No manual retry_failed() call is needed" and "With max_retries=3,
+    a job that keeps failing is attempted 3 times. On the third failure it lands
+    in dead letters."
+
+    The existing coverage proves auto-retry only via manual pop()+fail(). This
+    runs a REAL consume() loop (the documented pattern) that always fails the
+    job, and asserts the loop alone re-delivers the SAME job up to max_retries
+    and then dead-letters it — with no retry_failed() call anywhere.
+    """
+    queue = Queue(topic="emails", max_retries=3)
+    queue.push({"to": "bad@example.com"})
+
+    deliveries = []
+    for job in queue.consume("emails", poll_interval=0):  # drain loop, never empty until dead
+        deliveries.append(job.id)
+        job.fail("SMTP connection refused")
+        if len(deliveries) >= 10:  # safety bound so a never-dead-lettering bug can't loop forever
+            break
+
+    assert len(deliveries) == 3, "the consume loop re-delivered the job 3 times on its own"
+    assert len(set(deliveries)) == 1, "it was the same job each attempt"
+    assert len(queue.dead_letters()) == 1, "after the 3rd failure it landed in dead letters"
+    assert queue.size() == 0, "nothing left pending"
+
+
+# ---- DIVERGENCE sentinel: PY-12-08 purge('failed') ---------------------------
+
+def test_purge_failed_targets_dead_store_not_failed_jobs_PY_12_08(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S7 Counting and Purging by Status): "size and purge accept a status:
+    pending, failed, or dead." treating "failed" as distinct from "dead", with
+    (S7 Inspecting) failed() listing still-retrying jobs.
+
+    DIVERGENCE (PY-12-08): on the file backend purge("failed") does NOT drop the
+    failed (still-retrying) jobs that failed() reports, and instead clears the
+    dead-letter store — behaving like purge("dead"). The backend conflates the
+    "failed" and "dead" statuses (both map to the dead-letter dir), while
+    failed() reads still-retrying jobs from the pending/queue dir. Same root as
+    PY-12-06. Sentinel asserts the actual behaviour both ways; it flips when
+    purge("failed") acts on the failed() set instead of the dead-letter store.
+    """
+    # (1) purge("failed") leaves the failed()-reported retrying job untouched.
+    q = Queue(topic="emails", max_retries=3)
+    q.push({"job": "retrying"})
+    q.pop().fail("boom")  # attempts 1, still retrying -> failed() lists it
+    assert len(q.failed()) == 1, "precondition: failed() reports the retrying job"
+
+    removed = q.purge("failed")
+    assert removed == 0, "PY-12-08: purge('failed') removed none of the failed() jobs"
+    assert len(q.failed()) == 1, "PY-12-08: the failed() job survives purge('failed')"
+
+    # (2) purge("failed") DOES clear the dead-letter store (acts like purge('dead')).
+    qd = Queue(topic="dead_topic", max_retries=1)
+    qd.push({"job": "dead"})
+    qd.pop().fail("boom")  # max_retries=1 -> dead-lettered
+    assert qd.size("dead") == 1, "precondition: one dead-letter job"
+
+    qd.purge("failed")
+    assert qd.size("dead") == 0, "PY-12-08: purge('failed') cleared the dead-letter store"
+
+
 # ---- DIVERGENCE sentinel: PY-12-04 retry() revives only one ------------------
 
 def test_retry_noarg_requeues_only_one_not_every_PY_12_04(tmp_queue_path):
@@ -252,3 +323,113 @@ def test_size_failed_zero_while_failed_lists_it_PY_12_06(tmp_queue_path):
 
     assert len(queue.failed()) == 1, "failed() lists the retrying job"
     assert queue.size("failed") == 0, "PY-12-06: size('failed') does not count it"
+
+
+# ---- retry_failed() real re-queue behaviour (audit gap AUD-12-3) --------------
+#
+# "Dead AND still under the retry limit" cannot arise inside one queue's own
+# lifecycle (auto-dead-letter fires exactly AT the limit), which is why the
+# earlier test could only pin callable+count on a no-op. The state IS reachable
+# the way an operator reaches it: a job dead-letters under one limit, then the
+# queue is re-constructed with a HIGHER max_retries (you raised the limit after
+# investigating). Under the new limit the dead job is "still under the retry
+# limit" — exactly the doc's words — and retry_failed() has real work to do.
+
+def test_retry_failed_requeues_dead_job_under_the_limit(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S7 Reviving Dead Letters): "queue.retry_failed() -- Re-queue dead jobs
+    that are still under the retry limit."
+
+    A job dead-lettered at attempts=1 (max_retries=1); the queue is then
+    re-constructed with max_retries=3, so the dead job IS under the current
+    retry limit -> retry_failed() must re-queue it.
+    """
+    q1 = Queue(topic="emails", max_retries=1)
+    q1.push({"to": "bad@example.com"})
+    q1.pop().fail("boom")  # attempts 1 >= max_retries 1 -> dead
+    assert len(q1.dead_letters()) == 1, "precondition: dead at attempts=1"
+
+    q3 = Queue(topic="emails", max_retries=3)  # limit raised
+    count = q3.retry_failed()
+
+    assert count == 1, "retry_failed() re-queued the under-limit dead job"
+    assert q3.size("pending") == 1, "the job is back on the pending queue"
+    assert len(q1.dead_letters()) == 0, "it left the dead-letter store"
+
+    revived = q3.pop()
+    assert revived is not None and revived.payload == {"to": "bad@example.com"}, (
+        "the revived job is the same job, immediately consumable"
+    )
+
+
+def test_retry_failed_leaves_dead_jobs_at_the_limit(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S7 Reviving Dead Letters): "queue.retry_failed() -- Re-queue dead jobs
+    that are still under the retry limit."
+
+    The complement: a job dead at attempts == max_retries is NOT "still under
+    the retry limit", so retry_failed() must leave it dead and re-queue
+    nothing.
+    """
+    queue = Queue(topic="emails", max_retries=3)
+    queue.push({"job": "exhausted"})
+    assert _fail_until_gone(queue) == 3  # dead at attempts=3 == limit
+
+    count = queue.retry_failed()
+
+    assert count == 0, "nothing under the limit -> nothing re-queued"
+    assert queue.size("pending") == 0, "the pending queue stays empty"
+    assert len(queue.dead_letters()) == 1, "the exhausted job stays dead"
+
+
+# ---- failed() range boundaries (audit gap AUD-12-L) ----------------------------
+
+def test_failed_excludes_both_range_boundaries(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S7 Inspecting Failed and Dead Jobs): "Jobs that failed at least once but
+    are still being retried (0 < attempts < max_retries) ... retrying =
+    queue.failed()".
+
+    Both exclusive bounds: attempts == 0 (never failed) is not listed, and
+    attempts == max_retries (dead) is not listed; only the interior is.
+    """
+    queue = Queue(topic="emails", max_retries=2)
+    queue.push({"job": "x"})
+
+    # attempts == 0 — pushed, never failed: excluded by the lower bound.
+    assert queue.failed() == [], "attempts=0 is not 'failed at least once'"
+
+    # attempts == 1 — interior of 0 < attempts < 2: listed.
+    queue.pop().fail("boom")
+    assert len(queue.failed()) == 1, "0 < 1 < 2 -> still being retried"
+
+    # attempts == 2 == max_retries — dead: excluded by the upper bound.
+    queue.pop().fail("boom")
+    assert queue.failed() == [], "attempts == max_retries is dead, not retrying"
+    assert len(queue.dead_letters()) == 1, "it moved to the dead-letter store"
+
+
+# ---- pop()-path re-delivery is the SAME job (audit gap AUD-12-L) ---------------
+
+def test_pop_redelivers_the_same_job_after_fail(tmp_queue_path):
+    """documentation/tina4-book/book-1-python/chapters/12-queues.md
+    (S7 How Retry Works): "While `attempts` is below `max_retries`, the job is
+    automatically re-enqueued, so the next `pop()` or `consume()` picks it up
+    again."
+
+    The consume() half is pinned by test_consume_loop_auto_retries_until_dead;
+    this pins the pop() half by IDENTITY (same job id re-delivered), not just
+    by count.
+    """
+    queue = Queue(topic="emails", max_retries=3)
+    queue.push({"job": "flaky"})
+
+    first = queue.pop()
+    first_id = first.id
+    first.fail("boom")
+
+    second = queue.pop()
+    assert second is not None, "the next pop() picks the job up again"
+    assert second.id == first_id, "it is the SAME job, not a copy"
+    assert second.attempts == 1, "carrying the recorded attempt"
+    second.complete()

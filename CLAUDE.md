@@ -46,7 +46,7 @@ disagrees with it, **`readme.md` wins**. **`findings-log.md`** holds the mutable
 | Upstream filing format (plain `<ID> — title` opening line, location/Issue/Origin body, splitting findings) | `readme.md` → `## Issue Report Format` → "Upstream filing — …" |
 | Quick-reference summary of all conventions | `readme.md` → `## Convention Recap` |
 | Current chapter coverage | `findings-log.md` → `## Evaluation Progress` |
-| Per-section coverage ledgers (✓/⛔/⏸ per snippet+option, version-stamped sign-offs) | `coverage-ledger/<lang>-ch<NN>-<topic>.md` (e.g. `coverage-ledger/py-ch12-queues.md`) |
+| Per-section coverage ledgers (✓/⚠/⛔/⏸/`n/a` per snippet+option, version-stamped sign-offs) | `coverage-ledger/<lang>-ch<NN>-<topic>.md` — **currently only `py-ch07` + `py-ch12` exist; until every implemented chapter has one, the Evaluation Progress table in `findings-log.md` is the authoritative coverage index.** Template: `coverage-ledger/_TEMPLATE.md` |
 | All confirmed findings (Known Issues Log) | `findings-log.md` → `## Known Issues Log` |
 | Assigned bug investigations (`BH-<n>` rows) | `findings-log.md` → `## Known Issues Log` (the rows) + `## Bug Hunt` (what they are) |
 | Proposed fixes for findings (long-form) | `findings-log.md` → `## Suggested Fixes` |
@@ -92,12 +92,12 @@ in `readme.md` is the source of truth — these are pointers, not a replacement.
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `pypy/` | Python (primary workspace) | tina4-python **3.13.47** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
-| `phph/` | PHP | *not yet bootstrapped* | (will be `index.php`) | composer | empty dir; run `tina4 init php .` before working |
+| `pypy/` | Python (primary workspace) | tina4-python **3.13.49** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `phph/` | PHP | *not bootstrapped* | (will be `index.php`) | composer | only `vendor/` present — no `index.php`/`src/` yet; run `tina4 init php .` before working |
 | `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
 
 The global `tina4` CLI (Rust binary at `~/AppData/Local/tina4/tina4.exe` on Windows)
-is currently **3.8.51**. The CLI and the per-language frameworks are versioned
+is currently **3.8.53**. The CLI and the per-language frameworks are versioned
 independently — update with `tina4 update` (CLI) and `uv pip install --upgrade
 tina4-python` / `composer update` / `bundle update` (frameworks).
 
@@ -207,6 +207,7 @@ Not part of the harness's workflow, but present in the repo:
 - **`scratch/skills/`** — fuller copies of the same guides with `references/` subdirs. Deep reference.
 - **`pypy/.tina4/agents/`** — Tina4's own agent configs. Part of the framework under test, not this harness.
 - **`php-temp-test/`** — a vendored tina4php scratch/integration env. Ignore unless explicitly using it.
+- **`notes/`** — relocated long-form design notes for closed/low-priority findings (e.g. `FIX-04-test-output-formatter.md`), kept out of the hot `findings-log.md`.
 
 ## Git
 
