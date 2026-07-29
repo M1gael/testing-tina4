@@ -1,7 +1,7 @@
 # Coverage Ledger — <Lang> Ch<NN> <Topic>
 
 <!-- Copy this file to `<lang>-ch<NN>-<topic>.md` (e.g. `py-ch12-queues.md`) and fill in.
-     Every implemented chapter MUST have a ledger (readme.md → Workflow step 7). The
+     Every implemented chapter MUST have a ledger (documentation-testing/readme.md → Workflow step 7). The
      findings-log Evaluation Progress table links here and carries ONLY a one-line status. -->
 
 Per-snippet / per-option coverage for the chapter. The canonical home for coverage detail —

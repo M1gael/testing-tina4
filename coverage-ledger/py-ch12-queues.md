@@ -3,12 +3,12 @@
 Per-section proof-of-coverage for the chapter evaluation. A section is never "complete" —
 only **ledger-complete**: every snippet AND every named option marked `✓ tested` /
 `⛔ blocked` / `⏸ deferred` / `n/a`, and **every sign-off stamped with the date + the tina4
-versions it was verified on**. See [`readme.md`](../readme.md) → Workflow step 7. The
+versions it was verified on**. See [`documentation-testing/readme.md`](../documentation-testing/readme.md) → Workflow step 7. The
 Evaluation Progress table in [`findings-log.md`](../findings-log.md) links here.
 
 - **Doc:** `documentation/tina4-book/book-1-python/chapters/12-queues.md` (13 sections; rewritten 2026-06-24)
-- **Framework under test (READ-ONLY):** `pypy/.venv/Lib/site-packages/tina4_python/`
-- **Tests:** `pypy/tests/test_ch12_queue_*.py` · **Live mock:** `GET /chapter/12`
+- **Framework under test (READ-ONLY):** `documentation-testing/pypy/.venv/Lib/site-packages/tina4_python/`
+- **Tests:** `documentation-testing/pypy/tests/test_ch12_queue_*.py` · **Live mock:** `GET /chapter/12`
 
 Legend: `✓` tested · `⚠` diverges (logged finding) · `⛔` blocked (can't stand up here) · `⏸` deferred (USER) · `n/a` (no testable claim)
 

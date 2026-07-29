@@ -7,7 +7,7 @@ Now I'll write the ledger.
 Per-section proof-of-coverage for the chapter evaluation. A section is never "complete" —
 only **ledger-complete**: every snippet AND every named option marked `✓ tested` /
 `⚠ diverges` / `⛔ blocked` / `⏸ deferred` / `n/a`, and **every sign-off stamped with the
-date + the tina4 versions it was verified on**. See [`readme.md`](../readme.md) → Workflow
+date + the tina4 versions it was verified on**. See [`documentation-testing/readme.md`](../documentation-testing/readme.md) → Workflow
 step 7.
 
 **This file is the canonical coverage home for Chapter 18.** The `18 — Testing` row in the
@@ -16,8 +16,8 @@ a link here; the long run-on narrative that used to live in that cell has been m
 the section sign-offs below.
 
 - **Doc:** `documentation/tina4-book/book-1-python/chapters/18-testing.md` (13 sections)
-- **Framework under test (READ-ONLY):** `pypy/.venv/Lib/site-packages/tina4_python/`
-- **Tests:** `pypy/tests/test_ch18_*.py` + `pypy/tests/test_user_model.py`
+- **Framework under test (READ-ONLY):** `documentation-testing/pypy/.venv/Lib/site-packages/tina4_python/`
+- **Tests:** `documentation-testing/pypy/tests/test_ch18_*.py` + `documentation-testing/pypy/tests/test_user_model.py`
 - **Supporting routes (not in the chapter — added so verbatim tests can hit real handlers):** `src/routes/ch18_products.py`, `src/routes/ch18_auth.py`
 - **Live mock:** none for Ch18 — the chapter explorer registers only Ch7 + Ch12 (`src/routes/chapter_explorer.py`); a `GET /chapter/18` page does **not** exist. The `test_ch18_*` suite under `tina4 test` IS the coverage surface.
 

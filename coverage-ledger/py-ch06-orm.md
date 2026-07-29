@@ -6,12 +6,12 @@ coverage home** for Chapter 6 — the Evaluation Progress row for "06 — ORM" i
 never "complete", only **ledger-complete**: every snippet AND every named option marked
 `✓ tested` / `⚠ diverges` / `⛔ blocked` / `⏸ deferred` / `n/a`, and **every sign-off
 stamped with the date + the tina4 versions it was verified on**. See
-[`readme.md`](../readme.md) → Workflow step 7.
+[`documentation-testing/readme.md`](../documentation-testing/readme.md) → Workflow step 7.
 
 - **Doc:** `documentation/tina4-book/book-1-python/chapters/06-orm.md` (glance + S2–S15 + QueryBuilder Integration)
-- **Framework under test (READ-ONLY):** `pypy/.venv/Lib/site-packages/tina4_python/`
-- **DB binding:** live PostgreSQL (`postgres:18` Docker, `tina4testingdb`) via `pypy/.env` + `pypy/conftest.py`. Most snippets are ORM-backed and raise `RuntimeError: No database bound` without it.
-- **Tests:** `pypy/tests/test_ch06_*.py` (16 files) · **Live mock:** `GET /chapter/6` (served routes: `ch06_notes.py`, `ch06_blog.py`, `ch06_scopes.py`, `ch06_autocrud.py`, `blog.py`)
+- **Framework under test (READ-ONLY):** `documentation-testing/pypy/.venv/Lib/site-packages/tina4_python/`
+- **DB binding:** live PostgreSQL (`postgres:18` Docker, `tina4testingdb`) via `documentation-testing/pypy/.env` + `documentation-testing/pypy/conftest.py`. Most snippets are ORM-backed and raise `RuntimeError: No database bound` without it.
+- **Tests:** `documentation-testing/pypy/tests/test_ch06_*.py` (16 files) · **Live mock:** `GET /chapter/6` (served routes: `ch06_notes.py`, `ch06_blog.py`, `ch06_scopes.py`, `ch06_autocrud.py`, `blog.py`)
 
 Legend: `✓` tested · `⚠` diverges (logged finding — its sentinel test IS the coverage) · `⛔` blocked (can't stand up here) · `⏸` deferred (USER) · `n/a` (no testable claim)
 

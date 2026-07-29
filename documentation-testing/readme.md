@@ -36,8 +36,8 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
     (e.g., "Work on Python Chapter 3").
 2.  **Strict Sequencing** — implement chapters only in the order requested. No skipping ahead.
 3.  **Implementation Fidelity — documentation ONLY, nothing else** — implement the
-    documented example *exactly as written* in the correct language workspace (`pypy/`,
-    `phph/`, `ruru/`). Use **only what the chapter literally shows** — not framework source,
+    documented example *exactly as written* in the correct language workspace (`documentation-testing/pypy/`,
+    `documentation-testing/phph/`, `ruru/`). Use **only what the chapter literally shows** — not framework source,
     not the framework's dev guide / CLAUDE.md, not other chapters, not prior knowledge,
     not "the API the framework actually exposes." If the chapter shows a handler signature,
     an import, a method call, a config value — that is what gets written, character for
@@ -103,8 +103,8 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
 
 | Dir | Language | Bootstrap |
 |-----|----------|-----------|
-| `pypy/` | Python | `tina4 init python .` |
-| `phph/` | PHP | `tina4 init php .` |
+| `documentation-testing/pypy/` | Python | `tina4 init python .` |
+| `documentation-testing/phph/` | PHP | `tina4 init php .` |
 | `ruru/` | Ruby | `tina4 init ruby .` |
 
 Every workspace follows the same layout: `src/{routes,orm,templates}/`, `migrations/`,
@@ -173,9 +173,9 @@ structural findings that can't be expressed as an assertion are carved out ("whe
   distinguishable at a glance while living together in `tests/`. The header also records finding
   history + fix version.
 - One assertion = one observation; reference the probe filename from the KI Log row. Patterns:
-  trace-list inspection via direct dispatcher invocation (`pypy/tests/test_ch10_middleware_probe.py`
+  trace-list inspection via direct dispatcher invocation (`documentation-testing/pypy/tests/test_ch10_middleware_probe.py`
   → `PY-10-01/02/03`); positive contract assertions on framework objects
-  (`pypy/tests/test_ch18_response_object_probe.py` → `PY-18-10`).
+  (`documentation-testing/pypy/tests/test_ch18_response_object_probe.py` → `PY-18-10`).
 
 ## Patching Convention
 

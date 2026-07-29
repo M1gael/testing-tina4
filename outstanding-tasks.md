@@ -52,5 +52,5 @@ Recommended closure order:
 ---
 
 ## Notes
-- Standing constraints (read-only framework, doc-only, no test rigging, find-don't-fix, certainty-over-cause, no "we", file at EOD, coverage ledger per chapter) live in `readme.md` + auto-memory — not repeated here.
+- Standing constraints (read-only framework, doc-only, no test rigging, find-don't-fix, certainty-over-cause, no "we", file at EOD, coverage ledger per chapter) live in `documentation-testing/readme.md` + auto-memory — not repeated here.
 - Completed work is recorded in `findings-log.md` (findings, chapter progress, Maintenance & Audit Log) + the per-chapter `coverage-ledger/` files. DONE rows are not kept here.
