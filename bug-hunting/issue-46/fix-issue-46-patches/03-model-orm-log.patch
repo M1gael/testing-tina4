@@ -1,0 +1,80 @@
+--- a/tina4_python/orm/model.py
++++ b/tina4_python/orm/model.py
+@@ -333,8 +333,22 @@
+                 if last_id and pk in self._fields:
+                     setattr(self, pk, last_id)
+             db.commit()
+-        except Exception:
++        except Exception as e:
+             db.rollback()
++            # Issue #46: this silently returned False with no log — the
++            # caller had no idea what actually failed (typical case:
++            # UNIQUE constraint, FK violation, NOT NULL miss). Now we
++            # Log.error the original cause before returning False; the
++            # contract (rollback + return False, never raise) is
++            # unchanged so existing callers still work.
++            try:
++                from tina4_python.debug import Log
++                Log.error("ORM.save() failed",
++                          error=str(e),
++                          table=self._get_table(),
++                          model=type(self).__name__)
++            except Exception:
++                pass  # logging must never break the data path
+             return False
+ 
+         self.clear_cache()
+@@ -361,8 +375,16 @@
+             else:
+                 db.delete(table, f"{pk_db_col} = ?", [pk_value])
+             db.commit()
+-        except Exception:
++        except Exception as e:
+             db.rollback()
++            try:
++                from tina4_python.debug import Log
++                Log.error("ORM.delete() failed",
++                          error=str(e),
++                          table=self._get_table(),
++                          model=type(self).__name__)
++            except Exception:
++                pass
+             raise
+         return True
+ 
+@@ -381,8 +403,16 @@
+         try:
+             db.delete(table, f"{pk_db_col} = ?", [pk_value])
+             db.commit()
+-        except Exception:
++        except Exception as e:
+             db.rollback()
++            try:
++                from tina4_python.debug import Log
++                Log.error("ORM.force_delete() failed",
++                          error=str(e),
++                          table=self._get_table(),
++                          model=type(self).__name__)
++            except Exception:
++                pass
+             raise
+         return True
+ 
+@@ -402,8 +432,16 @@
+             db.update(table, {"is_deleted": 0}, f"{pk_db_col} = ?", [pk_value])
+             self.is_deleted = 0
+             db.commit()
+-        except Exception:
++        except Exception as e:
+             db.rollback()
++            try:
++                from tina4_python.debug import Log
++                Log.error("ORM.restore() failed",
++                          error=str(e),
++                          table=self._get_table(),
++                          model=type(self).__name__)
++            except Exception:
++                pass
+             raise
+         return True
+ 

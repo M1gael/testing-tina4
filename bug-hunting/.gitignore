@@ -1,0 +1,26 @@
+# Applies to every bug-hunt project dir (codx/, devagent/, serve-port/, serve-proj/, …).
+#
+# The `tina4 init` scaffold writes its own per-project .gitignore, but that one
+# lists `.env` only — while `tina4 init` also writes `.env.local` containing
+# TINA4_SECRET (the JWT signing key). This file closes that gap repo-wide so a
+# scaffolded project can never stage its signing secret.
+
+# Secrets — .env.local holds TINA4_SECRET
+.env
+.env.*
+!.env.example
+secrets/
+
+# Virtualenvs / build output
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Runtime state — a stale DB silently breaks migrations on the next run
+data/
+logs/
+
+# Tina4 agent scratch state (chat thoughts, escalations).
+# Needs the ** prefix: a mid-pattern slash would anchor this to bug-hunting/ only.
+**/.tina4/chat/
