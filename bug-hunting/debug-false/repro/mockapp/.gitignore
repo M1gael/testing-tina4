@@ -1,0 +1,16 @@
+.venv
+uv.lock
+__pycache__/
+
+# Written by the probe scripts, or scaffolded by `tina4 serve` on first boot.
+# .env.local carries a dev-minted TINA4_SECRET — never commit it.
+.env
+.env.local
+data/
+logs/
+plan/
+secrets/
+tests/
+migrations/
+src/public/
+src/templates/

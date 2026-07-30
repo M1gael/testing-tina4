@@ -34,3 +34,4 @@ for the live table. Directories in this folder:
 - `issue-48/` — [BH-48](https://github.com/tina4stack/tina4-python/issues/48), table relation investigation (see `issue-48/patches.md`)
 - `issue-49/` — [BH-49](https://github.com/tina4stack/tina4-python/issues/49), follow-up gaps (see `issue-49/patches.md`)
 - `serve-port/` — `tina4 serve 7150` positional argument vs `-p` flag investigation (see `serve-port/patches.md`)
+- `debug-false/` — `TINA4_DEBUG=false` browser-open onto a 404, dev-toolbar off-switch, footer route count, and Ask-Tina4 GitHub-vs-docs link (see `debug-false/README.md`; runnable repro app + probes in `debug-false/repro/`)
