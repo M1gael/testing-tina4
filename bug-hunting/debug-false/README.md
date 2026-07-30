@@ -45,6 +45,15 @@ The mock app carries 19 `auto_crud = True` models, so its dev footer reads exact
 **99 routes** — the reporter's number, reached without padding. See
 [`repro/README.md`](repro/README.md).
 
+To check the claims by eye instead, serve the app yourself and follow
+[`MANUAL.md`](MANUAL.md):
+
+```bash
+cd repro
+./serve-manual.sh true      # debug ON  — claims B and C
+./serve-manual.sh false     # claim A
+```
+
 ### Reproduction method (A–C)
 
 The browser-open check is black-box: `webbrowser.open()` honours `$BROWSER`, so a shim
@@ -133,6 +142,13 @@ and to pick the production server) — it simply isn't consulted.
 The reporter's phrasing "still tries to generate the dashboard, just says it cant find it"
 is precise: the framework decides to open a browser window without ever checking whether
 there is a dev landing page to show.
+
+**Scope check — debug mode does not break user routes.** Worth ruling out, since a 404 on
+`/` could also have meant a real route failing to resolve. Adding a user-defined
+`@get("/")` to the mock app gives `GET /` → **200** with the user's own body under *both*
+`TINA4_DEBUG=false` and `true`, and it takes precedence over the framework landing page
+when debug is on. So the 404 only ever appears when the project genuinely has no `/`
+route, and the unwanted window is the entire defect.
 
 ### Recommended fix
 

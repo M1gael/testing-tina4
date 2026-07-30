@@ -1,0 +1,210 @@
+# Verifying the four claims by hand
+
+For checking the report yourself, without probe scripts deciding anything for you.
+`repro/run-all.sh` answers the same questions automatically; this walks the same
+ground with your own eyes. Verdicts and source references are in
+[`README.md`](README.md).
+
+Two commands do everything:
+
+```bash
+cd repro
+./serve-manual.sh true      # debug ON  — claims B and C
+./serve-manual.sh false     # claim A
+```
+
+Port 7400 by default; pass a second argument to change it. Ctrl-C stops the server.
+The script prints its own checklist on boot, so you don't have to keep this file open.
+
+**Your real browser will open by itself** — that is claim A, so it is left switched on.
+To keep it from taking over your screen, add a third argument: `./serve-manual.sh false
+7400 shim` logs the attempted URL to `repro/.runs/browser-manual-7400.log` instead of
+opening a window.
+
+State checked on 2026-07-30 with tina4 CLI 3.8.64 and tina4-python 3.13.94: all four
+claims still reproduce.
+
+---
+
+## A — a browser opens onto a 404 with `TINA4_DEBUG=false`
+
+```bash
+cd repro && ./serve-manual.sh false
+```
+
+Watch your screen while it boots. A browser window opens on its own at
+`http://localhost:7400`, and that page is a 404 — with debug off there is no landing
+page to serve. Nothing asked for the window.
+
+| Check | Expect |
+|---|---|
+| the window that opened by itself | `404 Error` |
+| `http://localhost:7400/` | 404 |
+| `http://localhost:7400/__dev` | 404 |
+| `http://localhost:7400/hello/one` | 200, and **no** footer at the bottom |
+
+The 404 is correct on its own — debug is off, so the landing page and `/__dev` are
+*supposed* to be gone. The defect is being sent there. Two behaviours that should agree
+don't: the landing page checks debug mode, the browser-open doesn't check anything.
+
+Two more things worth trying, both in the same shape:
+
+```bash
+cd repro/mockapp
+tina4 serve -p 7400 --production      # still opens a window onto a 404
+tina4 serve -p 7400 --no-browser      # quiet — this is the only real off-switch
+```
+
+`TINA4_NO_BROWSER=true` works as well. Neither is mentioned when the window appears.
+
+**The "what if he had a `/` route?" question — tested, and the answer is reassuring.**
+This app has no `/` route, so with debug off `/` is *genuinely* nothing. The worry was
+that debug mode might be 404ing a real route, which would be a much bigger bug. It
+isn't. Adding this to `mockapp/src/routes/rootprobe.py`:
+
+```python
+from tina4_python.core.router import get
+
+
+@get("/")
+async def root(request, response):
+    return response.html("<html><body><h1>my own root route</h1></body></html>")
+```
+
+gives `GET /` → **200** with the user's own body under *both* `TINA4_DEBUG=false` and
+`true`. A user route at `/` also takes precedence over the framework landing page when
+debug is on. So debug mode does not break user routes, and the reporter almost certainly
+had no `/` route of their own — leaving the unwanted window as the entire finding.
+
+Re-run it yourself if you want; delete the file afterwards, since that route adds one
+router entry and claim C's count becomes 100.
+
+---
+
+## B — the dev footer: no off-switch, and its ✕ doesn't stick
+
+```bash
+cd repro && ./serve-manual.sh true
+```
+
+Open `http://localhost:7400/hello/one`. The page itself restates these steps.
+
+**B1 — the ✕ forgets.** Click the `✕` at the right of the dark bar. Footer goes. Now
+click **page two**. Footer is back. Every navigation, forever.
+
+Then the comparison that makes it a defect rather than a preference — click the footer's
+**Dashboard ↗**, then reload the page. The overlay is **still open**. It saved its state
+to `localStorage` under `tina4_dev_overlay_open`. Check for yourself in devtools:
+
+```js
+localStorage.getItem('tina4_dev_overlay_open')   // '1'
+localStorage.getItem('tina4_dev_toolbar_hidden') // null — nothing was ever saved
+```
+
+Two controls a few pixels apart in the same bar, one remembers and one doesn't. The ✕ is
+`onclick="this.parentElement.style.display='none'"` and nothing more.
+
+**B2 — no flag exists.** Nothing to run here; the point is the absence. Try any name you'd
+guess — `TINA4_NO_TOOLBAR`, `TINA4_HIDE_TOOLBAR`, `TINA4_DEV_TOOLBAR=false` — and the
+footer stays. Confirm it from the other side:
+
+```bash
+grep -rn "NO_TOOLBAR\|HIDE_TOOLBAR\|DEV_TOOLBAR" mockapp/.venv/lib/python*/site-packages/tina4_python/
+```
+
+No hits. `TINA4_NO_RELOAD` sounds close but only drops the live-reload script *inside* the
+toolbar; the bar itself stays. So the only way to remove the footer is `TINA4_DEBUG=false`,
+which also takes the error overlay, live reload, `/__dev` and Swagger — which is what the
+reporter was actually asking about.
+
+---
+
+## C — "99 routes"
+
+Same server as B. `http://localhost:7400/hello/one` measures this live and prints it.
+
+**The number is honest.** The footer reads **99**, and the page shows where every one
+comes from: 95 generated by the 19 `auto_crud = True` models in
+`mockapp/src/orm/models.py`, 1 hand-written, 3 registered by the framework. To prove
+nothing is padded, comment out a model class, restart, and the count drops to 94 — five
+REST routes per model, exactly as Chapter 6 documents.
+
+So a real project with ~20 CRUD models genuinely has ~100 routes. The reporter's 99 is
+almost certainly their own route table.
+
+**Two real defects sit next to it, though.**
+
+*The two counts disagree.* Compare the footer with the dashboard:
+
+| Where | Shows |
+|---|---|
+| footer, bottom of the page | **99** |
+| `http://localhost:7400/__dev/api/routes` | **98** |
+
+The page fetches both and diffs them for you. The missing entry is `GET /health`. The
+framework registers two health routes — canonical `/__health` plus a `/health`
+back-compat alias — and the dashboard filters on the prefix tuple `("/__dev", "/health",
+"/swagger")`. But `"/__health".startswith("/health")` is `False`. So the alias is hidden
+and the canonical one is listed as if it were one of your own routes. Off by one, every
+run. Confirm which one is dropped:
+
+```bash
+curl -s localhost:7400/__dev/api/routes | grep -o '/__\?health'
+```
+
+The same prefix would silently swallow an app route named `/healthz` — worth a try if you
+want to see it bite something that matters.
+
+*The number explains nothing.* The footer renders a bare `99 routes` — no tooltip, no
+link, no breakdown. A project with 20 AutoCRUD models has no way to learn that 100 of its
+routes were generated rather than written. Correct, and still reads as suspicious. That's
+exactly the reaction in the report.
+
+**Already ruled out, so don't spend time here:** reload inflation. Hitting
+`POST /__dev/api/reload` repeatedly does not grow the count — five consecutive reloads
+read 99/98 every time, because route registration replaces on a matching
+`(method, path)`. And the 70-odd `/__dev/*` paths are not in the count either; they're
+dispatched from a separate table. A clean empty project's floor is 3 routes, not 90.
+
+---
+
+## D — Ask Tina4 links to GitHub instead of the docs site
+
+No mock app for this one; it's the live site.
+
+1. Open <https://tina4.com>, use the **Ask Tina4** box.
+2. Ask something a chapter answers — `how do I define a route?`, `how does the ORM
+   work?`, `what does auto_crud do?`
+3. Look at the "further reading" link in the answer.
+
+It points at `github.com/tina4stack/tina4-book/blob/main/book-1-python/chapters/...md`
+— raw markdown source — instead of the rendered page at `tina4.com/python/<chapter>/`.
+The RAG index stores a GitHub URL as each chunk's `url`, and the frontend passes it
+through unchanged.
+
+**The second, worse half.** Sometimes the link is not merely pointing at the wrong place —
+it's broken and goes nowhere. When the model writes the CommonMark angle-bracket form
+`[source](<https://…>)`, the answer is HTML-escaped before the link is extracted, so the
+destination becomes `&lt;https://…&gt;` and the browser reads it as a *relative* path.
+Clicking it 404s on tina4.com itself.
+
+It depends on how the model happens to phrase that answer, so it may take a few tries.
+Tell-tale: hover the link and the status bar shows a `tina4.com/...` path rather than a
+`github.com` address. `repro/probe-d-asktina4.sh` replays a captured response that has
+this shape, if you'd rather see it on demand than fish for it.
+
+---
+
+## If something doesn't reproduce
+
+Worth knowing rather than assuming a mistake — an upstream fix may have landed. Check
+what you're running:
+
+```bash
+tina4 --version
+cd repro/mockapp && uv run python -c "import tina4_python; print(tina4_python.__version__)"
+```
+
+If either is newer than the versions at the top of this file, that's a result in itself.
+`repro/run-all.sh` is written to print `PASS` when a finding has been fixed rather than
+always going red, so it will tell you which one.

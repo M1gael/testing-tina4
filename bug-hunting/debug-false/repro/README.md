@@ -34,6 +34,24 @@ their own ports on the way out.
 claim B is something you have to see: dismiss the footer, click a link, watch it
 return. Press Enter to shut it down.
 
+## Or check it by hand
+
+To look rather than be told, skip the probes and serve the app yourself:
+
+```bash
+./serve-manual.sh true      # debug ON  — claims B and C, port 7400
+./serve-manual.sh false     # claim A
+```
+
+It writes the right `.env`, prints a checklist for whichever mode you picked, then
+runs `tina4 serve` in the foreground — Ctrl-C stops it. Second argument sets the
+port. Your **real** browser is left enabled, since claim A is a window appearing on
+its own; pass `shim` third (`./serve-manual.sh false 7400 shim`) to log the attempted
+URL to `.runs/` instead.
+
+Step-by-step for all four claims, including what to type and what to expect, is in
+[`../MANUAL.md`](../MANUAL.md).
+
 ## What you should see
 
 ```
@@ -120,6 +138,7 @@ repro/
   probe-a-browser.sh      claim A
   probe-bc-footer.sh      claims B + C
   probe-d-asktina4.sh     claim D
+  serve-manual.sh         serve it yourself, no assertions — see ../MANUAL.md
   lib/
     common.sh             server start/stop, count readers, output helpers
     fake-browser.sh       $BROWSER shim — records what got opened
