@@ -15,7 +15,7 @@ Verdicts:
 |---|---|---|---|
 | **A** | `TINA4_DEBUG=false` still opens a browser onto a page that 404s | **Confirmed — reproduced** | Gate `_open_browser()` on `is_debug` too |
 | **B** | Dev footer returns on every click; no way to turn it off | **Confirmed — no off-switch exists** | **Both:** add `TINA4_NO_TOOLBAR` env flag, and make the footer's ✕ persist |
-| **C** | Footer "99 routes" is wrong | **Partly — count is honest, but two real defects found nearby** | Match health paths exactly instead of by prefix; one shared counter for footer + dashboard; label the number |
+| **C** | Footer "99 routes" is wrong | **Two defects confirmed; the 99 itself is now OPEN** — reporter has no AutoCRUD, so the count has no known source | Match health paths exactly instead of by prefix; one shared source for all three route listings; make the count clickable into a route browser grouped by origin |
 | **D** | Ask Tina4 "further reading" links to GitHub, not the site | **Confirmed — reproduced, plus a worse second defect** | Store the site URL at RAG ingest; harden `md()` against `[text](<url>)` |
 
 ### Versions under test
@@ -262,12 +262,14 @@ PHP / Ruby / Node for parity, so both changes should land in all four.
 
 ---
 
-## C — "99 routes": count is honest, but two real defects sit next to it
+## C — "99 routes": two defects confirmed, and the 99 itself is unexplained
 
-**Partly confirmed.** The number itself is not inflated. Two adjacent defects are, though,
-and one of them means the footer number is *always* wrong by a small amount.
+**Partly confirmed, and one part reopened.** Two adjacent defects are confirmed outright,
+and one of them means the footer number is *always* wrong by a small amount. Whether the
+reporter's **99** is itself inflated is now **open** — the explanation that accounted for it
+(AutoCRUD) was ruled out by the reporter directly. See C1.
 
-### C1 — the count is not framework noise (my first hypothesis, disproved)
+### C1 — where the number comes from: hypothesis ruled out, now open
 
 A clean-room `tina4 init python` project with **zero** user route files shows:
 
@@ -295,8 +297,41 @@ module:
 
 The 10 `tina4_python.crud` routes are AutoCRUD expansions of user models — **5 REST routes
 per `auto_crud=True` model** (`GET`/`POST` on `/api/x`, `GET`/`PUT`/`DELETE` on
-`/api/x/{id}`). That is the multiplier that gets a real app to 99: ~20 CRUD models alone
-produces ~100 routes. So the reporter's "99" is almost certainly their genuine route table.
+`/api/x/{id}`).
+
+**AutoCRUD was the working hypothesis for the reporter's 99, and it is now ruled out.**
+Asked directly, the reporter said: *"No, was a standard project which took a static site of
+about 4 pages and upgraded it."* No AutoCRUD. The arithmetic that fit so neatly
+(16 hand-written + 3 framework + 16 models × 5 = 99) was coincidence.
+
+That leaves 99 unexplained, because the package has exactly three registration sites and
+nothing else reaches the router table:
+
+| Site | Registers |
+|---|---|
+| `core/router.py:668` | `@get`/`@post`/… decorators — the user's own routes |
+| `crud/__init__.py:142,158,182,216,238` | AutoCRUD, 5 per `auto_crud=True` model |
+| `core/server.py:443,445,451` | `/__health`, `/health`, `/__frond/live/{name}` |
+
+In particular there is **no template or static-file auto-registration** — static assets are
+served without router entries (verified: `/js/…` and `/images/…` return 200 while absent
+from the count). So with AutoCRUD excluded, 99 implies ~96 decorator registrations, which a
+four-page static-site upgrade should not produce.
+
+Two live possibilities, undecided:
+
+1. The reporter has far more `@get`/`@post` registrations than they realise — the table
+   counts `(method, path)` pairs, so `@get` + `@post` on one path is two entries.
+2. There is a genuine inflation path not yet found — which is what their original "surely
+   there is something amiss" instinct claimed.
+
+**Needed to settle it:** the reporter's actual route list, from `/__dev/api/routes` or the
+dashboard's `routes` dev-tool (`dev_admin/__init__.py:1709`, prints the raw table). 96 real
+routes means (1); repeats or unexpected paths mean (2) and C1 becomes a confirmed finding
+rather than a disproved one.
+
+Until then C1's verdict is **open**, not "count is honest". C2 and C3 are unaffected — both
+were verified directly and stand on their own.
 
 ### C2 — footer count and dashboard count permanently disagree
 
@@ -358,9 +393,32 @@ still reads as suspicious.
    class would bite a `/healthz` app route, which the filter silently hides today.
 2. Make the footer and the dashboard use one shared counting function so they cannot
    disagree.
-3. Label the footer count: `"34 app / 46 total"`, or make it a link to `/__dev` route
-   inspector. Attributing AutoCRUD-generated routes separately would answer "not sure what
-   that is" directly.
+3. **Make the count clickable — open a route browser from the footer.** (Suggested during
+   review, and the strongest of the three: it answers "not sure what that is" by letting the
+   user look, instead of asking the framework to guess what summary they wanted.) Clicking
+   `99 routes` opens the route list, grouped by origin:
+
+   ```
+   your routes        16     GET /  · GET /other · …
+   AutoCRUD           80     16 models × 5 · GET|POST /api/users · …
+   framework           3     GET /__health · GET /health · GET /__frond/live/{name}
+   ```
+
+   The plumbing is already there — `_api_routes` (`dev_admin/__init__.py:586`) serves the
+   list as JSON and the toolbar already links out to `/__dev`, so this is UI wiring rather
+   than new machinery. Origin is cheap to derive: the handler's `__module__` is
+   `tina4_python.crud` for AutoCRUD, `tina4_python.*` for framework, anything else is the
+   user's.
+
+   A label alone (`"16 app / 99 total"`) is the cheap fallback if the click-through is too
+   much, but it still can't answer *which* routes.
+
+4. **Collapse the three route-listing code paths into one.** There are currently three, and
+   they disagree: the footer's `len(Router.get_routes())` (raw), `_api_routes` (filtered),
+   and a `routes` dev-tool (`dev_admin/__init__.py:1709`) that subprocesses out to print
+   `Router.get_routes()` raw. Two of the three bypass the filter, so the dashboard is the
+   odd one out. A route browser built on one shared source makes C2 unrepresentable rather
+   than merely fixed.
 
 ---
 
@@ -477,12 +535,17 @@ Split across repos when filing:
 | **B1** ✕ dismissal doesn't persist while the overlay's does | `tina4-python` (`dev_admin/__init__.py:2139`) | DX inconsistency | Persist to `localStorage['tina4_dev_toolbar_hidden']`, same pattern as the overlay toggle |
 | **B2** no `TINA4_NO_TOOLBAR` switch | `tina4-python` (`core/server.py:1833`) + Rust CLI env table | Missing feature | New `TINA4_NO_TOOLBAR` env, checked alongside `is_dev`; register in the CLI env table |
 | **C2** footer count ≠ dashboard count; `/health` prefix filter misses `/__health` | `tina4-python` (`dev_admin/__init__.py:590`) | Real off-by-one, plus hides any `/health*` app route | Compare against resolved `_HEALTH_PATH` + the `/health` alias exactly, not by prefix; share one counter with the footer |
-| **C3** route count unlabelled / undrillable | `tina4-python` (`dev_admin/__init__.py:2136`) | UX | Render `"N app / M total"` and link it to the `/__dev` route inspector |
+| **C3** route count unlabelled / undrillable | `tina4-python` (`dev_admin/__init__.py:2136`) | UX — and it's why C1 can't be answered without asking the reporter | Make the count clickable into a route browser grouped by origin (yours / AutoCRUD / framework); `"N app / M total"` as the cheap fallback |
+| **C4** three route-listing code paths that disagree | `tina4-python` (`dev_admin/__init__.py:586`, `:1709`, `core/server.py:1840`) | Latent — C2 is one symptom of it | Collapse onto one shared source so footer, `_api_routes` and the `routes` dev-tool cannot diverge |
 | **D1** RAG index stores GitHub blob URLs | `rag.tina4.com` ingest pipeline | Wrong destination on every answer | Store `https://tina4.com/<lang>/<NN-topic>/` as the chunk `url`; keep GitHub in a separate `source_url` |
 | **D2** `md()` mangles `[text](<url>)` into a broken relative link | `tina4.com` `/assets/client.js` | Dead link | Strip wrapping `&lt;`/`&gt;` from the captured destination; reject non-`http(s):` / non-site-relative hrefs |
 
-A is the one with real functional impact. C1 should be stated plainly in the reply — the
-"99 routes" number is honest, and the AutoCRUD 5-routes-per-model multiplier is the
-explanation the reporter was missing. The reporter's hedge ("I might be uninformed") was
-unwarranted: three of four claims reproduce exactly as described, and the fourth pointed at
-a genuine defect one step away from where they were looking.
+A is the one with real functional impact. **C1 is not ready to file** — the AutoCRUD
+explanation was ruled out by the reporter (no AutoCRUD in their project), so the 99 has no
+known source and needs their route list before anything is claimed about it either way.
+Filing it as "working as intended" would be wrong.
+
+The reporter's hedge ("I might be uninformed") was unwarranted. Three of four claims
+reproduce exactly as described; the fourth turned out to sit next to two confirmed defects
+*and* a still-unexplained count — so on C they were closer to right than the first pass
+gave them credit for.
