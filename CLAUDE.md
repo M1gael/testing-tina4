@@ -9,6 +9,19 @@ cross-session **work backlog** (asked-for-but-not-yet-done) lives in **`outstand
 at the repo root — check it when resuming. Read this
 first to know *where* things are; read `documentation-testing/readme.md` for the rules and `findings-log.md` for the data.
 
+Repo shape at a glance — two evaluation axes plus their shared record:
+
+| Path | What |
+|---|---|
+| `documentation-testing/` | **Doc-fidelity testing** (the primary job) — protocol spec in `readme.md`, one workspace per language: `pypy/`, `phph/`, `ruru/` |
+| `agent-testing/` | **AI-tool evaluation** — can models build with Tina4 given the context Tina4 ships. Findings are NOT KI Log material (see that dir's readme) |
+| `bug-hunting/` | Long-form evidence per assigned `BH-<n>` investigation |
+| `coverage-ledger/` | Per-chapter ✓/⛔/⏸ ledgers, one markdown each |
+| `findings-log.md` | The record — coverage, Known Issues Log, Bug Hunt index, Suggested Fixes |
+| `outstanding-tasks.md` | Cross-session backlog |
+| `documentation/tina4-book/` | The documentation under test (untracked — symlink or `tina4 books`) |
+| `dev/`, `docker-compose.yml` | Local Postgres fixture |
+
 ## What this repo is
 
 A **QA / evaluation harness for the Tina4 web framework**, not an app and not the
@@ -24,7 +37,7 @@ red and is reported, not papered over.
 The loop is:
 
 1. Take a chapter from `documentation/tina4-book/`.
-2. Implement its code examples verbatim in the language's workspace (`documentation-testing/pypy/`, `documentation-testing/phph/`, `ruru/`).
+2. Implement its code examples verbatim in the language's workspace (`documentation-testing/pypy/`, `documentation-testing/phph/`, `documentation-testing/ruru/`).
 3. Run via the `tina4` CLI and observe.
 4. Log discrepancies in the Known Issues Log inside `findings-log.md`.
 
@@ -57,7 +70,7 @@ These are the bright lines a new collaborator most often trips over. The full Pr
 in `documentation-testing/readme.md` is the source of truth — these are pointers, not a replacement.
 
 - **Wait for direction** — don't start a chapter until the user names it.
-- **One language per conversation** — never drift between `documentation-testing/pypy/` / `documentation-testing/phph/` / `ruru/`.
+- **One language per conversation** — never drift between `documentation-testing/pypy/` / `documentation-testing/phph/` / `documentation-testing/ruru/`.
 - **Documentation ONLY, nothing else** — implement exactly what the chapter literally
   shows. Not framework source, not the dev guide / CLAUDE.md, not other chapters, not
   prior knowledge. The simulated reader knows nothing beyond the page.
@@ -74,7 +87,7 @@ in `documentation-testing/readme.md` is the source of truth — these are pointe
   is wired via `documentation-testing/pypy/.env` + `documentation-testing/pypy/conftest.py`. Symptom if not: `RuntimeError: No
   database bound`. Full setup in *Running / testing* below.
 - **Read-only framework — never edit framework source** — the installed `tina4_python`
-  package (`documentation-testing/pypy/.venv/Lib/site-packages/tina4_python/`), the `tina4` CLI, and any vendored
+  package (`documentation-testing/pypy/.venv/lib/python3.14/site-packages/tina4_python/`), the `tina4` CLI, and any vendored
   framework code are **off-limits**: no patch, shim, or monkey-patch, even for a severe bug.
   Only OUR files get written (tests, probes, fixtures, mocks, logs). `documentation-testing/readme.md` rule 10.
 - **Strict traceability — every test cites the doc** — each test/demo carries the exact
@@ -92,12 +105,17 @@ in `documentation-testing/readme.md` is the source of truth — these are pointe
 
 | Dir | Language | Tina4 version | Entry | Package manager | Notes |
 |-----|----------|---------------|-------|-----------------|-------|
-| `documentation-testing/pypy/` | Python (primary workspace) | tina4-python **3.13.49** (`uv.lock`) | `app.py` | `uv` | has `.tina4/` agents |
+| `documentation-testing/pypy/` | Python (primary workspace) | tina4-python **3.13.94** installed (`.venv`; `pyproject.toml` floor is `>=3.1.0`) | `app.py` | `uv` | has `.tina4/` agents |
 | `documentation-testing/phph/` | PHP | *not bootstrapped* | (will be `index.php`) | composer | only `vendor/` present — no `index.php`/`src/` yet; run `tina4 init php .` before working |
-| `ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty dir; run `tina4 init ruby .` before working |
+| `documentation-testing/ruru/` | Ruby | *not yet bootstrapped* | (will be `app.rb`) | bundler | empty (`.gitkeep` only); run `tina4 init ruby .` before working |
 
-The global `tina4` CLI (Rust binary at `~/AppData/Local/tina4/tina4.exe` on Windows)
-is currently **3.8.53**. The CLI and the per-language frameworks are versioned
+All three language workspaces live under `documentation-testing/`. Earlier revisions of this
+file placed Ruby at the repo root as `ruru/` — it is `documentation-testing/ruru/`.
+
+The global `tina4` CLI (Rust binary) is at **`/usr/local/bin/tina4`** on this machine and is
+currently **3.8.64**. (Earlier revisions of this file documented a Windows host —
+`~/AppData/Local/tina4/tina4.exe`; the harness now runs on Fedora Linux.) The CLI and the
+per-language frameworks are versioned
 independently — update with `tina4 update` (CLI) and `uv pip install --upgrade
 tina4-python` / `composer update` / `bundle update` (frameworks).
 
@@ -124,7 +142,7 @@ Python:  uv run tina4 serve              # dev server with watcher/reload
          uv run tina4 test                # full test suite (pytest wrapper — see PY-18-04)
          uv run python -m pytest <path>   # target a specific file (pytest binary itself is not on PATH)
 PHP:     TBD — workspace not bootstrapped (run `tina4 init php .` in documentation-testing/phph/ first).
-Ruby:    TBD — workspace not bootstrapped (run `tina4 init ruby .` in ruru/ first).
+Ruby:    TBD — workspace not bootstrapped (run `tina4 init ruby .` in documentation-testing/ruru/ first).
 ```
 
 Watch `logs/tina4.log` for registration/execution errors while testing.
@@ -142,7 +160,7 @@ Probes auto-skip (`pytest.mark.skipif`) when the instance is unreachable — a m
 
 **Runtime: Docker** (`postgres:18`). `docker-compose.yml` at the repo root defines the `tina4_pg` service; `dev/postgres-init/init.sh` runs once on first start and creates + seeds both DBs above. Note the data volume mounts at `/var/lib/postgresql` (not `/data`) — required by `postgres:18`.
 
-```powershell
+```bash
 docker compose up -d          # start (from repo root)
 docker compose down           # stop, keep data
 docker compose down -v        # stop + wipe volume → init.sh re-seeds on next up
@@ -151,11 +169,11 @@ docker compose logs postgres  # watch init / readiness
 
 **Bring-up from zero:** `docker compose up -d`, wait for `(healthy)` in `docker compose ps`. The init script seeds `gift_cards` (2 rows) + `items` (3 rows).
 
-**Verify:** `docker compose exec postgres psql -U postgres -c "\l"` lists both DBs; `cd pypy; uv run python tests/hello_pg.py` round-trips.
+**Verify:** `docker compose exec postgres psql -U postgres -c "\l"` lists both DBs; `cd documentation-testing/pypy; uv run python tests/hello_pg.py` round-trips.
 
 **`init.sh` line endings must stay LF** (it runs in a Linux container) — pinned via `.gitattributes` (`*.sh text eol=lf`). CRLF breaks the shebang.
 
-A native Windows install (`postgresql-x64-18` service) was the original runtime; it's now stopped + set to Manual start. To fall back to it, stop the container (`docker compose down`) and `Start-Service postgresql-x64-18` — same port/creds/DBs, so probes don't care which is serving.
+Docker is the only runtime on this machine. Earlier revisions documented a native **Windows** `postgresql-x64-18` service as a fallback (`Start-Service postgresql-x64-18`) — that host is gone; the harness runs on Fedora Linux. For a native fallback here, use the distro package (`postgresql-server`) on the same port/creds/DBs — probes don't care which is serving.
 
 ## Local queue brokers (Chapter 12 queue backend probes)
 
@@ -180,22 +198,38 @@ Note: kafka/rabbitmq have raw-socket fallbacks (driver optional); **only mongodb
 
 ## Documentation source — `documentation/tina4-book/`
 
-Seven "books", chapters as markdown under `book-N-*/chapters/NN-topic.md`:
+**Untracked** (`.gitignore`) — it is an upstream repo, not harness content. Populate it either way:
+
+- **Symlink a local clone** (current setup on this machine):
+  `git clone git@github.com:tina4stack/tina4-book.git` somewhere, then
+  `ln -s <path-to-clone> documentation/tina4-book`. Keeps one copy shared across projects
+  and lets you `git pull` for refreshes.
+- **Or pull with the CLI** — `tina4 books` extracts into place.
+
+If `documentation/tina4-book/` is missing or dangling, no chapter work can start — every
+Protocol step 1 reads from here.
+
+Eight "books", chapters as markdown under `book-N-*/chapters/NN-topic.md`. Counts as of
+2026-08-03 (they grow — re-count rather than trusting this table):
 
 | Book | Dir | Chapters |
 |------|-----|----------|
 | Understanding | `book-0-understanding` | 4 |
-| Python | `book-1-python` | 38 |
-| PHP | `book-2-php` | 38 |
+| Python | `book-1-python` | 39 |
+| PHP | `book-2-php` | 39 |
 | Ruby | `book-3-ruby` | 38 |
 | Node.js | `book-4-nodejs` | 38 |
-| JavaScript (frontend/Frond) | `book-5-javascript` | 16 |
+| JavaScript (frontend/Frond) | `book-5-javascript` | 19 |
 | Delphi | `book-6-delphi` | 15 |
+| Course | `book-7-course` | 2 |
 
-- `plan/` — API reference, brand guide, parity matrices. `plan/parity/` has per-subsystem
-  parity audits (auth, database, orm, queue, router, session, sse, template, websocket).
+- `plan/` — API reference (`API-REFERENCE.md`), brand guide, chapter-reshuffle notes, and the
+  per-subsystem parity audits as flat `parity-<subsystem>.md` files (auth, database, orm,
+  queue, request-response, router, session, sse, template, websocket, remaining) plus
+  `PARITY-MATRIX-*.md`. There is **no `plan/parity/` subdirectory** — earlier revisions of
+  this file claimed one.
 - The **live site at https://tina4.com is the actual source of truth**; this local copy is a
-  fallback (refreshable with `tina4 books`). See the Source of Truth section in `documentation-testing/readme.md`.
+  fallback. See the Source of Truth section in `documentation-testing/readme.md`.
 
 ## Other directories in the tree (background)
 
@@ -204,22 +238,41 @@ Not part of the harness's workflow, but present in the repo:
 - **`.agents/`** (gitignored) — local Claude skills (reporting, verification); not in fresh clones.
 - **`.prompts/`, `.skills/`** — duplicates of the same three Tina4 guides; they describe how to
   *build with* Tina4 and would tell you to "fix bugs proactively." The Protocol overrides.
-- **`scratch/skills/`** — fuller copies of the same guides with `references/` subdirs. Deep reference.
 - **`documentation-testing/pypy/.tina4/agents/`** — Tina4's own agent configs. Part of the framework under test, not this harness.
 - **`documentation-testing/php-temp-test/`** — a vendored tina4php scratch/integration env. Ignore unless explicitly using it.
-- **`notes/`** — relocated long-form design notes for closed/low-priority findings (e.g. `FIX-04-test-output-formatter.md`), kept out of the hot `findings-log.md`.
+- **`dev/postgres-init/`** — one-shot init script for the `tina4_pg` Docker fixture (see *Local Postgres fixture*).
+
+Two directories earlier revisions of this file described **do not exist**: `scratch/skills/`
+(deep-reference guide copies — use `.skills/`) and `notes/` (relocated long-form design notes;
+the referenced `FIX-04-test-output-formatter.md` is nowhere in the repo). The `notes/` directory
+at the *gitdir root* is an unrelated Obsidian vault — not this repo's.
+
+## `agent-testing/` — can AI tools build with Tina4?
+
+A second evaluation axis, distinct from doc-fidelity. `documentation-testing/` asks *do the docs
+work for a human reader*; `agent-testing/` asks *does the framework's AI-facing context work for
+a model*. Three arms — `codex-skill-delivery/` (does `tina4 ai` context reach OpenAI Codex),
+`ai-context-delivery/` (the scaffolded app carrying all seven context files),
+`small-model-tiers/` (the `.tina4/` agent on Qwen 27B–36B, three difficulty tiers). See
+[`agent-testing/readme.md`](agent-testing/readme.md).
+
+**Its findings are NOT KI Log material.** Agent runs carry no quoted-documented-claim trace, so
+rules 11–12 exclude them. They collect in `agent-testing/unverified-leads.md` and must be
+re-tested inside `documentation-testing/` against a real chapter before earning a `PY-NN-NN` ID.
 
 ## Git
 
-- Remote: `git@github.com:M1gael/testing-tina4.git`, default branch `main`.
-- **Two-branch workflow.** `main` holds the refined state: chapter implementations,
-  probes (doc-fidelity and bug-hunt alike, each tagged with a `# Probe — covers <ID>`
-  header line), fixtures, and the readme logs. `bug-hunting` is the scratch branch for
-  nasty/rough investigation work — draft comments, dead-end patches, multi-attempt
-  iteration, and the `bug-hunting/` evidence directory (which never merges to `main`).
-  When an investigation stabilises, its refined probes + readme rows are consolidated
-  onto `main`; compare the branches at the end of an investigation to see what still
-  needs cleaning up.
+- Remote: `git@github.com:M1gael/testing-tina4.git`, default branch `main`. Note this repo
+  uses the **`M1gael`** identity on plain `github.com`; the upstream `tina4stack` repos are
+  cloned over the `github-work` SSH alias (`MichaelC8E`). Don't cross the two.
+- **Single branch in practice.** `main` holds everything: chapter implementations, probes
+  (doc-fidelity and bug-hunt alike, each tagged with a `# Probe — covers <ID>` header line),
+  fixtures, the logs, and the `bug-hunting/` evidence directory (40 tracked files).
+- **The documented two-branch workflow was never implemented.** Earlier revisions described a
+  `bug-hunting` scratch branch for rough investigation work, with `bug-hunting/` never merging
+  to `main`. No such branch exists locally or on `origin`, and the directory is tracked on
+  `main`. Either create the branch and move scratch work onto it, or drop the convention —
+  until then `main` is the only branch. See `bug-hunting/README.md` → *Branch scope*.
 - Commit messages in history are conventional-ish (`test(python):`, `docs:`, `chore:`,
   `feat(php):`) and frequently reference the tina4 version and issue IDs being verified.
 - Before any user-requested `/commit`, follow the Issue Report Format in `documentation-testing/readme.md` for

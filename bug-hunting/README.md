@@ -1,7 +1,7 @@
 # `bug-hunting/` directory
 
 Deep-dive analysis files for each Bug Hunt finding. The **canonical
-log** lives in [`readme.md` → Bug Hunt section](../readme.md#bug-hunt);
+log** lives in [`findings-log.md` → Bug Hunt section](../findings-log.md#bug-hunt--bh-n-rows);
 this directory holds the long-form evidence the table rows there
 link out to.
 
@@ -13,20 +13,27 @@ Each issue directory contains `patches.md` (main investigation / report) along w
 
 ## Companion probes
 
-Probes live alongside the rest of the test suite in `pypy/tests/`,
-named `test_issue_<n>_<slug>.py`. They follow the existing
-bug-direction convention: assertions PASS in the buggy steady state
-today and FAIL when the upstream fix lands — regression sentinel.
+Probes live alongside the rest of the test suite in
+`documentation-testing/pypy/tests/`, named `test_issue_<n>_<slug>.py`.
+They follow the existing bug-direction convention: assertions PASS in
+the buggy steady state today and FAIL when the upstream fix lands —
+regression sentinel.
 
 ## Branch scope
 
-This directory exists only on the `bug-hunting` branch.
-`main` stays silver-lined for documentation-fidelity work; framework
-defects investigated on user request land here.
+**This directory is tracked on `main`** (40 files). The two-branch split
+described in `CLAUDE.md` — scratch investigation on a `bug-hunting`
+branch, refined work on `main` — was never carried out: no `bug-hunting`
+branch exists locally or on `origin`. Rough investigation work has been
+landing directly on `main` alongside the refined probes.
+
+Either create the branch and move the scratch work onto it, or drop the
+two-branch convention from `CLAUDE.md`. Until one of those happens,
+`main` is the only branch and this note is the accurate description.
 
 ## Current investigations
 
-See the **Bug Hunt** section in [`readme.md`](../readme.md#bug-hunt)
+See the **Bug Hunt** section in [`findings-log.md`](../findings-log.md#bug-hunt--bh-n-rows)
 for the live table. Directories in this folder:
 
 - `issue-46/` — [BH-46](https://github.com/tina4stack/tina4-python/issues/46), live-reproduced + **patches drafted** (see `issue-46/patches.md`)

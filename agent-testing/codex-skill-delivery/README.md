@@ -1,4 +1,4 @@
-# codx — Do Tina4 Skills Work on OpenAI Codex?
+# codex-skill-delivery — Do Tina4 Skills Work on OpenAI Codex?
 
 **Question under test:** when a developer runs `tina4 ai` in a Tina4 project and then
 works with **OpenAI Codex**, do the installed skills actually reach the model and
@@ -48,11 +48,14 @@ advertising a 7,400-line skill set.
 ## Design: two arms, two directories
 
 ```
-codx/
+agent-testing/codex-skill-delivery/
 ├── README.md      ← this file
 ├── nosk/          ← arm A: bare `tina4 init`, no `tina4 ai`
 └── sk/            ← arm B: `tina4 init` + `tina4 ai`
 ```
+
+**Neither arm exists yet** — this file is the design, not a record of a run. Create
+`nosk/` and `sk/` per the Protocol below before claiming any result.
 
 **Separate directories, not git branches.** This is a hard rule, learned the
 expensive way (see *Attempt 1*, below). `git checkout` **carries untracked files
@@ -62,8 +65,8 @@ between arms is how attempt 1 destroyed itself. Two directories cannot cross-
 contaminate.
 
 Both arms are plain directories inside the `testing-tina4` repo. Neither gets its own
-`.git` — everything is committed from the parent repo. `codx/` previously had a nested
-`.git`, which hid its history from the parent entirely.
+`.git` — everything is committed from the parent repo. This directory previously had a
+nested `.git`, which hid its history from the parent entirely.
 
 ## Protocol
 
@@ -76,7 +79,7 @@ Both arms are plain directories inside the `testing-tina4` repo. Neither gets it
    other arm. Untracked output is not evidence.
 4. **One arm per commit.** Never a commit that touches both `nosk/` and `sk/`.
 5. **Commit message names the arm and the model**, e.g.
-   `test(codx): nosk arm — codex gpt-5.4-mini medium`.
+   `test(codex-skill-delivery): nosk arm — codex gpt-5.4-mini medium`.
 6. **Capture the reasoning trace**, not just the diff. Whether Codex opened
    `SKILL.md` is the finding; the code is secondary evidence.
 7. **Record failures verbatim.** Framework errors go in the findings log below with

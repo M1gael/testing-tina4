@@ -1,0 +1,716 @@
+[
+  {
+    "id": "19f8ee597c5",
+    "timestamp": "1784808838Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8ef2d411",
+    "timestamp": "1784809706Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8efbc39f",
+    "timestamp": "1784810291Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f00573d",
+    "timestamp": "1784810591Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f04eb35",
+    "timestamp": "1784810891Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f097f0f",
+    "timestamp": "1784811191Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f0e12e1",
+    "timestamp": "1784811491Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f12a6ec",
+    "timestamp": "1784811791Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f173ba1",
+    "timestamp": "1784812091Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f1bce96",
+    "timestamp": "1784812391Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f206339",
+    "timestamp": "1784812691Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f24f65f",
+    "timestamp": "1784812991Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f298a66",
+    "timestamp": "1784813291Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f2e1daf",
+    "timestamp": "1784813591Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f32b1e1",
+    "timestamp": "1784813891Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f3745bb",
+    "timestamp": "1784814191Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f3bd9aa",
+    "timestamp": "1784814491Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f406e05",
+    "timestamp": "1784814791Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f45033d",
+    "timestamp": "1784815091Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f49953e",
+    "timestamp": "1784815391Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f4e2939",
+    "timestamp": "1784815691Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f52bd8f",
+    "timestamp": "1784815991Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f5750f3",
+    "timestamp": "1784816291Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f5be4de",
+    "timestamp": "1784816591Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f6078b2",
+    "timestamp": "1784816891Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f650ca1",
+    "timestamp": "1784817191Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f69a0ae",
+    "timestamp": "1784817491Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f6e344b",
+    "timestamp": "1784817791Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f72c842",
+    "timestamp": "1784818091Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f775c96",
+    "timestamp": "1784818391Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f7befe5",
+    "timestamp": "1784818691Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f8f8083e8",
+    "timestamp": "1784818991Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f93aedbc0",
+    "timestamp": "1784889137Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f94150144",
+    "timestamp": "1784895831Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f9419950e",
+    "timestamp": "1784896131Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f941e2932",
+    "timestamp": "1784896431Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f9422bcd7",
+    "timestamp": "1784896731Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f9427513f",
+    "timestamp": "1784897031Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f942be48e",
+    "timestamp": "1784897331Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f9430787e",
+    "timestamp": "1784897631Z",
+    "message": "Project has .env but no .env.example — other developers won't know what vars are needed",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f943629af",
+    "timestamp": "1784898004Z",
+    "message": "Hey there, I noticed we've got a .env file but no .env.example. This is a real concern because without an example, new team members might miss important environment variables, which could lead to some serious issues down the line. Let's get this sorted out quickly to avoid any risks.",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  },
+  {
+    "id": "19f943abdec",
+    "timestamp": "1784898304Z",
+    "message": "Hey there, I noticed we've got a .env file but no .env.example. This is really important because it means new team members won't know which environment variables they need to set up. With the project growing, we can't afford any confusion here—let's get this sorted out quickly to avoid any potential risks down the line.",
+    "category": "convention",
+    "actions": [
+      {
+        "label": "Tell me more",
+        "action": "act"
+      },
+      {
+        "label": "Got it",
+        "action": "dismiss"
+      }
+    ],
+    "dismissed": false
+  }
+]

@@ -37,7 +37,7 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
 2.  **Strict Sequencing** — implement chapters only in the order requested. No skipping ahead.
 3.  **Implementation Fidelity — documentation ONLY, nothing else** — implement the
     documented example *exactly as written* in the correct language workspace (`documentation-testing/pypy/`,
-    `documentation-testing/phph/`, `ruru/`). Use **only what the chapter literally shows** — not framework source,
+    `documentation-testing/phph/`, `documentation-testing/ruru/`). Use **only what the chapter literally shows** — not framework source,
     not the framework's dev guide / CLAUDE.md, not other chapters, not prior knowledge,
     not "the API the framework actually exposes." If the chapter shows a handler signature,
     an import, a method call, a config value — that is what gets written, character for
@@ -105,7 +105,7 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
 |-----|----------|-----------|
 | `documentation-testing/pypy/` | Python | `tina4 init python .` |
 | `documentation-testing/phph/` | PHP | `tina4 init php .` |
-| `ruru/` | Ruby | `tina4 init ruby .` |
+| `documentation-testing/ruru/` | Ruby | `tina4 init ruby .` |
 
 Every workspace follows the same layout: `src/{routes,orm,templates}/`, `migrations/`,
 `seeds/`, plus a `tests/` directory for chapter test files. Always bootstrap via the
