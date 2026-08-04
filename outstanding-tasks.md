@@ -43,6 +43,24 @@ Recommended closure order:
 
 ---
 
+## Codex skill delivery — from the 2026-08-04 mechanism study
+
+Study + evidence: [`codex/CODEX-CONTEXT-RESEARCH.md`](codex/CODEX-CONTEXT-RESEARCH.md).
+Findings CODX-01..05 recorded in [`agent-testing/codex-skill-delivery/README.md`](agent-testing/codex-skill-delivery/README.md).
+Fixture: `codex/` (tina4 CLI 3.8.64 · tina4-python 3.13.94 · codex-cli 0.145.0).
+
+| # | Item | Status | Notes |
+|---|---|---|---|
+| X1 | **File CODX-02..07 upstream** (`tina4stack/tina4-python`) | TODO | Two substantive: **CODX-02** skills installed only to `.claude/skills/`, so Codex (scans `.agents/skills/`) receives 0 of 158 KB; **CODX-06** `.cursorules` is a one-`r` typo, so Cursor receives nothing at all (3 sites: `ai/__init__.py:22`, `:254`, `CLAUDE.md:1451`). Then CODX-03/04 (non-TTY `EOFError`, dropped `--all`/`--force`), CODX-05 (empty `.cursor/`), CODX-07 (Aider needs `--read`). Follow `documentation-testing/readme.md` → *Upstream filing*. Per auto-memory, **no `owner/repo#NNN` refs in commit messages** from this account. |
+| X1b | Verify the 5 untested tools in the scorecard | TODO | Only **Claude Code** (works) and **Codex** (half) are measured. Copilot / Cline / Windsurf have plausible-looking paths but were never checked against a running tool; Cursor and Aider are already known-broken by inspection. Each needs the same treatment Codex got — install, then confirm from the tool's side that the file is actually in context. |
+| X2 | Re-verify **CODX-01** is fixed before filing again | TODO | Doubled-brace `response({{...}})` was already reported; confirmed still present in 3.13.94. Check whether an upstream issue exists before opening a duplicate. |
+| X3 | Run the `nosk`/`sk` arms now that delivery is measurable | TODO | Delivery itself is settled without a model (CODX-02). The arms now answer a *different*, still-open question: does a model **act** on `AGENTS.md`'s pointer block, and does registered-skill delivery change the architecture it produces? Use `codex debug prompt-input` to pin each arm's context before the run. |
+| X4 | Keep `AGENTS.md` off the harness repo root | TODO | Codex merges `<git-root>/AGENTS.md` into every session under it. `codex/` sits inside `testing-tina4`, so a root `AGENTS.md` would silently prepend to every arm and contaminate any comparison. |
+| X5 | Probe **channel 3 — MCP** end to end | TODO | tina4-python ships an HTTP/SSE MCP server (`tina4_python/mcp/`, gated on `TINA4_MCP`/`TINA4_DEBUG`, port framework+2000 = 9145). `codex mcp add <name> --url <URL>` consumes streamable HTTP. Untested: whether Codex's client negotiates tina4's protocol version and whether the loopback/token gate admits it. **Not** a substitute for the skills fix — it carries executable tools, not conventions. Security note: the built-in dev tools are DB query/execute + file read/write, so never register against a non-loopback URL without a token. |
+| X6 | Evaluate a **Codex/Claude/Cursor plugin bundle** as the real distribution channel | TODO | Codex's plugin loader accepts `.codex-plugin/`, `.claude-plugin/` *and* `.cursor-plugin/` manifests, and a plugin can carry `skills/` + `.mcp.json` + `hooks.json` together. One versioned, installable-by-name bundle would replace per-project file writes for all three tools at once — strictly better than fixing `tina4 ai`'s paths tool by tool. Scope this before investing further in the file-copy approach. |
+
+---
+
 ## Housekeeping
 
 | # | Item | Status | Notes |

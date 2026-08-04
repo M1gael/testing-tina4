@@ -10,7 +10,7 @@ when the cause traces to context Tina4 shipped, or failed to ship.
 
 | Dir | Question under test | State |
 |---|---|---|
-| `codex-skill-delivery/` | Does `tina4 ai` context actually reach **OpenAI Codex**? Codex has no `.claude/skills/` loader, so the skills land only if it follows the pointer in `AGENTS.md` and opens `SKILL.md` itself. | Design only — neither arm run |
+| `codex-skill-delivery/` | Does `tina4 ai` context actually reach **OpenAI Codex**? **Answered 2026-08-04: `AGENTS.md` yes, skills no.** Codex has a native skill loader, but it scans `.agents/skills/`, not `.claude/skills/` — so installing the skills changes Codex's prompt by zero bytes (CODX-02). | Delivery settled by measurement — [`codex/CODEX-CONTEXT-RESEARCH.md`](../codex/CODEX-CONTEXT-RESEARCH.md); `nosk`/`sk` arms still unrun |
 | `ai-context-delivery/` | Scaffolded Tina4 Python app carrying all seven `tina4 ai` context files (`AGENTS.md`, `CLAUDE.md`, `.clinerules`, `.cursorules`, `.windsurfrules`, `.github/copilot-instructions.md`, `CONVENTIONS.md`) plus `.claude/skills/**`. The fixture the delivery tests point at. | Scaffolded, `src/routes/` empty |
 | `small-model-tiers/` | Can the **built-in `.tina4/` agent driving a small local model** (Qwen 27B–36B) build working Tina4 apps across three difficulty tiers? | Level 1 run; levels 2–3 not built |
 
