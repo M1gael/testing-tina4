@@ -185,7 +185,7 @@ cover "how the CLI works":
 
 - `tina4-documentation/benchmark/benchmark.sh` — 569 lines, drives `hey` / `wrk` / `ab` across four endpoints (json, list, db, template) for tina4python, FastAPI, Flask, Django, Starlette, Bottle. Re-runnable, so numbers can be refreshed instead of quoted from March.
 - `/general/01-what-is-tina4/` — 223 lines, the zero-dependency argument already written (security, size, portability, upgrades), language-agnostic.
-- **Chapter 38: Complete Feature List** `[REPO]` — 190 lines, "97 built-in features", grouped into 13 tables (Core HTTP, Database, Auth, Templates, Caching, Background/Messaging, APIs, i18n, DX, Security, Additional, IoT, Parity). Every row names the dependency the built-in replaces: "instead of gunicorn/uvicorn config", "instead of body-parser", "instead of express-rate-limit". Already filed under the `Reference` sidebar group. This is the section's real "is it in the box?" page, and it makes the Overview cheatsheet redundant rather than merely duplicative.
+- **Chapter 38: Complete Feature List** `[REPO]` — 190 lines, "97 built-in features", grouped into 13 tables (Core HTTP, Database, Auth, Templates, Caching, Background/Messaging, APIs, i18n, DX, Security, Additional, IoT, Parity). Every row names the dependency the built-in replaces: "instead of gunicorn/uvicorn config", "instead of body-parser", "instead of express-rate-limit". Already filed under the `Reference` sidebar group. This is the section's "is it in the box?" page — a different question from the Overview's "how do I write it", which is why the Overview's snippet index is a finder rather than a second feature list.
 
 ## 7. How these pages are produced
 

@@ -1,4 +1,4 @@
-# State — last updated 2026-08-06
+# State — last updated 2026-08-07
 
 Resume file. Everything needed to pick this up cold, without the conversation that
 produced it. Read `README.md` for the convention, `python-evaluation.md` for the audit,
@@ -6,37 +6,68 @@ produced it. Read `README.md` for the convention, `python-evaluation.md` for the
 
 ## Where we are
 
-Python evaluation and refinement are drafted. Nothing has been written into
-`tina4-book` or `tina4-documentation` yet. Next step is implementation on a fork branch,
-iterating — the plan is expected to change as pages get written.
+**The docs-repo half is written and pushed.** Branch `docs/python-entry` on
+`MichaelC8E/tina4-documentation`, commit `32da3ec`: `docs/python/index.md` rewritten as the
+argument, `docs/python/quick-reference.md` created from the finder that used to occupy it,
+`tina4press.config.mjs` given the `quick-reference` stem. Builds clean (273 pages) and the
+`audit-truth.py` CLI gate passes. No PR opened. Preview with `npm run docs:dev` in the
+docs repo (`http://localhost:5180/python/`); `pnpm` is not installed on this machine
+despite the `packageManager` field, `npm` works.
+
+**Still to write:** `tina4-book/book-1-python/chapters/01-getting-started.md`, and the
+feature-matched comparison table the landing page currently leaves out.
+
+Structure is agreed, including Andre's feedback of 2026-08-07.
+
+**Working rule set by the user 2026-08-07:** decide structure now, resolve the detail while
+writing the pages. Do not stockpile measurements in these files ahead of the pages that
+use them.
 
 ## Decisions locked
 
 1. **Scope**: the `tina4.com/python/` section only. Not the site landing, not `/get-started/`. Other languages come after Python, copying whatever shape Python lands on.
-2. **Two pages**, each with one job:
-   - `/python/` → "Why Tina4 for Python": the argument and the mental model. No setup steps. `tina4-documentation/docs/python/index.md`, ~200 lines.
-   - `/python/01-getting-started/` → the mechanics: install assuming nothing, run it, how the CLI works, smallest working app, links out for depth. `tina4-book/book-1-python/chapters/01-getting-started.md`, ~480 lines.
-3. **The 621-line cheatsheet at `/python/` is retired, not relocated.** Every section duplicates a chapter; ch38 (Complete Feature List, 97 features with "instead of <dependency>" notes) already does the reference job; nothing links into it; it has drifted wrong in at least three places.
+2. **Three pages**, each with one job:
+   - `/python/` → "Why Tina4 instead of Flask": the argument and the mental model, for a reader already committed to Python. No setup steps. `tina4-documentation/docs/python/index.md`, ~200 lines.
+   - `/python/01-getting-started/` → the mechanics: install assuming nothing, run it, how the CLI works, a **First App**, links out for depth. `tina4-book/book-1-python/chapters/01-getting-started.md`, ~480 lines.
+   - `/python/quick-reference/` → per-chapter finder, ~610 lines. Kept, its own page under Overview. `tina4-documentation/docs/python/quick-reference.md`.
+3. **The quick reference is kept, moved and corrected** — Andre, 2026-08-07: "it serves as a quick finder". It stops being the landing page and becomes its own page under Overview (user, 2026-08-07). Three entries are wrong today and get fixed in the move (`ServiceRunner` vs "services are not necessary"; `.twig` vs `.html`; `init` "opens your browser" vs the `[Y/n]` prompt).
 4. **One install story**, in ch1 only. `/python/` gets a three-line "in a hurry" teaser with no output blocks.
-5. **The mock program lives in ch1** — one JSON endpoint plus one templated page (bookmarks), in-memory, no database.
+5. **The First App lives in ch1** — one JSON endpoint plus one templated page (bookmarks), in-memory, no database. Its POST needs `@noauth()`, and ch1 must say why: Tina4 closes non-GET routes by default.
 6. **The why is mirrored into ch1 as 8 lines** (three numbers + a link), because `docs/*/index.md` is site-only and never reaches the PDF. The only sanctioned duplication in the plan.
 7. **Ship on a fork branch and iterate**, rather than perfecting the plan first.
+8. **Comparisons must be feature-matched** — Andre, 2026-08-07: "compare apples with apples … if you need Swagger + auth + database = dependencies". The comparison app carries a database, a JWT-protected write and Swagger docs; whatever the comparatives add to reach parity is counted and named. Spec: `python-refinement.md` → *Comparison measurement spec*.
+9. **No throughput re-run.** `hey` absent here, and this is not the Apple Silicon box behind the March 2026 figures. Cite with the date, link `/comparisons/`.
+10. **ch1 §9–11 are cut, not relocated.** ch2 (1 011 ln) and ch3 (1 000 ln) already own every subsection, and both already carry an exercise plus solution. No PR to ch2/ch3 needed.
+
+**Withdrawn: the "fewer lines of code" pitch.** A first attempt measured a three-route app
+with no database, auth or Swagger — the one shape where Flask and FastAPI need no extra
+packages — and Tina4 saved nothing. Wrong benchmark, not a result. Nothing publishes until
+the feature-matched build runs. Andre has been told the tie bullet is withdrawn.
 
 ## Decisions open
 
-1. **LOC table** — build it (spec: `python-refinement.md` → *LOC measurement spec*) or pitch on packages / install size / features only?
-2. **Throughput numbers** — re-run `benchmark/benchmark.sh` here, cite the March 2026 Apple Silicon run, or link `/comparisons/` and keep no figure on the page?
-3. **ch1 §9–11** (~400 lines: request/response fundamentals, exercise, solutions) — relocate into chapters 2–3 in this pass, or cut from ch1 and log the move?
-4. **Two CLI defects found while measuring** — `tina4 routes` in a fresh project prints the "Tina4 must be started with the tina4 CLI" guard instead of listing routes; `tina4 test` fails with `No module named pytest` because the scaffold ships no test runner. Document the workaround in ch1, or leave both commands out until they are fixed upstream?
+1. **Where the quick reference sits in the generated sidebar.** Placement as a page is settled; its sidebar slot is not. From `tina4press@0.1.14/src/sidebar.js`: only the first group renders open (`collapsed: i !== 0`), so a new first group puts it under Overview but collapses Foundations and hides Getting Started. Alternative: add the stem to the existing `Reference` group — right meaning, bottom of the sidebar. Options and code refs: `python-refinement.md` → *Moving the quick reference*.
+2. **The landing page's sidebar label is hard-coded "Overview"** — `items: [{ text: "Overview", link: indexPage.url }]`, and `titleFromPage()` is never called for it. Retitling `index.md` changes the page, not the nav. Accept the mismatch, or land a small `tina4press` change (fourth repo — follow-up, not a blocker).
+3. **Two CLI defects found while measuring** — `tina4 routes` in a fresh project prints the "Tina4 must be started with the tina4 CLI" guard instead of listing routes; `tina4 test` fails with `No module named pytest` because the scaffold ships no test runner. Document the workaround in ch1, or leave both commands out until they are fixed upstream. Resolve while writing §4.
 
 ## Git and environment, as of 2026-08-06
 
 | Repo | Path | Branch | HEAD |
 |---|---|---|---|
-| tina4-book | `/var/home/work/gitdir/tina4-book` | `main` | `d0d3cef` |
-| tina4-documentation | `/var/home/work/gitdir/tina4-documentation` | `main` | `ca3feb6` |
+| tina4-book | `/var/home/work/gitdir/tina4-book` | `main` | `2818c2f` |
+| tina4-documentation | `/var/home/work/gitdir/tina4-documentation` | `docs/python-entry` | `32da3ec` (1 ahead of `origin/main` `dfbbde1`) |
 | tina4-dev-admin | `/var/home/work/gitdir/tina4-dev-admin` | `main` | `61a15d6` |
 | tina4-js | `/var/home/work/gitdir/tina4-js` | `master` | `1434721` |
+
+All four pulled level with their remotes on 2026-08-07. `MichaelC8E/tina4-documentation`
+is level with upstream at `dfbbde1` and carries `docs/python-entry` at `32da3ec`. No PR
+opened.
+
+**Do not trust an earlier read of these repos across a session.** On 2026-08-07 the
+documentation clone was 13 commits behind and the stale copy nearly shipped: `origin/main`
+had de-linked `/comparisons` pending re-benchmarking and added a CI gate
+(`scripts/audit-truth.py`, fails on any `tina4 <cmd>` or `TINA4_*` absent from source).
+Re-read before quoting.
 
 - All four clones have **only `origin`** (= `git@github-work:tina4stack/<repo>.git`). The `fork` remotes were removed on 2026-08-06.
 - `gh` is authenticated as **MichaelC8E**. **No push access to any `tina4stack` repo** (`push=false`), so every change ships as a PR from the fork `MichaelC8E/<repo>`.
@@ -98,9 +129,8 @@ they stand — the KI Log requires a quoted documented claim tested inside
 
 ## Next actions, in order
 
-1. Settle the four open decisions.
-2. Add the `fork` remote to `tina4-documentation`, branch `docs/python-entry` off `origin/main`, and write `docs/python/index.md` from `python-refinement.md` Part 2 — replacing the cheatsheet, not adding to it.
-3. `npm i && npm run docs:build` in `tina4-documentation` to confirm `tina4press` 0.1.9 renders the retitled `index.md` correctly in the sidebar (it currently hard-labels it "Overview").
-4. Branch `tina4-book` and rewrite `book-1-python/chapters/01-getting-started.md` against Part 2, re-running each command block so no output is invented.
-5. If the LOC row survives decision 1, build the four apps per the LOC spec and record the measurement here before quoting it.
-6. Open the two PRs, then repeat the shape for PHP, Ruby, Node.js, JavaScript, Delphi.
+1. **Look at the render and decide the sidebar trade.** Quick Reference is the first group, so it renders open and Foundations is now collapsed — Getting Started is one click further away than before. Flip by moving the stem into the `Reference` group if that reads worse.
+2. Branch `tina4-book` and rewrite `book-1-python/chapters/01-getting-started.md` against Part 2, re-running each command block so no output is invented. Note the chapter must teach `@noauth()` — its First App POST returns 401 without it.
+3. Build the four feature-matched comparison apps per the *Comparison measurement spec* — database, JWT-protected write, Swagger — and record the measurement before any figure reaches a page. Naming each added package per framework is the argument. The landing page has a placeholder callout where the table goes.
+4. Decide the `tina4press` question: the landing page's sidebar item is hard-labelled "Overview" and cannot be retitled from this repo.
+5. Open the PRs, then repeat the shape for PHP, Ruby, Node.js, JavaScript, Delphi. `BACKEND_GROUPS` already carries the `quick-reference` stem for all four backend languages.
