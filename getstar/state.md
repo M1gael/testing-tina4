@@ -6,16 +6,25 @@ produced it. Read `README.md` for the convention, `python-evaluation.md` for the
 
 ## Where we are
 
-**The docs-repo half is written and pushed.** Branch `docs/python-entry` on
-`MichaelC8E/tina4-documentation`, commit `32da3ec`: `docs/python/index.md` rewritten as the
-argument, `docs/python/quick-reference.md` created from the finder that used to occupy it,
-`tina4press.config.mjs` given the `quick-reference` stem. Builds clean (273 pages) and the
-`audit-truth.py` CLI gate passes. No PR opened. Preview with `npm run docs:dev` in the
-docs repo (`http://localhost:5180/python/`); `pnpm` is not installed on this machine
-despite the `packageManager` field, `npm` works.
+**All three pages are written.** Two branches, both local-only apart from the first docs
+commit. No PR opened.
 
-**Still to write:** `tina4-book/book-1-python/chapters/01-getting-started.md`, and the
-feature-matched comparison table the landing page currently leaves out.
+| Repo | Branch | Commits | Contents |
+|---|---|---|---|
+| `tina4-documentation` | `docs/python-entry` | `32da3ec` (pushed to fork) + one local | `docs/python/index.md` rewritten as the argument; `docs/python/quick-reference.md` created and then fact-corrected; `tina4press.config.mjs` given the `quick-reference` stem; synced copy of the new ch1 |
+| `tina4-book` | `docs/python-getting-started` | one local | `book-1-python/chapters/01-getting-started.md` rewritten, 1132 to 637 lines |
+
+Site builds clean (273 pages) and `scripts/audit-truth.py` passes. Preview with
+`npm run docs:dev` in the docs repo (`http://localhost:5180/python/`) — `pnpm` is not
+installed here despite the `packageManager` field, `npm` works.
+
+**The quick reference was fact-checked by execution, not reading, and 15 of its 36 sections
+were wrong** — nine would have failed outright for a reader. Full table:
+`python-evaluation.md` section 2a. Every correction was verified against a running server
+before it was written.
+
+**Still to do:** the feature-matched comparison table the landing page deliberately leaves
+as a placeholder callout, and the sidebar/`tina4press` questions below.
 
 Structure is agreed, including Andre's feedback of 2026-08-07.
 
@@ -112,10 +121,16 @@ tina4 init python my-store        # answer N to "Start the server now?"
 cd my-store && tina4 serve        # banner, /health, /swagger, /__dev
 ```
 
-Versions behind the measurements: `tina4` CLI **3.8.64** (3.8.67 available),
-`tina4-python` **3.13.94**, CPython **3.14.5**. The measured values are tabulated in
-`python-refinement.md` → *Fact inventory*; re-measure before publishing if the CLI or
-framework has moved.
+Versions behind everything published on 2026-08-07: `tina4` CLI **3.8.67**, `tina4-python`
+**3.13.95**, CPython **3.14.5**. Anything tagged 2026-08-06 was measured on CLI 3.8.64 /
+tina4-python 3.13.94 and has been superseded — the two figures that changed are the install
+size (4.9 MB was inflated by `__pycache__` from a prior run; a fresh 3.13.95 install is
+**3.9 MB / 105 `.py` files**) and the `/health` body, which on 3.13.95 is
+`{"status":"ok","version":"3.13.95","uptime":0.94,"framework":"tina4-python"}` — the shape
+the old docs already had, so the 3.13.94 payload I measured was the outlier. The scaffolded
+`.env` also gained a third line (`TINA4_DATABASE_URL=sqlite:///app.db`).
+
+Re-measure before publishing anything if the CLI or framework has moved again.
 
 The Postgres fixture, queue brokers and the `documentation-testing/pypy` workspace
 described in the repo's `CLAUDE.md` are **not needed** for this project.
@@ -130,7 +145,7 @@ they stand — the KI Log requires a quoted documented claim tested inside
 ## Next actions, in order
 
 1. **Look at the render and decide the sidebar trade.** Quick Reference is the first group, so it renders open and Foundations is now collapsed — Getting Started is one click further away than before. Flip by moving the stem into the `Reference` group if that reads worse.
-2. Branch `tina4-book` and rewrite `book-1-python/chapters/01-getting-started.md` against Part 2, re-running each command block so no output is invented. Note the chapter must teach `@noauth()` — its First App POST returns 401 without it.
-3. Build the four feature-matched comparison apps per the *Comparison measurement spec* — database, JWT-protected write, Swagger — and record the measurement before any figure reaches a page. Naming each added package per framework is the argument. The landing page has a placeholder callout where the table goes.
-4. Decide the `tina4press` question: the landing page's sidebar item is hard-labelled "Overview" and cannot be retitled from this repo.
-5. Open the PRs, then repeat the shape for PHP, Ruby, Node.js, JavaScript, Delphi. `BACKEND_GROUPS` already carries the `quick-reference` stem for all four backend languages.
+2. Build the four feature-matched comparison apps per the *Comparison measurement spec* — database, JWT-protected write, Swagger — and record the measurement before any figure reaches a page. Naming each added package per framework is the argument. The landing page carries a placeholder callout where the table goes.
+3. Decide the `tina4press` question: the landing page's sidebar item is hard-labelled "Overview" and cannot be retitled from this repo.
+4. **Decide what to do about the 15 wrong quick-reference sections beyond this page.** They are fixed on `/python/quick-reference`, but the same errors are likely in the sibling sections (`nodejs/index.md` 936 lines, `php` 739, `ruby` 566 — the same species of page) and possibly in the chapters that own each subsystem. Worth raising with Andre separately from this restructure: `@cached` not caching and `register()` silently not running a service are framework-behaviour questions, not documentation ones.
+5. Push `tina4-book` to the fork, open both PRs, then repeat the shape for PHP, Ruby, Node.js, JavaScript, Delphi. `BACKEND_GROUPS` already carries the `quick-reference` stem for all four backend languages.

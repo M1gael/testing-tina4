@@ -82,6 +82,40 @@ Chapter 21 uses `from tina4_python.api import Api`. Both work — the package re
 
 No "why Tina4 instead of Flask / FastAPI / Django" anywhere on the page. No number of any kind.
 
+### 2a. Snippet audit — 15 of 36 sections were factually wrong
+
+Every section was **executed** against tina4-python 3.13.95 / CLI 3.8.67 / CPython 3.14.5
+on 2026-08-07, not read `[RUN]`. Nine of these would have failed outright for a reader who
+copied them. This is the strongest single argument the page needed correcting rather than
+relocating unchanged.
+
+| Section | Published | What actually happens |
+|---|---|---|
+| Websockets | `from tina4_python import websocket` | That name is the implementation **module**, not the decorator. `'module' object is not callable`, and the whole route file fails to load. Correct: `from tina4_python.core.router import websocket` |
+| GraphQL | `GraphQL(schema, resolvers)` | `TypeError: GraphQL.__init__() takes 1 positional argument but 3 were given`. Real API: `GraphQL()`, then `schema.add_type()` / `schema.add_query()`; resolver signature `(root, args, ctx)`, not `(info, name)` |
+| Services | `runner.register("heartbeat", HeartbeatService(interval=30))` | **Silent no-op** — `run()` called 0 times, nothing logged. `register()` wants a callable; class-based services use `register_service()` |
+| Middleware | `response.content += "Before"` | `TypeError: can't concat str to bytes` → HTTP 500. Also the claimed output is fiction: only `before_`/`after_` prefixes are discovered, and a `before_` hook's writes are overwritten by the handler's response |
+| Inline Testing | `from tina4_python import tests` + bare `assert_equal` | `NameError: name 'assert_equal' is not defined`. All three names live in `tina4_python.Testing` |
+| CRUD | `users.to_crud(request)` + `{{ crud }}` | `to_crud` exists nowhere in the package. Real mechanism: `auto_crud = True` on the model (logs `AutoCrud: registered 5 routes for User (/api/user)`), or `tina4 generate crud` |
+| Static Websites | `.html` in `src/templates` served with no configuration | 404. Templates require a route, or `@template(...)` placed *below* the route decorator. `src/public/` is the directory that is served |
+| WSDL | "Drop the file in `src/routes/` and the framework serves the SOAP endpoint" | 404 — not auto-mounted. Needs `Calculator(request).handle()` returned from a handler; then `GET` yields the WSDL and SOAP `Add(2,3)` yields `<Result>5</Result>` |
+| Response Cache | `@cached(max_age=120)` caches the response | Does not cache. Same route returned different bodies one second apart, with and without `TINA4_CACHE_BACKEND=memory`. The decorator only stamps `_cache_max_age`; `ResponseCache` reads it but is not in the dev server's request path |
+| MCP | `/__mcp`, "24 dev tools" | Mounted at `/__dev/mcp` (JSON-RPC over POST; GET returns 405). `tools/list` returns **49** tools |
+| Forms | `{{ ("Register" ~ RANDOM()) \| form_token }}` | `RANDOM()` is not a Frond function; it renders empty, so the expression reduces to `"Register"`. `form_token` works as both filter and function |
+| Sessions | 5 backends listed | `memcached` missing; the aliases `filesystem`, `mongo`, `memcache`, `db` are accepted and undocumented |
+| Migrations | `migrations/00001_create_users_table.sql` | `tina4 migrate:create` emits a timestamped name: `20260807151239_create_users_table.sql` |
+| ORM | `User({"name": "Alice"}).save()` | `no such table: user` — the ORM does not create the table; a migration has to run first |
+| Dev Admin | six named tabs | `/__dev` is a JS shell (`<div id="app">` + `tina4-dev-admin.min.js`); only routes, database and metrics are confirmable, so the rest cannot be asserted |
+
+Verified correct and unchanged: every route decorator, `response()` callable forms and
+`redirect()`, the five `dotenv` helpers, the `Auth.get_token`/`valid_token` round-trip,
+`Database` + `fetch`, all four result converters, `I18n`, `HTMLElement`, events,
+`Log` keyword arguments, `Container`, `FakeData`, `Api`, `tina4 scss`, `/health`, and
+`@description` for Swagger.
+
+Undocumented discovery rule found while testing: **a file in `src/routes/` whose name starts
+with `_` is skipped silently** — no warning, the route simply 404s `[RUN]`.
+
 ## 3. Page 2 — Chapter 1, 1136 lines
 
 Order today: what it is → prerequisites/install → project structure → first route →
