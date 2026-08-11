@@ -61,6 +61,23 @@ Fixture: `codex/` (tina4 CLI 3.8.64 · tina4-python 3.13.94 · codex-cli 0.145.0
 
 ---
 
+## Deferred from the Getting Started rebuild — 2026-08-11
+
+Parked on USER direction ("problems for later, focusing on tina4 docs only now") while the
+Python section rewrite shipped. Notes in [`getstar/`](getstar/); the evidence table is
+[`getstar/python-evaluation.md`](getstar/python-evaluation.md) section 2a.
+
+| # | Item | Status | Notes |
+|---|---|---|---|
+| G1 | **Two framework defects found while fact-checking the quick reference** | TODO | `@cached(max_age=N)` does not cache — same route returned different bodies a second apart, with and without `TINA4_CACHE_BACKEND=memory`. `ServiceRunner.register(name, instance)` accepts an object with `run()` and **silently never runs it** — 0 invocations, nothing logged; `register_service()` is the working path. Framework behaviour, not documentation. **Not KI Log material as they stand** — needs re-testing inside `documentation-testing/` against a quoted chapter claim to earn a `PY-NN-NN` ID. Raise with Andre separately from the docs PRs. |
+| G2 | **Sibling language quick-reference pages carry the same class of errors** | TODO | 15 of 36 sections were wrong on `docs/python/index.md`; nine would not run at all. `nodejs/index.md` (936 lines), `php` (739), `ruby` (566), `js` (260), `delphi` (230) are the same species of hand-maintained page and have never been fact-checked. Fixing Python's did nothing for theirs. |
+| G3 | **`tina4press` hard-codes the section landing label as "Overview"** | ACCEPTED | `autoSectionSidebar` emits `items: [{ text: "Overview", link: indexPage.url }]` and never calls `titleFromPage` for it, so retitling `docs/<lang>/index.md` changes the page and not the nav. **USER accepted the mismatch 2026-08-11** — recorded so nobody re-investigates. Reopen only if the label starts to matter. |
+| G4 | **Two CLI defects, left out of Chapter 1 rather than documented** | TODO | `tina4 routes` in a fresh project prints the "must be started with the tina4 CLI" guard instead of listing routes — omitted from the chapter, since `/__dev` does that job. `tina4 test` fails `No module named pytest` because the scaffold ships no runner — documented *with* its fix (`uv add pytest`), verified to work. |
+| G5 | **Throughput unmeasured, and the published figures are stale** | TODO | `/comparisons` still carries a March 2026 Apple Silicon run this machine cannot reproduce (`hey` is not installed). Upstream has already de-linked that page from the home page pending re-benchmarking. Needs matched hardware and its own spec — `comparison-testing/readme.md` deliberately excludes throughput. |
+| G6 | **Repeat the section rewrite for the other five languages** | TODO | PHP, Ruby, Node.js, JavaScript, Delphi. Python's shape is the template: landing = the argument, chapter 1 = the mechanics, quick reference = the finder. `BACKEND_GROUPS` already carries the `quick-reference` stem for all four backend languages. The comparison spec takes per-language comparatives (Laravel/Slim, Rails/Sinatra, Express/Nest). |
+
+---
+
 ## Housekeeping
 
 | # | Item | Status | Notes |

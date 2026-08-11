@@ -1,0 +1,74 @@
+[app]
+framework = "Django"
+version = "django 5.2.17, djangorestframework 3.18.0, drf-spectacular 0.30.0, djangorestframework-simplejwt 5.5.1"
+language = "Python 3.14.5"
+openapi_path = "/openapi.json"
+
+authored = [
+    "bookmarks/models.py",
+    "bookmarks/views.py",
+    "bookmarks/__init__.py",
+    "templates/base.html",
+    "templates/bookmarks.html",
+]
+
+# No lines exist purely to wire the framework: django-admin startproject wrote
+# the app object, the WSGI/ASGI entry points and manage.py. The equivalent cost
+# shows up as edited lines in generated files instead — see [edited].
+wiring_lines = 0
+
+packages_added = ["djangorestframework", "drf-spectacular", "djangorestframework-simplejwt"]
+
+notes = """
+Three direct additions pull 12 more transitively: 16 distributions, and 30.6 MB
+-- the largest install of the four, nine times Tina4's 3.4 MB.
+
+Note for anyone re-quoting the old site figures: Django installs 2 third-party
+distributions on its own (asgiref, sqlparse), not the 20 that
+docs/comparisons.md claimed. It reaches 16 only because of what the spec
+requires it to add.
+
+Work Django needs that Tina4 did not:
+
+- Nineteen lines edited inside generated files, which no other framework here
+  required: three INSTALLED_APPS entries, the TEMPLATES DIRS path, a six-line
+  REST_FRAMEWORK block naming the schema class and the JWT authentication
+  class, three imports and six url() routes.
+- An app package. bookmarks/__init__.py exists only so Django will treat the
+  directory as an app.
+- A serializer class for the model, because DRF will not serialise a queryset
+  without one.
+- One view per URL path. Django resolves paths exactly, so GET and POST on
+  /api/bookmarks cannot be separate functions with separate permissions -- the
+  first attempt routed them to two views and returned 405. They are now one
+  view that branches on request.method and checks
+  request.user.is_authenticated by hand.
+- A real user row. simplejwt issues tokens for a User instance, so the login
+  view calls get_or_create on the user model. Django's auth tables also come
+  along: migrate applied 19 migrations for a one-table app.
+
+Judgement calls, resolved in Django's favour per readme rule 4:
+
+- Function-based views with @api_view rather than class-based APIView or a
+  ViewSet. Fewer lines.
+- simplejwt's AccessToken.for_user rather than hand-rolling PyJWT, and
+  drf-spectacular rather than a hand-written schema.
+- The generated bookmarks/migrations/0001_initial.py is not counted. It is
+  scaffolder output from makemigrations, exactly as Tina4's app.py is not
+  counted.
+
+Recorded against Django, for honesty: DRF's browsable API, the admin site, the
+auth system and the 19 applied migrations are real capabilities the spec never
+asked for. A larger install buys more than this comparison measures.
+"""
+
+[edited]
+"config/settings.py" = 10
+"config/urls.py" = 9
+
+[install]
+# Measured on a clean venv, before the app was ever run (readme rule 6).
+# 3 direct additions pull 12 transitively.
+measured_before_first_run = true
+distributions = 16
+size_mb = 30.6

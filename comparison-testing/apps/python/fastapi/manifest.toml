@@ -1,0 +1,59 @@
+[app]
+framework = "FastAPI"
+version = "fastapi 0.141.1, uvicorn 0.52.1, sqlalchemy 2.0.51, jinja2 3.1.6, pyjwt 2.13.0"
+language = "Python 3.14.5"
+openapi_path = "/openapi.json"
+
+authored = [
+    "main.py",
+    "templates/base.html",
+    "templates/bookmarks.html",
+]
+
+# engine = create_engine (1), templates = Jinja2Templates (1),
+# app = FastAPI (1), bearer = HTTPBearer (1), class Base + pass (2).
+wiring_lines = 6
+
+packages_added = ["uvicorn", "sqlalchemy", "jinja2", "pyjwt"]
+
+notes = """
+Four direct additions pull 13 more transitively: 18 distributions against
+Tina4's 1.
+
+FastAPI is the closest comparative, because OpenAPI generation is built in --
+the only framework here besides Tina4 that needed no package or config for R6.
+
+Work FastAPI needs that Tina4 did not:
+
+- A server. uvicorn is a separate install; there is no built-in dev server, and
+  no file watcher unless --reload is passed.
+- Auth is hand-rolled: HTTPBearer with auto_error=False, a require_token
+  dependency, and jwt.decode in a try/except. HTTPBearer alone returns 403 on a
+  missing header, so auto_error=False plus an explicit None check is required to
+  satisfy the spec's 401.
+- Token issuing is hand-rolled, as in Flask.
+- Templates need jinja2 plus a Jinja2Templates instance pointed at a directory.
+- SQLAlchemy declarative setup: a Base class, __tablename__, and three
+  mapped_column declarations with type annotations, then explicit Session
+  blocks in every handler.
+- Bookmark.to_dict() is hand-written.
+- Two pydantic models exist for request bodies. They do earn their keep --
+  they are also what documents the request shape in the generated spec.
+
+Judgement calls, resolved in FastAPI's favour per readme rule 4:
+
+- Raw request bodies via pydantic models rather than a fuller schema layer,
+  which is both terser and idiomatic.
+- Base.metadata.create_all() for the schema rather than adding Alembic, which
+  would have cost two more packages and a migrations directory. R1 explicitly
+  allows create_all.
+"""
+
+[edited]
+
+[install]
+# Measured on a clean venv, before the app was ever run (readme rule 6).
+# 4 direct additions pull 13 transitively.
+measured_before_first_run = true
+distributions = 18
+size_mb = 24.7

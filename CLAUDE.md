@@ -15,6 +15,7 @@ Repo shape at a glance — two evaluation axes plus their shared record:
 |---|---|
 | `documentation-testing/` | **Doc-fidelity testing** (the primary job) — protocol spec in `readme.md`, one workspace per language: `pypy/`, `phph/`, `ruru/` |
 | `agent-testing/` | **AI-tool evaluation** — can models build with Tina4 given the context Tina4 ships. Findings are NOT KI Log material (see that dir's readme) |
+| `comparison-testing/` | **Comparative measurement** — what a developer saves or loses choosing Tina4 over Flask/FastAPI/Django. Feature-matched apps, scripted counting. Findings are NOT KI Log material (see that dir's readme) |
 | `bug-hunting/` | Long-form evidence per assigned `BH-<n>` investigation |
 | `coverage-ledger/` | Per-chapter ✓/⛔/⏸ ledgers, one markdown each |
 | `findings-log.md` | The record — coverage, Known Issues Log, Bug Hunt index, Suggested Fixes |

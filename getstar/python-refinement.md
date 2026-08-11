@@ -465,6 +465,12 @@ version as the tie-breaker.
 
 ## Comparison measurement spec — `TODO(measure)`
 
+> **Moved.** The authoritative spec and its harness now live at
+> **`comparison-testing/`** in the repo root — app contract in `spec/bookmarks-app.md`,
+> nine measurement rules in `readme.md`, `scripts/verify-app.sh` and
+> `scripts/count-lines.py`, runs recorded in `results/`. What follows is the summary that
+> produced it; when the two disagree, `comparison-testing/` wins.
+
 **Revised 2026-08-07 (Andre): the comparison must be feature-matched.** "Functionality
 tested on comparatives needs to add packages to achieve what Tina4 has under the hood…
 if you need Swagger + auth + database = dependencies. Compare apples with apples."

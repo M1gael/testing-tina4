@@ -1,0 +1,57 @@
+[app]
+framework = "Tina4"
+version = "tina4-python 3.13.97, CLI 3.8.67"
+language = "Python 3.14.5"
+openapi_path = "/swagger/openapi.json"
+
+# Files written from nothing. app.py, .env, .gitignore, pyproject.toml and
+# uv.lock are scaffolder output left untouched, so they are not counted.
+authored = [
+    "migrations/20260811122923_create_bookmarks.sql",
+    "src/orm/bookmark.py",
+    "src/routes/bookmarks.py",
+    "src/routes/auth.py",
+    "src/templates/base.html",
+    "src/templates/bookmarks.html",
+]
+
+# Nothing in the generated scaffold had to change.
+
+# No lines exist purely to wire the framework up: no app object to construct,
+# no router to include, no template engine to point at a directory. Routes and
+# models are discovered from their directories.
+wiring_lines = 0
+
+packages_added = []
+
+notes = """
+Judgement calls, resolved against Tina4 per readme rule 4:
+
+- Schema by migration file (tina4 migrate), not ORM.create_table(). create_table()
+  would have removed a file and several lines; the migration is the documented
+  path and matches what Django and Alembic do, so it is the fairer comparison
+  and the more expensive one for Tina4.
+- Login split into its own src/routes/auth.py rather than folded into
+  bookmarks.py. Two files instead of one, chosen because it is how the routes
+  would actually be organised.
+- The seed INSERT in the migration is counted, though the spec does not require
+  seed data. It gives verify-app.sh a row to read on a fresh database.
+
+What came free, and is the reason the count is low:
+
+- R3 needed no auth code at all. Tina4 closes POST/PUT/PATCH/DELETE by default,
+  and the default guard accepts the JWT that Auth.get_token issues, so the only
+  auth line written is the login route itself.
+- R6 needed no code. OpenAPI 3.0.3 is generated from the declared routes and
+  served at /swagger/openapi.json.
+- Bookmark.all() and .to_dict() are ORM built-ins; no serialiser was written.
+"""
+
+[edited]
+
+[install]
+# Measured on a clean venv, before the app was ever run (readme rule 6).
+# 104 .py files in tina4_python.
+measured_before_first_run = true
+distributions = 1
+size_mb = 3.4
