@@ -6,14 +6,20 @@ produced it. Read `README.md` for the convention, `python-evaluation.md` for the
 
 ## Where we are
 
-**The Python section is content-complete.** All three pages written, the comparison table
-measured and published on the landing page. Two branches; only the first docs commit has been
-pushed. No PR opened.
+**The Python section is content-complete and out for review.** All three pages written, the
+comparison table measured and published on the landing page. Two branches; only the first
+docs commit has been pushed. No PR opened — **the user is waiting on Andre's sign-off, and
+the PRs open only once he clears it** (instruction, 2026-08-11).
 
 | Repo | Branch | Commits | Contents |
 |---|---|---|---|
-| `tina4-documentation` | `docs/python-entry` | `32da3ec` (pushed) + `3b51667` + `ea658f5` (local) | `docs/python/index.md` rewritten as the argument and carrying the measured comparison table; `docs/python/quick-reference.md` created then fact-corrected; `tina4press.config.mjs` sidebar stem; synced copy of the new ch1 |
-| `tina4-book` | `docs/python-getting-started` | `484d014` + `9e95bdc` (both local, never pushed) | `book-1-python/chapters/01-getting-started.md` rewritten 1132 to 637 lines, why-block carrying the comparison result |
+| `tina4-documentation` | `docs/python-entry` | 15, `32da3ec` (pushed) through `6a27397` (local) | `docs/python/index.md` rewritten as the argument and carrying the measured comparison table; `docs/python/quick-reference.md` created, fact-corrected, then cleared of fault-documenting prose; `tina4press.config.mjs` sidebar stem; synced copy of the new ch1 |
+| `tina4-book` | `docs/python-getting-started` | 11, `484d014` through `1aadcd7` (all local, never pushed) | `book-1-python/chapters/01-getting-started.md` rewritten 1132 to 732 lines, why-block carrying the comparison result |
+
+**Review handoff:** `~/Downloads/Tina4 New Docs/` holds the three pages as PDFs (printed from
+`localhost:5180`) and as `.md` copies — `01-overview`, `02-getting-started`,
+`03-quick-reference`. Re-copy and re-print both if the branches move again; a stale PDF is
+indistinguishable from a current one.
 
 Site builds clean (273 pages) and `scripts/audit-truth.py` passes. Preview with
 `npm run docs:dev` in the docs repo (`http://localhost:5180/python/`) — `pnpm` is not
@@ -34,6 +40,16 @@ The page also states what Tina4 loses on, including that its generated OpenAPI c
 request-body schema.
 
 Structure is agreed, including Andre's feedback of 2026-08-07.
+
+**Hard rule set by the user 2026-08-11: the documentation states intended behaviour only.**
+Framework defects are fixed separately and never described on the page — not as a gotcha, not
+as a "note", not as history of a bug already fixed. Corrections to *wrong* statements stay
+(the API name, the port, the tool count); explanations of *broken* behaviour go to
+[`outstanding-tasks.md`](../outstanding-tasks.md) G1/G1a instead. Two passes were needed to
+honour this: the first removed the defects I had written up, the second swept all three pages
+again and found six more in the quick reference and one in chapter 1, including a paragraph on
+a session-backend fallback that predated this work. Re-read the pages with this rule in mind
+before any future publish.
 
 **Working rule set by the user 2026-08-07:** decide structure now, resolve the detail while
 writing the pages. Do not stockpile measurements in these files ahead of the pages that
@@ -161,6 +177,7 @@ they stand — the KI Log requires a quoted documented claim tested inside
 The Python section is content-complete. What is left is mechanical or belongs to
 [`outstanding-tasks.md`](../outstanding-tasks.md) G1-G6.
 
-1. Push `docs/python-entry` (tina4-documentation) and `docs/python-getting-started` (tina4-book) to the `MichaelC8E` forks and open both PRs against `tina4stack`. Neither has been pushed since the comparison table landed.
-2. Review the rendered pages before the PRs go out: `npm run docs:dev` in `tina4-documentation`, then `/python/`, `/python/quick-reference` and `/python/01-getting-started` on the printed port.
-3. Then G1-G6: the two framework defects, the five sibling language pages, throughput, and repeating the shape for PHP / Ruby / Node.js / JavaScript / Delphi.
+1. **Wait for Andre.** The PDFs and markdown are with him. Nothing gets pushed until he clears the draft.
+2. On his approval: push `docs/python-entry` (tina4-documentation) and `docs/python-getting-started` (tina4-book) to the `MichaelC8E` forks and open both PRs against `tina4stack`. Neither has been pushed since the comparison table landed. Re-read both repos first — they have moved 13 commits under this work once already.
+3. If he asks for changes: edit, re-copy the `.md` files to `~/Downloads/Tina4 New Docs/`, and re-print the PDFs from `localhost:5180`.
+4. Then G1-G6: the framework defects (G1, G1a), the five sibling language pages, throughput, and repeating the shape for PHP / Ruby / Node.js / JavaScript / Delphi.
