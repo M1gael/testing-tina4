@@ -523,3 +523,38 @@ unverified until re-measured under this spec.
 | OpenAPI spec, generated, no extra code | `/swagger/openapi.json` — OpenAPI 3.0.3, lists every declared route (`/swagger.json` and `/openapi.json` both 404) | `[RUN]` 2026-08-07 |
 | Competitor deps / size / features | FastAPI 12 / 4.8 MB / 10 · Flask 6 / 4.2 MB / 7 · Django 20 / 25 MB / 24 | `[REPO]`, March 2026 — **do not republish**; a 2026-08-07 spot-check disagreed. Re-measure under the comparison spec |
 | Throughput (JSON / list req/s) | Tina4 9 761 / 5 769 · Starlette 15 664 / 9 302 · FastAPI 11 523 / 2 709 · Flask 5 722 / 962 · Django 2 333 / 2 150 | `[REPO]`, March 2026 |
+
+---
+
+## Parked — "What it costs you"
+
+Written for the landing page, measured, then **removed from it on USER direction 2026-08-11**
+("keep it aside but remove it from the overview"). Kept verbatim because every bullet is
+measured and it is the honest counterweight to the comparison table. Candidates for a home:
+`/comparisons/` when that page is re-benchmarked, or a trade-offs section of its own.
+
+Two bullets are findings in their own right — the shallow generated OpenAPI, and the absence
+of request typing — and are the same class of thing as `outstanding-tasks.md` G1.
+
+```markdown
+### What it costs you
+
+Worth knowing before you commit:
+
+- **The generated API docs are shallower.** Tina4's OpenAPI document lists your paths and
+  methods, but carries no request-body schema and one generic `200` response. Flask and
+  FastAPI describe the request body and the real status codes, because their OpenAPI layers
+  make you declare a schema — which is also part of why they cost more lines. Some of that
+  56-line count is Tina4 asking you for less information.
+- **No request typing or validation.** `request.body` is a plain dict. FastAPI validates and
+  coerces the body before your handler runs; in Tina4 you check it yourself.
+- **Raw throughput is not the pitch.** A bare ASGI framework serving plain JSON will beat
+  Tina4 on requests per second. If your bottleneck is a JSON echo, reach for one. Our
+  published throughput figures are being re-measured, so this page quotes none.
+- **The ecosystem is a fraction of Django's.** No third-party app directory, far fewer
+  Stack Overflow answers, fewer people who have hit your bug before. And Django's larger
+  install is buying real things this comparison never asked for — the admin site, a full
+  permissions system, a browsable API.
+- **The conventions are fixed.** Routes live in `src/routes/`, templates in
+  `src/templates/`, models in `src/orm/`. The framework will not be talked out of it.
+```
