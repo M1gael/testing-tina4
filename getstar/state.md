@@ -1,4 +1,4 @@
-# State — last updated 2026-08-11
+# State — last updated 2026-08-12
 
 Resume file. Everything needed to pick this up cold, without the conversation that
 produced it. Read `README.md` for the convention, `python-evaluation.md` for the audit,
@@ -6,24 +6,48 @@ produced it. Read `README.md` for the convention, `python-evaluation.md` for the
 
 ## Where we are
 
-**The Python section is content-complete and out for review.** All three pages written, the
-comparison table measured and published on the landing page. Two branches; only the first
-docs commit has been pushed. No PR opened — **the user is waiting on Andre's sign-off, and
-the PRs open only once he clears it** (instruction, 2026-08-11).
+**The restructure was rejected. The correction work was salvaged onto the old structure.**
+
+Andre did not want the new page shape (user, 2026-08-12: "my boss is not a fan of the new
+structure, so instead we will go back to the old docs but backport any fixes for syntax or
+logical faults, framework mismatches, or inconsistencies"). So the three-page split, the
+separate quick-reference page, the sidebar entry, the measured comparison table and every
+editorial rewrite are **abandoned**. What survives is the factual corrections, re-applied to
+the upstream pages, verified again from scratch against 3.13.98.
+
+Two fresh branches were cut off current `origin/main` — the old docs, untouched structure —
+and the corrections hand-applied. Cherry-pick was not usable: the target prose had been
+rewritten underneath the fix commits.
 
 | Repo | Branch | Commits | Contents |
 |---|---|---|---|
-| `tina4-documentation` | `docs/python-entry` | 15, `32da3ec` (pushed) through `6a27397` (local) | `docs/python/index.md` rewritten as the argument and carrying the measured comparison table; `docs/python/quick-reference.md` created, fact-corrected, then cleared of fault-documenting prose; `tina4press.config.mjs` sidebar stem; synced copy of the new ch1 |
-| `tina4-book` | `docs/python-getting-started` | 11, `484d014` through `1aadcd7` (all local, never pushed) | `book-1-python/chapters/01-getting-started.md` rewritten 1132 to 732 lines, why-block carrying the comparison result |
+| `tina4-documentation` | `docs/python-consistency-fixes` | 1, `c76e5f5` (local) | `docs/python/index.md` — the old quick-reference landing page, structure intact, ~25 factual corrections; `docs/python/01-getting-started.md` re-synced from the book |
+| `tina4-book` | `docs/python-consistency-fixes` | 1, `f2b92b9` (local) | `book-1-python/chapters/01-getting-started.md` — old 12-section structure intact, output blocks re-captured, wrong defaults fixed |
 
-**Review handoff:** `~/Downloads/Tina4 New Docs/` holds the three pages as PDFs (printed from
-`localhost:5180`) and as `.md` copies — `01-overview`, `02-getting-started`,
-`03-quick-reference`. Re-copy and re-print both if the branches move again; a stale PDF is
-indistinguishable from a current one.
+The superseded branches are **kept, not deleted** — they are the only record of the
+restructure and of the measurement work: `docs/python-entry` (15 commits, `32da3ec` pushed to
+the fork) and `docs/python-getting-started` (11 commits, never pushed).
 
-Site builds clean (273 pages) and `scripts/audit-truth.py` passes. Preview with
-`npm run docs:dev` in the docs repo (`http://localhost:5180/python/`) — `pnpm` is not
-installed here despite the `packageManager` field, `npm` works.
+Nothing pushed, no PR. The Andre gate still stands.
+
+Site builds clean (272 pages — one fewer than the restructure, since `quick-reference.md` is
+gone again). Preview with `npm run docs:dev` in the docs repo
+(`http://localhost:5180/python/`) — `pnpm` is not installed here despite the `packageManager`
+field, `npm` works.
+
+**Every correction was re-verified for this pass, not trusted from the earlier notes**, and
+two of the earlier "fixes" turned out to be wrong and were dropped:
+
+- `@cached` above `@get` is **correct** as the old page had it. `_register_route` returns the
+  original function, so a decorator applied above the route decorator still marks the
+  registered object. The earlier reorder was unnecessary churn.
+- memcached sessions need **no client package**. The handler speaks the memcached text
+  protocol over a socket. The earlier fix listed `pymemcache`.
+
+One correction reverses a deliberate upstream commit and is flagged in the commit message:
+upstream `10a1e3d` renamed the inline `@tests` builders `assert_*` → `expect_*` in the docs
+site, but `tina4_python.Testing` defines `assert_*` on both 3.13.94 and 3.13.98, so the page
+as printed raises `NameError` on every released version. This pass uses the names that exist.
 
 **The quick reference was fact-checked by execution, not reading, and 15 of its 36 sections
 were wrong** — nine would have failed outright for a reader. Full table:
@@ -56,6 +80,11 @@ writing the pages. Do not stockpile measurements in these files ahead of the pag
 use them.
 
 ## Decisions locked
+
+**Withdrawn 2026-08-12 — items 2 to 10 below describe the rejected restructure.** They are
+kept because they record why each choice was made, and because the sibling-language work in
+G6 would have copied this shape. Do not act on them. The live decision is: old structure,
+factual corrections only.
 
 1. **Scope**: the `tina4.com/python/` section only. Not the site landing, not `/get-started/`. Other languages come after Python, copying whatever shape Python lands on.
 2. **Three pages**, each with one job:
@@ -93,8 +122,8 @@ Closed 2026-08-11:
 
 | Repo | Path | Branch | HEAD |
 |---|---|---|---|
-| tina4-book | `/var/home/work/gitdir/tina4-book` | `docs/python-getting-started` | `9e95bdc` (2 ahead of `origin/main` `2818c2f`) |
-| tina4-documentation | `/var/home/work/gitdir/tina4-documentation` | `docs/python-entry` | `ea658f5` (3 ahead of `origin/main` `dfbbde1`) |
+| tina4-book | `/var/home/work/gitdir/tina4-book` | `docs/python-consistency-fixes` | `f2b92b9` (1 ahead of `origin/main` `2818c2f`) |
+| tina4-documentation | `/var/home/work/gitdir/tina4-documentation` | `docs/python-consistency-fixes` | `c76e5f5` (1 ahead of `origin/main` `d9ed4be`) |
 | tina4-dev-admin | `/var/home/work/gitdir/tina4-dev-admin` | `main` | `61a15d6` |
 | tina4-js | `/var/home/work/gitdir/tina4-js` | `master` | `1434721` |
 
@@ -138,7 +167,8 @@ separation rule in the user's memory.
 - `tina4-book/book-N-<lang>/chapters/NN-*.md` is the **only** source for numbered chapters. `tina4-documentation/scripts/sync-books.sh` runs book → docs: `rm -f docs/<lang>/[0-9]*.md`, then re-copies from the book, escaping Twig for VitePress. Chapter edits made in the docs repo are destroyed on the next sync.
 - `docs/<lang>/index.md`, `docs/get-started.md`, `docs/comparisons.md` and `tina4press.config.mjs` exist only in the docs repo; the sync preserves non-numbered files.
 - `tina4-book/scripts/build_pdf.py` globs `chapters/NN-*.md` per `book.yml`, so only chapters reach the downloadable PDF.
-- Known drift to fix in the book before any sync: `docs/python/01-getting-started.md` has a `TINA4_CORS_ORIGINS` / unset / deny-by-default row where the book still says `CORS_ORIGINS` / `*` / "all origins allowed".
+- The docs copy of ch1 differs from the book copy by exactly two site-only things: the title carries no `Chapter 1:` prefix, and a `<div v-pre>` / `</div>` pair wraps the numbered list in *How Template Rendering Works* so VitePress does not interpolate its `{{ }}` and `{% %}`. Re-generate the docs copy from the book by applying only those two, never by hand-editing both.
+- Closed 2026-08-12: the `CORS_ORIGINS` / `*` / "all origins allowed" row in the book. It is now `TINA4_CORS_ORIGINS` / unset / deny-by-default in both copies.
 
 ## Evidence and how to reproduce it
 
@@ -174,10 +204,17 @@ they stand — the KI Log requires a quoted documented claim tested inside
 
 ## Next actions, in order
 
-The Python section is content-complete. What is left is mechanical or belongs to
-[`outstanding-tasks.md`](../outstanding-tasks.md) G1-G6.
-
-1. **Wait for Andre.** The PDFs and markdown are with him. Nothing gets pushed until he clears the draft.
-2. On his approval: push `docs/python-entry` (tina4-documentation) and `docs/python-getting-started` (tina4-book) to the `MichaelC8E` forks and open both PRs against `tina4stack`. Neither has been pushed since the comparison table landed. Re-read both repos first — they have moved 13 commits under this work once already.
-3. If he asks for changes: edit, re-copy the `.md` files to `~/Downloads/Tina4 New Docs/`, and re-print the PDFs from `localhost:5180`.
-4. Then G1-G6: the framework defects (G1, G1a), the five sibling language pages, throughput, and repeating the shape for PHP / Ruby / Node.js / JavaScript / Delphi.
+1. **Wait for Andre.** Nothing gets pushed until he clears it. He is reviewing the old
+   structure plus corrections now, not the restructure.
+2. **Refresh the review handoff** if he wants it on paper again: `~/Downloads/Tina4 New Docs/`
+   still holds the three *restructured* pages, which are now obsolete. Replace with the two
+   current pages (`/python/` and `/python/01-getting-started/`) and re-print together — a
+   stale PDF is indistinguishable from a current one.
+3. On his approval: push `docs/python-consistency-fixes` from both repos to the `MichaelC8E`
+   forks and open both PRs against `tina4stack`. Re-read both repos first — they have moved 13
+   commits under this work once already.
+4. **Decide what happens to the abandoned branches.** `docs/python-entry` is already on the
+   fork at `32da3ec`; leaving it there advertises a structure that was rejected. Either delete
+   the fork branch or leave it and say so.
+5. Then the backlog: [`outstanding-tasks.md`](../outstanding-tasks.md) G1-G9, plus the two new
+   items G10 and G11 logged on 2026-08-12.
