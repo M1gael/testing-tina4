@@ -1,4 +1,4 @@
-# State — last updated 2026-08-12
+# State — last updated 2026-08-13
 
 Resume file. Everything needed to pick this up cold, without the conversation that
 produced it. Read `README.md` for the convention, `python-evaluation.md` for the audit,
@@ -21,14 +21,26 @@ rewritten underneath the fix commits.
 
 | Repo | Branch | Commits | Contents |
 |---|---|---|---|
-| `tina4-documentation` | `docs/python-consistency-fixes` | 1, `c76e5f5` (local) | `docs/python/index.md` — the old quick-reference landing page, structure intact, ~25 factual corrections; `docs/python/01-getting-started.md` re-synced from the book |
-| `tina4-book` | `docs/python-consistency-fixes` | 1, `f2b92b9` (local) | `book-1-python/chapters/01-getting-started.md` — old 12-section structure intact, output blocks re-captured, wrong defaults fixed |
+| `tina4-documentation` | `docs/python-consistency-fixes` | 1, `6f176d9` | `docs/python/index.md` — the old quick-reference landing page, structure intact (38 headings before and after, same order), ~30 factual corrections; `docs/python/01-getting-started.md` re-synced from the book |
+| `tina4-book` | `docs/python-consistency-fixes` | 1, `5ebe35b` | `book-1-python/chapters/01-getting-started.md` — old 12-section structure intact, output blocks re-captured, wrong defaults fixed, one section added (`tina4 doctor`) |
 
 The superseded branches are **kept, not deleted** — they are the only record of the
 restructure and of the measurement work: `docs/python-entry` (15 commits, `32da3ec` pushed to
 the fork) and `docs/python-getting-started` (11 commits, never pushed).
 
-Nothing pushed, no PR. The Andre gate still stands.
+**Both PRs are open** (USER instruction 2026-08-13, "if everything looks good make the pull
+request" — this supersedes the earlier Andre gate):
+
+- book — <https://github.com/tina4stack/tina4-book/pull/152> · 1 file, +162/-115
+- docs — <https://github.com/tina4stack/tina4-documentation/pull/50> · 2 files, +305/-182
+
+Both `MERGEABLE`, cross-linked by a comment on 152. **They must land together** —
+`sync-books.sh` regenerates `docs/python/01-getting-started.md` from the book chapter, so
+merging one alone loses the other. Both forks were synced level with upstream before pushing.
+
+Three things are flagged in the PR bodies rather than buried: the `expect_*` question (below),
+that the two must merge together, and that `TINA4_INIT_NO_SERVE` is deliberately undocumented
+because the env gate structurally cannot accept a CLI-only variable.
 
 Site builds clean (272 pages — one fewer than the restructure, since `quick-reference.md` is
 gone again). Preview with `npm run docs:dev` in the docs repo
@@ -54,16 +66,16 @@ were wrong** — nine would have failed outright for a reader. Full table:
 `python-evaluation.md` section 2a. Every correction was verified against a running server
 before it was written.
 
-**The comparison table is measured and on the page.** Feature-matched app in four
-frameworks, all verified 7/7 before counting: Tina4 56 lines / 0 added packages / 1
-distribution / 3.4 MB, against Flask 100 / 3 / 17 / 17.9 MB, FastAPI 86 / 4 / 18 / 24.7 MB,
-Django 76 / 3 / 16 / 30.6 MB. Harness and full write-up:
-[`comparison-testing/`](../comparison-testing/), run
-[`results/2026-08-11-python.md`](../comparison-testing/results/2026-08-11-python.md).
-The page also states what Tina4 loses on, including that its generated OpenAPI carries no
-request-body schema.
+**The comparison table is measured but published nowhere.** It went out with the restructure
+and is *not* in the open PRs. Feature-matched app in four frameworks, all verified 7/7 before
+counting: Tina4 56 lines / 0 added packages / 1 distribution / 3.4 MB, against Flask
+100 / 3 / 17 / 17.9 MB, FastAPI 86 / 4 / 18 / 24.7 MB, Django 76 / 3 / 16 / 30.6 MB. Harness
+and full write-up: [`comparison-testing/`](../comparison-testing/), run
+[`results/2026-08-11-python.md`](../comparison-testing/results/2026-08-11-python.md). Still a
+real measurement and still worth a home — see G8 for candidates.
 
-Structure is agreed, including Andre's feedback of 2026-08-07.
+**Structure is NOT agreed.** Andre's 2026-08-07 feedback shaped the restructure, and he then
+rejected the result on 2026-08-12. The live structure is upstream's own.
 
 **Hard rule set by the user 2026-08-11: the documentation states intended behaviour only.**
 Framework defects are fixed separately and never described on the page — not as a gotcha, not
@@ -204,17 +216,21 @@ they stand — the KI Log requires a quoted documented claim tested inside
 
 ## Next actions, in order
 
-1. **Wait for Andre.** Nothing gets pushed until he clears it. He is reviewing the old
-   structure plus corrections now, not the restructure.
-2. **Refresh the review handoff** if he wants it on paper again: `~/Downloads/Tina4 New Docs/`
-   still holds the three *restructured* pages, which are now obsolete. Replace with the two
-   current pages (`/python/` and `/python/01-getting-started/`) and re-print together — a
-   stale PDF is indistinguishable from a current one.
-3. On his approval: push `docs/python-consistency-fixes` from both repos to the `MichaelC8E`
-   forks and open both PRs against `tina4stack`. Re-read both repos first — they have moved 13
-   commits under this work once already.
+1. **Watch CI on both PRs.** `scripts/audit-truth.py` could not be run fully here: it wants all
+   four framework source trees checked out beside the docs repo and only `tina4-js/src` is
+   present, so its env-var check reported 215 pre-existing flags that a provisioned runner
+   should resolve. The punctuation gate is genuinely clean, and nothing this change introduces
+   is flagged. If CI disagrees, read its output rather than trusting the local run.
+2. **Answer the `expect_*` question on docs PR 50** — see G10. It is the one substantive
+   decision left in the change and a maintainer has to make it.
+3. **Refresh the review handoff** if Andre wants it on paper: `~/Downloads/Tina4 New Docs/`
+   still holds the three *restructured* pages, which are obsolete. Replace with the two current
+   pages (`/python/` and `/python/01-getting-started/`) and re-print together — a stale PDF is
+   indistinguishable from a current one.
 4. **Decide what happens to the abandoned branches.** `docs/python-entry` is already on the
    fork at `32da3ec`; leaving it there advertises a structure that was rejected. Either delete
    the fork branch or leave it and say so.
 5. Then the backlog: [`outstanding-tasks.md`](../outstanding-tasks.md) G1-G9, plus the two new
-   items G10 and G11 logged on 2026-08-12.
+   items G10 and G11 logged on 2026-08-12. G2 is now the live one — the same class of error sits
+   unfixed on the other five languages' quick-reference pages, and this pass is the template for
+   fixing them.
