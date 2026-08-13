@@ -20,6 +20,7 @@ Repo shape at a glance — two evaluation axes plus their shared record:
 | `coverage-ledger/` | Per-chapter ✓/⛔/⏸ ledgers, one markdown each |
 | `known-issues/ledger.md` | **Every issue, all languages** — documentation and framework code, one row each, with the version last reproduced on and how to reproduce it |
 | `findings-log.md` | The record — coverage, Bug Hunt index, Suggested Fixes. The Known Issues Log **moved out** to `known-issues/ledger.md` on 2026-08-13 |
+| `tutorial/` | Working notes for the **tutorial / course** section — `book-7-course` has a 36-module syllabus and no modules built. Nothing here ships |
 | `outstanding-tasks.md` | Cross-session backlog, including the docs PRs in flight |
 | `documentation/tina4-book/` | The documentation under test (untracked — symlink or `tina4 books`) |
 | `dev/`, `docker-compose.yml` | Local Postgres fixture |
