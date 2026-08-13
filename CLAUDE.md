@@ -2,7 +2,7 @@
 
 Orientation for new collaborators (human or LLM). This file is a map. The stable
 conventions/protocol live in `documentation-testing/readme.md`; the mutable record — chapter coverage,
-the Known Issues Log, the Bug Hunt index, and Suggested Fixes — lives in
+the Bug Hunt index, and Suggested Fixes — lives in
 `findings-log.md`; per-section **coverage ledgers** (✓/⛔/⏸ per snippet+option, with
 version-stamped sign-offs) live in **`coverage-ledger/`**, one markdown per chapter. The
 cross-session **work backlog** (asked-for-but-not-yet-done) lives in **`outstanding-tasks.md`**
@@ -14,11 +14,12 @@ Repo shape at a glance — two evaluation axes plus their shared record:
 | Path | What |
 |---|---|
 | `documentation-testing/` | **Doc-fidelity testing** (the primary job) — protocol spec in `readme.md`, one workspace per language: `pypy/`, `phph/`, `ruru/` |
-| `agent-testing/` | **AI-tool evaluation** — can models build with Tina4 given the context Tina4 ships. Findings are NOT KI Log material (see that dir's readme) |
-| `comparison-testing/` | **Comparative measurement** — what a developer saves or loses choosing Tina4 over Flask/FastAPI/Django. Feature-matched apps, scripted counting. Findings are NOT KI Log material (see that dir's readme) |
+| `agent-testing/` | **AI-tool evaluation** — can models build with Tina4 given the context Tina4 ships. Findings are not ledger-eligible until re-tested (see that dir's readme) |
+| `comparison-testing/` | **Comparative measurement** — what a developer saves or loses choosing Tina4 over Flask/FastAPI/Django. Feature-matched apps, scripted counting. Findings are not ledger-eligible (see that dir's readme) |
 | `bug-hunting/` | Long-form evidence per assigned `BH-<n>` investigation |
 | `coverage-ledger/` | Per-chapter ✓/⛔/⏸ ledgers, one markdown each |
-| `findings-log.md` | The record — coverage, Known Issues Log, Bug Hunt index, Suggested Fixes |
+| `known-issues/ledger.md` | **Every issue, all languages** — documentation and framework code, one row each, with the version last reproduced on and how to reproduce it |
+| `findings-log.md` | The record — coverage, Bug Hunt index, Suggested Fixes. The Known Issues Log **moved out** to `known-issues/ledger.md` on 2026-08-13 |
 | `outstanding-tasks.md` | Cross-session backlog |
 | `documentation/tina4-book/` | The documentation under test (untracked — symlink or `tina4 books`) |
 | `dev/`, `docker-compose.yml` | Local Postgres fixture |
@@ -40,7 +41,7 @@ The loop is:
 1. Take a chapter from `documentation/tina4-book/`.
 2. Implement its code examples verbatim in the language's workspace (`documentation-testing/pypy/`, `documentation-testing/phph/`, `documentation-testing/ruru/`).
 3. Run via the `tina4` CLI and observe.
-4. Log discrepancies in the Known Issues Log inside `findings-log.md`.
+4. Log discrepancies as a row in `known-issues/ledger.md`.
 
 This is **documentation-fidelity testing**: the work verifies whether a new user
 following the docs would succeed. The harness *is* the new user.
@@ -56,13 +57,13 @@ disagrees with it, **`documentation-testing/readme.md` wins**. **`findings-log.m
 | Protocol rules (12 non-negotiable rules) | `documentation-testing/readme.md` → `## Protocol: Chapter-Based Evaluation` |
 | File / naming conventions (chapter prefix, test prefix, probe prefix, migrations, seeds) | `documentation-testing/readme.md` → `## Standard Implementation Workflow` + `## Workspaces` |
 | Patching convention (PATCH markers, OLD lines, newest-stays-verbatim) | `documentation-testing/readme.md` → `## Patching Convention` |
-| Issue reporting (KI Log six-column schema + terminal-output snippet format + sub-letter notation) | `documentation-testing/readme.md` → `## Issue Report Format` |
+| Issue reporting (ledger schema + terminal-output snippet format + sub-letter notation) | `documentation-testing/readme.md` → `## Issue Report Format`; the live column set is at the top of `known-issues/ledger.md` |
 | Upstream filing format (plain `<ID> — title` opening line, location/Issue/Origin body, splitting findings) | `documentation-testing/readme.md` → `## Issue Report Format` → "Upstream filing — …" |
 | Quick-reference summary of all conventions | `documentation-testing/readme.md` → `## Convention Recap` |
 | Current chapter coverage | `findings-log.md` → `## Evaluation Progress` |
 | Per-section coverage ledgers (✓/⚠/⛔/⏸/`n/a` per snippet+option, version-stamped sign-offs) | `coverage-ledger/<lang>-ch<NN>-<topic>.md` — **currently only `py-ch07` + `py-ch12` exist; until every implemented chapter has one, the Evaluation Progress table in `findings-log.md` is the authoritative coverage index.** Template: `coverage-ledger/_TEMPLATE.md` |
-| All confirmed findings (Known Issues Log) | `findings-log.md` → `## Known Issues Log` |
-| Assigned bug investigations (`BH-<n>` rows) | `findings-log.md` → `## Known Issues Log` (the rows) + `## Bug Hunt` (what they are) |
+| All confirmed findings, every language | `known-issues/ledger.md` — 84 rows; supersedes the Known Issues Log |
+| Assigned bug investigations (`BH-<n>` rows) | `known-issues/ledger.md` (the rows) + `findings-log.md` → `## Bug Hunt` (what they are) + `bug-hunting/` (evidence) |
 | Proposed fixes for findings (long-form) | `findings-log.md` → `## Suggested Fixes` |
 
 ## Non-negotiables to be aware of up front

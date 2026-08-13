@@ -1,30 +1,45 @@
 # known-issues
 
-**Purpose not yet settled — see the warning below before putting anything here.**
+**[`ledger.md`](ledger.md) is the single home for issues in this repo** — every confirmed problem
+in the Tina4 documentation and in framework code, across every language, one row each. 84 rows as
+of 2026-08-13.
 
-## The record already has a Known Issues Log
+## What moved here, on 2026-08-13
 
-`findings-log.md` → `## Known Issues Log` is the canonical home for confirmed findings, and
-`CLAUDE.md` names it as such. It currently holds **67 rows** across roughly 670 of that file's
-1135 lines, in the six-column schema `documentation-testing/readme.md` → *Issue Report Format*
-defines.
+| From | Rows |
+|---|---|
+| `findings-log.md` → `## Known Issues Log` | 67 — Python doc-fidelity `PY-NN-NN` and bug-hunt `BH-<n>` |
+| `agent-testing/codex-skill-delivery/README.md` → `CODX-01`..`07` | 7 — re-coded `CLI-FW-05`..`11` |
+| Backlog rows G1 / G1a / G4 / G10 / G11 | 10 — issues that had only ever been described as *work* |
 
-So this directory must not become a second place where findings live. Two homes for one record
-means drift, and the first symptom is a fixed issue that is still open in the other copy.
+The move added four columns the old log never had: **Kind** (documentation or framework),
+**Language**, the version each issue was **last reproduced on**, and **how to reproduce it**. It
+kept every column that carried content — `Filed`, with all 39 upstream links intact, and
+`Suggested fix`, whose `→ FIX-NN` pointers still resolve into `findings-log.md` →
+*Suggested Fixes*.
 
-## Two workable jobs for this directory
+**Codes did not change.** A `PY-18-03` or `BH-46` quoted in an upstream GitHub issue still
+resolves to the same row. Never renumber a filed row.
 
-Pick one deliberately, then delete the other from this file.
+## What stayed where it was
 
-1. **Split the KI Log out of `findings-log.md`.** One markdown per issue (`PY-18-03.md`) or per
-   chapter (`py-ch18.md`), with `findings-log.md` keeping only an index. Worth doing if the log
-   has outgrown the single file — at 670 lines it arguably has. Requires updating `CLAUDE.md`,
-   `documentation-testing/readme.md`, and every inbound link.
-2. **Long-form write-ups per issue, index staying put.** The KI Log rows stay in
-   `findings-log.md` as the one-line record; this directory carries the evidence that will not
-   fit a table cell. That is close to what `bug-hunting/` already does for assigned `BH-<n>`
-   investigations, so check that directory first rather than duplicating it.
+- **`findings-log.md`** keeps the Evaluation Progress table, the audit-pass narrative, the Bug Hunt
+  index, and the long-form `FIX-NN` proposals. Its Known Issues Log section is now a pointer here.
+- **`bug-hunting/`** keeps the long-form evidence per assigned `BH-<n>` investigation.
+- **`coverage-ledger/`** keeps per-chapter ✓/⚠/⛔/⏸ coverage. A `⚠ diverges` cell cites an issue
+  code; the issue itself lives here.
+- **`agent-testing/unverified-leads.md`** stays a triage queue. Those entries are *unverified
+  leads*, not confirmed issues — two are already duplicates of ledger rows and the rest have no
+  quoted documented claim behind them. A lead earns a row here only once it has been reproduced.
+- **`outstanding-tasks.md`** tracks the *work*; this ledger tracks the *issue*. Rows cross-reference
+  each other so neither drifts.
 
-## Until then
+## Adding a row
 
-Empty on purpose. Nothing here is authoritative.
+Schema, column meanings, and the rules are at the top of [`ledger.md`](ledger.md). The two that
+get broken most often:
+
+1. **Reproduce it before you write it.** How-to-reproduce is the command or the sequence, not
+   prose. 54 of the 84 rows have one; the rest are marked for backfill.
+2. **Version-stamp what you actually observed.** If you only re-read the source, the row is
+   `pending-retest`, not `open` — a found-version is not a reproduced-version.

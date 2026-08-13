@@ -210,9 +210,11 @@ described in the repo's `CLAUDE.md` are **not needed** for this project.
 ## Boundary against the QA harness
 
 This directory writes documentation; the rest of `testing-tina4` audits it. Findings
-uncovered here (for example the two CLI defects) are **not Known Issues Log material** as
-they stand — the KI Log requires a quoted documented claim tested inside
-`documentation-testing/`. Re-test there if any of them should earn a `PY-NN-NN` ID.
+uncovered here do not earn a `PY-NN-NN` ID as they stand — that ID form requires a quoted
+documented claim tested inside `documentation-testing/`. They are still recorded: ten of them
+were migrated into [`known-issues/ledger.md`](../known-issues/ledger.md) on 2026-08-13 under
+scope-kind codes (`PY-FW-01`, `CLI-FW-01`, …). Re-test inside `documentation-testing/` if any
+should graduate to a chapter-traced ID.
 
 ## Next actions, in order
 

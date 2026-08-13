@@ -115,6 +115,11 @@ like.
 
 ## Findings
 
+> **The rows moved 2026-08-13** to [`known-issues/ledger.md`](../../known-issues/ledger.md),
+> re-coded `CLI-FW-05`..`CLI-FW-11` (CODX-01..07 in order). Original IDs are preserved in each
+> row's note, since they are quoted in the study below. The mechanism study and the seven-tool
+> scorecard stay here — the table below is kept as the study's own summary.
+
 | ID | Severity | Finding |
 |---|---|---|
 | CODX-01 | Bug | Broken code example in **all 7** `tina4 ai` context files |

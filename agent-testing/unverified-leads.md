@@ -19,6 +19,11 @@ Five observations recorded by an agent building a task-manager app against tina4
 The app itself was deleted; this file is the surviving record. Wording is the original
 author's, reorganised and triaged — the technical claims are **unverified by this harness**.
 
+> **Still a triage queue, not an issue log.** Nothing here was migrated into
+> [`known-issues/ledger.md`](../known-issues/ledger.md) on 2026-08-13: `L1` and `L3` are
+> duplicates of rows already in it, and the rest have no quoted documented claim behind them.
+> A lead earns a ledger row only once it has been reproduced.
+
 | # | Claim | Status | Triage |
 |---|---|---|---|
 | L1 | ORM query (`User().find()`) raises `RuntimeError: No database bound` unless `TINA4_DATABASE_URL` is set or `bind_database()` called | **dup** | Covered three times over: **PY-06-01** (filed [#142](https://github.com/tina4stack/tina4-book/issues/142)), **PY-18-07b**, **PY-18-13b**. No new information. |

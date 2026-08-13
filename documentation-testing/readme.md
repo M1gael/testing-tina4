@@ -128,7 +128,7 @@ required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
     the test case.
 4.  **Verification** — run the project via `tina4 serve`. Exercise routes via CLI/browser.
     Watch `logs/tina4.log` (or equivalent) for registration and execution errors.
-5.  **Reporting** — when behavior diverges from docs, capture it in the Known Issues Log
+5.  **Reporting** — when behavior diverges from docs, capture it in `known-issues/ledger.md`
     using the format below.
 6.  **Live per-section mock** — alongside the verbatim tests, **every implemented section
     ships a navigable mock served under `tina4 serve`** that the USER can open in a browser
@@ -190,7 +190,7 @@ bugs are still present in future framework versions.
 
 **Rules (apply only when the USER has asked to patch):**
 
-1.  **Every patch references an existing finding ID** in the Known Issues Log. If no
+1.  **Every patch references an existing finding ID** in `known-issues/ledger.md`. If no
     finding exists yet, log it first (per Protocol rules 4 and 5 — no proactive fixes,
     verbatim first then diagnose).
 2.  **Inline patch marker** — single-line changes use a `# PATCH [<finding-ID>]: ...`
@@ -262,10 +262,13 @@ failing *faithful* test as a short block the USER can read at a glance:
 ```
 
 Report only; do **not** attempt fixes, and stop execution after the report. Confirmed
-discrepancies then graduate to the Known Issues Log for durable tracking.
+discrepancies then graduate to `known-issues/ledger.md` for durable tracking.
 
-**2. Known Issues Log row — the durable record.** When you find a discrepancy, append a row
-to the Known Issues Log (in [`findings-log.md`](findings-log.md)) using this six-column format:
+**2. Ledger row — the durable record.** When you find a discrepancy, append a row to
+[`known-issues/ledger.md`](../known-issues/ledger.md). The six columns below are still the core of
+it; the ledger adds four more — **Kind** (documentation or framework), **Language**, **Last
+reproduced on**, and **How to reproduce** — and splits the old `Found` cell into a date plus that
+last-reproduced version. Fill all ten:
 
 ```
 | <ID> | <Status> | <Filed> | <Found> | <Suggested fix> | <Note> |
@@ -306,14 +309,14 @@ context as the issue needs; Suggested fix may be `—`.
   isolate one of several symptoms grouped under one ID. Sub-letters are **not** separate
   rows in this table. Search by the parent ID (`PY-18-08`) to find the row.
 
-Bug-hunt rows (`BH-<n>`) live in the **same** Known Issues Log under this schema — not a
+Bug-hunt rows (`BH-<n>`) live in the **same** ledger under this schema — not a
 separate table. For them, **Filed** is the `tina4-python` issue link (the BH-ID's own number)
 and **Note** opens with what's being investigated. See `findings-log.md` → *Bug Hunt* for the
 PY-vs-BH distinction.
 
 **Terminal-output snippet format.** When the finding is about code that doesn't run, add
-a subsection under the `### Observed terminal output` heading (h3, nested inside
-`## Known Issues Log`) using the canonical neutral format below — same format used in
+a subsection under the `### Observed terminal output` heading (h3, in the evidence section
+that backs the ledger row) using the canonical neutral format below — same format used in
 the upstream filing body template further down, only the heading level changes:
 
 ````
@@ -349,7 +352,7 @@ the neutral form above.
 `<ID> — <short title>` line: the finding ID, an em-dash, a short descriptive title.
 No square brackets, no `##` heading marks, no bold — no decorations. The ID still leads,
 so maintainers can grep upstream by `PY-06-08` and trace it back to a row in the local
-Known Issues Log without manual cross-linking.
+ledger without manual cross-linking.
 
 ```
 PY-06-01 — Chapter 6 shows no database-binding step
@@ -430,11 +433,11 @@ links back to where it's fully described.
 | **Exhaustive option coverage** | Docs name options a/b/c (engines, queue backends, cache/session stores, auth modes, …) → exercise **all** of them end-to-end, not just one. "Selectable" ≠ "works" — drive a real round-trip, standing up the broker/engine if needed. Can't stand one up → **logged blocker**, never a silent skip or a "covered". See [Protocol](#protocol-chapter-based-evaluation) rule 9. |
 | **Live per-section mock** | Each implemented section ships a browser-navigable mock under `tina4 serve` (verbatim snippet + live result), reachable before the section is "done". Ref `src/routes/chapter_explorer.py` → `/chapters` + `/chapter/{num}`. See [Workflow](#standard-implementation-workflow) step 6. |
 | *— Finding scope & evidence —* | |
-| **One code block = one finding ID** | Each distinct code block in a chapter that has issues gets its own row in the Known Issues Log. Don't lump issues from two separate code blocks under one ID, even if they're in the same section. Use sub-letters (`PY-18-07a`, `PY-18-07b`) for splitting upstream filings within a single finding — see [Issue Report Format](#issue-report-format). |
+| **One code block = one finding ID** | Each distinct code block in a chapter that has issues gets its own row in `known-issues/ledger.md`. Don't lump issues from two separate code blocks under one ID, even if they're in the same section. Use sub-letters (`PY-18-07a`, `PY-18-07b`) for splitting upstream filings within a single finding — see [Issue Report Format](#issue-report-format). |
 | **Probe pattern as evidence + regression sentinel** | For every code-testable finding, write a probe that asserts the CORRECT state (FAILs pre-fix, PASSes post-fix, stays live as a regression sentinel); first line `# Probe — covers <ID>. <purpose>.`. See [Probes](#probes). |
 | **Adversarial verification before filing** | Before any finding is filed upstream, actively try to disprove the claim across multiple angles — check for alternative code paths, hidden helpers, version-specific behaviour, framework's own internal docs, and inconsistent chapter usage that might excuse the symptom. Only file if every disproof attempt fails. The verification trail (what was tried, what was confirmed) goes into the upstream comment as part of the evidence. |
 | *— Filing cadence & labels —* | |
-| **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (Known Issues Log row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
+| **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (ledger row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
 | **Report opening line** | Every report opens with a plain `<ID> — <short title>` line — no brackets/heading/bold; the ID leads so it stays greppable. Legacy `[<id>]` on filed threads only. See [Issue Report Format](#issue-report-format). |
 | **Section notation: `S<n>` not `§<n>`** | When referring to chapter sections inline, use plain `S3`, `S12` (capital S + number). Never the `§` symbol. The spelled-out word *"Section"* is fine when starting a sentence or in a title that names a section. Applies to local logs, detailed evidence, and upstream filings. |
 | *— Test files —* | |

@@ -41,8 +41,8 @@ self-report — a small model will claim success it did not achieve.
 
 ## Findings
 
-Observations from these runs are **not** eligible for the Known Issues Log in
-`findings-log.md` — they carry no quoted-doc-claim trace (see
+Observations from these runs are **not** eligible for
+[`known-issues/ledger.md`](../../known-issues/ledger.md) — they carry no quoted-doc-claim trace (see
 [`../readme.md`](../readme.md) → *Relationship to the harness protocol*). They go to
 [`../unverified-leads.md`](../unverified-leads.md) and must be re-tested inside
 `documentation-testing/` against a real chapter before earning a `PY-NN-NN` ID.

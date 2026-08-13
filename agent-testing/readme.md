@@ -18,7 +18,7 @@ when the cause traces to context Tina4 shipped, or failed to ship.
 
 **These evaluations are outside the doc-fidelity Protocol.** They do not walk chapters,
 so their observations carry no quoted-documented-claim trace and are **not** eligible for
-the Known Issues Log in `findings-log.md` as-written (`documentation-testing/readme.md`
+the ledger in `known-issues/ledger.md` as-written (`documentation-testing/readme.md`
 rules 11–12: strict traceability, no test rigging).
 
 Observations that surface here land in [`unverified-leads.md`](unverified-leads.md). To
