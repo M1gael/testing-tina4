@@ -1,5 +1,23 @@
 # Python — suggested refinement
 
+> **WITHDRAWN 2026-08-12. The proposal below was built, reviewed, and rejected.** Andre did
+> not want the new page shape, so the three-page split, the separate quick-reference page, the
+> sidebar entry, the measured comparison table on the landing page and every editorial rewrite
+> were abandoned. What shipped instead was the factual corrections re-applied to upstream's own
+> structure — see [`state.md`](state.md) and PRs
+> [tina4-book 152](https://github.com/tina4stack/tina4-book/pull/152) and
+> [tina4-documentation 50](https://github.com/tina4stack/tina4-documentation/pull/50).
+>
+> **Do not build from Part 1 or Part 2.** Two sections are still live and cited elsewhere:
+>
+> - **Comparison measurement spec** — the feature-matched benchmark method. Cited by
+>   `state.md` decision 8 and `comparison-testing/readme.md`.
+> - **Parked — "What it costs you"** — five measured trade-offs with no home yet. Cited by
+>   `outstanding-tasks.md` G8.
+>
+> The rest is kept only as a record of what was decided and why, since the reasoning explains
+> the rejection as much as the plan did.
+
 Proposal for `tina4.com/python/`, built on `python-evaluation.md`. Part 1 is what we
 do and why; Part 2 is the skeleton to write against.
 

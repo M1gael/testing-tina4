@@ -10,8 +10,13 @@ how it works, a small working program, and — the part that is missing today �
 a developer already using Flask, Laravel, Rails, or Express should care. Fewer
 lines of code? Fewer dependencies? Faster? The claim has to be measured, not asserted.
 
-Order of work: **Python first**, then the shape that lands there becomes the
-template for PHP, Ruby, Node.js, JavaScript, and Delphi.
+Order of work: **Python first**, then the other five.
+
+**Revised 2026-08-12.** Python's *restructure* was rejected, so there is no new page shape for
+the other languages to copy. What transfers is the **correction pass**: audit every snippet by
+running it, then fix the page in place, leaving upstream's structure alone. That is
+`outstanding-tasks.md` G2, and the sibling pages carry the same class of error — 15 of 36
+sections were wrong on Python's.
 
 ## Two files per language
 
@@ -73,7 +78,7 @@ documents deliberately say nothing about process.
 
 | Language | Evaluation | Refinement | Shipped |
 |---|---|---|---|
-| Python | `python-evaluation.md` | `python-refinement.md` | not started — see `state.md` |
+| Python | `python-evaluation.md` | `python-refinement.md` — **withdrawn** | **PRs open 2026-08-13** — [book 152](https://github.com/tina4stack/tina4-book/pull/152), [docs 50](https://github.com/tina4stack/tina4-documentation/pull/50). Corrections only, upstream structure kept. See `state.md` |
 | PHP | — | — | — |
 | Ruby | — | — | — |
 | Node.js | — | — | — |

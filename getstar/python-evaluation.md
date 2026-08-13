@@ -1,5 +1,13 @@
 # Python — evaluation of the current entry pages
 
+> **Status: still current, and the reason this directory earned its keep.** The audit below
+> holds — section 2a is the evidence table for the 15-of-36 wrong sections and is cited from
+> [`outstanding-tasks.md`](../outstanding-tasks.md). The *proposal* it fed
+> ([`python-refinement.md`](python-refinement.md)) was rejected; the *findings* shipped, as
+> corrections to upstream's own page structure. Re-verified against tina4-python 3.13.98 before
+> shipping, which dropped two of the fixes as wrong (`@cached` decorator order, the memcached
+> client package). Read [`state.md`](state.md) for what landed.
+
 What exists on `tina4.com/python/` today. Audit only; the proposal lives in
 `python-refinement.md`.
 
