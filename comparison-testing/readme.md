@@ -6,7 +6,7 @@ work for a human reader*; `agent-testing/` asks *does the AI-facing context work
 model*; this directory asks *what does a developer actually save, or lose, by choosing
 Tina4*.
 
-Nothing here ships. It produces numbers that `getstar/` and the public site may then quote,
+Nothing here ships. It produces numbers that the public site may then quote,
 with a date and a method attached.
 
 ## Why this exists
@@ -129,6 +129,8 @@ has to be re-tested inside `documentation-testing/` against a real chapter befor
 The framework stays **read-only** here too, exactly as in `documentation-testing/`. If Tina4
 needs a patch to pass the spec, that is a finding, not a licence to edit it.
 
-Consumers of these numbers: [`getstar/python-refinement.md`](../getstar/python-refinement.md)
-(the landing page carries a placeholder callout where the table goes) and, once reviewed,
-`tina4-documentation/docs/comparisons.md`.
+Consumers of these numbers: [`results/`](results/) is the record. **Nothing is published yet.**
+The restructure that would have carried the table on `tina4.com/python/` was rejected on
+2026-08-12, so no page quotes these figures today. The candidate home is
+`tina4-documentation/docs/comparisons.md`, once it is re-benchmarked — that page is currently
+de-linked from the site's home page for carrying stale March 2026 numbers.
