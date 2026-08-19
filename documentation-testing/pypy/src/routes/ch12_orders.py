@@ -7,7 +7,7 @@
 # handler pushes an order-confirmation onto "emails" and produces onto two other
 # topics ("invoices", "warehouse_sync"), then returns an instant 201. Nothing in
 # the snippet is changed. Served under `tina4 serve`; the served-path behaviour is
-# recorded in findings-log.md / coverage-ledger. (The chapter's snippet carries no
+# recorded in known-issues/ledger.md / documentation-testing/coverage-ledger. (The chapter's snippet carries no
 # auth note — the empirical served result of POSTing without a token is recorded
 # there too.)
 

@@ -8,7 +8,7 @@
 # GET /api/emails/dead, POST /api/emails/retry). Nothing in the snippet is changed.
 # The companion consumer is the S12 worker (kept at src/workers/_email_worker.py;
 # see that file's header for why the leading underscore is required — PY-12-09).
-# Served under `tina4 serve`; served-path behaviour recorded in findings-log.md.
+# Served under `tina4 serve`; served-path behaviour recorded in known-issues/ledger.md.
 
 from tina4_python.core.router import get, post
 from tina4_python.queue import Queue

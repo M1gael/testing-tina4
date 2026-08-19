@@ -29,8 +29,8 @@ the books lives in `documentation/tina4-book/` (refreshable with `tina4 books`),
 The assistant acts as an **independent QA Auditor**. The execution loop is: extract concrete,
 testable claims from the documentation (inputs, outputs, side effects, error handling) → write
 tests that verify those specific claims against the framework → run them → output a Discrepancy
-Report. The framework is **read-only**, tests are **never rigged**, and every test **traces to a
-quoted documented claim**. The ASSISTANT MUST follow these rules without exception:
+Report. The framework is **read-only** while testing (rule 10 carries the one user-triggered
+exception), tests are **never rigged**, and every test **traces to a quoted documented claim**. The ASSISTANT MUST follow these rules without exception:
 
 1.  **Wait for Direction** — do NOT start any chapter until the USER explicitly names it
     (e.g., "Work on Python Chapter 3").
@@ -78,12 +78,20 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
     as covered. (Sharpens *Coverage bar*: every snippet AND every named option.) Enforced by the
     **coverage ledger** (Workflow step 7): before a section is called done, enumerate every snippet
     and option and mark each `tested` / `blocked` / `deferred` — never tag a bare "complete".
-10. **Read-Only Framework — never modify the framework source** — the framework under test
-    (the installed `tina4_python` package, the `tina4` CLI, any vendored framework code) is
-    **strictly off-limits to edits**. Do NOT patch, fix, monkey-patch, shim, or alter it, even
-    on finding a severe bug. The only files the assistant writes are its OWN: tests, probes,
-    fixtures, the live mocks, and these logs. Fixing *ours* (a harness / test / doc-impl
-    mistake) is allowed; touching framework code is not, ever.
+10. **Read-Only Framework — never modify the framework source while testing** — the framework
+    under test (the installed `tina4_python` package, the `tina4` CLI, any vendored framework
+    code) is **off-limits to edits during a chapter run**. Do NOT patch, fix, monkey-patch,
+    shim, or alter it to get *past* a bug, however severe: the run then measures a framework
+    nobody else has, and the output looks identical either way. The only files the assistant
+    writes are its OWN: tests, probes, fixtures, the live mocks, and these logs. Fixing *ours*
+    (a harness / test / doc-impl mistake) is always allowed.
+    **User-triggered exception — testing a candidate fix.** Like the Patching Convention, this
+    is never automatic. When the USER has asked for a fix, the installed copy may be patched to
+    try one out, but only after the defect is already reproduced against the untouched copy,
+    and only under the workflow in the root `readme.md` (*Fixing the framework*): the fix that
+    works moves to the `gitdir/tina4-python` clone with a regression test, the workspace is
+    restored with `uv sync --reinstall-package tina4-python`, and **no reported result — ledger
+    row, fix-verification, audit entry — is ever measured against a patched workspace.**
 11. **Strict Traceability — every test cites the doc** — every test (and every live-mock demo)
     MUST carry, in a docstring or comment, the **exact quoted claim** it verifies plus the
     **documentation file path** it came from. No test exists without a documented claim behind
@@ -98,6 +106,16 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
     to make it a **more faithful** reading of the doc (a mis-stated claim) — never to paper over
     the framework. (See rule 4 and *Verify fidelity, fix ours*: fix the test only when the
     test, not the framework, was wrong.)
+13. **Pull Before You Work — never test against a stale checkout** — at the start of a session
+    fetch every repo in play (`tina4-python`, `tina4-book`, `tina4-documentation`, `tina4-js`),
+    not only the one you expect to touch: a doc claim gets checked against framework source and
+    a framework fix gets checked against the doc describing it. Where a repo is a **fork**, bring
+    it level with the official tina4stack repo before building on it, and branch new work off
+    `upstream/main` — a fork's `main` drifts behind in silence, and the files simply describe an
+    older release with no warning. If a clone has no remote pointing at tina4stack, add one:
+    drift you cannot measure is drift you will report as a finding. Version-stamp every row with
+    what you pulled, not what you had. Details and the exact commands: root `readme.md`,
+    *Working against the real repositories*.
 
 ## Workspaces
 
@@ -107,12 +125,16 @@ quoted documented claim**. The ASSISTANT MUST follow these rules without excepti
 | `documentation-testing/phph/` | PHP | `tina4 init php .` |
 | `documentation-testing/ruru/` | Ruby | `tina4 init ruby .` |
 
+`php-temp-test/` is a vendored tina4php scratch env — **not** a language workspace. Ignore it unless the USER names it.
+
+Coverage ledgers live in **`coverage-ledger/`** (this directory). Confirmed issues live in **`../known-issues/ledger.md`**. Long-form `FIX-NN` proposals live in **`../known-issues/suggested-fixes.md`**. Chapter progress is **`coverage-ledger/README.md`**. Audit history is **`audit-log.md`**. The work backlog is **`outstanding-tasks.md`** (this directory).
+
 Every workspace follows the same layout: `src/{routes,orm,templates}/`, `migrations/`,
 `seeds/`, plus a `tests/` directory for chapter test files. Always bootstrap via the
 `tina4` CLI — never hand-create the structure.
 
 **Test filename prefix is non-negotiable.** `tina4 test` is a thin pytest wrapper
-(see [PY-18-04](findings-log.md#known-issues-log)) and inherits pytest's default discovery rules:
+(see [PY-18-04](../known-issues/ledger.md)) and inherits pytest's default discovery rules:
 files must be named `test_*.py` or `*_test.py` to be collected. A file named
 `ch18_basic.py` is silently skipped (`collected 0 items`, no warning). Combine the
 required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
@@ -147,8 +169,8 @@ required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
     named option** the section contains, each marked `✓ tested` (with the test/probe name or the
     live-mock demo), `⛔ blocked` (with the reason — e.g. broker not stood up, driver not
     installed), `⚠ diverges` (framework differs from the doc — cite the finding ID; its sentinel test is the coverage), `⏸ deferred` (USER-deferred, with a pointer), or `n/a` (nothing to test — concept-only prose). The ledgers live in
-    **`coverage-ledger/`**, one markdown per chapter — `coverage-ledger/<lang>-ch<NN>-<topic>.md`
-    (e.g. `py-ch12-queues.md`). **The Evaluation Progress table in `findings-log.md` MUST carry ONLY a one-line status + a link
+    **`coverage-ledger/`** (this directory), one markdown per chapter — `coverage-ledger/<lang>-ch<NN>-<topic>.md`
+    (e.g. `py-ch12-queues.md`). **The Evaluation Progress table in `coverage-ledger/README.md` MUST carry ONLY a one-line status + a link
     to the ledger — NEVER per-section narrative (all coverage detail belongs in the ledger).** That status must name the open dimensions
     explicitly — e.g. "file-backend complete; rabbitmq/kafka/mongo open", never just "complete".
     **Every sign-off is version-stamped:** each section records the date and the tina4 versions it
@@ -172,7 +194,7 @@ structural findings that can't be expressed as an assertion are carved out ("whe
   doc-fidelity probes (`PY-NN-NN`) and bug-hunt probes (`BH-NN` / `test_issue_<n>_*.py`) are
   distinguishable at a glance while living together in `tests/`. The header also records finding
   history + fix version.
-- One assertion = one observation; reference the probe filename from the KI Log row. Patterns:
+- One assertion = one observation; reference the probe filename from the ledger row. Patterns:
   trace-list inspection via direct dispatcher invocation (`documentation-testing/pypy/tests/test_ch10_middleware_probe.py`
   → `PY-10-01/02/03`); positive contract assertions on framework objects
   (`documentation-testing/pypy/tests/test_ch18_response_object_probe.py` → `PY-18-10`).
@@ -265,7 +287,9 @@ Report only; do **not** attempt fixes, and stop execution after the report. Conf
 discrepancies then graduate to `known-issues/ledger.md` for durable tracking.
 
 **2. Ledger row — the durable record.** When you find a discrepancy, append a row to
-[`known-issues/ledger.md`](../known-issues/ledger.md). The six columns below are still the core of
+[`known-issues/ledger.md`](../known-issues/ledger.md). The live column set is at the top of
+that file (Kind, Language, Last reproduced on, How to reproduce, plus the original six).
+The six columns below are still the core of
 it; the ledger adds four more — **Kind** (documentation or framework), **Language**, **Last
 reproduced on**, and **How to reproduce** — and splits the old `Found` cell into a date plus that
 last-reproduced version. Fill all ten:
@@ -300,7 +324,7 @@ context as the issue needs; Suggested fix may be `—`.
   wasn't recorded. A logged issue's *fix* is tracked by its probe/test, not by re-verifying on
   every version bump.
 - **Suggested fix** — a short inline fix, a `→ FIX-NN` pointer to a long-form write-up in the
-  Suggested Fixes section, or `—`.
+  Suggested Fixes (`../known-issues/suggested-fixes.md`), or `—`.
 - **Note** — the detail, as deep as the issue needs (or nothing): docs-say vs. actual, how/whether
   it was tested, how certain the cause is, the smallest repro hint (file/line, function, exact
   error), and the probe/test filename(s) if any.
@@ -311,13 +335,13 @@ context as the issue needs; Suggested fix may be `—`.
 
 Bug-hunt rows (`BH-<n>`) live in the **same** ledger under this schema — not a
 separate table. For them, **Filed** is the `tina4-python` issue link (the BH-ID's own number)
-and **Note** opens with what's being investigated. See `findings-log.md` → *Bug Hunt* for the
-PY-vs-BH distinction.
+and **Note** opens with what's being investigated. `PY-NN-NN` rows come from walking a chapter;
+`BH-<n>` rows are assigned hunts against an upstream `tina4-python` issue. Both live in the same ledger.
 
-**Terminal-output snippet format.** When the finding is about code that doesn't run, add
-a subsection under the `### Observed terminal output` heading (h3, in the evidence section
-that backs the ledger row) using the canonical neutral format below — same format used in
-the upstream filing body template further down, only the heading level changes:
+**Terminal-output snippet format.** When the finding is about code that doesn't run, put the
+shortest decisive output in the ledger **How to reproduce** or **Note** column. Keep it to the
+shortest decisive line — the `bug-hunting/` directory that used to hold long dumps was removed
+on 2026-08-19, so a row has to stand on its own. Canonical shape:
 
 ````
 #### <ID> — <short title>
@@ -409,7 +433,7 @@ is "missing import", do not write "add the import." (A documentation gap is the 
 its one-line corrective action, e.g. "change `[1]` to `[True]`" or "qualify the field-types
 row per engine", IS the finding and belongs at the close of the `Issue:` paragraph.)
 Non-obvious structural recommendations (naming, restructuring, renames) live in the local
-Suggested Fixes section of [`findings-log.md`](findings-log.md), not in the upstream filing.
+Suggested Fixes file [`suggested-fixes.md`](../known-issues/suggested-fixes.md), not in the upstream filing.
 
 Consolidated findings in the local log may need to be **split into multiple smaller
 filings** upstream. Each filing tackles one symptom so maintainers can react to them
@@ -423,13 +447,14 @@ links back to where it's fully described.
 | Convention | One-line rule |
 |---|---|
 | *— QA auditor stance —* | |
-| **Read-only framework** | Never edit framework source (`tina4_python`, the `tina4` CLI, vendored code) — not even to fix a severe bug. Only OUR files (tests, probes, fixtures, mocks, logs) get written. See [Protocol](#protocol-chapter-based-evaluation) rule 10. |
+| **Pull before you work** | Fetch every repo in play at session start; bring a fork level with the official tina4stack repo before building on it, and branch off `upstream/main`. A finding measured on a stale checkout is a finding about the past. See [Protocol](#protocol-chapter-based-evaluation) rule 13. |
+| **Read-only framework** | Never edit framework source (`tina4_python`, the `tina4` CLI, vendored code) to get *past* a bug, however severe. Only OUR files (tests, probes, fixtures, mocks, logs) get written. Patching it to try a candidate fix is user-triggered only, needs the defect reproduced clean first, and the workspace gets reinstalled after — root `readme.md`, *Fixing the framework*. See [Protocol](#protocol-chapter-based-evaluation) rule 10. |
 | **Strict traceability** | Every test/demo carries the **exact quoted claim + doc file path** it verifies, in a docstring/comment. No test without a documented claim; no speculative edge cases the docs don't state. See [Protocol](#protocol-chapter-based-evaluation) rule 11. |
 | **No test rigging** | Framework diverges from a faithful test → the test FAILS and stays red; record it. Never weaken/`xfail`/skip/`try-except` to go green. Change a test only to read the doc *more* faithfully. See [Protocol](#protocol-chapter-based-evaluation) rule 12. |
-| **Discrepancy Report** | Test-run output per failing test: `Documented Claim (quote+path)` / `Expected` / `Actual`. Report only, then stop — no fixes. Confirmed ones graduate to the KI Log. See [Issue Report Format](#issue-report-format). |
+| **Discrepancy Report** | Test-run output per failing test: `Documented Claim (quote+path)` / `Expected` / `Actual`. Report only, then stop — no fixes. Confirmed ones graduate to `known-issues/ledger.md`. See [Issue Report Format](#issue-report-format). |
 | **Certainty first (verdict > cause)** | The deliverable is an ironclad **works / doesn't-work** verdict — deterministic, reproduced, sentineled (flips when behavior changes). Rule out TEST artifacts on **both** sides (works-by-luck / in-isolation-only isn't *works*; a self-inflicted test bug isn't *broken*). Root cause / `Origin` is an optional bonus that never gates or delays the verdict; if the cause is unknown, still log the certain verdict. |
 | *— Coverage & live mocks —* | |
-| **Coverage ledger** | Never a bare "complete": enumerate every snippet + named option, mark each `✓`/`⚠ diverges`/`⛔ blocked`/`⏸ deferred`/`n/a`, version-stamp each sign-off; one ledger per chapter in `coverage-ledger/`, progress table links to it. See [Workflow](#standard-implementation-workflow) step 7. |
+| **Coverage ledger** | Never a bare "complete": enumerate every snippet + named option, mark each `✓`/`⚠ diverges`/`⛔ blocked`/`⏸ deferred`/`n/a`, version-stamp each sign-off; one ledger per chapter in `coverage-ledger/` (this directory), progress table links to it. See [Workflow](#standard-implementation-workflow) step 7. |
 | **Exhaustive option coverage** | Docs name options a/b/c (engines, queue backends, cache/session stores, auth modes, …) → exercise **all** of them end-to-end, not just one. "Selectable" ≠ "works" — drive a real round-trip, standing up the broker/engine if needed. Can't stand one up → **logged blocker**, never a silent skip or a "covered". See [Protocol](#protocol-chapter-based-evaluation) rule 9. |
 | **Live per-section mock** | Each implemented section ships a browser-navigable mock under `tina4 serve` (verbatim snippet + live result), reachable before the section is "done". Ref `src/routes/chapter_explorer.py` → `/chapters` + `/chapter/{num}`. See [Workflow](#standard-implementation-workflow) step 6. |
 | *— Finding scope & evidence —* | |
@@ -437,12 +462,12 @@ links back to where it's fully described.
 | **Probe pattern as evidence + regression sentinel** | For every code-testable finding, write a probe that asserts the CORRECT state (FAILs pre-fix, PASSes post-fix, stays live as a regression sentinel); first line `# Probe — covers <ID>. <purpose>.`. See [Probes](#probes). |
 | **Adversarial verification before filing** | Before any finding is filed upstream, actively try to disprove the claim across multiple angles — check for alternative code paths, hidden helpers, version-specific behaviour, framework's own internal docs, and inconsistent chapter usage that might excuse the symptom. Only file if every disproof attempt fails. The verification trail (what was tried, what was confirmed) goes into the upstream comment as part of the evidence. |
 | *— Filing cadence & labels —* | |
-| **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (ledger row + detailed evidence section). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
+| **Local-first, upstream-at-EOD** | Findings are logged locally throughout the day (ledger row). The USER batches the upstream filings at end of day. The assistant does not push to file mid-session. |
 | **Report opening line** | Every report opens with a plain `<ID> — <short title>` line — no brackets/heading/bold; the ID leads so it stays greppable. Legacy `[<id>]` on filed threads only. See [Issue Report Format](#issue-report-format). |
 | **Section notation: `S<n>` not `§<n>`** | When referring to chapter sections inline, use plain `S3`, `S12` (capital S + number). Never the `§` symbol. The spelled-out word *"Section"* is fine when starting a sentence or in a title that names a section. Applies to local logs, detailed evidence, and upstream filings. |
 | *— Test files —* | |
 | **Newest stays verbatim, older patched** | Within a chapter, only the most-recently-created test file stays unpatched. When moving to the next file, the USER triggers the patch on the previous one (see [Patching Convention](#patching-convention)). |
 | *— Voice & shape of upstream reports —* | |
-| **Neutral voice** | No "we" / "I" / "us" in prose. Local logs, detailed evidence sections, and upstream filings all use clinical, actor-free phrasing: "the chapter shows", "the framework returned", "the snippet fails because…". See [Issue Report Format](#issue-report-format) for the canonical wording. |
+| **Neutral voice** | No "we" / "I" / "us" in prose. Local logs and upstream filings all use clinical, actor-free phrasing: "the chapter shows", "the framework returned", "the snippet fails because…". See [Issue Report Format](#issue-report-format) for the canonical wording. |
 | **Report shape — location / Issue / Origin** | After the `<ID> — title` line: a one-line doc location, an `Issue:` paragraph, and `Origin:` **only for framework defects**; a doc gap stops at a one-line corrective action. Code/SQL/errors in their own blocks; clinical no-"we" voice. Full spec + legacy-format note in [Issue Report Format](#issue-report-format). |
 

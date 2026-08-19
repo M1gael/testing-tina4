@@ -6,3 +6,5 @@ data/
 logs/
 secrets/
 .env
+.tina4/commands.json
+.tina4/chat/

@@ -3,10 +3,8 @@
 # `tina4 books` extracts to ./tina4-book/ at the cwd. Ignore stray root pulls.
 /tina4-book/
 
-# The documentation source lands at documentation/tina4-book/ — either a `tina4 books`
-# pull or a symlink to a local clone of tina4stack/tina4-book (see CLAUDE.md →
-# Documentation source). Untracked either way: a committed symlink dangles in fresh
-# clones, and a committed pull duplicates an upstream repo. documentation/.gitkeep
-# preserves the parent dir.
+# Local copy of tina4stack/tina4-book — either `tina4 books` or a symlink.
+# Untracked: a committed symlink dangles in fresh clones, and a committed pull
+# duplicates an upstream repo. Recreate with: mkdir -p documentation && tina4 books
 /documentation/tina4-book
 /documentation/tina4-book/*
