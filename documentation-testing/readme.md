@@ -4,6 +4,28 @@ A documentation-fidelity QA harness for the **Tina4** web framework. The officia
 implemented verbatim across multiple languages, run, and every place the framework's actual
 behavior deviates from what the docs say is logged.
 
+**This is its own project.** It lives in `testing-tina4/` alongside other projects, but it is
+not a sub-part of them and it does not share their files. The work is crawling the official
+documentation chapter by chapter and section by section: implement what the page shows,
+establish whether the things it cites exist and behave as described, and record what does not.
+This file is the authority on how that is done — if anything anywhere disagrees with it,
+including the root `readme.md`, this file wins.
+
+**Not here:**
+
+- **Fixing the framework** — any patch, branch, fork, pull request or upstream filing against
+  `tina4-python` or any other framework repo. That is a different activity with different
+  rules; see Protocol rule 10. Its workflow, history and backlog do not belong in this
+  directory, and neither do notes about clones, remotes or releases.
+- **A second issue list** — confirmed findings are logged *out* to `../known-issues/ledger.md`.
+- **Another project's history or backlog** — `audit-log.md` and `outstanding-tasks.md` in this
+  directory are **this project's**: chapter retests, version bumps, doc-testing work not yet
+  done. Framework-fix verification and PR chasing are not this project's history, however much
+  they look like an audit trail.
+
+If a piece of work does not fit the description above, it does not get written here because
+this was the nearest plausible file. It belongs to another project, or to none.
+
 ## Goal
 
 This repo is an **independent QA audit** of the Tina4 framework against its own
@@ -29,8 +51,8 @@ the books lives in `documentation/tina4-book/` (refreshable with `tina4 books`),
 The assistant acts as an **independent QA Auditor**. The execution loop is: extract concrete,
 testable claims from the documentation (inputs, outputs, side effects, error handling) → write
 tests that verify those specific claims against the framework → run them → output a Discrepancy
-Report. The framework is **read-only** while testing (rule 10 carries the one user-triggered
-exception), tests are **never rigged**, and every test **traces to a quoted documented claim**. The ASSISTANT MUST follow these rules without exception:
+Report. The framework is **read-only**, tests are **never rigged**, and every test **traces to a
+quoted documented claim**. The ASSISTANT MUST follow these rules without exception:
 
 1.  **Wait for Direction** — do NOT start any chapter until the USER explicitly names it
     (e.g., "Work on Python Chapter 3").
@@ -78,20 +100,12 @@ exception), tests are **never rigged**, and every test **traces to a quoted docu
     as covered. (Sharpens *Coverage bar*: every snippet AND every named option.) Enforced by the
     **coverage ledger** (Workflow step 7): before a section is called done, enumerate every snippet
     and option and mark each `tested` / `blocked` / `deferred` — never tag a bare "complete".
-10. **Read-Only Framework — never modify the framework source while testing** — the framework
-    under test (the installed `tina4_python` package, the `tina4` CLI, any vendored framework
-    code) is **off-limits to edits during a chapter run**. Do NOT patch, fix, monkey-patch,
-    shim, or alter it to get *past* a bug, however severe: the run then measures a framework
-    nobody else has, and the output looks identical either way. The only files the assistant
-    writes are its OWN: tests, probes, fixtures, the live mocks, and these logs. Fixing *ours*
-    (a harness / test / doc-impl mistake) is always allowed.
-    **User-triggered exception — testing a candidate fix.** Like the Patching Convention, this
-    is never automatic. When the USER has asked for a fix, the installed copy may be patched to
-    try one out, but only after the defect is already reproduced against the untouched copy,
-    and only under the workflow in the root `readme.md` (*Fixing the framework*): the fix that
-    works moves to the `gitdir/tina4-python` clone with a regression test, the workspace is
-    restored with `uv sync --reinstall-package tina4-python`, and **no reported result — ledger
-    row, fix-verification, audit entry — is ever measured against a patched workspace.**
+10. **Read-Only Framework — never modify the framework source** — the framework under test
+    (the installed `tina4_python` package, the `tina4` CLI, any vendored framework code) is
+    **strictly off-limits to edits**. Do NOT patch, fix, monkey-patch, shim, or alter it, even
+    on finding a severe bug. The only files the assistant writes are its OWN: tests, probes,
+    fixtures, the live mocks, and these logs. Fixing *ours* (a harness / test / doc-impl
+    mistake) is allowed; touching framework code is not, ever.
 11. **Strict Traceability — every test cites the doc** — every test (and every live-mock demo)
     MUST carry, in a docstring or comment, the **exact quoted claim** it verifies plus the
     **documentation file path** it came from. No test exists without a documented claim behind
@@ -106,16 +120,6 @@ exception), tests are **never rigged**, and every test **traces to a quoted docu
     to make it a **more faithful** reading of the doc (a mis-stated claim) — never to paper over
     the framework. (See rule 4 and *Verify fidelity, fix ours*: fix the test only when the
     test, not the framework, was wrong.)
-13. **Pull Before You Work — never test against a stale checkout** — at the start of a session
-    fetch every repo in play (`tina4-python`, `tina4-book`, `tina4-documentation`, `tina4-js`),
-    not only the one you expect to touch: a doc claim gets checked against framework source and
-    a framework fix gets checked against the doc describing it. Where a repo is a **fork**, bring
-    it level with the official tina4stack repo before building on it, and branch new work off
-    `upstream/main` — a fork's `main` drifts behind in silence, and the files simply describe an
-    older release with no warning. If a clone has no remote pointing at tina4stack, add one:
-    drift you cannot measure is drift you will report as a finding. Version-stamp every row with
-    what you pulled, not what you had. Details and the exact commands: root `readme.md`,
-    *Working against the real repositories*.
 
 ## Workspaces
 
@@ -139,6 +143,62 @@ files must be named `test_*.py` or `*_test.py` to be collected. A file named
 `ch18_basic.py` is silently skipped (`collected 0 items`, no warning). Combine the
 required prefix with the chapter-prefix convention: `tests/test_ch18_basic.py`,
 `tests/test_ch10_middleware.py`, etc.
+
+## Running a workspace
+
+| Dir | Language | Framework in `.venv` | Entry | Package manager |
+|---|---|---|---|---|
+| `pypy/` | Python (primary) | tina4-python **3.13.105** | `app.py` | `uv` |
+| `phph/` | PHP | *not bootstrapped* | (`index.php`) | composer |
+| `ruru/` | Ruby | *not bootstrapped* | (`app.rb`) | bundler |
+
+The `tina4` CLI (Rust binary) is at `/usr/local/bin/tina4`, currently **3.8.77**. The CLI and
+the frameworks version independently — `tina4 update` for the CLI,
+`uv lock --upgrade-package tina4-python && uv sync` in `pypy/` for the Python framework.
+
+### The Python suite
+
+```bash
+cd documentation-testing/pypy
+uv run tina4 serve                # dev server with watcher/reload
+uv run tina4 test                 # full suite (pytest wrapper — see PY-18-04)
+uv run python -m pytest <path>    # one file (the pytest binary is not on PATH)
+```
+
+Watch `logs/tina4.log` for registration and execution errors.
+
+**ORM-backed chapters need a database first.** Ch06, Ch07, Ch18 and anything else touching
+the ORM raise `RuntimeError: No database bound` on the first ORM call otherwise.
+`conftest.py` loads `.env` into `os.environ` before any test (the framework itself only
+reads `.env` under `tina4 serve`, not under pytest), and the ORM reads `TINA4_DATABASE_URL`
+lazily — so a running database plus a correct `.env` binds the whole suite.
+
+Expected: `postgresql://postgres:tina4test@localhost:5432/tina4testingdb`, with an `items`
+seed table; chapter tables are created by the tests at runtime.
+
+> **The Docker fixture that provided this was deleted on 2026-08-19.** `docker-compose.yml`
+> (a `postgres:18` service named `tina4_pg`) and `dev/postgres-init/init.sh` (which created
+> and seeded the databases on first start) are both gone. Until something replaces them,
+> Postgres has to be provided by hand on the same port and credentials — the tests do not
+> care what is serving. Recover the originals with
+> `git show HEAD:docker-compose.yml` and `git show HEAD:dev/postgres-init/init.sh`.
+
+Probes that need a live database `skipif` when it is unreachable, so a machine without one
+still runs the mocked probes cleanly rather than failing loudly.
+
+Chapter 12's queue tests are broker-gated the same way — each socket-checks its port and
+skips if RabbitMQ / MongoDB / Kafka is down. Brokers were run as plain `docker run`
+containers, never in the compose file, so nothing was lost with it:
+
+```bash
+docker run -d --name tina4_rabbit -p 5672:5672   rabbitmq:3
+docker run -d --name tina4_mongo  -p 27017:27017 mongo:7
+docker run -d --name tina4_kafka  -p 9092:9092   apache/kafka:3.7.0
+```
+
+Only MongoDB hard-requires its driver (`pymongo`) at construction; Kafka and RabbitMQ have
+raw-socket fallbacks. Kafka's first delivery lags ~16s on consumer-group join, so an
+immediate `pop()` returns nothing (PY-12-02).
 
 ## Standard Implementation Workflow
 
@@ -447,8 +507,7 @@ links back to where it's fully described.
 | Convention | One-line rule |
 |---|---|
 | *— QA auditor stance —* | |
-| **Pull before you work** | Fetch every repo in play at session start; bring a fork level with the official tina4stack repo before building on it, and branch off `upstream/main`. A finding measured on a stale checkout is a finding about the past. See [Protocol](#protocol-chapter-based-evaluation) rule 13. |
-| **Read-only framework** | Never edit framework source (`tina4_python`, the `tina4` CLI, vendored code) to get *past* a bug, however severe. Only OUR files (tests, probes, fixtures, mocks, logs) get written. Patching it to try a candidate fix is user-triggered only, needs the defect reproduced clean first, and the workspace gets reinstalled after — root `readme.md`, *Fixing the framework*. See [Protocol](#protocol-chapter-based-evaluation) rule 10. |
+| **Read-only framework** | Never edit framework source (`tina4_python`, the `tina4` CLI, vendored code) — not even to fix a severe bug. Only OUR files (tests, probes, fixtures, mocks, logs) get written. See [Protocol](#protocol-chapter-based-evaluation) rule 10. |
 | **Strict traceability** | Every test/demo carries the **exact quoted claim + doc file path** it verifies, in a docstring/comment. No test without a documented claim; no speculative edge cases the docs don't state. See [Protocol](#protocol-chapter-based-evaluation) rule 11. |
 | **No test rigging** | Framework diverges from a faithful test → the test FAILS and stays red; record it. Never weaken/`xfail`/skip/`try-except` to go green. Change a test only to read the doc *more* faithfully. See [Protocol](#protocol-chapter-based-evaluation) rule 12. |
 | **Discrepancy Report** | Test-run output per failing test: `Documented Claim (quote+path)` / `Expected` / `Actual`. Report only, then stop — no fixes. Confirmed ones graduate to `known-issues/ledger.md`. See [Issue Report Format](#issue-report-format). |

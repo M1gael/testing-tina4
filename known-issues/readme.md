@@ -1,8 +1,13 @@
 # known-issues
 
+**Not a project — the shared record.** Every project in `testing-tina4/` logs its confirmed
+findings *out* to here, and no project keeps a second list of its own. This is the one
+directory that more than one project writes into; that is deliberate, and it is the only
+exception to one-directory-per-project.
+
 **[`ledger.md`](ledger.md) is the only bug log in this repo.** Every confirmed problem
 in the Tina4 documentation and in framework code, across every language, one row each.
-**105 rows** as of 2026-08-19 (see the header of `ledger.md` for the live status mix).
+**106 rows** as of 2026-08-20 (see the header of `ledger.md` for the live status mix).
 
 | File | What |
 |---|---|
