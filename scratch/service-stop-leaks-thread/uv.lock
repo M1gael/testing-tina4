@@ -1,0 +1,23 @@
+version = 1
+revision = 3
+requires-python = ">=3.12"
+
+[[package]]
+name = "service-stop-leaks-thread"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "tina4-python" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "tina4-python", specifier = ">=3.1.0" }]
+
+[[package]]
+name = "tina4-python"
+version = "3.13.107"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/21/5e273e233b2417d38f49e854b0eefb2882491d66acc354348a2f3ff32941/tina4_python-3.13.107.tar.gz", hash = "sha256:c7d875a2e2b27bbdd3cea4b0a78c28ac2fbb98a2bd63daa9d7c3cfaff10404c6", size = 1106834, upload-time = "2026-08-20T10:41:56.513Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/66/c4/6fda22106ea94f5f33dfe3dfa4904e5376f4a8ce82b2d48a004b442890e1/tina4_python-3.13.107-py3-none-any.whl", hash = "sha256:00837088cfd011b9561f0e9a0b8110e8ed9cd48e397f982f9286f67194fda9ba", size = 1215170, upload-time = "2026-08-20T10:41:54.464Z" },
+]

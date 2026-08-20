@@ -1,0 +1,80 @@
+diff --git a/tina4_python/service/__init__.py b/tina4_python/service/__init__.py
+index fbc20c3..14d0779 100644
+--- a/tina4_python/service/__init__.py
++++ b/tina4_python/service/__init__.py
+@@ -248,6 +248,7 @@ class Service:
+ # ---------------------------------------------------------------------------
+ 
+ _list = list  # preserve builtin before class scope shadows it
++_UNSET = object()
+ 
+ 
+ class ServiceRunner:
+@@ -261,23 +262,48 @@ class ServiceRunner:
+ 
+     # -- Registration -------------------------------------------------------
+ 
+-    def register(self, name: str, handler: callable, interval: int = 60,
++    def register(self, name: str, handler: callable, interval: int = _UNSET,
+                  cron: str = None, daemon: bool = False, max_retries: int = 3):
+         """Register a background service.
+ 
+         Args:
+             name: Human-readable service name (used in logs).
+-            handler: Callable that receives a :class:`ServiceContext`.
+-            interval: Seconds between runs (ignored when *cron* is set).
++            handler: Callable that receives a :class:`ServiceContext`, or an object
++                    with a ``run()`` method. If an object with ``run()`` is provided,
++                    it is adapted: its ``run()`` is called with no arguments, ``daemon``
++                    is forced ``True`` because the object owns its loop, and the instance
++                    is retained so ``ServiceRunner.stop()`` can call its ``stop()``.
++            interval: Seconds between runs (ignored when *cron* is set or when an object
++                    with ``run()`` is adapted).
+             cron: Cron expression, e.g. ``"*/5 * * * *"``.
+             daemon: If ``True`` the handler manages its own loop; the runner
+                     calls it once and does not reschedule.
+             max_retries: Number of consecutive crash restarts before giving up.
+         """
+-        self.services.append({
++        instance = None
++        if not callable(handler):
++            if hasattr(handler, "run") and callable(getattr(handler, "run")):
++                instance = handler
++                actual_handler = lambda _ctx=None: instance.run()
++                daemon = True
++                if interval is not _UNSET or cron is not None:
++                    _get_log().warning(
++                        "interval or cron ignored for adapted service instance; run() owns its loop",
++                        name=name,
++                    )
++            else:
++                raise TypeError(f"handler for '{name}' must be callable")
++        else:
++            actual_handler = handler
++            if isinstance(handler, Service):
++                instance = handler
++
++        resolved_interval = 60 if interval is _UNSET else interval
++
++        service_entry = {
+             "name": name,
+-            "handler": handler,
+-            "interval": interval,
++            "handler": actual_handler,
++            "interval": resolved_interval,
+             "cron": cron,
+             "daemon": daemon,
+             "max_retries": max_retries,
+@@ -285,7 +311,11 @@ class ServiceRunner:
+             "running": False,
+             "last_run": None,
+             "started_at": None,
+-        })
++        }
++        if instance is not None:
++            service_entry["instance"] = instance
++
++        self.services.append(service_entry)
+ 
+     def register_service(self, name: str, service: "Service", max_retries: int = 3):
+         """Register a class-based service (:class:`Service` instance) by name.

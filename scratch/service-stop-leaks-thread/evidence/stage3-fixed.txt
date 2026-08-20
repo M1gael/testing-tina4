@@ -1,0 +1,53 @@
+Applying candidate patch to service/__init__.py...
+  patch applied successfully
+
+==============================================================
+ ServiceRunner Stop Thread Leak Proof — WITH CANDIDATE FIX (.fw16-candidate.patch)
+ tina4-python 3.13.107
+==============================================================
+
+==============================================================
+ Tina4 ServiceRunner Shutdown Lifecycle Verification
+==============================================================
+Registered services:
+  - 'control_service': plain callable via register(daemon=True), watching ctx.stop_event
+  - 'class_service':   Service subclass via register_service(), watching self.should_stop()
+
+Starting ServiceRunner...
+{"timestamp":"2026-08-20T12:59:56.865Z","level":"INFO","message":"Service started","context":{"name":"control_service"}}
+{"timestamp":"2026-08-20T12:59:56.865Z","level":"INFO","message":"Service started","context":{"name":"class_service"}}
+Running state (after ~200ms):
+  control_service counter: 20
+  class_service counter:   20
+
+Calling ServiceRunner.stop()...
+{"timestamp":"2026-08-20T12:59:57.065Z","level":"INFO","message":"Stopping all services"}
+{"timestamp":"2026-08-20T12:59:57.069Z","level":"INFO","message":"Service thread exited","context":{"name":"class_service"}}
+{"timestamp":"2026-08-20T12:59:57.070Z","level":"INFO","message":"Service thread exited","context":{"name":"control_service"}}
+{"timestamp":"2026-08-20T12:59:57.070Z","level":"INFO","message":"All services stopped"}
+Stop timing:
+  stop() duration: 0.0050 seconds
+
+Post-shutdown observations:
+  Control Callable ('control_service'):
+    - Thread 'svc-control_service' alive at stop return: False
+    - Counter at stop return:   20
+    - Counter 200ms later:      20 (delta: 0)
+    - Thread alive 200ms later: False
+
+  Class-based Service ('class_service'):
+    - Thread 'svc-class_service' alive at stop return:   False
+    - Counter at stop return:   20
+    - Counter 200ms later:      20 (delta: 0)
+    - Thread alive 200ms later: False
+
+Property Evaluation:
+  PASS  Control service terminated promptly (stop_event observed)
+  PASS  stop() completed promptly (0.0050s < 1.0s)
+  PASS  Class service thread 'svc-class_service' terminated cleanly
+  PASS  Class service stopped executing (counter did not advance after stop)
+==============================================================
+ VERDICT: All properties hold (Service shutdown cleanly)
+==============================================================
+  venv restored from backup
+  restore verified (md5 332d3e38acdbc418d3b19994c6e43e5c)

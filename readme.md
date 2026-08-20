@@ -7,14 +7,16 @@ how the project works.** This file says only which projects exist and what each 
 It does not restate their rules, their workflow, or their tooling — to know how a project
 operates, open its readme.
 
-One directory per project. The single exception is `known-issues/`, which is not a project
-but a shared record every project writes into.
+One directory per project, with two deliberate exceptions: `known-issues/`, which is not a
+project but a shared record every project writes into, and `scratch/`, which holds one
+throwaway sub-directory per issue being proven rather than a single body of work.
 
 ## Projects
 
 | Directory | What it is for | Its rules live in |
 |---|---|---|
 | `documentation-testing/` | Crawl the official Tina4 documentation chapter by chapter and section by section. Implement what each page literally shows, in real Tina4 projects, and establish whether the things it cites exist and behave as described — plus any general documentation faults found on the way. | [`documentation-testing/readme.md`](documentation-testing/readme.md) |
+| `scratch/` | Prove a framework issue is real before anything is fixed. One runnable Tina4 app per issue: reproduce the wrong behaviour on the released framework, explain it down to `file:line`, then show the candidate fix closing it. Only after that does the fix go near the fork. | [`scratch/readme.md`](scratch/readme.md) |
 
 ## The shared record
 

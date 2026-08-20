@@ -1,0 +1,31 @@
+Applying candidate patch to the installed framework (will be restored).
+  patch applied
+
+==============================================================
+ ResponseCache cross-session replay — WITH CANDIDATE FIX
+ tina4-python 3.13.107   port 17451
+==============================================================
+
+1. Two sessions, same URL /account/balance
+   ALICE sent Cookie: session=alice_session_token
+     -> X-Cache: none  {"user":"Alice Smith","account_number":"ACC-9921","balance":"$84,250.00"}
+   BOB   sent Cookie: session=bob_session_token
+     -> X-Cache: none  {"user":"Bob Jones","account_number":"ACC-1044","balance":"$12.50"}
+  PASS  BOB must NOT receive Alice's body
+
+2. Response sets Cache-Control: no-store on /account/no-store
+   BOB -> {"user":"Bob Jones","account_number":"ACC-1044","balance":"$12.50"}
+  PASS  no-store must prevent storage
+
+3. Control — Cache-Control: public must still cache (cookies present)
+   second request X-Cache: HIT
+  PASS  public response still served from cache
+
+4. Control — no cookie at all must still cache
+   second request X-Cache: HIT
+  PASS  cookieless response still served from cache
+
+==============================================================
+ VERDICT: all properties hold
+==============================================================
+  venv restored from backup

@@ -1,0 +1,49 @@
+
+==============================================================
+ ServiceRunner Plain Object run() Proof — STOCK FRAMEWORK (as installed)
+ tina4-python 3.13.107
+==============================================================
+
+==============================================================
+ Tina4 ServiceRunner Plain Object Lifecycle Verification
+==============================================================
+Registered services:
+  - 'heartbeat':        plain class instance with run()/stop() via register()
+  - 'plain_function':   plain callable taking (ctx) via register()
+  - 'subclass_service': Service subclass via register_service()
+
+Starting ServiceRunner...
+{"timestamp":"2026-08-20T13:05:29.830Z","level":"ERROR","message":"Service error","context":{"error":"'HeartbeatService' object is not callable","max_retries":3,"name":"heartbeat","retry":1}}
+{"timestamp":"2026-08-20T13:05:29.831Z","level":"INFO","message":"Service started","context":{"name":"heartbeat"}}
+{"timestamp":"2026-08-20T13:05:29.831Z","level":"INFO","message":"Service started","context":{"name":"plain_function"}}
+{"timestamp":"2026-08-20T13:05:29.832Z","level":"INFO","message":"Service started","context":{"name":"subclass_service"}}
+Running state (after ~300ms):
+  heartbeat invocations:        0 (running flag: False)
+  plain_function invocations:   1
+  subclass_service invocations: 15
+
+Calling ServiceRunner.stop()...
+{"timestamp":"2026-08-20T13:05:30.132Z","level":"INFO","message":"Stopping all services"}
+{"timestamp":"2026-08-20T13:05:30.133Z","level":"INFO","message":"Service thread exited","context":{"name":"heartbeat"}}
+{"timestamp":"2026-08-20T13:05:30.133Z","level":"INFO","message":"Service thread exited","context":{"name":"plain_function"}}
+{"timestamp":"2026-08-20T13:05:35.134Z","level":"INFO","message":"All services stopped"}
+Stop timing:
+  stop() duration: 5.0021 seconds
+
+Post-shutdown observations:
+  heartbeat running flag:        False
+  subclass_service should_stop(): False
+
+Testing invalid handler registrations:
+  register('bad_int', 42) -> ACCEPTED (silent acceptance)
+  register('bad_obj', <object object at 0x7faa93bb4ca0>) -> ACCEPTED (silent acceptance)
+
+Property Evaluation:
+  FAIL  Plain class instance with run() was not executed (invocations: 0)
+  FAIL  Plain class instance stop() was not called on runner.stop()
+  PASS  Control services executed normally (plain function and Service subclass)
+  FAIL  Service subclass failed to stop promptly (duration: 5.0021s, should_stop: False)
+  FAIL  Invalid handlers accepted silently at registration time (0/2 rejected)
+==============================================================
+ VERDICT: 4 property/properties broken (ServiceRunner plain object bug confirmed)
+==============================================================

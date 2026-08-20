@@ -1,0 +1,48 @@
+
+==============================================================
+ ServiceRunner Stop Thread Leak Proof — STOCK FRAMEWORK (as installed)
+ tina4-python 3.13.107
+==============================================================
+
+==============================================================
+ Tina4 ServiceRunner Shutdown Lifecycle Verification
+==============================================================
+Registered services:
+  - 'control_service': plain callable via register(daemon=True), watching ctx.stop_event
+  - 'class_service':   Service subclass via register_service(), watching self.should_stop()
+
+Starting ServiceRunner...
+{"timestamp":"2026-08-20T12:59:50.727Z","level":"INFO","message":"Service started","context":{"name":"control_service"}}
+{"timestamp":"2026-08-20T12:59:50.727Z","level":"INFO","message":"Service started","context":{"name":"class_service"}}
+Running state (after ~200ms):
+  control_service counter: 20
+  class_service counter:   20
+
+Calling ServiceRunner.stop()...
+{"timestamp":"2026-08-20T12:59:50.928Z","level":"INFO","message":"Stopping all services"}
+{"timestamp":"2026-08-20T12:59:50.930Z","level":"INFO","message":"Service thread exited","context":{"name":"control_service"}}
+{"timestamp":"2026-08-20T12:59:55.931Z","level":"INFO","message":"All services stopped"}
+Stop timing:
+  stop() duration: 5.0036 seconds
+
+Post-shutdown observations:
+  Control Callable ('control_service'):
+    - Thread 'svc-control_service' alive at stop return: False
+    - Counter at stop return:   20
+    - Counter 200ms later:      20 (delta: 0)
+    - Thread alive 200ms later: False
+
+  Class-based Service ('class_service'):
+    - Thread 'svc-class_service' alive at stop return:   True
+    - Counter at stop return:   510
+    - Counter 200ms later:      529 (delta: 19)
+    - Thread alive 200ms later: True
+
+Property Evaluation:
+  PASS  Control service terminated promptly (stop_event observed)
+  FAIL  stop() blocked for thread join timeout (5.0036s >= 1.0s, expected prompt exit)
+  FAIL  Class service thread 'svc-class_service' leaked in threading.enumerate()
+  FAIL  Class service continued running after stop (counter advanced by 19)
+==============================================================
+ VERDICT: 3 property/properties broken (Service stop leaked thread)
+==============================================================

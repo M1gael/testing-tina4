@@ -1,0 +1,57 @@
+Applying candidate patches to service/__init__.py...
+  Stock MD5: 332d3e38acdbc418d3b19994c6e43e5c
+  Applying patch 1: .fw16-candidate.patch...
+  Applying patch 2: .fw02-candidate.patch...
+  Patched MD5: fa945cf3a45806b7ccb5d934ba9dee08
+
+==============================================================
+ ServiceRunner Plain Object run() Proof — WITH CANDIDATE FIXES (.fw16 + .fw02)
+ tina4-python 3.13.107
+==============================================================
+
+==============================================================
+ Tina4 ServiceRunner Plain Object Lifecycle Verification
+==============================================================
+Registered services:
+  - 'heartbeat':        plain class instance with run()/stop() via register()
+  - 'plain_function':   plain callable taking (ctx) via register()
+  - 'subclass_service': Service subclass via register_service()
+
+Starting ServiceRunner...
+{"timestamp":"2026-08-20T13:05:39.029Z","level":"INFO","message":"Service started","context":{"name":"heartbeat"}}
+{"timestamp":"2026-08-20T13:05:39.030Z","level":"INFO","message":"Service started","context":{"name":"plain_function"}}
+{"timestamp":"2026-08-20T13:05:39.030Z","level":"INFO","message":"Service started","context":{"name":"subclass_service"}}
+Running state (after ~300ms):
+  heartbeat invocations:        6 (running flag: True)
+  plain_function invocations:   1
+  subclass_service invocations: 15
+
+Calling ServiceRunner.stop()...
+{"timestamp":"2026-08-20T13:05:39.330Z","level":"INFO","message":"Stopping all services"}
+{"timestamp":"2026-08-20T13:05:39.331Z","level":"INFO","message":"Service thread exited","context":{"name":"plain_function"}}
+{"timestamp":"2026-08-20T13:05:39.332Z","level":"INFO","message":"Service thread exited","context":{"name":"heartbeat"}}
+{"timestamp":"2026-08-20T13:05:39.333Z","level":"INFO","message":"Service thread exited","context":{"name":"subclass_service"}}
+{"timestamp":"2026-08-20T13:05:39.333Z","level":"INFO","message":"All services stopped"}
+Stop timing:
+  stop() duration: 0.0031 seconds
+
+Post-shutdown observations:
+  heartbeat running flag:        False
+  subclass_service should_stop(): True
+
+Testing invalid handler registrations:
+  register('bad_int', 42) -> REJECTED with TypeError ('bad_int' in message)
+  register('bad_obj', <object object at 0x7feb8e2e4cf0>) -> REJECTED with TypeError ('bad_obj' in message)
+
+Property Evaluation:
+  PASS  Plain class instance with run() executed (6 invocations)
+  PASS  Plain class instance stop() called on runner.stop() (running flag cleared)
+  PASS  Control services executed normally (plain function and Service subclass)
+  PASS  Service subclass stopped promptly (0.0031s < 1.0s)
+  PASS  Invalid handlers rejected at registration time with TypeError
+==============================================================
+ VERDICT: All properties hold (ServiceRunner plain object support verified)
+==============================================================
+
+Restoring stock framework...
+  restore verified (md5 332d3e38acdbc418d3b19994c6e43e5c)

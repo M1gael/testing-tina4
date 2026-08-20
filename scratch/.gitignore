@@ -1,0 +1,9 @@
+# `tina4 init` writes a generated TINA4_SECRET into .env.local and its own
+# .gitignore does not cover that file. This repo is swept by `add -A`, so
+# without this every scaffolded proof project would publish its signing secret.
+.env.local
+**/.env.local
+
+# Belt and braces — the per-project .gitignore already covers these.
+.venv/
+**/.venv/

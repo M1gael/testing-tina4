@@ -1,0 +1,31 @@
+
+==============================================================
+ @cached decorator attach probe — STOCK FRAMEWORK
+ tina4-python 3.13.107   port 17453
+==============================================================
+
+1. Route /docs-order — @cached(max_age=120) above @get (documented order)
+   first  request -> X-Cache: none  body: {"t":1787231150.7427976}
+   second request -> X-Cache: none  body: {"t":1787231150.875617}
+  FAIL  @cached above @get should serve second response from cache (X-Cache: HIT)
+        expected X-Cache: HIT, got 'none' (body changed: yes)
+
+2. Route /reversed-order — @get above @cached(max_age=120) (reversed order)
+   first  request -> X-Cache: none  body: {"t":1787231150.905507}
+   second request -> X-Cache: none  body: {"t":1787231151.035309}
+  FAIL  @get above @cached should serve second response from cache (X-Cache: HIT)
+        expected X-Cache: HIT, got 'none' (body changed: yes)
+
+3. Control — /middleware-form with middleware=["ResponseCache:120"]
+   first  request -> X-Cache: MISS  body: {"t":1787231151.0621765}
+   second request -> X-Cache: HIT  body: {"t":1787231151.0621765}
+  PASS  middleware=["ResponseCache:120"] serves second response from cache (X-Cache: HIT)
+
+4. Control — /undecorated (no cache requested)
+   first  request -> X-Cache: none  body: {"t":1787231151.2203312}
+   second request -> X-Cache: none  body: {"t":1787231151.35658}
+  PASS  undecorated route is not cached (no X-Cache, body updates)
+
+==============================================================
+ VERDICT: 2 property/properties broken
+==============================================================

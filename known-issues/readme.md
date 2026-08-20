@@ -16,6 +16,7 @@ in the Tina4 documentation and in framework code, across every language, one row
 
 **Not here:**
 
+- The proof that a row is real, and the fix built on it → [`scratch/`](../scratch/)
 - Chapter coverage → [`documentation-testing/coverage-ledger/`](../documentation-testing/coverage-ledger/)
 - Version-bump / retest history → [`documentation-testing/audit-log.md`](../documentation-testing/audit-log.md)
 - Work backlog → [`documentation-testing/outstanding-tasks.md`](../documentation-testing/outstanding-tasks.md)
@@ -36,3 +37,18 @@ get broken most often:
    prose. Rows reading *not recorded* need one written the next time anyone touches them.
 2. **Version-stamp what you actually observed.** If you only re-read the source, the row is
    `pending-retest`, not `open` — a found-version is not a reproduced-version.
+
+## Rows that become fixes
+
+A row is a claim. Before anyone writes a fix for it, the claim gets proven in its own project
+under [`scratch/`](../scratch/) — reproduced on the released framework, explained down to the
+`file:line` that causes it, and only then used to demonstrate that a candidate fix closes it.
+That order is not bureaucracy: a fix built on a symptom rather than a mechanism is a guess, and
+three of the fixes on this ledger were blocked in review for exactly that reason.
+
+Note the proof project on the row, and keep the row the source of truth — `scratch/` is
+disposable and its projects are deleted once a fix is merged. Anything that must survive the
+project belongs in the row, self-contained, before the project goes.
+
+Status only reaches `fix-in-review` when a pull request is actually open. A fix sitting on a
+local branch, however well tested, leaves the row `open`.
