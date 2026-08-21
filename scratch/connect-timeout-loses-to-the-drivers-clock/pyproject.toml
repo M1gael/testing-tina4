@@ -1,0 +1,12 @@
+[project]
+name = "connect-timeout-loses-to-the-drivers-clock"
+version = "0.1.0"
+description = "A Tina4 Python project"
+requires-python = ">=3.12"
+dependencies = [
+    "tina4-python>=3.1.0",
+    "psycopg2-binary>=2.9.9",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

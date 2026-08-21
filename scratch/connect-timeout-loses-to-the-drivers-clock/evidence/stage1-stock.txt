@@ -1,0 +1,37 @@
+
+==================================================================
+ PY-FW-18 — the framework's connect-timeout message loses a race
+ STOCK FRAMEWORK (as released, unpatched)
+ tina4-python 3.13.107   psycopg2/libpq 2.9.12 170009
+==================================================================
+
+-- The two clocks, straight out of the driver binary -------------
+  nm -D --undefined-only _psycopg.cpython-313-x86_64-linux-gnu.so
+                     U gettimeofday@GLIBC_2.2.5
+    (gettimeofday is CLOCK_REALTIME. No clock_gettime import at all,
+     so nothing in libpq reads the monotonic clock the framework uses.)
+
+-- Controls: clocks agree, so the promise holds ------------------
+  server=silent   SKEW_RATE=1.0   bound=2s  monotonic elapsed= 2.0162s   PROMISE KEPT   DatabaseConnectTimeout
+      Database connect to 127.0.0.1:38525 timed out after 2.0s (TINA4_DATABASE_CONNECT_TIMEOUT=2 seconds). Raise TINA4_DATABASE_CONNECT_TIMEOUT if the server is simply slow, or set it to 0 to wait indefinitely.
+  server=dribble  SKEW_RATE=1.0   bound=2s  monotonic elapsed= 2.0151s   PROMISE KEPT   DatabaseConnectTimeout
+      Database connect to 127.0.0.1:37207 timed out after 2.0s (TINA4_DATABASE_CONNECT_TIMEOUT=2 seconds). Raise TINA4_DATABASE_CONNECT_TIMEOUT if the server is simply slow, or set it to 0 to wait indefinitely.
+
+-- Clocks diverge: realtime runs ahead of monotonic --------------
+  server=dribble  SKEW_RATE=1.3   bound=2s  monotonic elapsed= 1.5641s   PROMISE BROKEN  psycopg2.OperationalError
+      connection to server at "127.0.0.1", port 46411 failed: timeout expired
+  server=dribble  SKEW_RATE=2.0   bound=2s  monotonic elapsed= 1.5157s   PROMISE BROKEN  psycopg2.OperationalError
+      connection to server at "127.0.0.1", port 44679 failed: timeout expired
+
+-- How wide the window is on the silent server (the CI case) -----
+  server=silent   SKEW_RATE=1.0   bound=2s  monotonic elapsed= 2.0160s   PROMISE KEPT   DatabaseConnectTimeout
+      Database connect to 127.0.0.1:46193 timed out after 2.0s (TINA4_DATABASE_CONNECT_TIMEOUT=2 seconds). Raise TINA4_DATABASE_CONNECT_TIMEOUT if the server is simply slow, or set it to 0 to wait indefinitely.
+      libpq read the realtime clock 5 times; 4 before the long wait:
+        t =     0.0000 ms
+        t =     0.0202 ms   (+0.0202 ms)
+        t =     0.0261 ms   (+0.0059 ms)
+        t =     0.0522 ms   (+0.0261 ms)
+        t =  2001.0542 ms   (+2001.0021 ms)   <- poll() returned; wait is over
+      exposure window = 0.0522 ms. A forward realtime jump only shortens the wait if it lands in there,
+      because the last read is where the remaining budget becomes a relative poll() timeout -- and the kernel measures THAT on monotonic.
+

@@ -1,0 +1,77 @@
+--- a/tina4_python/database/adapter.py
++++ b/tina4_python/database/adapter.py
+@@ -74,6 +74,27 @@
+     return None if seconds is None else max(1, math.ceil(seconds))
+ 
+ 
++def bound_was_reached(elapsed_monotonic: float, elapsed_realtime: float,
++                      seconds: float | None) -> bool:
++    """Did a connect that failed take at least the configured bound?
++
++    Two readings, because the framework and the driver do not share a clock.
++    :func:`connect_deadline` times on ``time.monotonic()``; libpq times its own
++    ``connect_timeout`` on ``gettimeofday()``. NTP moves the wall clock and
++    never touches the monotonic one, so a forward step or slew can make the
++    driver abort before a monotonic reading has reached the bound.
++
++    Taking the LARGER of the two readings covers both directions: the realtime
++    reading catches a forward jump, and keeping the monotonic reading means a
++    BACKWARD jump cannot hide a timeout that really did happen.
++
++    Pure, so the decision is testable without faking a clock.
++    """
++    if seconds is None:
++        return False
++    return max(elapsed_monotonic, elapsed_realtime) >= seconds
++
++
+ @contextlib.contextmanager
+ def connect_deadline(host, port):
+     """Bound a driver connect, and name the bound when it expires.
+@@ -105,19 +126,39 @@
+     throws away the driver's own diagnosis, and for the watchdog adapters it
+     would abandon a thread the driver could have unwound itself.
+ 
+-    The invariant that makes this work: the driver's option is always >= our
+-    bound (:func:`driver_connect_timeout_seconds` rounds UP), and our clock
+-    starts BEFORE the call, so the driver's own timeout cannot expire before
+-    ``elapsed`` has reached our bound. Break either half and a bare driver
+-    message reaches the caller instead of ours.
++    THE INVARIANT, AND WHY IT TAKES TWO CLOCKS
++    ------------------------------------------
++    What decides the race is not the driver's OPTION against our bound — it
++    is the driver's ABORT INSTANT against our reading of a clock. Two things
++    have to hold, and each of them was broken:
++
++    * The driver's option must be STRICTLY greater than our bound, so its
++      deadline lands after ours instead of on top of it.
++      :func:`driver_connect_timeout_seconds` returns ``floor(s) + 1`` for that
++      reason; ``ceil`` left a whole-second bound with no separation at all, and
++      the default bound is a whole number.
++
++    * The comparison has to be made on the clock the DRIVER used. libpq times
++      ``connect_timeout`` with ``gettimeofday()`` — CLOCK_REALTIME — while a
++      duration in Python belongs on ``time.monotonic()``. NTP slews and steps
++      realtime and never touches monotonic, so a monotonic reading can still
++      sit below the bound at the instant the driver has already given up, and
++      then the driver's own message — which names no tunable — reaches
++      the caller. :func:`bound_was_reached` compares both readings.
++
++    Break either half and a bare driver message reaches the caller instead of
++    ours.
+     """
+     seconds = resolve_connect_timeout()
+     started = time.monotonic()
++    started_realtime = time.time()
+     try:
+         yield seconds
+     except Exception as failure:
+-        elapsed = time.monotonic() - started
+-        if seconds is not None and elapsed >= seconds:
++        elapsed_monotonic = time.monotonic() - started
++        elapsed_realtime = time.time() - started_realtime
++        elapsed = max(elapsed_monotonic, elapsed_realtime)
++        if bound_was_reached(elapsed_monotonic, elapsed_realtime, seconds):
+             raise DatabaseConnectTimeout(
+                 f"Database connect to {host}:{port} timed out after {elapsed:.1f}s "
+                 f"({CONNECT_TIMEOUT_VARIABLE}={seconds:g} seconds). "

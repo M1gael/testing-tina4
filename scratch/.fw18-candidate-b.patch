@@ -1,0 +1,29 @@
+--- a/tina4_python/database/adapter.py
++++ b/tina4_python/database/adapter.py
+@@ -62,16 +62,20 @@
+ 
+ 
+ def driver_connect_timeout_seconds(seconds: float | None) -> int | None:
+-    """A driver's own connect-timeout option value, rounded UP to whole seconds.
++    """A driver's own connect-timeout option, in whole seconds, STRICTLY longer
++    than the bound it protects.
+ 
+     Every driver option here (libpq ``connect_timeout``, mysql-connector
+     ``connection_timeout``, pymssql ``login_timeout``, pyodbc ``timeout``) is
+-    whole seconds. Rounding UP matters: a driver that fired EARLY — at 2s for a
+-    configured 2.5s — would raise its own raw error before our bound was
+-    reached, and the caller would see a bare driver message instead of one
+-    naming the variable that caused it.
++    whole seconds, so the bound has to become an integer — and which integer
++    decides whether the driver's deadline lands after ours or on top of it.
++    ``ceil`` put it on top: for a whole-second bound ``ceil(N) == N``, and the
++    shipped default of 10 is whole. ``floor(s) + 1`` is strictly greater for
++    every input, fractional or whole, which is what leaves the driver's own
++    timer the room to fire first — the thing this wrapper is built on. The
++    cost is at most one extra second, on a path that has already failed.
+     """
+-    return None if seconds is None else max(1, math.ceil(seconds))
++    return None if seconds is None else max(1, math.floor(seconds) + 1)
+ 
+ 
+ @contextlib.contextmanager

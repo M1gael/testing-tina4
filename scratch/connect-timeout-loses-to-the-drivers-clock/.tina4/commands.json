@@ -1,0 +1,128 @@
+{
+  "fingerprint": ".venv/bin/tina4python|1787229825043282282|368",
+  "manifest": {
+    "framework": "python",
+    "version": "3.13.107",
+    "commands": [
+      {
+        "name": "init",
+        "summary": "Scaffold a new project",
+        "args": [
+          "dir?"
+        ]
+      },
+      {
+        "name": "serve",
+        "summary": "Start dev server (default: 0.0.0.0:7146)"
+      },
+      {
+        "name": "start",
+        "summary": "Alias for serve"
+      },
+      {
+        "name": "migrate",
+        "summary": "Run pending database migrations"
+      },
+      {
+        "name": "migrate:create",
+        "summary": "Create a new migration file",
+        "args": [
+          "description"
+        ]
+      },
+      {
+        "name": "migrate:rollback",
+        "summary": "Rollback last migration batch"
+      },
+      {
+        "name": "migrate:status",
+        "summary": "Show migration status"
+      },
+      {
+        "name": "env-migrate",
+        "summary": "Rewrite .env to TINA4_-prefixed names (v3.12 migration)",
+        "args": [
+          "path?"
+        ]
+      },
+      {
+        "name": "seed",
+        "summary": "Run database seeders"
+      },
+      {
+        "name": "routes",
+        "summary": "List all registered routes"
+      },
+      {
+        "name": "test",
+        "summary": "Run test suite"
+      },
+      {
+        "name": "queue",
+        "summary": "Run queue workers and manage jobs",
+        "subcommands": [
+          "work",
+          "stats",
+          "retry",
+          "clear"
+        ]
+      },
+      {
+        "name": "build",
+        "summary": "Build the deployable Docker image"
+      },
+      {
+        "name": "ai",
+        "summary": "Install AI coding assistant context"
+      },
+      {
+        "name": "generate",
+        "summary": "Generate scaffolding (see Generators below)",
+        "subcommands": [
+          "model",
+          "route",
+          "crud",
+          "migration",
+          "middleware",
+          "test",
+          "form",
+          "view",
+          "auth",
+          "service",
+          "queue",
+          "validator",
+          "seeder",
+          "websocket",
+          "listener"
+        ]
+      },
+      {
+        "name": "console",
+        "summary": "Start interactive REPL with framework loaded"
+      },
+      {
+        "name": "commands",
+        "summary": "List available commands (add --json for machine form)"
+      },
+      {
+        "name": "help",
+        "summary": "Show this help"
+      },
+      {
+        "name": "doctor",
+        "summary": "Check installed languages and tools"
+      },
+      {
+        "name": "setup",
+        "summary": "Guided, menu-driven setup: install everything + scaffold a ready-to-run project"
+      },
+      {
+        "name": "deploy",
+        "summary": "Generate deployment scaffolding (Dockerfile, systemd unit, nginx block, cPanel)",
+        "args": [
+          "target"
+        ]
+      }
+    ]
+  }
+}

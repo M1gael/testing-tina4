@@ -7,7 +7,7 @@ exception to one-directory-per-project.
 
 **[`ledger.md`](ledger.md) is the only bug log in this repo.** Every confirmed problem
 in the Tina4 documentation and in framework code, across every language, one row each.
-**106 rows** as of 2026-08-20 (see the header of `ledger.md` for the live status mix).
+**109 rows** as of 2026-08-21 (see the header of `ledger.md` for the live status mix).
 
 | File | What |
 |---|---|
