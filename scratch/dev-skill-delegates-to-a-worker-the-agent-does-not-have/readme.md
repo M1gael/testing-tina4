@@ -4,30 +4,13 @@
 **Measured on:** `tina4-developer-nodejs` SKILL.md as shipped at tags **3.13.103** and
 **3.13.114**, against **codex-cli 0.147.0**, 2026-08-24.
 
-## The issue
+Reporter-raised: a Codex session on a tina4-nodejs app kept saying what it was about to do and
+doing little or none of it.
 
-`tina4-developer-<lang>` — the developer skill `tina4 ai` installs for python, php, ruby and
-nodejs — tells the assistant, in the imperative, **not to do the work itself**:
+## Why the report is this skill
 
-> ### 1. Keep the main session free — delegate to a worker
-> When the developer gives an instruction, don't do the work inline. **Allocate it to a plan, then
-> spawn a separate worker to execute it**, so the main session is always free for the next input.
-> — `.claude/skills/tina4-developer-nodejs/SKILL.md:155`
-
-Spawning a worker is a **harness capability, not a framework one**. Claude Code has it. Codex, as
-configured by `tina4 ai`, does not: `codex debug prompt-input` renders the whole model-visible
-prompt for a tina4 project and the word *worker* appears **zero** times in it. The skill uses it 17
-times.
-
-So an agent that reads this skill is holding an instruction it cannot carry out, and the skill
-never says what to do instead. What it can still do is the surrounding ceremony — write the plan
-file, announce the next step, report — which is what a developer sees: an assistant that keeps
-saying what it is about to do.
-
-## Why the report is this skill and not the app
-
-The three surface markers in the reported session are all literal instructions from this file, and
-nothing else in the Tina4 tree emits them:
+The three surface markers in the reported session are literal instructions from this one file,
+and nothing else in the Tina4 tree emits them:
 
 | marker in the report | instruction | line |
 |---|---|---|
@@ -38,59 +21,110 @@ nothing else in the Tina4 tree emits them:
 The 🤖 marker and the worker instruction are both present at tag **3.13.103**, the version the
 reported app pins. `Announce before you act` is **not** — it first appears at **3.13.105**
 (2026-08-19, `5cf5c5b`). The reported session used both, so the skill in that developer's context
-was ≥3.13.105 even though their app pins 3.13.103 — `skillsRef()` keys the fetch to the installed
-framework version, so the newer text arrived by some other route (a later `tina4 ai` run, or the
-global `~/.claude/skills` install, which by design lags or leads independently).
+was ≥3.13.105 even though their app pins 3.13.103; `skillsRef()` keys the fetch to the installed
+framework version, so the newer text arrived by another route (a later `tina4 ai` run, or the
+global `~/.claude/skills` install, which lags or leads independently by design).
 
-## The mechanism
+## The instruction inventory
 
-Three defects compound, in order of weight.
+The file is at war with itself. **Twelve** instructions end a turn or suppress an action;
+**four** push the other way.
 
-**1. The instruction is unsatisfiable and has no fallback.** `SKILL.md:155-157` is unconditional.
-Nothing in the section says "if your harness has no worker mechanism, build inline." The one
-sentence that addresses cross-agent portability is about *cost tiers*, not about whether workers
-exist at all:
+**Gates**
+
+| line | instruction |
+|---|---|
+| `:44` | never write more than two files between announcements |
+| `:48` | five named stop-points — first file write, migration, dependency, scaffolding past two files, full test suite |
+| `:131` | Delegate row: *"Spawn a worker per task; the main session stays free"* |
+| `:156` | *"When the developer gives an instruction, don't do the work inline"* |
+| `:236` | *"Developer approval is only required to **start** the plan"* |
+| `:409` | *"Ask the developer which one they want before writing UI code"* |
+| `:483` | *"**Before writing any UI code, ask:** 'Are we server-rendered or client-rendered?'"* |
+| `:769` | *"Every feature starts with `plan/<feature-name>.md` … **No exceptions.**"* |
+| `:850` | `## Status: Complete` only *"After developer confirmation"* |
+| `:861` | *"'Server-rendered or client-rendered?' — Ask for any UI work … If unclear, ask."* |
+| `:939` | *"Ask short questions."* |
+
+**Counter-gates**
+
+| line | instruction |
+|---|---|
+| `:122` | *"but if you build in the main session, you still own the plan file"* |
+| `:137-152` | infer the outcome and PROCEED — *"Do not stop to ask: a stated assumption the developer can correct beats a plan blocked waiting on a reply"* |
+| `:233-238` | *"do not wait for per-item approval … **that is why plans stall**"* |
+| `:835` | *"Do **not** wait for per-item human approval."* |
+
+The file therefore contains an accurate, named diagnosis of the reported failure — and patches it
+in one narrow place while leaving five larger gates standing.
+
+## The fix that missed
+
+`de5358d` (2026-08-13) is titled:
+
+> `docs(skills): let AI complete plans autonomously (drop approval-to-start / confirm-to-close / ask-first gates); add model + terse-thinking guidance to tina4-js`
+
+It rewrote the outcome-asking section and two Working Method table rows. It **never touched any of
+the five gates it names**:
+
+```bash
+git show de5358d -- .claude/skills/tina4-developer-nodejs/SKILL.md \
+  | grep -cE "approval is only required to|After developer confirmation|Ask for any UI work|Before writing any UI code|Ask the developer which one"
+# 0
+```
+
+`git blame` puts `:236`, `:850` and `:861` at `16eb0c8` (2026-08-11) and `:409`, `:483` at
+`6d7c3568` (2026-07-08) — both **before** the commit that claimed to remove them. All five are at
+HEAD today, in `.claude` and `.agents` alike.
+
+## How it got this shape
+
+| date | commit | what changed |
+|---|---|---|
+| 2026-07-08 | `6d7c3568` | developer skill split per language; the two UI ask-gates already present |
+| 2026-07-09 | `0d84ef9` | *"add The Tina4 Working Method"* — the worker operating model, when `.claude/skills` was the repo's only tree |
+| 2026-08-04 | `33c0a0b` | *"add Codex skill entrypoints"* — `.agents/skills` created, operating model copied across unchanged |
+| 2026-08-11 | `eece8fd` | Cursor entrypoints under `.cursor/skills` |
+| 2026-08-11 | `16eb0c8` | plan discipline unified: names the stall (*"that is why plans stall"*) **and** adds the start gate |
+| 2026-08-12 | `4d7df10` | the agent-agnostic tier claim at `:161` |
+| 2026-08-13 | `de5358d` | the gate-drop that missed five gates |
+| 2026-08-19 | `5cf5c5b` | `Announce before you act` |
+| 2026-08-24 | — | the report |
+
+The operating model predates Codex support by four weeks. When Codex support arrived it was a file
+copy, not an adaptation.
+
+## The worker instruction — a real defect, not the cause
+
+`SKILL.md:155-157` is unconditional:
+
+> When the developer gives an instruction, don't do the work inline. **Allocate it to a plan, then
+> spawn a separate worker to execute it**, so the main session is always free for the next input.
+
+Spawning a worker is a harness capability. `codex debug prompt-input` renders the whole
+model-visible prompt for a tina4 project and the word *worker* appears **zero** times in it; the
+skill uses it 17 times. The one sentence addressing portability is about *cost tiers*, not about
+whether workers exist:
 
 > This is agent-agnostic: Claude maps it to model + reasoning-effort, Codex to its model/effort
 > selector, Cursor to its model picker. — `SKILL.md:161`
 
-A model/effort selector is a setting. It does not spawn anything. The sentence reads as a portability
-guarantee while quietly assuming the capability it is meant to make portable.
+A model/effort selector is a setting. It does not spawn anything.
 
-**2. It contradicts its own section preamble, 33 lines earlier.** `SKILL.md:122`:
+**But it is not what the reported agent was acting on.** Across the two skill-carrying arms of the
+delivery experiment, **0 of 23 and 0 of 27 agent turns** mention a worker, delegation or the main
+session in the agent's own output. The model read the instruction, could not act on it, said
+nothing about it, and built inline anyway — resolving the `:122` / `:156` contradiction toward the
+preamble. It is the clearest defect in the file and the weakest driver of the behaviour.
 
-> Prefer keeping the main session free (scope / delegate / report) and spawning workers to build —
-> **but if you build in the main session**, you still own the plan file …
+## Two experiments
 
-The preamble permits inline work; §1's heading and first sentence forbid it. A reader resolving the
-conflict toward the more specific, more imperative §1 stops building.
+### 1. Delivery — `prove.sh`
 
-**3. The announcement contract is framed as an interception point.** `SKILL.md:29-46` asks for
-three announcements per action — Plan, Next, Done — and states the purpose plainly:
-
-> A developer who can see the plan can stop it before you spend their afternoon undoing it.
-> … one line before each step, **so the developer can stop between steps** rather than after all of
-> them.
-
-Told that the point of an announcement is to give the developer a chance to intervene, and told
-separately that the main session must stay free "for the next input", an agent in a turn-taking
-session has every reason to end the turn on the announcement. That is the reported behaviour.
-
-`tina4-js` carries a **softened** copy of the same Working Method (`tina4-js/SKILL.md:84-107` in the
-port repos): *"Prefer a worker per task; main session stays free **when possible**"*, and it keeps
-the "or you" escape in the Delegate row. It also gates on developer approval — *"the plan file
-(approved to start)"*, *"scope it with the developer first"* — which is its own turn-ending pull,
-but it never says "don't do the work inline". The hard form is only in the four developer skills.
-
-## Before / after
-
-`prove.sh` runs three Codex sessions on an identical fixture and an identical prompt, differing
-only in how the skill is delivered. **HOME is redirected to a throwaway directory** — the first run
-of this experiment was void because the machine's own `~/.agents/skills` and `~/.claude/skills`
-carry the same six tina4 skills, so the control arm had the skill too and both arms emitted
-`About to:`.
-
-Measured 2026-08-24, codex-cli 0.147.0:
+Three arms, identical fixture and prompt, differing only in how the skill reaches Codex.
+**HOME is redirected to a throwaway directory**; the first run of this experiment was void because
+the machine's own `~/.agents/skills` and `~/.claude/skills` carry the same six tina4 skills, so the
+control arm had the skill too and both arms emitted `About to:`.
 
 | arm | skill delivery | `About to:` | 🤖 | log lines | `plan/` | task finished |
 |---|---|---|---|---|---|---|
@@ -98,49 +132,71 @@ Measured 2026-08-24, codex-cli 0.147.0:
 | D | none — control | **0** | **0** | 6 534 | no | yes |
 | E | `AGENTS.md` pointer → `.claude/skills/` (what `tina4 ai` writes) | 8 | 7 | 10 423 | **yes** | yes |
 
-Two things the table settles:
+Both delivery paths reach Codex 0.147.0 — the native registry and the prose pointer alike. The
+behavioural contract is the skill's, not Codex's: arm D is the same fixture, model and prompt and
+emits neither marker.
 
-- **Both delivery paths reach Codex 0.147.0.** Arm C proves the native `.agents/skills/` registry
-  works; arm E proves the `AGENTS.md` pointer block `tina4 ai` writes is enough on its own, which
-  is the path a real scaffolded project takes. Ledger `CLI-FW-06` was measured on codex-cli 0.145.0
-  and says Codex receives none of the skills; that half is now out of date.
-- **The behavioural contract is the skill's, not Codex's.** Arm D is the same fixture, same model,
-  same prompt, and emits neither marker.
+### 2. Ablation — `ablate.sh`
 
-## What is NOT proven here
+Four arms, all carrying the skill via `.agents/skills/`, differing only in which section of
+SKILL.md was deleted. Section bounds are resolved by search, not hard-coded, so an edited skill
+still ablates correctly.
 
-**A stall was not reproduced.** All three arms finished the task. `codex exec` is non-interactive —
-there is no "next input" to keep the session free for, and no developer to stop between steps — so
-the two instructions that would end a turn have no referent, and the cost shows up as overhead
-instead: arm E used 60% more log lines than the control and was the only arm to build a `plan/`
-tree.
+| arm | skill variant | `About to:` | 🤖 | log lines | files changed |
+|---|---|---|---|---|---|
+| F | full | 6 | 6 | 10 638 | 7 |
+| G | minus `Announce before you act` (`:29-61`) | **0** | 5 | 11 815 | 7 |
+| H | minus `1. Keep the main session free` (`:155-164`) | 6 | 5 | 12 868 | 8 |
+| I | minus both | **0** | 16 | 5 278 | 6 |
 
-The reported failure is a **multi-turn interactive** one, and reproducing it needs a driven
-interactive session rather than `codex exec`. Until that exists, the causal claim rests on the
-three literal markers matching and on the instruction being unsatisfiable — strong, but short of
-the standard `scratch/readme.md` sets. Say so on the row; do not upgrade it quietly.
+The announcement count tracks the Announce block exactly and is untouched by removing the worker
+section. Every arm still read the skill (🤖 survives in all four) and every arm still shipped the
+feature — the block is separable and deleting it cost nothing in output.
 
-## Suggested fix
+**Log volume did not separate** (F 10 638, G 11 815, H 12 868). An earlier draft of this readme
+suggested the skill drives verbosity; the ablation does not support that and the claim is dropped.
 
-Make the delegation **conditional on the capability**, and keep the plan discipline unconditional:
+## What is still NOT proven
 
-- Rewrite `SKILL.md:155-157` to say the plan file is mandatory and worker delegation is an
-  optimisation *where the harness provides workers* — naming the check, not assuming the answer.
-- Delete the contradiction: either `:122` or `:155` has to go.
-- Reframe `SKILL.md:29-46` so an announcement precedes an action **in the same turn**, rather than
-  being described as the developer's chance to stop it. The stop-point framing is what turns a
-  progress line into an end-of-turn.
-- Correct `:161`, which names Codex and Cursor as if a model/effort selector were a worker.
+**A stall.** Every arm in both experiments finished the task. `codex exec` is non-interactive —
+there is no "next input" to keep the session free for and no developer to stop between steps, so
+the instructions that would end a turn have no referent. `codex`'s
+`default_mode_request_user_input` feature flag was tried as a way in and is inert: enabling it
+changes the rendered prompt by zero bytes.
 
-The same four edits apply to python, php and ruby — the sections are line-for-line the same file
-with the language swapped (`tina4-developer-python/SKILL.md:152`, `-php/SKILL.md:157`,
-`-ruby/SKILL.md:155`).
+The reported failure is multi-turn and interactive, and reproducing it needs a driven interactive
+session. Until that exists the causal claim rests on the three literal markers matching, on the
+gate inventory, and on the ablation attributing the announcements to a single removable block —
+strong, but short of the standard `scratch/readme.md` sets. Say so on the row; do not upgrade it
+quietly.
 
-## Run it
+## Suggested fix, in evidence order
+
+1. **Finish `de5358d`** — remove the five gates it was meant to drop: `:236`, `:850`, `:409`,
+   `:483`, `:861`.
+2. **Reframe `:29-61`** so an announcement precedes an action *in the same turn* rather than being
+   the developer's chance to stop it. Ablation says this is free.
+3. **Make delegation conditional** on the harness having workers; keep the plan file unconditional.
+4. **Delete the `:122` / `:156` contradiction** — one of them has to go.
+5. **Correct `:161`**, which names Codex and Cursor as if a model/effort selector were a worker.
+6. **Reconcile the two plan doctrines** — the Working Method (`:120-257`) and *Plan First — Always*
+   (`:764-868`) restate the same rules in different words, and `:769`'s "No exceptions" is stricter.
+
+All six apply identically to python, php and ruby: the four files are the same document with the
+language swapped, and every gate above is present in all four with identical counts
+(`tina4-developer-python/SKILL.md:152`, `-php/SKILL.md:157`, `-ruby/SKILL.md:155` for the worker
+section).
+
+`tina4-js` is **clear** for the worker imperative and for the approval gates — the shipped port
+copy (v1.5.2) reads *"the plan file (outcome stated, then start)"*. The gated text survives only in
+the tina4-js repo's own copy (v1.5.0), which `sync-tina4-skills.sh` calls "a soft mirror on its own
+release cadence" and does not gate.
+
+## Run them
 
 ```bash
-NODEJS_REPO=~/gitdir/tinaforks/tina4-nodejs ./prove.sh
+NODEJS_REPO=~/gitdir/tinaforks/tina4-nodejs ./prove.sh    # 3 codex sessions, ~5-10 min
+NODEJS_REPO=~/gitdir/tinaforks/tina4-nodejs ./ablate.sh   # 4 codex sessions, ~10-20 min
 ```
 
-Costs three real Codex sessions, roughly 5-10 minutes. Everything is written under a `mktemp -d`;
-nothing is left in this directory.
+Both cost real tokens. Everything is written under a `mktemp -d`; nothing is left here.
