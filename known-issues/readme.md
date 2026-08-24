@@ -7,12 +7,12 @@ exception to one-directory-per-project.
 
 **[`ledger.md`](ledger.md) is the only bug log in this repo.** Every confirmed problem
 in the Tina4 documentation and in framework code, across every language, one row each.
-**109 rows** as of 2026-08-21 (see the header of `ledger.md` for the live status mix).
+**116 rows** as of 2026-08-24 (see the header of `ledger.md` for the live status mix).
 
 | File | What |
 |---|---|
 | [`ledger.md`](ledger.md) | The issue list. One row per bug or doc discrepancy. |
-| [`suggested-fixes.md`](suggested-fixes.md) | Long-form `FIX-NN` proposals. Not a second issue list — the ledger's Suggested-fix column points here (`→ FIX-NN`). |
+| [`suggested-fixes.md`](suggested-fixes.md) | Long-form `FIX-NN` proposals. Not a second issue list — the ledger's `Fix` column points here (`→ FIX-NN`). |
 
 **Not here:**
 
@@ -35,8 +35,13 @@ get broken most often:
 
 1. **Reproduce it before you write it.** How-to-reproduce is the command or the sequence, not
    prose. Rows reading *not recorded* need one written the next time anyone touches them.
-2. **Version-stamp what you actually observed.** If you only re-read the source, the row is
-   `pending-retest`, not `open` — a found-version is not a reproduced-version.
+2. **Version-stamp what you actually observed.** A found-version is not a reproduced-version.
+   If you only re-read the source, say so in the `Version` cell rather than implying a run.
+3. **Fill in `Port status` honestly.** Tina4 ships the same framework in six languages and the
+   ports are translated from one another, so a defect found in one usually travelled with the
+   translation. A row is not characterised until every port has been checked, and `clear` —
+   checked, defect absent — is a finding worth recording, not an omission. Write `?` when
+   nobody looked, and never write `clear` to make a row look finished.
 
 ## Rows that become fixes
 
@@ -50,5 +55,12 @@ Note the proof project on the row, and keep the row the source of truth — `scr
 disposable and its projects are deleted once a fix is merged. Anything that must survive the
 project belongs in the row, self-contained, before the project goes.
 
-Status only reaches `fix-in-review` when a pull request is actually open. A fix sitting on a
-local branch, however well tested, leaves the row `open`.
+There is no Status column — a row's state is whatever its ports say. A port reaches `filed#N`
+only when an issue or PR is actually open in *that port's* repository. A fix sitting on a local
+branch is `fixed`, and the Note must name the branch; that is a real state the old schema could
+not express, so branch work used to read as though nothing had been done.
+
+All ten Tina4 checkouts live in `gitdir/tinaforks/`, so a cross-port check needs no cloning —
+see that directory's `CLAUDE.md` for the layout and the fork-freshness rule. Keeping them in
+one directory is load-bearing: `sync-tina4-skills.sh` finds siblings relative to its own repo
+and silently compares nothing when they are split (`ALL-FW-05`).

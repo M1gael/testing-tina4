@@ -37,7 +37,7 @@ claim nobody can check.
 **Not here:**
 
 - **The fix itself** — a candidate patch may sit here while it is being proven, but the fix
-  lands in the fork at `gitdir/tina4-python`, on its own branch. This directory is evidence,
+  lands in the fork at `gitdir/tinaforks/tina4-python`, on its own branch. This directory is evidence,
   not a source tree.
 - **A second issue list** — findings are logged out to `../known-issues/ledger.md`. A project
   here corresponds to a ledger row; it does not replace one.
@@ -54,10 +54,10 @@ The framework, the book and the site live outside this repo. A proof project wri
 stale copy proves something about a version nobody runs.
 
 ```
-gitdir/tina4-python/          origin = tina4stack; fork = MichaelC8E
-gitdir/tina4-book/            fork of tina4stack/tina4-book      (fork = MichaelC8E)
-gitdir/tina4-documentation/   fork of tina4stack/tina4-documentation
-gitdir/tina4-js/              clone of tina4stack/tina4-js
+gitdir/tinaforks/tina4-python/          origin = tina4stack; fork = MichaelC8E
+gitdir/tinaforks/tina4-book/            fork of tina4stack/tina4-book      (fork = MichaelC8E)
+gitdir/tinaforks/tina4-documentation/   fork of tina4stack/tina4-documentation
+gitdir/tinaforks/tina4-js/              clone of tina4stack/tina4-js
 ```
 
 **Pull before you prove anything.** All of them, not just the one you expect to touch — a
@@ -113,7 +113,7 @@ nothing, so it needs no cleanup and cannot be forgotten.
 
 ## After the proof
 
-The fix lands on its own branch in `gitdir/tina4-python`, cut from the current upstream branch,
+The fix lands on its own branch in `gitdir/tinaforks/tina4-python`, cut from the current upstream branch,
 carrying a regression test that fails against unfixed source. Then it is verified a second time
 there, from the fork rather than from this directory.
 

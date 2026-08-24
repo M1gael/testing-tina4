@@ -1,0 +1,9 @@
+{
+  "name": "nodejs-service-stop-does-not-stop-the-service",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "dependencies": {
+    "tina4-nodejs": "^3.13.114"
+  }
+}

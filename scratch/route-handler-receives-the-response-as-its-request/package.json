@@ -1,0 +1,8 @@
+{
+  "name": "route-handler-receives-the-response-as-its-request",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "tina4-nodejs": "^3.13.103"
+  }
+}

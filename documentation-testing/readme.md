@@ -347,47 +347,45 @@ Report only; do **not** attempt fixes, and stop execution after the report. Conf
 discrepancies then graduate to `known-issues/ledger.md` for durable tracking.
 
 **2. Ledger row — the durable record.** When you find a discrepancy, append a row to
-[`known-issues/ledger.md`](../known-issues/ledger.md). The live column set is at the top of
-that file (Kind, Language, Last reproduced on, How to reproduce, plus the original six).
-The six columns below are still the core of
-it; the ledger adds four more — **Kind** (documentation or framework), **Language**, **Last
-reproduced on**, and **How to reproduce** — and splits the old `Found` cell into a date plus that
-last-reproduced version. Fill all ten:
+[`known-issues/ledger.md`](../known-issues/ledger.md). **The live column set is defined at the
+top of that file and is the only authority** — it was restructured on 2026-08-24 and this
+section is a summary, not a spec. Eight columns:
 
 ```
-| <ID> | <Status> | <Filed> | <Found> | <Suggested fix> | <Note> |
+| <Code> | <Kind> | <Port status> | <Version> | <Date found> | <Fix> | <Note> | <Reproduce> |
 ```
 
-The first four columns are **always populated**. Note carries as much (or as little)
-context as the issue needs; Suggested fix may be `—`.
+- **Code** — `<kind>-<subsystem>-<NN>` lowercase, e.g. `f-orm-01`, `d-ws-01`. `f` framework,
+  `d` documentation; subsystem from the closed vocabulary in `ledger.md`. Legacy `PY-NN-NN`,
+  `BH-<n>` and `SCOPE-KIND-NN` codes are **frozen** wherever they are quoted upstream; renamed
+  rows carry their old ID in the Note under **Record:**. Never renumber a filed row.
+- **Kind** — `framework` or `documentation`. Redundant for new codes but load-bearing for the
+  legacy ones, whose IDs encode no kind.
+- **Port status** — one token per port in the order `py php rb nd js dlp cli`, written
+  `port:state` with `#N` once filed. Lifecycle `affected → fixed → filed#N → merged#N`, plus
+  `?` (never checked), `n/a` (no such surface) and `clear` (checked, absent). **This column is
+  the row's status — there is no Status or Filed column**, because one defect across five
+  languages is five branches and five pull requests, which a single cell cannot hold. Never
+  turn a `?` into a `clear` without running the reproduction against that port.
+- **Version** — the version the behaviour was *actually observed on*. If you only re-read the
+  source, say so; a found-version is not a reproduced-version.
+- **Date found** — `<YYYY-MM-DD>`.
+- **Fix** — a short inline fix, a `→ FIX-NN` pointer into
+  [`suggested-fixes.md`](../known-issues/suggested-fixes.md), or `—`.
+- **Note** — the detail: docs-say vs actual, how it was tested, how certain the cause is, the
+  smallest repro hint (`file:line`, function, exact error), the proof project, and the
+  cross-port check. **Record:** at the end carries the old ID, the scope gloss and the filing
+  text folded in from the removed columns.
+- **Reproduce** — the command or the sequence, not prose.
 
-- **ID** — `<LANG>-<CH>-<NN>` where LANG = `PY` | `PH` | `RB` | `CLI`, CH = zero-padded
-  chapter, NN = sequence within that chapter (e.g. `PY-03-02`). The ID encodes language and
-  chapter, so there are **no separate Lang/Chapter columns**. Assigned bug-hunt investigations
-  use `BH-<n>` instead, where `<n>` is the upstream `tina4-python` issue number — same table,
-  same schema, just a different ID prefix.
-- **Status** — `open` | `fixed` | `workaround` | `pending-retest` | `not-a-bug`.
-- **Filed** — the upstream GitHub issue/PR link, or `no` if not yet filed. **Filing
-  destination depends on the ID type:** doc-fidelity findings (`PY-`/`PH-`/`RB-`) are filed
-  against the book repo **[`tina4stack/tina4-book`](https://github.com/tina4stack/tina4-book/issues)**
-  (e.g. [#142](https://github.com/tina4stack/tina4-book/issues/142)); bug-hunt
-  investigations (`BH-<n>`) are filed against the framework repo
-  **[`tina4stack/tina4-python`](https://github.com/tina4stack/tina4-python/issues)** — the
-  issue number *is* the `<n>`. **Chapter-evaluation findings all live on the chapter's
-  `tina4-book` thread — a `PY-`/`PH-`/`RB-` finding that turns out to be a *framework*
-  defect (not just a doc gap) still files there, not on `tina4-python`. `BH-<n>` is
-  reserved for standalone framework bug-hunts opened directly against `tina4-python`.**
-  The USER files (see *Local-first, upstream-at-EOD* in the
-  Convention Recap); the assistant only records the link here once it's filed.
-- **Found** — `<YYYY-MM-DD>` the issue was logged · the framework version it was found on
-  (e.g. `2026-06-17 · 3.13.30`). Version may be omitted only for pre-convention rows where it
-  wasn't recorded. A logged issue's *fix* is tracked by its probe/test, not by re-verifying on
-  every version bump.
-- **Suggested fix** — a short inline fix, a `→ FIX-NN` pointer to a long-form write-up in the
-  Suggested Fixes (`../known-issues/suggested-fixes.md`), or `—`.
-- **Note** — the detail, as deep as the issue needs (or nothing): docs-say vs. actual, how/whether
-  it was tested, how certain the cause is, the smallest repro hint (file/line, function, exact
-  error), and the probe/test filename(s) if any.
+**Filing destination still depends on the finding type.** Doc-fidelity findings are filed
+against the book repo
+**[`tina4stack/tina4-book`](https://github.com/tina4stack/tina4-book/issues)**; framework
+bug-hunts go to the language repo — and to *that port's* repo, so `rb:filed#39` is ruby's 39,
+not python's. A chapter-evaluation finding that turns out to be a framework defect still files
+on `tina4-book`. The USER files (see *Local-first, upstream-at-EOD* in the Convention Recap);
+the assistant records the link in the port token once it is filed.
+
 - **Sub-letter notation** (e.g. `PY-18-08b`, `PY-18-07a`) refers to *bullets within* a single
   finding row — informal pointers used in PATCH comments and upstream filing titles to
   isolate one of several symptoms grouped under one ID. Sub-letters are **not** separate
