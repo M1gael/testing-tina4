@@ -172,6 +172,12 @@ quietly.
 
 ## Suggested fix, in evidence order
 
+A concrete patch for all six now exists: **[`suggested-fix.md`](suggested-fix.md)**, runnable as
+`./apply-fix.sh` (diff only) / `--write`. Verified to apply cleanly to all twelve files — 4 skills
+x 3 delivery trees — with 0 unmatched anchors and 0 gates left behind. Nothing has been applied,
+branched or filed. The summary below is the rationale; the patch is the text.
+
+
 1. **Finish `de5358d`** — remove the five gates it was meant to drop: `:236`, `:850`, `:409`,
    `:483`, `:861`.
 2. **Reframe `:29-61`** so an announcement precedes an action *in the same turn* rather than being
@@ -197,6 +203,7 @@ release cadence" and does not gate.
 ```bash
 NODEJS_REPO=~/gitdir/tinaforks/tina4-nodejs ./prove.sh    # 3 codex sessions, ~5-10 min
 NODEJS_REPO=~/gitdir/tinaforks/tina4-nodejs ./ablate.sh   # 4 codex sessions, ~10-20 min
+./apply-fix.sh                                            # the proposed patch, as a diff
 ```
 
 Both cost real tokens. Everything is written under a `mktemp -d`; nothing is left here.

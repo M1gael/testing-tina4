@@ -42,6 +42,15 @@ get broken most often:
    translation. A row is not characterised until every port has been checked, and `clear` —
    checked, defect absent — is a finding worth recording, not an omission. Write `?` when
    nobody looked, and never write `clear` to make a row look finished.
+4. **Verify the documentation, per port, and say so.** A framework change is not finished
+   until the page documenting that behaviour has been read and compared against it — see the
+   rule in `gitdir/tinaforks/CLAUDE.md`. `Doc verified` has the same shape as `Port status`
+   because each language has its own page. A port's token stays `?` until that port's
+   `Port status` is settled; checking a page against code you are about to change measures
+   nothing. **A row is closed only when neither column has a `?` left.** `ok` and `silent` are
+   findings worth having; `stale` means a documentation PR is owed. Rows of kind
+   `documentation` are `n/a` throughout. If the check finds the page wrong in a way the fix
+   does not address, that is a **new row**, not an edit to the page.
 
 ## Rows that become fixes
 

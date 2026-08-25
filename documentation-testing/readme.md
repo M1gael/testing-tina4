@@ -349,10 +349,10 @@ discrepancies then graduate to `known-issues/ledger.md` for durable tracking.
 **2. Ledger row — the durable record.** When you find a discrepancy, append a row to
 [`known-issues/ledger.md`](../known-issues/ledger.md). **The live column set is defined at the
 top of that file and is the only authority** — it was restructured on 2026-08-24 and this
-section is a summary, not a spec. Eight columns:
+section is a summary, not a spec. Nine columns:
 
 ```
-| <Code> | <Kind> | <Port status> | <Version> | <Date found> | <Fix> | <Note> | <Reproduce> |
+| <Code> | <Kind> | <Port status> | <Doc verified> | <Version> | <Date found> | <Fix> | <Note> | <Reproduce> |
 ```
 
 - **Code** — `<kind>-<subsystem>-<NN>` lowercase, e.g. `f-orm-01`, `d-ws-01`. `f` framework,
@@ -367,6 +367,12 @@ section is a summary, not a spec. Eight columns:
   the row's status — there is no Status or Filed column**, because one defect across five
   languages is five branches and five pull requests, which a single cell cannot hold. Never
   turn a `?` into a `clear` without running the reproduction against that port.
+- **Doc verified** — added 2026-08-25, **same shape as `Port status`**: one token per port,
+  same order `py php rb nd js dlp cli`. Each language has its own page and they can disagree.
+  States: `?` not checked, `n/a` no page to check, `ok` correct, `silent` no page covers it,
+  `stale` now wrong, then `filed#N` / `merged#N` for the documentation PR. A port's token stays
+  `?` until that port's `Port status` is settled. **Rows you write from this project are `n/a`
+  across the board** — a documentation finding has nothing to verify itself against.
 - **Version** — the version the behaviour was *actually observed on*. If you only re-read the
   source, say so; a found-version is not a reproduced-version.
 - **Date found** — `<YYYY-MM-DD>`.
