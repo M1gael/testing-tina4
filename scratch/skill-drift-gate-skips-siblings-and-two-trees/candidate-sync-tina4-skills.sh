@@ -166,9 +166,34 @@ for repo in "$REPO_ROOT" "${SIBLINGS[@]/#/$PARENT/}"; do
   done
 done
 
+# ------------------------------------------- 4. dangling reference pointers
+
+# A SKILL.md that cites references/<file> must ship that file in ITS OWN tree.
+# This is deliberately separate from the diff gates for the same reason the
+# encoding assertion is: when every copy of a tree is missing the same file, a
+# cross-repo comparison reports all of them clean.
+dangling=0
+for repo in "$REPO_ROOT" "${SIBLINGS[@]/#/$PARENT/}"; do
+  [ -d "$repo" ] || continue
+  for tree in "${TREES[@]}"; do
+    [ -d "$repo/$tree/skills" ] || continue
+    while IFS= read -r -d '' skillmd; do
+      dir="$(dirname "$skillmd")"
+      while IFS= read -r ref; do
+        [ -e "$dir/$ref" ] || { echo "DANGLING [$ref]: $skillmd"; dangling=1; }
+      done < <(grep -o 'references/[A-Za-z0-9._-]*' "$skillmd" | sort -u)
+    done < <(find "$repo/$tree/skills" -name SKILL.md -print0)
+  done
+done
+
 # --------------------------------------------------------------------- verdict
 
 status=0
+if [ "$dangling" -eq 1 ]; then
+  echo "DANGLING REFERENCES — a SKILL.md cites files its own tree does not ship." >&2
+  status=1
+fi
+
 if [ "$bad_encoding" -eq 1 ]; then
   echo "ENCODING FAILURE — rewrite the files above as UTF-8 without a BOM and repair the mangled characters." >&2
   status=1
