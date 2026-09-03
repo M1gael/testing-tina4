@@ -1,0 +1,13 @@
+HTTP/2 202 
+date: Thu, 03 Sep 2026 11:38:08 GMT
+content-type: text/plain; charset=utf-8
+content-length: 0
+x-request-id: aa5a2632ebd3909c8ac1e0de75a8fa47
+x-frame-options: SAMEORIGIN
+x-content-type-options: nosniff
+content-security-policy: default-src 'self'
+referrer-policy: strict-origin-when-cross-origin
+x-xss-protection: 0
+permissions-policy: camera=(), microphone=(), geolocation=()
+strict-transport-security: max-age=31536000; includeSubDomains
+
