@@ -3,14 +3,18 @@
 # network problem (or as nothing at all), exit 0 while doing it, and leave a truncated
 # zip behind.
 #
-# Stock side runs the released 3.8.78 binary, which is upstream `c02cb48` verbatim.
+# Stock side runs the current released binary (STOCK_VERSION, default 3.8.83).
 # Fixed side takes a build of the fix branch as $1.
 set -u
 cd "$(dirname "$0")"
+# STOCK is the released binary the defect is being shown on. Bump it when a new
+# release lands and re-run: a reproduction pinned to an old release ages into a
+# claim about a version nobody runs.
+STOCK_VERSION="${STOCK_VERSION:-3.8.83}"
 mkdir -p bin
-[ -f bin/tina4-3.8.78 ] || curl -fsSL -o bin/tina4-3.8.78 \
-  https://github.com/tina4stack/tina4/releases/download/v3.8.78/tina4-linux-amd64
-chmod +x bin/tina4-3.8.78
+[ -f "bin/tina4-$STOCK_VERSION" ] || curl -fsSL -o "bin/tina4-$STOCK_VERSION" \
+  "https://github.com/tina4stack/tina4/releases/download/v$STOCK_VERSION/tina4-linux-amd64"
+chmod +x "bin/tina4-$STOCK_VERSION"
 
 FIXED="${1:-}"
 R=$(mktemp -d); trap 'rm -rf "$R"' EXIT; mkdir -p "$R/home"
@@ -30,14 +34,14 @@ check(){ # $1 output  $2 pattern  $3 message
   grep -q "$2" <<<"$1" || { echo "MISS: $3"; fail=1; }
 }
 
-say "1. STOCK 3.8.78 — tina4 books, the write fails"
-o=$(run_partial stock-books bin/tina4-3.8.78 books); echo "$o"
+say "1. STOCK $STOCK_VERSION — tina4 books, the write fails"
+o=$(run_partial stock-books "bin/tina4-$STOCK_VERSION" books); echo "$o"
 check "$o" "Check your connection"  "expected the stock build to blame the connection"
 check "$o" "EXIT=0"                 "expected exit 0"
 grep '^left:' <<<"$o" | grep -q 'tina4-book.zip' || { echo "MISS: expected a leftover tina4-book.zip"; fail=1; }
 
-say "2. STOCK 3.8.78 — tina4 docs, the write fails"
-o=$(run_partial stock-docs bin/tina4-3.8.78 docs project); echo "$o"
+say "2. STOCK $STOCK_VERSION — tina4 docs, the write fails"
+o=$(run_partial stock-docs "bin/tina4-$STOCK_VERSION" docs project); echo "$o"
 check "$o" "Download failed\."      "expected the stock build's bare failure line"
 check "$o" "EXIT=0"                 "expected exit 0"
 grep '^left:' <<<"$o" | grep -q '.tina4-docs.zip' || { echo "MISS: expected a leftover .tina4-docs.zip"; fail=1; }

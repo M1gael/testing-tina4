@@ -1,0 +1,42 @@
+[
+  {
+    "scheme": "dark",
+    "state": "idle",
+    "palePct": 0,
+    "bluePct": 0,
+    "mean": "42,49,64",
+    "tag": "div",
+    "children": 1,
+    "first": "svg"
+  },
+  {
+    "scheme": "dark",
+    "state": "thinking",
+    "palePct": 0.1,
+    "bluePct": 19.7,
+    "mean": "51,62,84",
+    "tag": "div",
+    "children": 1,
+    "first": "svg"
+  },
+  {
+    "scheme": "light",
+    "state": "idle",
+    "palePct": 0,
+    "bluePct": 8.8,
+    "mean": "144,151,163",
+    "tag": "div",
+    "children": 1,
+    "first": "svg"
+  },
+  {
+    "scheme": "light",
+    "state": "thinking",
+    "palePct": 0.1,
+    "bluePct": 19.6,
+    "mean": "132,142,162",
+    "tag": "div",
+    "children": 1,
+    "first": "svg"
+  }
+]

@@ -1,0 +1,1 @@
+primary=192 primary_503=192 mirror=48

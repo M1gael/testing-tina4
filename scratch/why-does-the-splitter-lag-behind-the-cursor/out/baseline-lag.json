@@ -1,0 +1,15 @@
+{
+  "label": "baseline-lag",
+  "host": "http://127.0.0.1:8795",
+  "cpuThrottle": 1,
+  "samples": 60,
+  "stepPx": 4,
+  "gapMs": 8,
+  "framesDuringDrag": 60,
+  "meanTrailPx": 119.5,
+  "maxTrailPx": 237.5,
+  "trailAtEndPx": 237.5,
+  "settleAfterMouseUpMs": 239,
+  "finalX": 835,
+  "targetX": 838
+}

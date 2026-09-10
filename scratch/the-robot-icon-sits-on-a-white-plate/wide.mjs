@@ -1,0 +1,13 @@
+import { createRequire } from "node:module";
+import { writeFileSync } from "node:fs";
+const puppeteer = createRequire("/var/home/work/gitdir/tina4-simple-agent-work/scratch/package.json")("puppeteer-core");
+const b = await puppeteer.launch({ executablePath: "/usr/bin/chromium-browser", headless: "new", args: ["--no-sandbox","--disable-gpu","--force-device-scale-factor=1"] });
+const p = await b.newPage();
+await p.setViewport({ width: 1400, height: 900 });
+await p.emulateMediaFeatures([{ name: "prefers-color-scheme", value: "dark" }]);
+await p.goto("http://127.0.0.1:8790", { waitUntil: "networkidle2" });
+await new Promise(r => setTimeout(r, 2500));
+writeFileSync("shots/wide-bottomleft.png", Buffer.from(await p.screenshot({ clip: { x: 0, y: 620, width: 460, height: 280 }, encoding: "base64" }), "base64"));
+writeFileSync("shots/wide-full.png", Buffer.from(await p.screenshot({ encoding: "base64" }), "base64"));
+console.log("shot");
+await b.close();

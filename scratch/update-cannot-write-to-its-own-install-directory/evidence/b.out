@@ -1,0 +1,22 @@
+▶ Checking for updates...
+  ℹ Current: 3.8.85  Latest: 3.8.86
+▶ Trying tina4-linux-amd64 ...
+✓ Updated tina4 CLI 3.8.85 → 3.8.86
+▶ Refreshing Tina4 AI skills for claude...
+  ▶ Installing tina4 AI skills for claude...
+
+  Tina4 Skills Installer
+  Target: claude  (ref: 3.13.136)
+
+  + tina4-developer-python  (tina4-python)
+  + tina4-developer-php  (tina4-php)
+  + tina4-developer-ruby  (tina4-ruby)
+  + tina4-developer-nodejs  (tina4-nodejs)
+  + tina4-js  (tina4-python)
+  + tina4-maintainer  (tina4-python)
+  + tina4-architect  (tina4-python)
+  + tina4-design  (tina4-python)
+  verified 48 skill files against skills.sha256 (ref 3.13.136)
+  installed for /var/home/work/.claude/skills
+
+  Done - eight skills installed for claude (ref 3.13.136). Restart your coding tool to pick them up.

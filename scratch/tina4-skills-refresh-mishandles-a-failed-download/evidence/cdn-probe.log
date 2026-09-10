@@ -1,0 +1,26 @@
+20 probes, 5s apart, 2026-09-08 08:08Z
+
+08:06:26Z  raw=503  jsdelivr=200
+08:06:31Z  raw=503  jsdelivr=200
+08:06:36Z  raw=503  jsdelivr=200
+08:06:41Z  raw=503  jsdelivr=200
+08:06:47Z  raw=503  jsdelivr=200
+08:06:52Z  raw=503  jsdelivr=200
+08:06:57Z  raw=200  jsdelivr=200
+08:07:02Z  raw=200  jsdelivr=200
+08:07:07Z  raw=200  jsdelivr=200
+08:07:12Z  raw=200  jsdelivr=200
+08:07:17Z  raw=200  jsdelivr=200
+08:07:22Z  raw=200  jsdelivr=200
+08:07:28Z  raw=200  jsdelivr=200
+08:07:33Z  raw=200  jsdelivr=200
+08:07:38Z  raw=200  jsdelivr=200
+08:07:43Z  raw=200  jsdelivr=200
+08:07:48Z  raw=200  jsdelivr=200
+08:07:53Z  raw=200  jsdelivr=200
+08:07:58Z  raw=200  jsdelivr=200
+08:08:03Z  raw=200  jsdelivr=200
+
+jsdelivr  200 : 20/20
+raw       200 : 14/20
+raw       503 : 6/20

@@ -1,0 +1,30 @@
+{
+  "label": "base2-cpu6",
+  "host": "http://127.0.0.1:8795",
+  "cpuThrottle": 6,
+  "samples": 60,
+  "stepPx": 4,
+  "gapMs": 8,
+  "dragWallMs": 1492,
+  "intendedMs": 480,
+  "overrunPct": 210.8,
+  "framesPainted": 76,
+  "framesPerSample": 1.27,
+  "fpsDuringDrag": 41.7,
+  "localStorageWrites": 60,
+  "localStorageMs": 16.9,
+  "localStorageKeys": {
+    "t4a.previewWidth": 60
+  },
+  "recalcStyleMs": 817.2,
+  "recalcStyleCount": 168,
+  "layoutMs": 73.5,
+  "layoutCount": 100,
+  "scriptMs": 135.2,
+  "taskMs": 1799.1,
+  "startW": 520,
+  "expectedFinalW": 760,
+  "settleMs": 0,
+  "finalW": 760,
+  "reachedTarget": true
+}

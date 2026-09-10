@@ -1,0 +1,1 @@
+primary=2 primary_503=1 mirror=48 mirror_503=1

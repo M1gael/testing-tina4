@@ -1,0 +1,12 @@
+import { createRequire } from "node:module";
+const HARNESS = "/var/home/work/gitdir/tina4-simple-agent-work/baseline-main/";
+const puppeteer = createRequire(HARNESS + "package.json")("puppeteer-core");
+const b = await puppeteer.launch({ executablePath: "/usr/bin/chromium-browser", headless: "new", args: ["--no-sandbox","--disable-gpu"] });
+const p = await b.newPage();
+await p.setViewport({ width: 1600, height: 1000 });
+await p.goto("http://127.0.0.1:8790", { waitUntil: "networkidle2" });
+await new Promise(r => setTimeout(r, 1500));
+console.log("modal present:", await p.$$eval(".modal-backdrop", n => n.length));
+console.log("cog buttons:", await p.$$eval("button.cog-btn", ns => ns.map(n => ({ title: n.getAttribute("title"), aria: n.getAttribute("aria-label"), html: n.outerHTML.slice(0,90) }))));
+console.log("all buttons:", await p.$$eval("button", ns => ns.slice(0,14).map(n => (n.getAttribute("title")||n.textContent||"").trim().slice(0,40))));
+await b.close();

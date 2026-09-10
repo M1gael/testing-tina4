@@ -1,0 +1,11 @@
+import { createRequire } from "node:module";
+const puppeteer = createRequire("/var/home/work/gitdir/tina4-simple-agent-work/scratch/package.json")("puppeteer-core");
+const b = await puppeteer.launch({ executablePath: "/usr/bin/chromium-browser", headless: "new", args: ["--no-sandbox","--disable-gpu"] });
+const p = await b.newPage();
+const errs = [];
+p.on("console", m => { if (m.type() === "error") errs.push(m.text().slice(0,160)); });
+p.on("pageerror", e => errs.push("PAGEERROR: " + String(e).slice(0,160)));
+await p.goto(process.env.T4A || "http://127.0.0.1:8796", { waitUntil: "networkidle2", timeout: 30000 });
+await new Promise(r => setTimeout(r, 2500));
+console.log("  console/page errors:", errs.length ? JSON.stringify(errs, null, 2) : "none");
+await b.close();

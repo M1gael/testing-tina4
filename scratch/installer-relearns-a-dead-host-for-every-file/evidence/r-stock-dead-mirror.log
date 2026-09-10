@@ -1,0 +1,15 @@
+
+  Tina4 Skills Installer
+  Target: claude  (ref: 3.13.135)
+
+  + tina4-developer-python  (tina4-python)
+  + tina4-developer-php  (tina4-php)
+  + tina4-developer-ruby  (tina4-ruby)
+  + tina4-developer-nodejs  (tina4-nodejs)
+  + tina4-js  (tina4-python)
+  + tina4-maintainer  (tina4-python)
+  + tina4-architect  (tina4-python)
+  verified 47 skill files against skills.sha256 (ref 3.13.135)
+  installed for /tmp/tmp.8GrLHO1ZoJ/.claude/skills
+
+  Done - seven skills installed for claude (ref 3.13.135). Restart your coding tool to pick them up.

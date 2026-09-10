@@ -1,0 +1,9 @@
+
+  Tina4 Skills Installer
+  Target: claude  (ref: 3.13.135)
+
+curl: (22) The requested URL returned error: 503
+  ! download failed, trying next source: http://127.0.0.1:8831/tina4-python/3.13.135/.claude/skills/tina4-developer-python/SKILL.md
+curl: (22) The requested URL returned error: 503
+  ! download failed, trying next source: http://127.0.0.1:8832/tina4-python@3.13.135/.claude/skills/tina4-developer-python/SKILL.md
+error: every download source failed for /tmp/tmp.DsZNuReMgU/tina4-developer-python/SKILL.md

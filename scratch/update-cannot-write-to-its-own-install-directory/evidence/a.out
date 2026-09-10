@@ -1,0 +1,7 @@
+▶ Checking for updates...
+  ℹ Current: 3.8.85  Latest: 3.8.86
+▶ Trying tina4-linux-amd64 ...
+curl: (23) client returned ERROR on write of 1369 bytes
+✗ Could not download tina4-linux-amd64 to /var/home/work/gitdir/testing-tina4/scratch/update-cannot-write-to-its-own-install-directory/work/readonly/tina4.tmp (curl exited 23 -- it could not write the file).
+  The release asset is fine -- trying another asset name would not have helped.
+  This failed on this machine: check free space with `df -h` and that you can write to /var/home/work/gitdir/testing-tina4/scratch/update-cannot-write-to-its-own-install-directory/work/readonly.
