@@ -1,0 +1,288 @@
+
+> tina4-simple-agent@0.2.0 test:unit
+> for f in cost edits edit-sizes edit-retry filechecks ideation locate outline seams plan-todo providers retry-prompt state-dir-isolation stuck targets userrank vendor-auth write-checks write-guards; do npx tsx test/$f.mjs || exit 1; done
+
+  ✓ addUsage aggregates per person+vendor+model; missing tokens = 0 but still a call
+  ✓ lower-bound provenance: lbCalls counts pre-fix delegated calls; caveat only when present
+  ✓ costTotals rolls up by person, by vendor, and grand total
+  ✓ JSON round-trips; old byKey shape migrates to actor 'unknown'; garbage → empty
+  ✓ parseKey round-trips actor/vendor/model
+  ✓ renderCostMd shows By person, By vendor, detail, and grand total
+  ✓ mergeLedgers: per-developer files aggregate additively, distinct people never overlap
+  ✓ JSONL append-only round-trips; union-merge duplicate-tolerant fold
+  ✓ formatters: tokens k/M, duration s/m
+  ✓ cached re-reads are tracked separately so the headline total isn't mistaken for spend
+
+cost: 10 passed
+  ✓ applyEditBlocks: exact unique match applies
+  ✓ applyEditBlocks: fuzzy match tolerates reindentation of the SEARCH
+  ✓ applyEditBlocks: non-unique SEARCH is refused (not a blind first-match)
+  ✓ applyEditBlocks: no-op (search===replace) is skipped, not a false change
+  ✓ diffToEditBlocks: a small real change → ONE tiny hunk (not the whole file)
+  ✓ diffToEditBlocks: pure REFORMATTING is NOT a change (the +263/-245 trap)
+  ✓ diffToEditBlocks: identical file → no hunks
+  ✓ parseEditBlocks: extracts SEARCH/REPLACE blocks
+
+edits: 8 passed
+  ✓ SMALL file: a SEARCH/REPLACE block changes only its lines, rest byte-identical
+  ✓ LARGE file (600 lines): one deep SEARCH/REPLACE edit — only that line changes
+  ✓ LARGE file: coder returns the WHOLE file with ONE change → diff yields MINIMAL hunks, not a rewrite
+  ✓ LARGE file: TWO separate edits land independently, everything between stays identical
+  ✓ LARGE file: a non-matching SEARCH does NOT corrupt the file (fails cleanly, content preserved)
+  ✓ churnFraction: a one-line edit is tiny; a whole rewrite is near 1 (the reject threshold)
+  ✓ growthRatio catches duplicated markup that churn misses (324 → 569 lines)
+  ✓ stripProsePreamble: an agent's prose never becomes line 1 of the file
+
+edit-sizes: 8 passed
+  ✓ a reviewer rejection is fed back and the second attempt lands the correct edit
+  ✓ a cap rejection (reviewer approved) still feeds a specific reason into the retry
+  ✓ retries exhausted → no content, and every rejection reason is returned
+  ✓ a coder that produces no applicable edit is not retried with a false accusation
+  ✓ a good edit is accepted on attempt 1 — no extra call, no note
+  ✓ seedReason puts the earlier stage's rejection on attempt 1 of the fallback
+  ✓ capVerdict: growth names duplication, churn names regeneration, a real edit passes
+  ✓ rejectionRetryNote is actionable even when the judge gives no words
+
+edit-retry: 8 passed
+  ✓ sqlShapeCheck: python-shaped migration caught; plain SQL passes
+  ✓ sqlDialectCheck: MySQL-only DDL caught for SQLite; portable SQLite passes
+  ✓ contentTypeCheck: html-with-python and py-with-html caught; real html passes
+  ✓ ormModelCheck: plain class caught; ORM subclass passes; non-model py ignored
+  ✓ frameworkRejectCheck: flask/@app.route caught; tina4 route passes
+  ✓ crossFileImportCheck: unknown module caught w/ correction; known module passes
+  ✓ htmlTruncationCheck: unterminated <script> and missing </html> caught; complete page passes
+  ✓ inlineScripts: extracts non-src inline scripts, flags modules, skips external/empty
+  ✓ staticCodeChecks: aggregates in order, returns first reject
+  ✓ syntaxErrorFromCheck: missing interpreter (127) is NOT a syntax error; real SyntaxError rejects
+
+10 checks passed
+  ✓ normalizeIdeation: absent/legacy session restores to a clean slate
+  ✓ normalizeIdeation: a full mid-flow state is preserved exactly
+  ✓ normalizeIdeation: partial state fills only the missing fields
+  ✓ normalizeIdeation: garbage/hostile values are coerced safely (negative test)
+  ✓ normalizeIdeation: fractional mockupN is floored
+  ✓ ideation survives a real disk JSON round-trip (restart resume)
+
+ideation: 6 passed
+  ✓ locate: finds the operator region for an operator-handling change
+  ✓ locate: a styling change points at the styles, not the operator code
+  ✓ locate: small files return nothing (edit whole)
+  ✓ locate: an unrelated query returns nothing (no false region)
+  ✓ locate: a diffuse 'light mode' request alone MISSES (shares no vocabulary)
+  ✓ locate: the code-vocabulary hint bridges the semantic gap — finds the colour lines
+
+locate: 6 passed
+(node:147683) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓ finds functions in an inline <script> with correct start/end lines
+  ✓ cutting a symbol's line range removes exactly that function
+  ✓ python: def/class blocks end by indentation
+  ✓ control-flow keywords are not mistaken for methods
+  ✓ renderOutline is readable and reports empty files honestly
+  ✓ a URL in a string is not a line comment
+  ✓ nested template literals do not close the outer one
+  ✓ a slash inside a regex character class does not end the regex
+  ✓ TypeScript signatures: modifiers, object params, object return types, one-liners
+  ✓ REAL FILES: no symbol runs away to end-of-file
+
+outline: 10 passed
+  ✓ two groups that never reference each other are reported as a clean seam
+  ✓ NEGATIVE: one shared helper welds the groups together — no clean seam
+  ✓ NEGATIVE: a file with nothing to separate refuses instead of inventing a split
+  ✓ a seam reports what it would still NEED from the rest — the cost of moving it
+  ✓ when one class owns the file, the answer is that the seam is INSIDE it
+  ✓ NEGATIVE: a verdict is refused when most of the file is not inside any visible symbol
+  ✓ NEGATIVE: it does not descend into a dominant symbol that has nothing inside it
+  ✓ coverage is measured against the SCOPE analysed, not the whole file
+
+      7562 lines, 115 symbols covering 85% at inside ThreadActor — no clean seam
+      No clean seam: 106 of 115 symbols are all connected by references. Splitting here would cut through working code.
+        1. 4211 lines  _runTurnBody, accumulateStats, activeStepAcrossPlans, actorSlug, addPreviewError, addServiceError, addSteer, addSteerWithImages (+98 more)
+        2. 21 lines  constructor, restoreIdeation
+        3. 16 lines  attach
+        4. 15 lines  injectConsoleBridge
+        5. 10 lines  info
+        6. 7 lines  sawFail
+
+  ✓ REAL FILE: app.ts is analysed and its verdict is reported, whatever it is
+
+seams: 9 passed
+  ✓ combines MASTER + feature plan into ONE flat TODO with steps + tests
+  ✓ TICK PROPAGATION: ticking a step in the plan flips its box in the combined TODO
+  ✓ fallback: MASTER with its own ## Steps and no feature plans still renders them
+  ✓ multiple features fold in order, each with its own heading
+  ✓ an UNCONFIRMED failure stays inconclusive — but its evidence is a FAILURE, not a shrug
+  ✓ probeAgreementVerdict: only a CONFIRMED failure fails; disagreement is inconclusive
+  ✓ isVisualCheck: subjective/visual claims yes; functional claims no
+
+plan-todo: 7 passed
+  ✓ modelsForRole: role tagging is respected
+  ✓ isValidSelection guards vendor+model+role
+  ✓ resolveLevel maps our level → vendor mode, overrides merge on top
+  ✓ derivePresets: pure registry view (all vendors, per role); `only` restricts to logged-in
+  ✓ parsePresetId round-trips vendor:model and tolerates bare ids
+  ✓ registry integrity: every model has ≥1 role; tina4 is native REST, the rest delegate to a client
+
+providers: 6 passed
+  ✓ the snapshot shows the END of the output — where it actually stopped
+  ✓ it states the real size, so 'too long' is a number not an opinion
+  ✓ a SHORT output is shown whole, not described as a tail
+  ✓ NEGATIVE: empty input produces nothing rather than an empty ceremony
+  ✓ the tail length is bounded — a huge file does not blow up the prompt
+  ✓ the html example shows the closing tags a finished page ends with
+  ✓ a non-html file still gets usable advice, not html tags
+  ✓ the ladder repeats twice, then varies, then diagnoses
+  ✓ the varied temperature spans a real range, not a jitter around the same value
+  ✓ the diagnose routine asks for reasoning BEFORE code, and offers a way out
+  ✓ a context request is recognised only when it is the WHOLE reply
+
+retry-prompt: 11 passed
+  ✓ unset: the state dir is ~/.tina4-simple-agent, and global secrets sit under it
+  ✓ set: BOTH the state dir and the global secrets store move with it
+  ✓ a leading ~ still expands
+  ✓ read: get_secret reads the ISOLATED store, never the home one
+  ✓ unset: get_secret still reads ~/.tina4-simple-agent/secrets
+  ✓ read: an isolated global secret is still labelled global, not project
+  ✓ read: a project secret still wins over the global of the same name
+  ✓ no source file re-derives the global secrets path from the home directory
+  ✓ TINA4_STATE_DIR is parsed in exactly one place
+  ✓ the real home was never touched by this suite
+  ✓ temp dir removed, verified by reading
+
+state-dir-isolation: 11 passed
+  ✓ the region shown is the symbol the problem NAMES
+  ✓ with no symbol named, a line number wins
+  ✓ with neither, it offers the biggest piece of logic
+  ✓ NEGATIVE: it never dumps a whole large file at a person
+  ✓ NEGATIVE: nothing to show for an empty file
+  ✓ an edited region goes back EXACTLY where it came from
+  ✓ an edit with more lines than it replaced still fits
+  ✓ NEGATIVE: an empty edit is refused, never applied as a deletion
+  ✓ NEGATIVE: a region outside the file is refused rather than clamped
+  ✓ the coder is told the human's edit is FACT, not a suggestion
+  ✓ it points at ONE line, so the question is answerable
+  ✓ the invitation is plain, names the line, and makes looking OPTIONAL
+  ✓ with nothing to show, it still asks plainly instead of going quiet
+
+stuck: 13 passed
+  ✓ classifyRequest: the buttons-green case is a LOGGED edit (not ignored)
+  ✓ classifyRequest: add / fix / update / reprioritise
+  ✓ addTarget: appends with an id, logs the exact request
+  ✓ addTarget: an open duplicate is reused, not piled up; done ones don't block a new one
+  ✓ openTargets + status flow
+  ✓ persist + resume: JSON round-trips to disk and back
+  ✓ loadState: garbage/empty → clean empty state (never throws)
+  ✓ stateToMarkdown: renders each request with status; a tick means verified
+
+targets: 8 passed
+  ✓ non-coder phrasing scores negative → novice, plain audience
+  ✓ technical phrasing still scores technical — but the CHAT stays layman
+  ✓ code-shaped input is strong technical evidence
+  ✓ empty / neutral input scores 0 → novice by default
+  ✓ session score converges: non-coder stays novice across turns
+  ✓ session score climbs to technical for a coder
+  ✓ a single technical aside does not flip a non-coder
+
+7 checks passed
+  ✓ parseClaudeCreds: valid future token → connected, exposes the token
+  ✓ parseClaudeCreds: past expiry → expired (needs re-login)
+  ✓ parseClaudeCreds: no oauth block / no token → loggedout
+  ✓ parseClaudeCreds: empty / garbage → loggedout (never throws)
+  ✓ parseClaudeAccount: pulls oauthAccount.emailAddress, tolerates missing
+  ✓ tina4Auth: empty → loggedout; FREE-TOKEN → free tier; other → profile token
+  ✓ parseCursorStatus: 'Logged in as <email>' → connected; prompts → loggedout; else unavailable
+
+vendor-auth: 7 passed
+  ✓ isLocalRef: local yes, external no
+  ✓ htmlLocalRefs: pulls script/link/img, drops external
+  ✓ danglingHtmlRefs: missing file flagged; present file passes; external ignored
+  ✓ jsLocalImports: import/require/Worker, skip bare package
+  ✓ symbolDigest: JS names surface for a sibling to wire to
+  ✓ symbolDigest: CSS selectors and HTML ids
+  ✓ orphanedAssets: unreferenced .js flagged; referenced .js clean
+  ✓ node --check: valid passes, broken fails (real subprocess)
+  ✓ temp dir removed, verified by reading
+
+8 checks passed
+  ✓ PLAN-FIRST: a non-plan write is refused while plan/MASTER.md is absent
+  ✓ PLAN-FIRST: the plan itself is always writable, and unblocks the rest
+  ✓ PLAN-FIRST: a nested plan file counts as a plan write
+  ✓ duplicate: writing bytes that are already there is refused
+  ✓ duplicate: a REAL change to the same file is not blocked
+  ✓ duplicate: the guard is per-content, not per-path - a new file is never a duplicate
+  ✓ complete_step ticks exactly the named step and its matching test
+  ✓ temp workspaces removed, verified by reading
+
+write-guards: 8 passed
+UNIT-EXIT=0
+(node:148191) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+TRACE 2026-09-14T14:12:03.709Z [s4::s4] turn:start {"mode":"efficient","thinking":false,"model":"fake-model","userText":"say hi"}
+TRACE 2026-09-14T14:12:03.727Z [s4::s4] determine-intent {"called":true,"ok":true,"answer":"JUST A REPLY, NO TOOLS","intent":null}
+TRACE 2026-09-14T14:12:03.728Z [s4::s4] determine-intent-retry {"attempt":2}
+TRACE 2026-09-14T14:12:03.731Z [s4::s4] determine-intent {"called":true,"ok":true,"answer":"(FAKE: NO MORE SCRIPTED ","intent":null}
+TRACE 2026-09-14T14:12:03.731Z [s4::s4] determine-intent-retry {"attempt":3}
+TRACE 2026-09-14T14:12:03.734Z [s4::s4] determine-intent {"called":true,"ok":true,"answer":"(FAKE: NO MORE SCRIPTED ","intent":null}
+TRACE 2026-09-14T14:12:03.734Z [s4::s4] upstream-gave-up {"role":"thinker","why":"routing got no answer after 3 attempts"}
+TRACE 2026-09-14T14:12:03.736Z [s4::s4] intent {"intent":"chat","hasProject":false,"tier":"novice","userScore":0,"userText":"say hi"}
+TRACE 2026-09-14T14:12:03.739Z [s4::s4] thinker-stream {"ev":"aborted-or-error","aborted":true,"reasoningDeltas":0,"contentLen":0,"err":"This operation was aborted"}
+✅ turn always closes with turn:done
+✅ enrich (bare) suggests the correct-cased symbol
+✅ enrich (bare) lists the real exports
+✅ enrich (bare) lists submodules
+✅ enrich (with-path) suggests correct symbol
+✅ enrich maps a tina4_python 'response' import to the handler-arg fix
+✅ enrich still fires on a circular-import form
+✅ enrich does not give Tina4 import advice for urllib
+✅ enrich does not give Tina4 import advice for requests
+✅ enrich does not give Tina4 import advice for starlette
+✅ enrich ignores non-import errors
+✅ enrich handles No-module-named with real submodules
+✅ enrich maps tina4_python.logger to the real logging guidance
+✅ enrich handles no-such-table with the exact migration fix
+✅ enrich maps tina4_python.route → tina4_python.core.router
+✅ enrich maps the Route class hallucination too
+✅ complete_step closes a lagging test for an already-ticked step
+✅ complete_step pairs the test by TEXT not position
+✅ complete_step ticks step + matching test together
+✅ no open numbered steps remain (turn can converge)
+✅ install_stack at root with no plan is refused (PLAN-FIRST)
+✅ install_stack at root with a full-stack plan is refused (ROOT-CLEAN)
+✅ refused root scaffolds left the root clean (only plan/)
+✅ serve-verify does not block when there is no backend to run
+✅ scaffolding registers both services in the manifest
+✅ re-scaffolding the same component does not duplicate
+✅ auto-registration preserves a human-set port
+✅ feedback endpoint appends actionable items to the plan
+TRACE 2026-09-14T14:12:04.636Z [s12::s12] turn:start {"mode":"efficient","thinking":false,"model":"fake-model","userText":"build something"}
+TRACE 2026-09-14T14:12:04.645Z [s12::s12] determine-intent {"called":true,"ok":false,"note":"empty reply → offline fallback"}
+TRACE 2026-09-14T14:12:04.645Z [s12::s12] upstream-fail {"role":"thinker","n":1,"downMs":0,"model":"fake-model","detail":"empty response"}
+TRACE 2026-09-14T14:12:04.655Z [s12::s12] determine-intent-retry {"attempt":2}
+TRACE 2026-09-14T14:12:04.658Z [s12::s12] determine-intent {"called":true,"ok":false,"note":"empty reply → offline fallback"}
+TRACE 2026-09-14T14:12:04.659Z [s12::s12] upstream-fail {"role":"thinker","n":2,"downMs":14,"model":"fake-model","detail":"empty response"}
+TRACE 2026-09-14T14:12:04.679Z [s12::s12] determine-intent-retry {"attempt":3}
+TRACE 2026-09-14T14:12:04.683Z [s12::s12] determine-intent {"called":true,"ok":false,"note":"empty reply → offline fallback"}
+TRACE 2026-09-14T14:12:04.683Z [s12::s12] upstream-fail {"role":"thinker","n":3,"downMs":38,"model":"fake-model","detail":"empty response"}
+TRACE 2026-09-14T14:12:04.714Z [s12::s12] upstream-gave-up {"role":"thinker","why":"routing got no answer after 3 attempts"}
+TRACE 2026-09-14T14:12:04.715Z [s12::s12] intent {"intent":"chat","hasProject":false,"tier":"novice","userScore":0,"userText":"build something"}
+TRACE 2026-09-14T14:12:04.718Z [s12::s12] thinker-stream {"ev":"aborted-or-error","aborted":true,"reasoningDeltas":0,"contentLen":0,"err":"This operation was aborted"}
+✅ sustained upstream outage triggers open-setup
+✅ sustained upstream outage stops the turn (no spin)
+TRACE 2026-09-14T14:12:05.335Z [s13::s13] turn:start {"mode":"efficient","thinking":false,"model":"fake-model","userText":"what does this project do?"}
+TRACE 2026-09-14T14:12:05.343Z [s13::s13] determine-intent {"called":true,"ok":false,"note":"empty reply → offline fallback"}
+TRACE 2026-09-14T14:12:05.343Z [s13::s13] upstream-fail {"role":"thinker","n":1,"downMs":0,"model":"fake-model","detail":"empty response"}
+TRACE 2026-09-14T14:12:05.354Z [s13::s13] determine-intent-retry {"attempt":2}
+TRACE 2026-09-14T14:12:05.360Z [s13::s13] determine-intent {"called":true,"ok":false,"note":"empty reply → offline fallback"}
+TRACE 2026-09-14T14:12:05.360Z [s13::s13] upstream-fail {"role":"thinker","n":2,"downMs":17,"model":"fake-model","detail":"empty response"}
+TRACE 2026-09-14T14:12:05.380Z [s13::s13] determine-intent-retry {"attempt":3}
+TRACE 2026-09-14T14:12:05.385Z [s13::s13] determine-intent {"called":true,"ok":true,"answer":"QUESTION","intent":"question"}
+TRACE 2026-09-14T14:12:05.385Z [s13::s13] intent {"intent":"question","hasProject":true,"tier":"novice","userScore":0,"userText":"what does this project do?"}
+TRACE 2026-09-14T14:12:05.390Z [s13::s13] thinker-stream {"ev":"ok","reasoningDeltas":0,"contentLen":23,"reasonedLen":0,"usedReasoning":false,"maxTokens":16000}
+✅ transient flap recovers and the turn continues
+✅ backend component plan derives assigned execution steps
+✅ frontend component plan derives assigned execution steps
+✅ derived component plans retain explicit verification criteria
+✅ temp dirs removed
+
+35/35 passed
+HARNESS-EXIT=0

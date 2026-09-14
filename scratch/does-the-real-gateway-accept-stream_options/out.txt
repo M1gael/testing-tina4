@@ -1,0 +1,7 @@
+A with stream_options: status=200 chunks=4 usage={"prompt_tokens":21,"total_tokens":23,"completion_tokens":2,"completion_tokens_details":{"reasoning_tokens":1}} text="OK"
+B control, no stream_options: status=200 chunks=4 usage={"prompt_tokens":21,"total_tokens":23,"completion_tokens":2,"completion_tokens_details":{"reasoning_tokens":1}} text="OK"
+
+field accepted (200 + streamed): true
+usage block with a positive total: true
+control streamed without the field: true
+VERDICT: PASS -- real gateway accepts stream_options and returns usage. run-20 claim closed by running.
