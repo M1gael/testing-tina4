@@ -301,3 +301,34 @@ exit 0. No regression, and no new output where there was none.
 The prefix was restored after every run and the PATH key read back to confirm it —
 `wineserver -k` returns before the server has flushed its registry, and an early restore gets
 overwritten. That happened once and was repaired.
+
+## Verification 2026-09-18: the fix against the refreshed fork
+
+The fork (`MichaelC8E/tina4`) had sat **48 commits behind** upstream and was fast-forwarded to
+`2bb1418` on 2026-09-18. Question: does the fix still hold against it?
+
+**Yes, and the refresh was load-bearing.**
+
+- `fork/main` and `origin/main` are now the **same commit and the same tree**
+  (`2bb1418`, tree `25c3d1b`), and the patch's pre-image blobs match that tree's
+  (`src/setup.rs` `e4aa697`, `src/main.rs` `589471a`). *Run.*
+- Fresh detached worktree off `fork/main`, the two new test files dropped in **before** the
+  patch: `the_repaired_sites_still_resolve_before_spawning`,
+  `the_set_of_bare_powershell_spawns_has_not_grown`, `a_spawn_that_never_starts_says_so` and
+  `a_child_that_runs_and_fails_says_that_instead` all **FAILED**; only the direction-agnostic
+  `no_source_binds_powershell_to_a_name` passed. The instrument can say "no" on this tree. *Run.*
+- Same worktree, patch applied from `fix.patch`: **247 passed, 0 failed**,
+  `cargo clippy -- -D warnings` **exit 0**. *Run.*
+- The counterfactual: **9 of the 48 commits the fork was missing touch `src/setup.rs` or
+  `src/main.rs`** — among them `b84b1fe fix(windows): read the skills installer as text, not
+  bytes`, `547a9e5 fix(skills): survive a CDN outage`, `e4f852d fix(cli): say what actually
+  failed when a download fails`. At the stale tip the blobs are different (`e80fbb6`,
+  `45f1602`) and `git apply --check` exits **1**: *patch failed: src/setup.rs:948 … does not
+  apply*. Against the refreshed tip it exits **0**. Had the branch been cut from the fork's own
+  tip, this fix could not have been written against it at all. *Run.*
+
+**Bounds.** Linux only; this says nothing about Windows behaviour, and nothing about the
+reporter's machine. It covers one repo — the other nine checkouts in `tinaforks/` were not
+synced or checked. It is a statement about `2bb1418`; any upstream commit after it re-opens the
+question. The throwaway worktrees used here (`verify-fork-main`, `stale-c02cb48`) were removed
+afterwards; `spawn-fix` (the fix) and `pristine-2bb1418` (the unfixed-source gate) remain.

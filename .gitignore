@@ -8,3 +8,7 @@
 # duplicates an upstream repo. Recreate with: mkdir -p documentation && tina4 books
 /documentation/tina4-book
 /documentation/tina4-book/*
+
+# Agent rules for this wrapper. Local, not shared -- untracked with
+# `git rm --cached CLAUDE.md`; the file stays on disk.
+/CLAUDE.md
