@@ -160,3 +160,102 @@ went green and only the self-check caught it.
   fix and out of the test's scope.
 - The PHP and Ruby serve arms on Windows were not exercised.
 - `tina4-js`'s own `bin/tina4.js` was never checked for the same pattern.
+
+---
+
+## Update — 2026-09-17, re-verified against 3.8.88
+
+**The reported bug is fixed upstream.** `origin/main` moved to `2bb1418` = 3.8.88 while this
+was parked. `78d876a` (2026-09-16 16:06, hours after we cut the branch) fixes the tina4js
+serve arm by a better route than ours: it extracts `tina4js_serve_command()` and drives the
+project's own Vite through `node node_modules/vite/bin/vite.js`. `node` is a real `.exe` on
+Windows, so no shim lookup is needed at all; `npx` survives only as a fallback, wrapped in
+`console::resolve_cmd`. Our `npx` change here is redundant and has been dropped.
+
+Ledger row `f-cli-20` is closed against that commit and has moved back down into the Ledger.
+
+### What is still broken, and now has its own rows
+
+`78d876a` fixed one site. The same mechanism remains at the three places that spawn whatever
+`resolve_cli` hands back — `main.rs:1190` (php serve), `main.rs:1394` (`delegate_command`),
+`manifest.rs:103` (`manifest::query`). That is **`f-cli-21`**, and the branch now carries only
+those three call sites plus tests.
+
+The strongest evidence for it is in the tree itself. `resolve_cmd`'s own doc comment at
+`console.rs:201` states the rule:
+
+> On Windows this is critical: `which` finds `composer.bat` but `Command::new("composer")`
+> does NOT — it only searches for `.exe`.
+
+Two more places already act on it: `console::php_vendor_bin` deliberately returns the PHP
+script rather than composer's `.bat` wrapper, and `manifest::framework_cli_path` hardcodes
+`node_modules\.bin\tina4nodejs.cmd` on Windows. The rule is the maintainer's own; three call
+sites simply never applied it.
+
+The nodejs and ruby arms of `resolve_cli` show the contradiction directly: they gate on
+`which::which("npx").is_ok()` — a lookup that *does* read `%PATHEXT%`, and so finds `npx.cmd`
+— and then spawn the bare name by a call that cannot launch it.
+
+### A second defect, found by attacking the fix
+
+Asking which launcher `resolve_cli` returns for a **tina4js** project turned up a bug nobody
+had reported. There is no tina4js arm, so it falls to `_ => info.cli_name()`, and `detect.rs:19`
+maps tina4js to `"vite"`. Every forwarded subcommand therefore spawns a bare `vite` — and Vite
+installs into `node_modules/.bin`, which is only on `PATH` inside an `npm run` script.
+
+This is **not** the Windows shim problem, and `resolve_cmd` does not help: there is nothing on
+`PATH` to find. It fails on every platform. That is **`f-cli-22`**, and it is reproducible here:
+
+```console
+$ cd control/                       # package.json lists a tina4js dependency
+$ env PATH=/usr/bin:/bin tina4 build
+  ✗ Failed to run vite build: No such file or directory (os error 2)
+$ env PATH=/usr/bin:/bin tina4 routes
+  ✗ Failed to run vite routes: No such file or directory (os error 2)
+```
+
+Confirmed identical against a binary built from stock `2bb1418` and against the `f-cli-21`
+branch — the fix neither closes it nor worsens it.
+
+**Scrub `PATH` or this does not reproduce.** This machine has a global Vite at
+`~/.npm-global/bin/vite`; with it visible, `tina4 build` resolves and runs real Vite, and the
+defect is invisible. The first run of this test passed for exactly that reason.
+
+On Windows the same two commands should print `program not found` — the identical string
+`f-cli-20` reported. So on Caleb's machine `tina4 serve` now works while `tina4 build` still
+does not, and the error text gives no hint they are different bugs. **Not yet run on Windows.**
+
+### Gating, against `2bb1418`
+
+| | |
+|---|---|
+| Baseline, stock 3.8.88 | 227 pass, 0 fail, 4 ignored, exit 0 |
+| With the fix | 234 pass, 0 fail, 4 ignored, exit 0 |
+| `cargo clippy -- -D warnings` | exit 0, exactly as CI runs it |
+
+Each of the three call-site changes, reverted on its own, turns two tests red on its own.
+
+Both scanners in `windows_spawn_resolution.rs` were blinded in turn. Blinding the `resolve_cli`
+binding scan left `every_resolve_cli_consumer_resolves_before_spawning` passing **vacuously** —
+only `the_scans_still_find_their_subjects` caught it, which is the whole reason that test exists.
+Reducing `console::resolve_cmd` to the identity function turns
+`a_program_on_path_resolves_to_an_absolute_path` red.
+
+One test does **not** gate the fix and is kept deliberately:
+`an_absolute_path_that_exists_survives_resolution` stays green under an identity `resolve_cmd`,
+because idempotence cannot distinguish the two. It guards a different future failure — a
+`resolve_cmd` that started rewriting paths would break `resolve_cli`'s php and python branches,
+which return `vendor/bin/tina4php` and `.venv/bin/tina4python`.
+
+Probed with the pinned `which` 7.0.3 that resolving a symlinked `.venv/bin/tina4python`
+absolutizes the path but does **not** follow the symlink, so venv detection is undisturbed.
+
+### What this still does not cover
+
+**Nothing has been run on Windows.** No rustup, no mingw, no Windows target on this box, and
+CI builds Windows only on a tag, with `tina4.exe --version` as its only smoke test — which
+never reaches a spawn. Closing this needs a built binary on a real Windows project.
+
+`install.rs:315` spawns a bare `gem`, with `install_tina4_cli("tina4ruby", "gem", ..)` beside
+it. Same mechanism, different subsystem, confirmed still present on 3.8.88, deliberately out of
+scope and still unlogged.

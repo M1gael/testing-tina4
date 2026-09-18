@@ -1,0 +1,1 @@
+{"name":"js","dependencies":{"tina4js":"^1.7.0"},"scripts":{"build":"vite build"}}

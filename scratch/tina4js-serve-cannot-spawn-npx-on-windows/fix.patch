@@ -1,8 +1,56 @@
+diff --git a/src/console.rs b/src/console.rs
+index 458a8b4..6606a0d 100644
+--- a/src/console.rs
++++ b/src/console.rs
+@@ -218,3 +218,43 @@ pub fn php_vendor_bin(name: &str) -> String {
+         format!("vendor/bin/{}", name)
+     }
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::resolve_cmd;
++
++    /// `resolve_cmd` is wrapped around a dozen spawn sites, several of which
++    /// pass a name that may legitimately not be installed. The whole pattern is
++    /// only safe because a failed lookup hands the name straight back — the
++    /// spawn then fails exactly as it did before, with the caller's own error
++    /// text, instead of launching an empty or mangled program name.
++    #[test]
++    fn an_unresolvable_name_is_returned_unchanged() {
++        let absent = "tina4-no-such-program-b9f2c1";
++        assert_eq!(resolve_cmd(absent), absent);
++    }
++
++    /// The other half: when the program IS on PATH, the caller must get a full
++    /// path, because a bare name is what `CreateProcess` cannot launch when the
++    /// only thing on disk is a `.cmd` shim.
++    #[test]
++    fn a_program_on_path_resolves_to_an_absolute_path() {
++        // `sh` on unix, `cmd` on Windows — both always present, both real
++        // executables, so this asserts the lookup and not the PATHEXT rule.
++        let name = if cfg!(windows) { "cmd" } else { "sh" };
++        let resolved = resolve_cmd(name);
++        assert_ne!(resolved, name, "resolve_cmd({name}) did not look anything up");
++        let path = std::path::Path::new(&resolved);
++        assert!(path.is_absolute(), "{resolved} is not an absolute path");
++        assert!(path.exists(), "{resolved} does not exist");
++    }
++
++    /// An argument that is already a path must survive. `resolve_cli` returns
++    /// `.venv/bin/tina4python` and `vendor/bin/tina4php` on that branch, and a
++    /// lookup that dropped or rewrote them would break the non-Windows path.
++    #[test]
++    fn an_absolute_path_that_exists_survives_resolution() {
++        let sh = resolve_cmd("sh");
++        assert_eq!(resolve_cmd(&sh), sh, "resolving an already-resolved path moved it");
++    }
++}
 diff --git a/src/main.rs b/src/main.rs
-index 045fa6b..f886c42 100644
+index 589471a..601f831 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -1146,7 +1146,7 @@ fn start_language_server(
+@@ -1187,7 +1187,7 @@ fn start_language_server(
                  "--host".into(), host.into(),
                  "--port".into(), port.to_string(),
              ]);
@@ -11,16 +59,7 @@ index 045fa6b..f886c42 100644
              cmd.args(&cmd_args)
                  .stdout(std::process::Stdio::inherit())
                  .stderr(std::process::Stdio::inherit());
-@@ -1246,7 +1246,7 @@ fn start_language_server(
-                 );
-                 return None;
-             }
--            let mut cmd = std::process::Command::new("npx");
-+            let mut cmd = std::process::Command::new(console::resolve_cmd("npx"));
-             cmd.args(["vite", "--port", &port_s, "--host", host, "--strictPort"])
-                 .stdout(std::process::Stdio::inherit())
-                 .stderr(std::process::Stdio::inherit());
-@@ -1341,7 +1341,7 @@ fn delegate_command(args: Vec<String>) {
+@@ -1391,7 +1391,7 @@ fn delegate_command(args: Vec<String>) {
              let (cmd, mut cmd_args) = resolve_cli(&info);
              cmd_args.extend(args);
  

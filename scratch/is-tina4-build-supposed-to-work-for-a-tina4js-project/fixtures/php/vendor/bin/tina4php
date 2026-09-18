@@ -1,0 +1,2 @@
+#!/usr/bin/env php
+<?php echo "TINA4PHP-STUB args=" . implode(" ", array_slice($argv,1)) . "\n";
