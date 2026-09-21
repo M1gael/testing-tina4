@@ -1,0 +1,57 @@
+diff --git a/src/init.rs b/src/init.rs
+index 0b6c237..e368ddf 100644
+--- a/src/init.rs
++++ b/src/init.rs
+@@ -624,7 +624,9 @@ fn scaffold_python(path: &str) {
+     write_file(
+         path,
+         ".gitignore",
+-        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsecrets/\n.env\n",
++        // .env.local carries the JWT signing secret the framework auto-mints
++        // on first dev run; sessions/ and *.db match the tina4-python template.
++        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsessions/\nsecrets/\n*.db\n.env\n.env.local\n",
+     );
+ 
+     let pyproject = format!(
+@@ -1467,6 +1469,24 @@ mod tests {
+     use super::*;
+     use std::fs;
+ 
++    #[test]
++    fn python_scaffold_gitignores_the_secret_file() {
++        // ensure_dev_secret() mints TINA4_SECRET into .env.local on first dev
++        // run, and the framework documents that file as gitignored — so the
++        // scaffold must ignore it, or the signing secret gets committed.
++        let dir = std::env::temp_dir().join(format!("tina4_init_gi_{}", std::process::id()));
++        let _ = fs::remove_dir_all(&dir);
++        fs::create_dir_all(&dir).unwrap();
++        scaffold_project("python", dir.to_str().unwrap());
++        let gitignore =
++            fs::read_to_string(dir.join(".gitignore")).expect("scaffold wrote a .gitignore");
++        assert!(
++            gitignore.lines().any(|l| l.trim() == ".env.local"),
++            "python scaffold .gitignore must ignore .env.local (JWT secret leak):\n{gitignore}"
++        );
++        let _ = fs::remove_dir_all(&dir);
++    }
++
+     #[test]
+     fn scaffold_binds_a_default_sqlite_database() {
+         // Every backend project must ship a bound database in its .env so a
+diff --git a/tests/scaffold.rs b/tests/scaffold.rs
+index 85ece9d..5e12295 100644
+--- a/tests/scaffold.rs
++++ b/tests/scaffold.rs
+@@ -129,6 +129,12 @@ fn init_python_scaffolds_runnable_project() {
+     assert!(proj.join("app.py").is_file());
+     assert!(proj.join("pyproject.toml").is_file());
+     assert!(proj.join(".env").is_file());
++    let gitignore =
++        fs::read_to_string(proj.join(".gitignore")).expect("scaffold wrote a .gitignore");
++    assert!(
++        gitignore.lines().any(|l| l.trim() == ".env.local"),
++        ".gitignore must ignore .env.local (the auto-minted JWT secret):\n{gitignore}"
++    );
+     let _ = fs::remove_dir_all(&base);
+ }
+ 

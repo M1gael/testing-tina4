@@ -1,0 +1,417 @@
+diff --git a/Tina4/Routing/Crud.php b/Tina4/Routing/Crud.php
+index 1099b0a89..88308bac7 100644
+--- a/Tina4/Routing/Crud.php
++++ b/Tina4/Routing/Crud.php
+@@ -321,7 +321,7 @@ function (Response $response, Request $request) use ($object, $function) {
+                 } else {
+                     $object->create($request->params);
+                 }
+-                $object->load("{$object->getFieldName($object->primaryKey)} = '{$id}'");
++                $object->load("{$object->getFieldName($object->primaryKey)} = ?", [$id]);
+                 $function("update", $object, null, $request);
+                 $object->save();
+                 $jsonResult = $function("afterUpdate", $object, null, $request);
+@@ -342,7 +342,7 @@ function (Response $response, Request $request) use ($object, $function) {
+             function (Response $response, Request $request) use ($object, $function) {
+                 $id = $request->inlineParams[count($request->inlineParams) - 1]; //get the id on the last param
+                 $object->create($request->params);
+-                $object->load("{$object->getFieldName($object->primaryKey)} = '{$id}'");
++                $object->load("{$object->getFieldName($object->primaryKey)} = ?", [$id]);
+                 $function("delete", $object, null, $request);
+                 if (!$object->softDelete) {
+                     $object->delete();
+@@ -403,27 +403,41 @@ public static function getDataTablesFilter(string $tablePrefix = "", ?ORM $ORM =
+             $orderBy = $request["order"];
+         }
+ 
++        //Column names the request is allowed to reference, taken from the ORM itself
++        $allowedColumns = self::getAllowedColumnNames($ORM);
++
+         $filter = null;
+         $listOfColumnNames = null;
+         if (!empty($request["search"])) {
+             $search = $request["search"];
+ 
+             foreach ($columns as $id => $column) {
+-                $columnName = $ORM->getFieldName($column["data"], $ORM->fieldMapping);
++                if (!is_array($column) || !isset($column["data"])) {
++                    continue;
++                }
++
++                $columnName = self::getSafeColumnName($ORM, $column["data"], $allowedColumns);
++
++                //Anything that does not resolve to a known column is ignored
++                if ($columnName === null) {
++                    continue;
++                }
++
+                 if (($column["searchable"] == "true")) {
+                     // Prioritises general search over column search
+-                    if (!empty($search["value"])) {
++                    if (!empty($search["value"]) && is_scalar($search["value"])) {
+                         // Searches all searchable fields for the search box value
+                         //Add each searchable column to array
+                         $listOfColumnNames[] = $tablePrefix . $columnName;
+                         //Split search phrase into individual searchable words
+-                        $splitValue = explode(" ", $search["value"]);
++                        $splitValue = explode(" ", (string)$search["value"]);
+ 
+                         //Iterate searchable words
+                         foreach ($splitValue as $singleValue) {
+                             //Check that the values aren't whitespaces
+                             if (!empty($singleValue)) {
+-                                $filterValue = " like '%" . strtoupper($singleValue) . "%'";
++                                //The search box holds data, never SQL, so it is quoted as a literal
++                                $filterValue = " like " . self::escapeLiteral($ORM, "%" . strtoupper($singleValue) . "%");
+                                 //Check if $filer is already an array
+                                 if (!is_array($filter)) {
+                                     $filter[] = $filterValue;
+@@ -440,11 +454,15 @@ public static function getDataTablesFilter(string $tablePrefix = "", ?ORM $ORM =
+                         $isRegex = $column['search']['regex'] ?? false;
+ 
+                         if ($isRegex == "true") {
+-                            // Use REGEXP for regex search
+-                            $filter[] = " REGEXP '" . $searchValue . "'";
++                            // Use REGEXP for regex search. The pattern is data, so it is quoted.
++                            $filter[] = " REGEXP " . self::escapeLiteral($ORM, (string)$searchValue);
+                         } else {
+                             // a standard search filter any sql can be used.
+                             // fieldName "=5" or " like '%test%'"
++                            //
++                            // NOTE: this branch is a deliberate SQL passthrough and the value
++                            // arrives from the request, so an application exposing it to
++                            // untrusted callers must validate it before it gets here.
+                             $filter[] = $searchValue;
+                         }
+                     }
+@@ -455,8 +473,19 @@ public static function getDataTablesFilter(string $tablePrefix = "", ?ORM $ORM =
+         $ordering = null;
+         if (!empty($orderBy)) {
+             foreach ($orderBy as $id => $orderEntry) {
+-                $columnName = $ORM->getFieldName($columns[$orderEntry["column"]]["data"], $ORM->fieldMapping);
+-                $ordering[] = $tablePrefix . $columnName . " " . $orderEntry["dir"];
++                if (!is_array($orderEntry) || !isset($orderEntry["column"], $columns[$orderEntry["column"]]["data"])) {
++                    continue;
++                }
++
++                $columnName = self::getSafeColumnName($ORM, $columns[$orderEntry["column"]]["data"], $allowedColumns);
++
++                if ($columnName === null) {
++                    continue;
++                }
++
++                //Only asc/desc may reach the statement
++                $direction = strtolower(trim((string)($orderEntry["dir"] ?? ""))) === "desc" ? "desc" : "asc";
++                $ordering[] = $tablePrefix . $columnName . " " . $direction;
+             }
+         }
+ 
+@@ -467,16 +496,21 @@ public static function getDataTablesFilter(string $tablePrefix = "", ?ORM $ORM =
+ 
+         $where = "";
+         //Check that filter isn't empty
+-        if (is_array($filter) && count($filter) > 0) {
++        if (is_array($filter) && count($filter) > 0 && !empty($listOfColumnNames)) {
+             $whereArray = null;
++            $columnsToSearch = "";
+ 
+             //Concatenate row columns into a single searchable string
+ 
+             //Check for type of database
+             if (!empty($ORM->DBA)) {
+                 //Mysql
++                //upper() on the column as well as the value: the search term is
++                //uppercased above, so without this the comparison only matches
++                //data that is already uppercase on any engine whose LIKE is
++                //case-sensitive (PostgreSQL, and MySQL under a binary collation).
+                 foreach ($listOfColumnNames as $id => $listColumn) {
+-                    $listOfColumnNames[$id] = "coalesce($listColumn, '')";
++                    $listOfColumnNames[$id] = "upper(coalesce($listColumn, ''))";
+                 }
+ 
+                 if (in_array(get_class($ORM->DBA), ["Tina4\DataMySQL", "Tina4\DataMSSQL"])) {
+@@ -486,27 +520,118 @@ public static function getDataTablesFilter(string $tablePrefix = "", ?ORM $ORM =
+                 }
+             }
+ 
+-            //Create check statement per searched word
+-            foreach ($filter as $searchFor) {
+-                $whereArray[] = $columnsToSearch . $searchFor;
++            //Without a connection there is nothing to concatenate the columns with,
++            //so the filter is dropped rather than emitted against no column at all.
++            if ($columnsToSearch !== "") {
++                //Create check statement per searched word
++                foreach ($filter as $searchFor) {
++                    $whereArray[] = $columnsToSearch . $searchFor;
++                }
++
++                //Glue each searchable phrase with "and" to ensure that it contains all searched words
++                $where = join(" and ", $whereArray);
+             }
++        }
++
++        //Both are concatenated into a limit/offset by the caller, so they are cast
++        $start = !empty($request["start"]) ? (int)$request["start"] : 0;
++        $length = !empty($request["length"]) ? (int)$request["length"] : 10;
+ 
+-            //Glue each searchable phrase with "and" to ensure that it contains all searched words
+-            $where = join(" and ", $whereArray);
++        return ["length" => $length, "start" => $start, "orderBy" => $order, "where" => $where];
++    }
++
++    /**
++     * The column names a request may reference, taken from the ORM's own fields
++     * and its field mapping.
++     *
++     * An empty set means the ORM exposes no fields — a bare Tina4\ORM, for
++     * instance — in which case only the identifier shape is enforced and the
++     * previous behaviour is preserved.
++     *
++     * @param ORM $ORM
++     * @return array
++     */
++    private static function getAllowedColumnNames(ORM $ORM): array
++    {
++        $allowed = [];
++
++        foreach ($ORM->getFieldNames() as $fieldName) {
++            $allowed[strtolower($fieldName)] = true;
+         }
+ 
+-        if (!empty($request["start"])) {
+-            $start = $request["start"];
+-        } else {
+-            $start = 0;
++        if (!empty($ORM->fieldMapping) && is_array($ORM->fieldMapping)) {
++            foreach ($ORM->fieldMapping as $mappedName) {
++                if (is_string($mappedName)) {
++                    $allowed[strtolower($mappedName)] = true;
++                }
++            }
+         }
+ 
+-        if (!empty($request["length"])) {
+-            $length = $request["length"];
+-        } else {
+-            $length = 10;
++        return $allowed;
++    }
++
++    /**
++     * Resolves a DataTables column to a database column name.
++     *
++     * Column names cannot be bound as parameters, so they are concatenated into
++     * the statement. Returns null unless the result is a bare identifier and a
++     * field the ORM actually knows about.
++     *
++     * @param ORM $ORM
++     * @param mixed $requestedColumn
++     * @param array $allowedColumns
++     * @return string|null
++     */
++    private static function getSafeColumnName(ORM $ORM, $requestedColumn, array $allowedColumns): ?string
++    {
++        if (!is_string($requestedColumn) || $requestedColumn === "") {
++            return null;
+         }
+ 
+-        return ["length" => $length, "start" => $start, "orderBy" => $order, "where" => $where];
++        $columnName = (string)$ORM->getFieldName($requestedColumn, $ORM->fieldMapping);
++
++        if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $columnName)) {
++            return null;
++        }
++
++        if (!empty($allowedColumns) && !isset($allowedColumns[strtolower($columnName)])) {
++            return null;
++        }
++
++        return $columnName;
++    }
++
++    /**
++     * Quotes a value as a SQL string literal, using the connection's own escaping
++     * where the driver offers it.
++     *
++     * @param ORM|null $ORM
++     * @param string $value
++     * @return string
++     */
++    private static function escapeLiteral(?ORM $ORM, string $value): string
++    {
++        $dba = $ORM->DBA ?? null;
++
++        if (!empty($dba)) {
++            $driver = get_class($dba);
++
++            if ($driver === "Tina4\\DataPostgresql" && !empty($dba->dbh) && function_exists("pg_escape_literal")) {
++                $escaped = @pg_escape_literal($dba->dbh, $value);
++
++                if ($escaped !== false) {
++                    return $escaped;
++                }
++            }
++
++            if ($driver === "Tina4\\DataMySQL") {
++                //MySQL treats a backslash as an escape character unless
++                //NO_BACKSLASH_ESCAPES is set, so it has to be neutralised too.
++                return "'" . str_replace(["\\", "'"], ["\\\\", "''"], $value) . "'";
++            }
++        }
++
++        //Standard SQL, and what MSSQL and SQLite3 expect: double the quote.
++        return "'" . str_replace("'", "''", $value) . "'";
+     }
+ }
+diff --git a/tests/CrudDataTablesFilterTest.php b/tests/CrudDataTablesFilterTest.php
+new file mode 100644
+index 000000000..1dcf1f57e
+--- /dev/null
++++ b/tests/CrudDataTablesFilterTest.php
+@@ -0,0 +1,146 @@
++<?php
++
++use PHPUnit\Framework\TestCase;
++use Tina4\Crud;
++use Tina4\DataSQLite3;
++use Tina4\ORM;
++
++/**
++ * Covers Crud::getDataTablesFilter().
++ *
++ * The method returns SQL fragments that a caller concatenates into a statement,
++ * and every part of them is built from $_REQUEST, so the tests below fix three
++ * things in place:
++ *
++ *   - search values are quoted as literals rather than concatenated raw,
++ *   - column names must resolve to fields the ORM knows about,
++ *   - the order direction can only be asc or desc.
++ *
++ * The case-insensitivity test is the portability one: the search term is
++ * uppercased, so the column has to be too, or the comparison silently matches
++ * nothing on any engine whose LIKE is case-sensitive.
++ */
++class CrudDataTablesFilterTest extends TestCase
++{
++    private ORM $orm;
++
++    protected function setUp(): void
++    {
++        $this->orm = new CrudFilterTestModel();
++        $this->orm->DBA = new DataSQLite3(":memory:");
++    }
++
++    protected function tearDown(): void
++    {
++        $_REQUEST = [];
++    }
++
++    private function filter(array $request): array
++    {
++        $_REQUEST = $request;
++
++        return Crud::getDataTablesFilter("t.", $this->orm);
++    }
++
++    public function testSearchIsMatchedCaseInsensitively(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "firstName", "searchable" => "true"]],
++            "search" => ["value" => "ann"],
++        ]);
++
++        // Both sides uppercased, or a case-sensitive LIKE never matches.
++        $this->assertStringContainsString("upper(coalesce(t.first_Name, ''))", $result["where"]);
++        $this->assertStringContainsString("like '%ANN%'", $result["where"]);
++    }
++
++    public function testGeneratedWhereIsValidSqlAndMatchesRegardlessOfCase(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "firstName", "searchable" => "true"]],
++            "search" => ["value" => "bob"],
++        ]);
++
++        $database = new SQLite3(":memory:");
++        $database->exec("create table t (id integer, first_Name text)");
++        $database->exec("insert into t values (1, 'Bob'), (2, 'Ann')");
++
++        $this->assertSame(
++            1,
++            (int)$database->querySingle("select count(*) from t where {$result["where"]}")
++        );
++    }
++
++    public function testSearchValueIsQuotedRatherThanConcatenatedRaw(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "firstName", "searchable" => "true"]],
++            "search" => ["value" => "o'brien"],
++        ]);
++
++        $this->assertStringContainsString("like '%O''BRIEN%'", $result["where"]);
++    }
++
++    public function testUnknownColumnIsIgnored(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "notAFieldOnTheModel", "searchable" => "true"]],
++            "search" => ["value" => "ann"],
++        ]);
++
++        $this->assertSame("", $result["where"]);
++    }
++
++    public function testColumnNameThatIsNotAPlainIdentifierIsIgnored(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "first_Name) or (1=1", "searchable" => "true"]],
++            "search" => ["value" => "ann"],
++        ]);
++
++        $this->assertSame("", $result["where"]);
++    }
++
++    public function testOrderDirectionIsLimitedToAscOrDesc(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "firstName", "searchable" => "true"]],
++            "order" => [["column" => 0, "dir" => "DESC"]],
++        ]);
++
++        $this->assertSame("t.first_Name desc", $result["orderBy"]);
++
++        $result = $this->filter([
++            "columns" => [["data" => "firstName", "searchable" => "true"]],
++            "order" => [["column" => 0, "dir" => "asc, (select 1)"]],
++        ]);
++
++        $this->assertSame("t.first_Name asc", $result["orderBy"]);
++    }
++
++    public function testStartAndLengthAreIntegers(): void
++    {
++        $result = $this->filter([
++            "columns" => [["data" => "firstName", "searchable" => "true"]],
++            "start" => "10 union select",
++            "length" => "25",
++        ]);
++
++        $this->assertSame(10, $result["start"]);
++        $this->assertSame(25, $result["length"]);
++    }
++
++    public function testDefaultsWhenTheRequestIsEmpty(): void
++    {
++        $result = $this->filter([]);
++
++        $this->assertSame(["length" => 10, "start" => 0, "orderBy" => "", "where" => ""], $result);
++    }
++}
++
++class CrudFilterTestModel extends ORM
++{
++    public $id;
++    public $firstName;
++    public $emailAddress;
++}

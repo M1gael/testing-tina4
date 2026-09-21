@@ -1,0 +1,62 @@
+Independent verification of fix.patch — 2026-09-21
+tina4 Rust CLI, origin/main @ 2bb14188b9559fb3d7a32486074056c2490c52fe (v3.8.88)
+Binaries built from worktrees off origin/main; 'fixed' = origin/main + fix.patch, nothing else.
+
+===== stock: .gitignore emitted by the real binary =====
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+data/
+logs/
+secrets/
+.env
+----- git check-ignore -v (core.excludesFile=/dev/null); rc0=IGNORED rc1=NOT -----
+rc=1 .env.local                       <not ignored>
+rc=0 .env                             .gitignore:8:.env	.env
+rc=1 .env.example                     <not ignored>
+rc=1 app.py                           <not ignored>
+rc=1 pyproject.toml                   <not ignored>
+rc=1 app.db                           <not ignored>
+rc=1 sessions/sess1                   <not ignored>
+rc=1 src/routes/sessions/get.py       <not ignored>
+rc=1 src/orm/sessions/model.py        <not ignored>
+rc=1 tests/fixtures/seed.db           <not ignored>
+rc=1 docs/sessions/readme.md          <not ignored>
+----- .env.local in index after 'git add -A .'? -----
+YES — SECRET STAGED (leak)
+
+===== fixed: .gitignore emitted by the real binary =====
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+data/
+logs/
+sessions/
+secrets/
+*.db
+.env
+.env.local
+----- git check-ignore -v (core.excludesFile=/dev/null); rc0=IGNORED rc1=NOT -----
+rc=0 .env.local                       .gitignore:11:.env.local	.env.local
+rc=0 .env                             .gitignore:10:.env	.env
+rc=1 .env.example                     <not ignored>
+rc=1 app.py                           <not ignored>
+rc=1 pyproject.toml                   <not ignored>
+rc=0 app.db                           .gitignore:9:*.db	app.db
+rc=0 sessions/sess1                   .gitignore:7:sessions/	sessions/sess1
+rc=0 src/routes/sessions/get.py       .gitignore:7:sessions/	src/routes/sessions/get.py
+rc=0 src/orm/sessions/model.py        .gitignore:7:sessions/	src/orm/sessions/model.py
+rc=0 tests/fixtures/seed.db           .gitignore:9:*.db	tests/fixtures/seed.db
+rc=0 docs/sessions/readme.md          .gitignore:7:sessions/	docs/sessions/readme.md
+----- .env.local in index after 'git add -A .'? -----
+no — secret not staged
+
+===== other backend languages, PATCHED binary (all four frameworks mint into .env.local) =====
+php     .gitignore: vendor/ data/ logs/ cache/ secrets/ .env 
+php     .env.local rc=1 <NOT IGNORED — still leaks>
+ruby    .gitignore: .bundle/ vendor/ data/ logs/ .env Gemfile.lock 
+ruby    .env.local rc=1 <NOT IGNORED — still leaks>
+nodejs  .gitignore: node_modules/ dist/ data/ logs/ .env 
+nodejs  .env.local rc=1 <NOT IGNORED — still leaks>
