@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tina4Php</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;display:flex;flex-direction:column;align-items:center;position:relative}
+.bg-watermark{position:fixed;bottom:-5%;right:-5%;width:45%;opacity:0.04;pointer-events:none;z-index:0}
+.hero{text-align:center;z-index:1;padding:3rem 2rem 2rem}
+.logo{width:120px;height:120px;margin-bottom:1.5rem}
+h1{font-size:3rem;font-weight:700;margin-bottom:0.25rem;letter-spacing:-1px}
+.tagline{color:#64748b;font-size:1.1rem;margin-bottom:2rem}
+.actions{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.btn{padding:0.6rem 1.5rem;border-radius:0.5rem;font-size:0.9rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;border:1px solid #334155;color:#94a3b8;background:transparent;min-width:140px;text-align:center;display:inline-block}
+.btn:hover{border-color:#64748b;color:#e2e8f0}
+.status{display:flex;gap:2rem;justify-content:center;align-items:center;color:#64748b;font-size:0.85rem;margin-bottom:1.5rem}
+.status .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block;margin-right:0.4rem}
+.footer{color:#334155;font-size:0.8rem;letter-spacing:0.5px}
+.section{z-index:1;width:100%;max-width:800px;padding:0 2rem;margin-bottom:2.5rem}
+.card{background:#1e293b;border-radius:0.75rem;padding:2rem;border:1px solid #334155}
+.card h2{font-size:1.4rem;font-weight:600;margin-bottom:1.25rem;color:#e2e8f0}
+.code-block{background:#0f172a;border-radius:0.5rem;padding:1.25rem;overflow-x:auto;font-family:'SF Mono',SFMono-Regular,Consolas,'Liberation Mono',Menlo,monospace;font-size:0.85rem;line-height:1.6;color:#4ade80;border:1px solid #1e293b}
+.gallery{z-index:1;width:100%;max-width:800px;padding:0 2rem;margin-bottom:3rem}
+.gallery h2{font-size:1.4rem;font-weight:600;margin-bottom:1.25rem;color:#e2e8f0;text-align:center}
+.gallery-grid{display:flex;gap:1rem;flex-wrap:wrap}
+.gallery-card{flex:1 1 220px;background:#1e293b;border:1px solid #334155;border-radius:0.75rem;padding:1.5rem;position:relative;overflow:hidden}
+.gallery-card .accent{position:absolute;top:0;left:0;right:0;height:3px}
+.gallery-card .accent-purple{background:#7b1fa2}
+.gallery-card .accent-green{background:#22c55e}
+.gallery-card .accent-blue{background:#a78bfa}
+.gallery-card .icon{font-size:1.5rem;margin-bottom:0.75rem}
+.gallery-card h3{font-size:1rem;font-weight:600;margin-bottom:0.5rem;color:#e2e8f0}
+.gallery-card p{font-size:0.85rem;color:#94a3b8;line-height:1.5}
+.gallery-card .try-btn{display:inline-block;margin-top:0.75rem;padding:0.3rem 0.8rem;background:#7b1fa2;color:#fff;border:none;border-radius:0.375rem;font-size:0.75rem;font-weight:600;cursor:pointer;transition:opacity 0.15s}
+.gallery-card .try-btn:hover{opacity:0.85}
+@keyframes wiggle{0%{transform:rotate(0deg)}15%{transform:rotate(14deg)}30%{transform:rotate(-10deg)}45%{transform:rotate(8deg)}60%{transform:rotate(-4deg)}75%{transform:rotate(2deg)}100%{transform:rotate(0deg)}}
+.star-wiggle{display:inline-block;transform-origin:center}
+</style>
+</head>
+<body>
+<img src="/images/tina4-logo-icon.webp" class="bg-watermark" alt="">
+<div class="hero">
+    <img src="/images/tina4-logo-icon.webp" class="logo" alt="Tina4">
+    <h1>Tina4Php</h1>
+    <p class="tagline">The Intelligent Native Application 4ramework</p>
+    <div class="actions">
+        <a href="https://tina4.com/php" class="btn" target="_blank">Website</a>
+        <a href="/__dev" class="btn">Dev Admin</a>
+        <a href="#gallery" class="btn">Gallery</a>
+        <a href="https://github.com/tina4stack/tina4-php" class="btn" target="_blank">GitHub</a>
+        <a href="https://github.com/tina4stack/tina4-php/stargazers" class="btn" target="_blank"><span class="star-wiggle">&#9734;</span> Star</a>
+    </div>
+    <div class="status">
+        <span><span class="dot"></span>Server running</span>
+        <span>Port 8793</span>
+        <span>v3.13.134</span>
+    </div>
+    <p class="footer">Zero dependencies &middot; Convention over configuration</p>
+</div>
+<div class="section">
+    <div class="card">
+        <h2>Getting Started</h2>
+        <pre class="code-block"><code><span style="color:#64748b">// index.php</span>
+<span style="color:#c084fc">require_once</span> <span style="color:#4ade80">'vendor/autoload.php'</span>;
+
+$app = <span style="color:#c084fc">new</span> <span style="color:#38bdf8">\Tina4\App</span>();
+
+<span style="color:#38bdf8">\Tina4\Router</span>::<span style="color:#fbbf24">get</span>(<span style="color:#4ade80">'/hello'</span>, <span style="color:#c084fc">function</span> ($request, $response) {
+    <span style="color:#c084fc">return</span> $response-&gt;json([<span style="color:#4ade80">'message'</span> =&gt; <span style="color:#4ade80">'Hello World!'</span>]);
+});
+
+$app-&gt;run();  <span style="color:#64748b">// starts on port 7145</span></code></pre>
+    </div>
+</div>
+<div class="gallery">
+    <h2 id="gallery">What You Can Build</h2>
+    <p style="color:#64748b;font-size:0.85rem;text-align:center;margin-bottom:1.25rem;">Click <strong style="color:#94a3b8;">Try It</strong> to deploy working example code into your <code style="color:#4ade80;">src/</code> folder</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;">
+        <div class="gallery-card">
+            <div class="accent accent-purple"></div>
+            <div class="icon">&#128640;</div>
+            <h3>REST API</h3>
+            <p>Define routes with one closure</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">Router::get('/api/users', function($req, $res) {
+    return $res-&gt;json(['users' =&gt; []]);
+});</pre>
+            <button class="try-btn" onclick="deployGallery('rest-api','/api/gallery/hello')">Try It</button>
+        </div>
+        <div class="gallery-card">
+            <div class="accent accent-green"></div>
+            <div class="icon">&#128451;</div>
+            <h3>ORM</h3>
+            <p>Active record models, zero config</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">class User extends ORM {
+    public $tableName = "users";
+    public $primaryKey = "id";
+}</pre>
+            <button class="try-btn" onclick="deployGallery('orm','/api/gallery/products')">Try It</button>
+        </div>
+        <div class="gallery-card">
+            <div class="accent accent-blue"></div>
+            <div class="icon">&#128274;</div>
+            <h3>Auth</h3>
+            <p>JWT tokens built-in</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">$token = Auth::getToken(["user_id" =&gt; 1]);
+$valid = Auth::validToken($token);</pre>
+            <button class="try-btn" onclick="deployGallery('auth','/gallery/auth')">Try It</button>
+        </div>
+        <div class="gallery-card">
+            <div class="accent accent-purple"></div>
+            <div class="icon">&#9889;</div>
+            <h3>Queue</h3>
+            <p>Background jobs, no Redis needed</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">$producer = new Producer(new Queue("emails"));
+$producer-&gt;produce(["to" =&gt; "a@b.com"]);</pre>
+            <button class="try-btn" onclick="deployGallery('queue','/api/gallery/queue/status')">Try It</button>
+        </div>
+        <div class="gallery-card">
+            <div class="accent accent-green"></div>
+            <div class="icon">&#128196;</div>
+            <h3>Templates</h3>
+            <p>Twig templates with auto-reload</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">Router::get('/dashboard', function($req, $res) {
+    return $res-&gt;template("dashboard.twig", $data);
+});</pre>
+            <button class="try-btn" onclick="deployGallery('templates','/gallery/page')">Try It</button>
+        </div>
+        <div class="gallery-card">
+            <div class="accent accent-blue"></div>
+            <div class="icon">&#128225;</div>
+            <h3>Database</h3>
+            <p>Multi-engine, one API</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">$db = new Database("sqlite:///app.db");
+$result = $db-&gt;fetch("SELECT * FROM users");</pre>
+            <button class="try-btn" onclick="deployGallery('database','/api/gallery/db/tables')">Try It</button>
+        </div>
+        <div class="gallery-card">
+            <div class="accent accent-purple"></div>
+            <div class="icon">&#128680;</div>
+            <h3>Error Overlay</h3>
+            <p>Rich debug page with source code</p>
+            <pre style="background:#0f172a;color:#4ade80;padding:0.75rem;border-radius:0.375rem;font-size:0.75rem;overflow-x:auto;margin-top:0.5rem;font-family:'SF Mono',SFMono-Regular,Consolas,monospace;">$user = ["name" =&gt; "Alice"];
+$role = $user["role"];  // KeyError!</pre>
+            <button class="try-btn" onclick="deployGallery('error-overlay','/api/gallery/crash')">Try It</button>
+        </div>
+    </div>
+</div>
+<script>
+function deployGallery(name, tryUrl) {
+    var btn = event.target;
+    if (btn.dataset.deployed) {
+        window.open(tryUrl, '_blank');
+        return;
+    }
+    if (!confirm('This will add example code to your src/ folder. Continue?')) return;
+    btn.textContent = 'Deploying...';
+    btn.disabled = true;
+    fetch('/__dev/api/gallery/deploy', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: name})
+    }).then(function(r) { return r.json(); }).then(function(d) {
+        if (d.deployed) {
+            btn.textContent = 'View \u2197';
+            btn.style.background = '#22c55e';
+            btn.dataset.deployed = '1';
+            btn.disabled = false;
+            // Wait for the newly deployed route to become reachable, then
+            // open in a new tab so the gallery home stays open (tina4-book#115).
+            var attempts = 0;
+            var maxAttempts = 5;
+            function pollRoute() {
+                fetch(tryUrl, {method: 'HEAD'}).then(function() {
+                    window.open(tryUrl, '_blank');
+                }).catch(function() {
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        setTimeout(pollRoute, 500);
+                    } else {
+                        window.open(tryUrl, '_blank');
+                    }
+                });
+            }
+            setTimeout(pollRoute, 500);
+        } else {
+            btn.textContent = 'Try It';
+            btn.disabled = false;
+            alert(d.error || 'Deploy failed');
+        }
+    }).catch(function() {
+        btn.textContent = 'Try It';
+        btn.disabled = false;
+        alert('Deploy failed — check console');
+    });
+}
+</script>
+<script>
+(function(){
+    var star=document.querySelector('.star-wiggle');
+    if(!star)return;
+    function doWiggle(){
+        star.style.animation='wiggle 1.2s ease-in-out';
+        star.addEventListener('animationend',function onEnd(){
+            star.removeEventListener('animationend',onEnd);
+            star.style.animation='none';
+            var delay=3000+Math.random()*15000;
+            setTimeout(doWiggle,delay);
+        });
+    }
+    setTimeout(doWiggle,3000);
+})();
+</script>
+<link rel="stylesheet" href="/__dev/toolbar.css">
+<div id="tina4-dev-toolbar" data-reload="1">
+    <span id="tina4-ver-btn" title="Click to check for updates">Tina4 v3.13.134</span>
+    <div id="tina4-ver-modal">
+      <div class="t4-modal-head">
+        <strong class="t4-modal-title">Version Info</strong>
+        <span id="tina4-ver-close" class="t4-x">&times;</span>
+      </div>
+      <div id="tina4-ver-body">
+        <div>Current: <strong class="t4-ok">v3.13.134</strong></div>
+        <div id="tina4-ver-latest" class="t4-dim">Checking for updates...</div>
+      </div>
+    </div>
+    <span class="t4-green">GET</span>
+    <span>/</span>
+    <span class="t4-arrow">&rarr; /</span>
+    <span class="t4-yellow">req:9a0366be</span>
+    <span class="t4-blue">87 routes</span>
+    <span class="t4-dim">PHP 8.4.25</span>
+    <a href="#" id="tina4-dash-link" class="t4-dash">Dashboard &#8599;</a>
+    <span id="tina4-bar-close" class="t4-x t4-bar-close">&#10005;</span>
+</div>
+<script src="/__dev/toolbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+BIN=C:\Users\mig\cli27\tina4-fixed.exe
+HOST=DESKTOP-2KQGEUM
+tina4 3.8.88
+----- serve (no -p) dump -----
+TINA4_CSP=default-src 'self'; form-action 'self'
+PLAIN_TRAILING_SQ=form-action 'self'
+SQ_WRAPPED=hello world
+DQ_WRAPPED=hello world
+ENDS_DQ=say "hi"
+QUOTED_EMPTY=''
+PADDED= spaced 
+----- serve -p 8795 dump -----
+TINA4_CSP=<unset>
+PLAIN_TRAILING_SQ=<unset>
+SQ_WRAPPED=<unset>
+DQ_WRAPPED=<unset>
+ENDS_DQ=<unset>
+QUOTED_EMPTY=<unset>
+PADDED=<unset>
+## verdict
+    .env holds:            default-src 'self'; form-action 'self'
+    serve (default port):  default-src 'self'; form-action 'self'
+    serve -p 8795:         <unset>
+    VALUE SURVIVED: default-port serve handed the child the CSP intact.
+fixed_exit:1

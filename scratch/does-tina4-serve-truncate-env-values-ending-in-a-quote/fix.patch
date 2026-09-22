@@ -1,0 +1,499 @@
+diff --git a/src/env_config.rs b/src/env_config.rs
+index 6afc556..89914d2 100644
+--- a/src/env_config.rs
++++ b/src/env_config.rs
+@@ -284,6 +284,76 @@ fn interactive_features() -> Vec<Feature> {
+     ]
+ }
+ 
++/// Strip at most one matching pair of wrapping quotes from a `.env` value.
++///
++/// This replaces `trim().trim_matches('"').trim_matches('\'')`, the expression
++/// that stood at all three `.env` value sites. `trim_matches` strips EVERY
++/// matching character off both ends, not one wrapping pair, so a value whose
++/// own content ended in a quote lost it:
++/// `TINA4_CSP="default-src 'self'; form-action 'self'"` reached the framework
++/// as `default-src 'self'; form-action 'self`, which is not a valid CSP source
++/// expression, so the browser dropped the directive and blocked the very form
++/// post it was written to allow. A value of three quotes lost all three, and
++/// `"''"` came out empty.
++///
++/// The two quote characters are deliberately not interchangeable: a pair is a
++/// pair only when both ends are the SAME character, so `'say "hi"'` keeps its
++/// inner double quotes and `"it's"` keeps its apostrophe.
++pub(crate) fn unquote_env_value(value: &str) -> &str {
++    let value = value.trim();
++    let bytes = value.as_bytes();
++    if bytes.len() >= 2 {
++        let first = bytes[0];
++        if (first == b'"' || first == b'\'') && bytes[bytes.len() - 1] == first {
++            // Both ends are ASCII quotes, so these are char boundaries.
++            return &value[1..value.len() - 1];
++        }
++    }
++    value
++}
++
++/// Render a value for a `.env` line so that reading the file back yields this
++/// exact string — both through `unquote_env_value` above and through the
++/// frameworks' own dotenv parsers, which also read the file the CLI writes.
++///
++/// Writing values bare is what made `tina4 env --sync` destructive rather than
++/// merely wrong: the read unwrapped, the write put nothing back, and the next
++/// read unwrapped again. Measured on 3.8.88, one `--sync` turned
++/// `QUOTED_EMPTY="''"` into an empty value and `PADDED=" spaced "` into
++/// `spaced` — the user's own file, edited in place, with no backup (only
++/// `tina4 env --migrate` writes a `.env.bak`).
++///
++/// A value is quoted only when it does not survive being written bare, which is
++/// exactly when `unquote_env_value` would change it: leading or trailing
++/// whitespace, or a matching pair of quotes at both ends. Everything else is
++/// left alone, so `form-action 'self'` and `say "hi"` keep the shape the user
++/// wrote.
++///
++/// Which quote character is not a free choice. `Tina4/DotEnv.php` — and the
++/// other ports — treat a double-quoted value as escapable and interpolating
++/// (`\x` is `x`, `${VAR}` is substituted) and a single-quoted value as literal,
++/// so a value carrying a backslash, a `"` or a `${` must not be wrapped in
++/// double quotes.
++///
++/// A value that needs quoting AND contains both quote characters cannot be
++/// represented in this format without an escaping scheme the readers do not all
++/// share, so it is left bare. That is what happens today for every such value;
++/// nothing regresses, and the shape is vanishingly rare.
++pub(crate) fn quote_env_value(value: &str) -> String {
++    if unquote_env_value(value) == value {
++        return value.to_string();
++    }
++    let double_quotes_are_safe =
++        !value.contains('"') && !value.contains('\\') && !value.contains("${");
++    if double_quotes_are_safe {
++        return format!("\"{}\"", value);
++    }
++    if !value.contains('\'') {
++        return format!("'{}'", value);
++    }
++    value.to_string()
++}
++
+ /// Read current .env file into a map.
+ fn read_env(path: &str) -> BTreeMap<String, String> {
+     let mut map = BTreeMap::new();
+@@ -295,7 +365,7 @@ fn read_env(path: &str) -> BTreeMap<String, String> {
+             }
+             if let Some((key, value)) = line.split_once('=') {
+                 let key = key.trim().to_string();
+-                let value = value.trim().trim_matches('"').trim_matches('\'').to_string();
++                let value = unquote_env_value(value).to_string();
+                 map.insert(key, value);
+             }
+         }
+@@ -323,7 +393,7 @@ fn write_env(path: &str, vars: &BTreeMap<String, String>) {
+     for (group, entries) in &groups {
+         contents.push_str(&format!("# {}\n", group));
+         for (key, value) in entries {
+-            contents.push_str(&format!("{}={}\n", key, value));
++            contents.push_str(&format!("{}={}\n", key, quote_env_value(value)));
+         }
+         contents.push('\n');
+     }
+@@ -331,7 +401,7 @@ fn write_env(path: &str, vars: &BTreeMap<String, String>) {
+     // Write any custom vars not in known list
+     for (key, value) in vars {
+         if !used_keys.contains(key) {
+-            contents.push_str(&format!("{}={}\n", key, value));
++            contents.push_str(&format!("{}={}\n", key, quote_env_value(value)));
+         }
+     }
+ 
+@@ -685,3 +755,150 @@ pub fn run(sync: bool, example_only: bool, list_only: bool) {
+     );
+     println!();
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::{quote_env_value, unquote_env_value};
++
++    /// Values a `.env` file can hold on one line, including every shape the old
++    /// `trim_matches` chain destroyed. Excludes the one documented shape that
++    /// this format cannot represent — see `a_value_holding_both_quote_characters`.
++    fn cases() -> Vec<&'static str> {
++        vec![
++            "",
++            "x",
++            "hello world",
++            "default-src 'self'; form-action 'self'",
++            "form-action 'self'",
++            "say \"hi\"",
++            "it's",
++            "abc'''",
++            "'''",
++            "''",
++            "\"",
++            "'",
++            "\"\"",
++            " leading",
++            "trailing ",
++            " both ",
++            " say \"hi\" ",
++            " C:\\logs\\app.log ",
++            " ${HOME}/data ",
++            "a=b=c",
++            "#not-a-comment",
++            "postgres://u:p@h/db?sslmode=require",
++        ]
++    }
++
++    #[test]
++    fn a_wrapping_pair_is_removed_once_and_only_once() {
++        assert_eq!(unquote_env_value("\"hello world\""), "hello world");
++        assert_eq!(unquote_env_value("'hello world'"), "hello world");
++        // The value's own trailing quote survives - this is the reported defect.
++        assert_eq!(
++            unquote_env_value("\"default-src 'self'; form-action 'self'\""),
++            "default-src 'self'; form-action 'self'"
++        );
++        assert_eq!(unquote_env_value("form-action 'self'"), "form-action 'self'");
++        assert_eq!(unquote_env_value("\"''\""), "''");
++        assert_eq!(unquote_env_value("abc'''"), "abc'''");
++    }
++
++    #[test]
++    fn mismatched_ends_are_not_a_pair() {
++        assert_eq!(unquote_env_value("'say \"hi\"'"), "say \"hi\"");
++        assert_eq!(unquote_env_value("\"it's\""), "it's");
++        assert_eq!(unquote_env_value("\"abc"), "\"abc");
++        assert_eq!(unquote_env_value("abc\""), "abc\"");
++    }
++
++    #[test]
++    fn a_lone_quote_is_a_value_not_a_wrapper() {
++        assert_eq!(unquote_env_value("\""), "\"");
++        assert_eq!(unquote_env_value("'"), "'");
++        assert_eq!(unquote_env_value("\"\""), "");
++    }
++
++    #[test]
++    fn surrounding_whitespace_is_still_dropped() {
++        assert_eq!(unquote_env_value("  hello  "), "hello");
++        assert_eq!(unquote_env_value("  \" hello \"  "), " hello ");
++    }
++
++    /// The property the write path has to satisfy: whatever `read_env` produced,
++    /// `write_env` must render it so that reading the file back yields the same
++    /// string. Without it `tina4 env --sync` loses a character per run.
++    #[test]
++    fn every_value_round_trips_through_a_written_line() {
++        for value in cases() {
++            let line = format!("KEY={}", quote_env_value(value));
++            let (_, written) = line.split_once('=').expect("line has a separator");
++            assert_eq!(
++                unquote_env_value(written),
++                value,
++                "value {:?} was written as {:?} and read back wrong",
++                value,
++                line
++            );
++        }
++    }
++
++    /// Re-reading and re-writing must reach a fixed point immediately, not decay.
++    #[test]
++    fn writing_twice_changes_nothing() {
++        for value in cases() {
++            let once = quote_env_value(value);
++            let read_back = unquote_env_value(&once).to_string();
++            assert_eq!(quote_env_value(&read_back), once, "value {:?} decayed", value);
++        }
++    }
++
++    /// A value is quoted only when writing it bare would change it. Quoting more
++    /// than that is not free: the frameworks' own parsers read this file, and
++    /// wrapping a value that did not need it can change what THEY see.
++    #[test]
++    fn a_value_that_survives_bare_is_written_bare() {
++        for value in [
++            "hello world",
++            "8080",
++            "",
++            "form-action 'self'",
++            "say \"hi\"",
++            "default-src 'self'; form-action 'self'",
++            "C:\\logs\\app.log",
++            "\"",
++        ] {
++            assert_eq!(quote_env_value(value), value, "{:?} did not need quoting", value);
++        }
++    }
++
++    #[test]
++    fn a_value_that_would_not_survive_bare_is_wrapped() {
++        assert_eq!(quote_env_value(" padded "), "\" padded \"");
++        assert_eq!(quote_env_value("''"), "\"''\"");
++        assert_eq!(quote_env_value("'''"), "\"'''\"");
++    }
++
++    /// `Tina4/DotEnv.php` and its sibling ports read a double-quoted value as
++    /// escapable and interpolating, and a single-quoted one as literal. A value
++    /// carrying a backslash, a `"` or a `${` therefore cannot go in double
++    /// quotes, however well the CLI's own parser would cope.
++    #[test]
++    fn the_wrapping_quote_is_one_the_framework_parsers_read_literally() {
++        assert_eq!(quote_env_value(" say \"hi\" "), "' say \"hi\" '");
++        assert_eq!(quote_env_value(" C:\\logs\\app.log "), "' C:\\logs\\app.log '");
++        assert_eq!(quote_env_value(" ${HOME}/data "), "' ${HOME}/data '");
++        assert_eq!(quote_env_value("\"\""), "'\"\"'");
++    }
++
++    /// The one shape this format cannot represent: it needs quoting AND holds
++    /// both quote characters, so neither wrapper is safe and no escaping scheme
++    /// is shared by all the readers. It is left bare, which is exactly what
++    /// happens today - nothing regresses, and the round trip is lossy.
++    #[test]
++    fn a_value_holding_both_quote_characters_is_left_bare() {
++        let value = " it's \"x\" ";
++        assert_eq!(quote_env_value(value), value);
++        assert_eq!(unquote_env_value(&format!("KEY={}", value).split_once('=').unwrap().1), "it's \"x\"");
++    }
++}
+diff --git a/src/main.rs b/src/main.rs
+index 589471a..27ed1b4 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -625,7 +625,7 @@ pub fn handle_serve(port: Option<u16>, host: &str, force_dev: bool, force_produc
+                 }
+                 if let Some((key, value)) = line.split_once('=') {
+                     let key = key.trim();
+-                    let value = value.trim().trim_matches('"').trim_matches('\'');
++                    let value = env_config::unquote_env_value(value);
+                     if std::env::var(key).is_err() {
+                         std::env::set_var(key, value);
+                     }
+@@ -982,6 +982,13 @@ fn read_dotenv_bool_from<P: AsRef<std::path::Path>>(path: P, key: &str) -> bool
+         }
+         if let Some((k, v)) = line.split_once('=') {
+             if k.trim() == key {
++                // Left on the old expression deliberately. Truncation is invisible
++                // here - the result is lower-cased and tested for membership of
++                // {true, 1, yes}, so a lost trailing quote cannot change the
++                // answer for any well-formed value. Switching it to
++                // env_config::unquote_env_value would change what a MALFORMED
++                // value means (`true'` would stop counting as true), and no
++                // report covers that.
+                 let v = v.trim().trim_matches('"').trim_matches('\'').to_lowercase();
+                 return matches!(v.as_str(), "true" | "1" | "yes");
+             }
+diff --git a/tests/env_dotenv_values.rs b/tests/env_dotenv_values.rs
+new file mode 100644
+index 0000000..2b81285
+--- /dev/null
++++ b/tests/env_dotenv_values.rs
+@@ -0,0 +1,207 @@
++//! `.env` values must survive the CLI, through the real entry points.
++//!
++//! Both defects these cover were reported against 3.8.88 and reproduced there:
++//!
++//!   * `tina4 serve` (no `--port`) parses `.env` itself and exports it to the
++//!     language server. `TINA4_CSP="default-src 'self'; form-action 'self'"`
++//!     arrived as `... form-action 'self` — not a valid CSP source expression,
++//!     so the browser dropped the directive and blocked the login form post.
++//!   * `tina4 env --sync` read the same way and wrote values back bare, so the
++//!     truncation landed in the user's own file and compounded on every run.
++//!
++//! These go through the shipped binary, not the helpers: the defect was in what
++//! the entry points did with them.
++
++use std::fs;
++use std::path::Path;
++use std::process::Command;
++use std::time::{Duration, Instant};
++
++/// The value from the report, plus the shapes that decayed on a second `--sync`.
++const ENV_FILE: &str = concat!(
++    "TINA4_CSP=\"default-src 'self'; form-action 'self'\"\n",
++    "PLAIN_TRAILING_SQ=form-action 'self'\n",
++    "SQ_WRAPPED='hello world'\n",
++    "DQ_WRAPPED=\"hello world\"\n",
++    "ENDS_DQ='say \"hi\"'\n",
++    "QUOTED_EMPTY=\"''\"\n",
++    "PADDED=\" spaced \"\n",
++);
++
++fn expected() -> Vec<(&'static str, &'static str)> {
++    vec![
++        ("TINA4_CSP", "default-src 'self'; form-action 'self'"),
++        ("PLAIN_TRAILING_SQ", "form-action 'self'"),
++        ("SQ_WRAPPED", "hello world"),
++        ("DQ_WRAPPED", "hello world"),
++        ("ENDS_DQ", "say \"hi\""),
++        ("QUOTED_EMPTY", "''"),
++        ("PADDED", " spaced "),
++    ]
++}
++
++fn temp_dir(tag: &str) -> std::path::PathBuf {
++    let dir = std::env::temp_dir().join(format!(
++        "tina4-dotenv-{}-{}-{:?}",
++        tag,
++        std::process::id(),
++        std::thread::current().id()
++    ));
++    let _ = fs::remove_dir_all(&dir);
++    fs::create_dir_all(&dir).expect("create temp dir");
++    dir
++}
++
++/// Parse a `.env` the way a consumer would, WITHOUT reusing the CLI's parser —
++/// a test that shares the parser cannot see the parser be wrong.
++fn read_back(path: &Path) -> Vec<(String, String)> {
++    let contents = fs::read_to_string(path).expect("read .env");
++    let mut out = Vec::new();
++    for line in contents.lines() {
++        let line = line.trim();
++        if line.is_empty() || line.starts_with('#') {
++            continue;
++        }
++        if let Some((key, value)) = line.split_once('=') {
++            let value = value.trim();
++            let unwrapped = if value.len() >= 2
++                && (value.starts_with('"') || value.starts_with('\''))
++                && value.ends_with(value.chars().next().unwrap())
++            {
++                &value[1..value.len() - 1]
++            } else {
++                value
++            };
++            out.push((key.trim().to_string(), unwrapped.to_string()));
++        }
++    }
++    out
++}
++
++fn value_of<'a>(pairs: &'a [(String, String)], key: &str) -> Option<&'a str> {
++    pairs
++        .iter()
++        .find(|(k, _)| k == key)
++        .map(|(_, v)| v.as_str())
++}
++
++#[test]
++fn env_sync_leaves_every_value_exactly_as_it_found_it() {
++    let dir = temp_dir("sync");
++    let env_path = dir.join(".env");
++    fs::write(&env_path, ENV_FILE).expect("seed .env");
++
++    for run in 1..=2 {
++        let output = Command::new(env!("CARGO_BIN_EXE_tina4"))
++            .args(["env", "--sync"])
++            .current_dir(&dir)
++            .output()
++            .expect("run tina4 env --sync");
++        assert!(
++            output.status.success(),
++            "run {} failed: {}",
++            run,
++            String::from_utf8_lossy(&output.stderr)
++        );
++
++        let pairs = read_back(&env_path);
++        for (key, want) in expected() {
++            assert_eq!(
++                value_of(&pairs, key),
++                Some(want),
++                "after --sync run {}, {} was not preserved.\nfile now:\n{}",
++                run,
++                key,
++                fs::read_to_string(&env_path).unwrap_or_default()
++            );
++        }
++    }
++
++    let _ = fs::remove_dir_all(&dir);
++}
++
++/// The language server inherits the CLI's process environment. A stand-in for it
++/// dumps that environment, which is exactly what the framework would have read.
++#[cfg(unix)]
++#[test]
++fn serve_without_a_port_flag_exports_values_unharmed() {
++    use std::os::unix::fs::PermissionsExt;
++
++    let dir = temp_dir("serve");
++    let dump = dir.join("dump.txt");
++    let bin_dir = dir.join("stub-bin");
++    fs::create_dir_all(&bin_dir).expect("create stub bin dir");
++
++    // `tina4 serve` on a Python project runs `python3 app.py --managed`.
++    fs::write(dir.join("requirements.txt"), "tina4_python\n").expect("write requirements.txt");
++    fs::write(dir.join("app.py"), "").expect("write app.py");
++    fs::write(
++        &env_path_of(&dir),
++        format!("{}TINA4_PORT=8919\n", ENV_FILE),
++    )
++    .expect("seed .env");
++
++    let stub = bin_dir.join("python3");
++    fs::write(
++        &stub,
++        format!(
++            "#!/bin/sh\nenv > '{}'\nexit 0\n",
++            dump.display()
++        ),
++    )
++    .expect("write stub python3");
++    fs::set_permissions(&stub, fs::Permissions::from_mode(0o755)).expect("chmod stub");
++
++    let path = format!(
++        "{}:{}",
++        bin_dir.display(),
++        std::env::var("PATH").unwrap_or_default()
++    );
++    let mut child = Command::new(env!("CARGO_BIN_EXE_tina4"))
++        .arg("serve")
++        .current_dir(&dir)
++        .env("PATH", path)
++        .env("TINA4_NO_BROWSER", "true")
++        // The values under test must come from .env, not from this process.
++        .env_remove("TINA4_CSP")
++        .env_remove("PLAIN_TRAILING_SQ")
++        .env_remove("SQ_WRAPPED")
++        .env_remove("DQ_WRAPPED")
++        .env_remove("ENDS_DQ")
++        .env_remove("QUOTED_EMPTY")
++        .env_remove("PADDED")
++        .stdout(std::process::Stdio::null())
++        .stderr(std::process::Stdio::null())
++        .spawn()
++        .expect("spawn tina4 serve");
++
++    // A blown cap is a named failure, never a wedged run.
++    let deadline = Instant::now() + Duration::from_secs(30);
++    while !dump.exists() && Instant::now() < deadline {
++        std::thread::sleep(Duration::from_millis(100));
++    }
++    let _ = child.kill();
++    let _ = child.wait();
++
++    assert!(
++        dump.exists(),
++        "the stand-in server was never started within 30s, so nothing was measured"
++    );
++
++    let dumped = fs::read_to_string(&dump).expect("read dumped environment");
++    for (key, want) in expected() {
++        let line = dumped
++            .lines()
++            .find(|l| l.starts_with(&format!("{}=", key)))
++            .unwrap_or_else(|| panic!("{} never reached the server at all", key));
++        let got = &line[key.len() + 1..];
++        assert_eq!(got, want, "{} reached the server altered", key);
++    }
++
++    let _ = fs::remove_dir_all(&dir);
++}
++
++#[cfg(unix)]
++fn env_path_of(dir: &Path) -> std::path::PathBuf {
++    dir.join(".env")
++}

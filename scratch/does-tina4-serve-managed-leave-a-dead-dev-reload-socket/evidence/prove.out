@@ -1,0 +1,13 @@
+# framework: e0df3a97 (origin/v3)
+
+## managed
+    GET /__dev_reload (websocket upgrade): HTTP 404
+    toolbar on GET /:                      data-reload="1"
+
+## unmanaged
+    GET /__dev_reload (websocket upgrade): HTTP 101
+    toolbar on GET /:                      data-reload="1"
+
+## verdict
+    --managed is the only difference. 404 vs 101 on the socket, identical page flag:
+    the server's decision not to serve /__dev_reload never reaches the client that dials it.

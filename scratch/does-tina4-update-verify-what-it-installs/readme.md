@@ -117,3 +117,45 @@ Four mutations, each reverted after:
 | warn on mismatch instead of refusing | red — two entry-point tests |
 
 `sha256_file` is checked against the published digest of the empty input, not against itself.
+
+### Second pass, 2026-09-22 — a local failure was switching verification off
+
+Run against the built binary with a stand-in `curl` exiting **23** (a write
+failure) on the `SHA256SUMS` fetch:
+
+```
+⚠ No SHA256SUMS published for v9.9.9 — installing without verifying
+✓ Updated tina4 CLI 3.8.88 → 9.9.9          exit 0
+```
+
+Both claims false. The release may publish the file perfectly well; it could not be
+fetched *here*. `DownloadOutcome` already separates `Http` (a 404 — genuinely
+absent, and install.sh's documented "verify strictly when present" case) from
+`Local(_)` (no space, no permission, no route), and the first version collapsed
+both into one `_` arm. A local condition therefore turned verification off with
+nobody choosing it.
+
+Now `Http` keeps the documented behaviour and `Local` refuses:
+
+```
+✗ Could not fetch SHA256SUMS for v9.9.9 — curl exited 23 -- it could not write the file
+  Refusing to install a binary that cannot be verified. The CLI you are
+  running has not been touched.
+```
+
+Gated by `update_refuses_when_the_checksums_cannot_be_fetched_locally`; folding
+`Local` back into the `Http` arm turns it red.
+
+**The trade-off, stated.** On Windows with no `C:\Windows\System32\curl.exe` the
+downloader falls back to `Invoke-WebRequest`, which upstream's own comment says
+"exits 1 for everything" — so every failure there classifies as `Local`, and self-
+update will now refuse rather than install unverified. That path is already marked
+untested upstream and Windows 10+ ships `curl.exe`, but it is a real behaviour
+change on a platform that cannot be tested from here.
+
+**Also confirmed this pass:** a download that exits 0 having written no file is now
+refused with `the download could not be read back: No such file or directory (os
+error 2)` and a non-zero exit, where stock printed `Cannot replace binary` and
+exited 0 — the Linux half of `f-cli-23`, closed for the update path as a side
+effect. Garbage or empty `SHA256SUMS` fails closed. No `.sha256sums` file is left
+behind on any path.

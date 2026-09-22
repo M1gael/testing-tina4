@@ -118,3 +118,31 @@ and that mutation is red.
 
 `BIN=<built binary> ./prove.sh` runs the reproduction against the fix: the three `-> DELETED`
 rows and the symlink row go red, which is the behaviour change.
+
+### Second pass, 2026-09-22 — two holes found in the fix itself
+
+An adversarial re-read plus a 16-string probe battery against the built binary.
+
+**The classifier read only the first version token, and that was still wrong.**
+`Ruby 2.7.0 -- Tina4 Ruby CLI 3.13.136` was nominated: the leading token is the
+*interpreter's*, major 2. Narrower than the substring test, not safe. Now every
+`<major>.<minor>` in the text is read and **a major of 3 or more anywhere wins**.
+The asymmetry is deliberate — mistaking a v2 for current leaves a stale binary on
+PATH, mistaking a current one for v2 offers to delete a working CLI, and only the
+second cannot be undone. Gated at both levels: reverting to first-token-only turns
+`classify_v2_positive_edge_runtime_version_does_not_make_it_v2` and
+`update_leaves_a_current_cli_whose_runtime_is_named_first` red.
+
+Same change fixes a wart the probe found: a number too large for `u32`
+(`1234567890123.0`) used to abort the scan and hide every token after it.
+
+**Scope creep of my own, reverted.** The first version removed a `.bat` sibling on
+the *success* branch for all four named CLIs. Upstream only does that in the
+*failure* branch for those four, and on success only for the second `tina4` arm.
+That is an extra file deletion, unmeasured, in exactly the class of operation this
+fix exists to restrain. Each candidate now carries upstream's own flag and the two
+arms behave as they did.
+
+**Not gated:** the `.bat` behaviour has no test — the success branch needs a
+terminal to consent, and the suite has no pty. Verified by reading the diff against
+upstream, and by the interactive runs (yes deletes, no keeps).

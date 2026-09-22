@@ -1,8 +1,8 @@
 diff --git a/src/main.rs b/src/main.rs
-index 589471a..00933ec 100644
+index 589471a..3945bed 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -1893,64 +1893,145 @@ fn update_framework_package() {
+@@ -1893,64 +1893,165 @@ fn update_framework_package() {
      }
  }
  
@@ -26,21 +26,24 @@ index 589471a..00933ec 100644
 +    Unknown,
 +}
 +
-+/// Read the first `<major>.<minor>` token out of a CLI's own `--version` text.
++/// Every `<major>.<minor>` version token in a CLI's own `--version` text, in
++/// order, as majors.
 +///
-+/// First, not any: a v3 CLI names itself before it names its runtime, so the
-+/// leading token is the one that is about the program we ran. Anything later
-+/// belongs to something else and must not decide this binary's fate.
-+fn first_version_major(text: &str) -> Option<u32> {
++/// All of them, not the first: a CLI names itself and its runtime in whichever
++/// order it likes, and a single token cannot be told apart from the other's.
++/// `Ruby 2.7.0 -- Tina4 Ruby CLI 3.13.136` leads with the interpreter, and
++/// reading only the leading token called a current CLI v2.
++fn version_majors(text: &str) -> Vec<u32> {
 +    let bytes = text.as_bytes();
++    let mut majors = Vec::new();
 +    let mut i = 0;
 +    while i < bytes.len() {
 +        if !bytes[i].is_ascii_digit() {
 +            i += 1;
 +            continue;
 +        }
-+        // A digit run that is preceded by a digit or a dot is the tail of a
-+        // token we have already rejected (the `2` of `8.2.1`), not a new one.
++        // A digit run preceded by a digit or a dot is the tail of a token
++        // already being read (the `2` of `8.2.1`), not a new one.
 +        if i > 0 && (bytes[i - 1] == b'.' || bytes[i - 1].is_ascii_digit()) {
 +            i += 1;
 +            continue;
@@ -51,24 +54,37 @@ index 589471a..00933ec 100644
 +        }
 +        // `<digits>.<digits>` is a version; `7146` on its own is a port.
 +        if i + 1 < bytes.len() && bytes[i] == b'.' && bytes[i + 1].is_ascii_digit() {
-+            return text[start..i].parse::<u32>().ok();
++            // A number too large to be a major is not a version we understand.
++            // Skip it and keep reading -- returning here would hide every token
++            // after a build number.
++            if let Ok(major) = text[start..i].parse::<u32>() {
++                majors.push(major);
++            }
 +        }
 +    }
-+    None
++    majors
 +}
 +
 +/// Decide a binary's generation from its `--version` output.
++///
++/// A v3 anywhere wins. That is deliberately asymmetric: mistaking a v2 for
++/// current leaves a stale binary on PATH, and mistaking a current one for v2
++/// offers to delete a working CLI. Only the second is unrecoverable.
 +fn classify_cli_generation(text: &str) -> CliGeneration {
-+    match first_version_major(text) {
-+        Some(1..=2) => CliGeneration::V2,
-+        Some(3..) => CliGeneration::V3,
-+        // `Thor` is the v2 Ruby CLI's own banner and no v3 CLI prints it, so
-+        // it gets a vote only where a version did not settle it. A leading
-+        // major of 0 is not evidence either way -- tina4-python has shipped
-+        // 0.2.x releases in the v3 era.
-+        _ if text.contains("Thor") => CliGeneration::V2,
-+        _ => CliGeneration::Unknown,
++    let majors = version_majors(text);
++    if majors.iter().any(|m| *m >= 3) {
++        return CliGeneration::V3;
 +    }
++    if majors.iter().any(|m| (1..=2).contains(m)) {
++        return CliGeneration::V2;
++    }
++    // `Thor` is the v2 Ruby CLI's own banner and no v3 CLI prints it, so it
++    // gets a vote only where no version settled it. A major of 0 is not
++    // evidence either way -- tina4-python has shipped 0.2.x in the v3 era.
++    if text.contains("Thor") {
++        return CliGeneration::V2;
++    }
++    CliGeneration::Unknown
 +}
 +
 +/// Ask before deleting, and treat silence as no.
@@ -122,7 +138,11 @@ index 589471a..00933ec 100644
  fn clean_v2_binaries() {
      let stale_names = ["tina4python", "tina4php", "tina4ruby", "tina4nodejs"];
 -    let mut found_any = false;
-+    let mut candidates: Vec<std::path::PathBuf> = Vec::new();
++    // The bool is upstream's own asymmetry, preserved: the four named CLIs
++    // only ever removed a `.bat` sibling when the main removal FAILED, while
++    // the second `tina4` arm removed it on success. Only the silent deletion
++    // is being fixed here, not which files each arm touches.
++    let mut candidates: Vec<(std::path::PathBuf, bool)> = Vec::new();
  
      for name in &stale_names {
          if let Ok(path) = which::which(name) {
@@ -175,7 +195,7 @@ index 589471a..00933ec 100644
 -                    }
 -                }
 +            if cli_generation_at(&path) == CliGeneration::V2 {
-+                candidates.push(path);
++                candidates.push((path, false));
              }
          }
      }
@@ -191,7 +211,7 @@ index 589471a..00933ec 100644
              let is_old = std::process::Command::new(&tina4_path)
                  .arg("--version")
                  .output()
-@@ -1960,36 +2041,54 @@ fn clean_v2_binaries() {
+@@ -1960,36 +2061,55 @@ fn clean_v2_binaries() {
                      out.contains("Thor") || out.contains("Deprecation") || !out.contains("tina4")
                  })
                  .unwrap_or(false);
@@ -218,7 +238,7 @@ index 589471a..00933ec 100644
 -                        path_str
 -                    ),
 -                }
-+                candidates.push(tina4_path);
++                candidates.push((tina4_path, true));
              }
          }
      }
@@ -234,7 +254,7 @@ index 589471a..00933ec 100644
 +    );
 +    let shown: Vec<String> = candidates
 +        .iter()
-+        .map(|p| p.to_string_lossy().to_string())
++        .map(|(p, _)| p.to_string_lossy().to_string())
 +        .collect();
 +    for p in &shown {
 +        println!("  {} {}", icon_fail().red(), p.dimmed());
@@ -245,13 +265,14 @@ index 589471a..00933ec 100644
 +        return;
      }
 +
-+    for path in &candidates {
++    for (path, bat_on_success) in &candidates {
 +        let path_str = path.to_string_lossy().to_string();
 +        match std::fs::remove_file(path) {
 +            Ok(_) => {
-+                // A Windows install is a shim plus a .bat wrapper; the wrapper
-+                // is dead weight once the shim is gone.
-+                std::fs::remove_file(path.with_extension("bat")).ok();
++                if *bat_on_success {
++                    // A Windows install is a shim plus a .bat wrapper.
++                    std::fs::remove_file(path.with_extension("bat")).ok();
++                }
 +                println!("    {} Removed {}", icon_ok().green(), path_str.dimmed());
 +            }
 +            Err(_) => {
@@ -269,7 +290,7 @@ index 589471a..00933ec 100644
  }
  
  fn get_latest_version() -> Option<String> {
-@@ -2493,6 +2592,86 @@ Always read and follow `.claude/skills/tina4-js/SKILL.md` when working with this
+@@ -2493,6 +2613,92 @@ Always read and follow `.claude/skills/tina4-js/SKILL.md` when working with this
  #[cfg(test)]
  mod tests {
  
@@ -282,7 +303,7 @@ index 589471a..00933ec 100644
 +    // the PHP runtime's `2.`, and a current CLI was removed with no prompt
 +    // and no undo.
 +
-+    use super::{classify_cli_generation, first_version_major, CliGeneration};
++    use super::{classify_cli_generation, version_majors, CliGeneration};
 +
 +    /// Positive: the generation this feature exists to clear out.
 +    #[test]
@@ -307,6 +328,10 @@ index 589471a..00933ec 100644
 +    fn classify_v2_positive_edge_runtime_version_does_not_make_it_v2() {
 +        for text in [
 +            "Tina4 PHP CLI 3.13.136 (PHP 8.2.1)",
++            // The runtime comes FIRST here, and its major is 2. Reading only
++            // the leading token called this current CLI a v2.
++            "Ruby 2.7.0 -- Tina4 Ruby CLI 3.13.136",
++            "Python 2.7.18 -- Tina4 Python CLI 3.13.100",
 +            "Tina4 Python CLI 3.13.100 (Python 3.12.7)",
 +            "Tina4 Node CLI 3.13.136 (node v22.1.0)",
 +        ] {
@@ -341,15 +366,17 @@ index 589471a..00933ec 100644
 +        assert_eq!(classify_cli_generation(help), CliGeneration::Unknown);
 +    }
 +
-+    /// A port, a path and a bare number are not versions.
++    /// A port, a path and a bare number are not versions, and every version
++    /// in the text is read, not only the first.
 +    #[test]
-+    fn first_version_major_reads_a_version_not_any_digits() {
-+        assert_eq!(first_version_major("listening on 0.0.0.0:7146"), Some(0));
-+        assert_eq!(first_version_major("no numbers here"), None);
-+        assert_eq!(first_version_major("port 7146"), None);
-+        assert_eq!(first_version_major("tina4 3.8.88"), Some(3));
++    fn version_majors_reads_versions_not_any_digits() {
++        assert_eq!(version_majors("listening on 0.0.0.0:7146"), vec![0]);
++        assert_eq!(version_majors("no numbers here"), Vec::<u32>::new());
++        assert_eq!(version_majors("port 7146"), Vec::<u32>::new());
 +        // The `2` of `8.2.1` is mid-token and must never start a match.
-+        assert_eq!(first_version_major("Tina4 PHP CLI 3.13.136 (PHP 8.2.1)"), Some(3));
++        assert_eq!(version_majors("Tina4 PHP CLI 3.13.136 (PHP 8.2.1)"), vec![3, 8]);
++        // A number too large to be a major does not stop the scan.
++        assert_eq!(version_majors("build 1234567890123.0 then tina4ruby 2.1.4"), vec![2]);
 +    }
 +
 +
@@ -358,10 +385,10 @@ index 589471a..00933ec 100644
      /// `tina4 serve` must launch a tina4js project's OWN Vite through `node`,
 diff --git a/tests/update_v2_cleanup.rs b/tests/update_v2_cleanup.rs
 new file mode 100644
-index 0000000..3d23cbd
+index 0000000..74ca565
 --- /dev/null
 +++ b/tests/update_v2_cleanup.rs
-@@ -0,0 +1,179 @@
+@@ -0,0 +1,193 @@
 +//! `tina4 update` deletes files off PATH before it does anything else, and the
 +//! deletion has no undo. These go through the real entry point on purpose: the
 +//! unit tests cover the classification, and every one of them stays green while
@@ -493,6 +520,20 @@ index 0000000..3d23cbd
 +        &php,
 +        &text,
 +        "3.13.136 is current; the 2. came from the PHP version.",
++    );
++}
++
++/// The runtime is named FIRST and its major is 2. Reading only the leading
++/// version token called this current CLI a v2 and offered to delete it.
++#[test]
++fn update_leaves_a_current_cli_whose_runtime_is_named_first() {
++    let sb = sandbox("runtimefirst");
++    let rb = decoy(&sb, "tina4ruby", "Ruby 2.7.0 -- Tina4 Ruby CLI 3.13.136");
++    let text = run_update(&sb);
++    assert_not_nominated(
++        &rb,
++        &text,
++        "3.13.136 is this CLI's own version; the 2.7.0 belongs to Ruby.",
 +    );
 +}
 +

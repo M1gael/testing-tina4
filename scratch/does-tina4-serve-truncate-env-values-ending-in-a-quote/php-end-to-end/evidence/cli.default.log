@@ -1,0 +1,23 @@
+✓ Detected php project
+▶ Starting tina4php on 0.0.0.0:7145
+2026-09-22T11:14:27.349Z [INFO    ] Tina4 v3.13.134 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/does-tina4-serve-truncate-env-values-ending-in-a-quote/php-end-to-end","development":false}
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ \`/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+
+  Tina4 PHP v3.13.134 — The Intelligent Native Application 4ramework
+
+  Server:    http://0.0.0.0:7145 (tina4-server)
+  Swagger:   http://localhost:7145/swagger
+  Dashboard: http://localhost:7145/__dev
+  Debug:     ON (Log level: DEBUG)
+  Test Port: http://localhost:8145 (stable — no hot-reload)
+✓ Server ready: http://localhost:7145
+👁 File watcher active (changes hot-reload in-process) — press Ctrl+C to stop
+✗ watcher started but watching ZERO directories — file changes won't fire
+2026-09-22T11:14:29.310Z [INFO    ] [7c099929] GET / -> 200 (2.898ms)
+2026-09-22T11:14:29.312Z [INFO    ] Graceful shutdown started (SIGTERM) — not accepting new connections, draining for up to 30s
+2026-09-22T11:14:29.315Z [INFO    ] Server stopped.

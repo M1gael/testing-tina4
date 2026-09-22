@@ -1,0 +1,19 @@
+2026-09-22T11:15:47.907Z [INFO    ] Tina4 v3.13.134 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/does-tina4-serve-managed-leave-a-dead-dev-reload-socket","development":false}
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ \`/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+
+  Tina4 PHP v3.13.134 — The Intelligent Native Application 4ramework
+
+  Server:    http://127.0.0.1:8792 (tina4-server)
+  Swagger:   http://localhost:8792/swagger
+  Dashboard: http://localhost:8792/__dev
+  Debug:     ON (Log level: DEBUG)
+  Test Port: http://localhost:9792 (stable — no hot-reload)
+2026-09-22T11:15:48.819Z [WARNING ] [c026d343] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-09-22T11:15:48.821Z [INFO    ] [c026d343] GET / -> 200 (3.77ms)
+2026-09-22T11:15:48.824Z [INFO    ] Graceful shutdown started (SIGTERM) — not accepting new connections, draining for up to 30s
+2026-09-22T11:15:48.826Z [INFO    ] Server stopped.

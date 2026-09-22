@@ -1,0 +1,43 @@
+BIN=C:\Users\mig\cli27\tina4-fixed.exe
+CWD=C:\Users\mig\AppData\Local\Temp\tina4-cli27-dc2f8c163d404d6c8294511b02843f9a
+tina4 3.8.88
+--- --sync run 1 exit=0 ---
+   Tina4 Environment Configuration    + Scanned 0 env vars, added 0 new to .env + Generated .env.example
+----- .env after run 1 -----
+# Security
+TINA4_CSP=default-src 'self'; form-action 'self'
+
+DQ_WRAPPED=hello world
+ENDS_DQ=say "hi"
+PADDED=" spaced "
+PLAIN_TRAILING_SQ=form-action 'self'
+QUOTED_EMPTY="''"
+SQ_WRAPPED=hello world
+ok   run 1 : TINA4_CSP = [default-src 'self'; form-action 'self']
+ok   run 1 : PLAIN_TRAILING_SQ = [form-action 'self']
+ok   run 1 : SQ_WRAPPED = [hello world]
+ok   run 1 : DQ_WRAPPED = [hello world]
+ok   run 1 : ENDS_DQ = [say "hi"]
+ok   run 1 : QUOTED_EMPTY = ['']
+ok   run 1 : PADDED = [ spaced ]
+--- --sync run 2 exit=0 ---
+   Tina4 Environment Configuration    + Scanned 0 env vars, added 0 new to .env + Generated .env.example
+----- .env after run 2 -----
+# Security
+TINA4_CSP=default-src 'self'; form-action 'self'
+
+DQ_WRAPPED=hello world
+ENDS_DQ=say "hi"
+PADDED=" spaced "
+PLAIN_TRAILING_SQ=form-action 'self'
+QUOTED_EMPTY="''"
+SQ_WRAPPED=hello world
+ok   run 2 : TINA4_CSP = [default-src 'self'; form-action 'self']
+ok   run 2 : PLAIN_TRAILING_SQ = [form-action 'self']
+ok   run 2 : SQ_WRAPPED = [hello world]
+ok   run 2 : DQ_WRAPPED = [hello world]
+ok   run 2 : ENDS_DQ = [say "hi"]
+ok   run 2 : QUOTED_EMPTY = ['']
+ok   run 2 : PADDED = [ spaced ]
+PASS: two --sync runs left every value intact
+fixed_exit:0

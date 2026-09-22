@@ -1,0 +1,50 @@
+===== stock lf =====
+AXIS=lf BIN=C:\Users\mig\cli27\tina4-stock.exe
+TINA4_CSP=default-src 'self'; form-action 'self
+WIRE=default-src 'self'; form-action 'self
+
+===== stock bom =====
+AXIS=bom BIN=C:\Users\mig\cli27\tina4-stock.exe
+TINA4_CSP=<unset>
+WIRE=<unset>
+
+===== stock long =====
+AXIS=long BIN=C:\Users\mig\cli27\tina4-stock.exe
+TINA4_CSP=default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self'; worker-src 'self' blob:; form-action 'self
+WIRE=default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self'; worker-src 'self' blob:; form-action 'self
+
+===== stock cmd =====
+AXIS=cmd BIN=C:\Users\mig\cli27\tina4-stock.exe
+TINA4_CSP=default-src 'self'; form-action 'self
+WIRE=default-src 'self'; form-action 'self
+
+===== stock preset =====
+AXIS=preset BIN=C:\Users\mig\cli27\tina4-stock.exe
+TINA4_CSP=preset-from-parent
+WIRE=preset-from-parent
+
+===== fixed lf =====
+AXIS=lf BIN=C:\Users\mig\cli27\tina4-fixed.exe
+TINA4_CSP=default-src 'self'; form-action 'self'
+WIRE=default-src 'self'; form-action 'self'
+
+===== fixed bom =====
+AXIS=bom BIN=C:\Users\mig\cli27\tina4-fixed.exe
+TINA4_CSP=<unset>
+WIRE=<unset>
+
+===== fixed long =====
+AXIS=long BIN=C:\Users\mig\cli27\tina4-fixed.exe
+TINA4_CSP=default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self'; worker-src 'self' blob:; form-action 'self'
+WIRE=default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'self'; worker-src 'self' blob:; form-action 'self'
+
+===== fixed cmd =====
+AXIS=cmd BIN=C:\Users\mig\cli27\tina4-fixed.exe
+TINA4_CSP=default-src 'self'; form-action 'self'
+WIRE=default-src 'self'; form-action 'self'
+
+===== fixed preset =====
+AXIS=preset BIN=C:\Users\mig\cli27\tina4-fixed.exe
+TINA4_CSP=preset-from-parent
+WIRE=preset-from-parent
+

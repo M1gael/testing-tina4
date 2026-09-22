@@ -1,0 +1,8 @@
+TINA4_CSP=default-src 'self'; form-action 'self
+PLAIN_TRAILING_SQ=form-action 'self
+SQ_WRAPPED=hello world
+DQ_WRAPPED=hello world
+ENDS_DQ=say "hi"
+TRIPLE_SQ=abc
+QUOTED_EMPTY=
+PORT=7146

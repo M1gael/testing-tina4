@@ -1,0 +1,26 @@
+2026-09-22T11:15:50.923Z [INFO    ] Tina4 v3.13.134 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/does-tina4-serve-managed-leave-a-dead-dev-reload-socket","development":false}
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ \`/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+
+  Tina4 PHP v3.13.134 — The Intelligent Native Application 4ramework
+
+  Server:    http://127.0.0.1:8793 (tina4-server)
+  Swagger:   http://localhost:8793/swagger
+  Dashboard: http://localhost:8793/__dev
+  Debug:     ON (Log level: DEBUG)
+  Test Port: http://localhost:9793 (stable — no hot-reload)
+2026-09-22T11:15:51.397Z [WARNING ] [28c3e684] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-09-22T11:15:51.398Z [INFO    ] [28c3e684] GET / -> 200 (2.237ms)
+2026-09-22T11:15:51.417Z [WARNING ] [b8e47a64] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-09-22T11:15:51.417Z [INFO    ] [b8e47a64] GET /__dev/toolbar.css -> 304 (1.464ms)
+2026-09-22T11:15:51.420Z [INFO    ] [0d8e95ab] GET /images/tina4-logo-icon.webp -> 304 (1.511ms)
+2026-09-22T11:15:51.447Z [INFO    ] [f9073a4f] GET /__dev/toolbar.js -> 304 (0.605ms)
+2026-09-22T11:15:52.015Z [INFO    ] [ee8ea48e] GET /__dev/api/mtime -> 200 (0.327ms)
+2026-09-22T11:15:55.016Z [INFO    ] [a657e818] GET /__dev/api/mtime -> 304 (0.311ms)
+2026-09-22T11:15:56.850Z [INFO    ] [9a0366be] GET / -> 200 (1.302ms)
+2026-09-22T11:15:56.854Z [INFO    ] Graceful shutdown started (SIGTERM) — not accepting new connections, draining for up to 30s
+2026-09-22T11:15:56.857Z [INFO    ] Server stopped.

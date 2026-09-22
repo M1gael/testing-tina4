@@ -133,10 +133,10 @@ index 6a562fc..d983586 100644
  # SIGINT) on Unix, plus CTRL_CLOSE / LOGOFF / SHUTDOWN on Windows. The dev
  # server child sits in its own process group, so without this a `kill` or a
 diff --git a/src/main.rs b/src/main.rs
-index 589471a..e5e90c4 100644
+index 589471a..9b58f79 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -1673,14 +1673,61 @@ fn handle_update() {
+@@ -1673,14 +1673,80 @@ fn handle_update() {
          download_file_classified(&url, &tmp_path)
      });
  
@@ -192,10 +192,10 @@ index 589471a..e5e90c4 100644
 +            }
 +            println!("  {} Checksum verified (sha256)", icon_ok().green());
 +        }
-+        // Releases before 3.8.53 publish no SHA256SUMS. install.sh's rule is
-+        // to verify strictly when it is there, so this matches it -- but it
-+        // says so, because an unverified install is not the normal case.
-+        _ => {
++        // A 404. Releases before 3.8.53 publish no SHA256SUMS, and install.sh's
++        // rule is to verify strictly only when it is there -- so this matches
++        // it, and says so, because an unverified install is not the normal case.
++        DownloadOutcome::Http => {
 +            std::fs::remove_file(&sums_path).ok();
 +            println!(
 +                "  {} No SHA256SUMS published for {} — installing without verifying",
@@ -203,10 +203,29 @@ index 589471a..e5e90c4 100644
 +                latest_tag
 +            );
 +        }
++        // Not a 404: the sums could not be fetched on THIS machine -- no space,
++        // no permission, no route. Reporting that as "none published" is false,
++        // and installing anyway lets a local condition switch verification off
++        // without anyone choosing to.
++        DownloadOutcome::Local(cause) => {
++            std::fs::remove_file(&sums_path).ok();
++            std::fs::remove_file(&tmp_path).ok();
++            eprintln!(
++                "{} Could not fetch SHA256SUMS for {} — {}",
++                icon_fail().red(),
++                latest_tag,
++                cause.why()
++            );
++            eprintln!(
++                "  Refusing to install a binary that cannot be verified. The CLI you are\n  running has not been touched. Download it by hand from:\n  https://github.com/{}/releases/tag/{}",
++                REPO, latest_tag
++            );
++            std::process::exit(1);
++        }
      }
  
      // Replace current binary
-@@ -1992,6 +2039,75 @@ fn clean_v2_binaries() {
+@@ -1992,6 +2058,75 @@ fn clean_v2_binaries() {
      }
  }
  
@@ -282,7 +301,7 @@ index 589471a..e5e90c4 100644
  fn get_latest_version() -> Option<String> {
      let api_url = format!("https://api.github.com/repos/{}/releases/latest", REPO);
  
-@@ -2493,6 +2609,112 @@ Always read and follow `.claude/skills/tina4-js/SKILL.md` when working with this
+@@ -2493,6 +2628,112 @@ Always read and follow `.claude/skills/tina4-js/SKILL.md` when working with this
  #[cfg(test)]
  mod tests {
  
@@ -397,10 +416,10 @@ index 589471a..e5e90c4 100644
      /// `tina4 serve` must launch a tina4js project's OWN Vite through `node`,
 diff --git a/tests/update_verifies_download.rs b/tests/update_verifies_download.rs
 new file mode 100644
-index 0000000..0179f6f
+index 0000000..30c26bc
 --- /dev/null
 +++ b/tests/update_verifies_download.rs
-@@ -0,0 +1,208 @@
+@@ -0,0 +1,237 @@
 +//! `tina4 update` must not install bytes the release did not publish.
 +//!
 +//! These drive the real `tina4 update`. The unit tests cover the comparison
@@ -441,8 +460,11 @@ index 0000000..0179f6f
 +    }
 +}
 +
-+/// `sums` is what the stand-in serves for SHA256SUMS; empty means the release
-+/// publishes none, which the stand-in reports as an HTTP failure.
++/// `sums` is what the stand-in serves for SHA256SUMS. Empty means the release
++/// publishes none, which the stand-in reports as curl's 22 (an HTTP refusal).
++/// `"!23"` means the fetch failed on THIS machine — curl's 23 is a write
++/// failure — which is a different thing and must not be read as "none
++/// published".
 +fn sandbox(tag: &str, sums: &str) -> Sandbox {
 +    let root = std::env::temp_dir().join(format!(
 +        "tina4-verify-dl-{}-{}-{}",
@@ -474,7 +496,7 @@ index 0000000..0179f6f
 +         done\n\
 +         case \"$url\" in\n\
 +         \t*api.github.com*) printf '%s' '{{\"tag_name\": \"v9.9.9\"}}'; exit 0;;\n\
-+         \t*SHA256SUMS) [ -n \"$SUMS\" ] || exit 22; printf '%s' \"$SUMS\" > \"$dest\"; exit 0;;\n\
++         \t*SHA256SUMS) [ -n \"$SUMS\" ] || exit 22; [ \"$SUMS\" = '!23' ] && exit 23; printf '%s' \"$SUMS\" > \"$dest\"; exit 0;;\n\
 +         \t*) printf '%s' \"$PAYLOAD\" > \"$dest\"; exit 0;;\n\
 +         esac\n",
 +        sums = sums,
@@ -594,6 +616,32 @@ index 0000000..0179f6f
 +        "an unverified install must not look like a verified one:\n{text}"
 +    );
 +    assert_eq!(installed(&sb), PAYLOAD.as_bytes());
++}
++
++/// Negative edge — a fetch that failed on THIS machine is not "none published".
++/// Saying so would be false, and installing anyway lets a local condition —
++/// no space, no permission, no route — switch verification off silently.
++#[test]
++fn update_refuses_when_the_checksums_cannot_be_fetched_locally() {
++    let sb = sandbox("localfail", "!23");
++    let before = installed(&sb);
++
++    let (code, text) = run_update(&sb);
++
++    assert_ne!(code, 0, "{text}");
++    assert!(
++        text.contains("Could not fetch SHA256SUMS"),
++        "the real reason has to be named, not 'none published':\n{text}"
++    );
++    assert!(
++        !text.contains("No SHA256SUMS published"),
++        "a local failure must not be reported as an absent file:\n{text}"
++    );
++    assert!(
++        !text.contains("Updated tina4 CLI"),
++        "nothing was installed, so nothing may claim it was:\n{text}"
++    );
++    assert_eq!(installed(&sb), before, "the running CLI must be untouched");
 +}
 +
 +/// Negative edge — an asset the release does not list is not a free pass.

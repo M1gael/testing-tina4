@@ -1,0 +1,46 @@
+<?php
+/**
+ * Minimal tina4php stand-in: load the real Tina4\DotEnv, then serve the
+ * Content-Security-Policy header DotEnv::getEnv would give the middleware.
+ */
+require __DIR__ . '/../Tina4/DotEnv.php';
+
+$port = 7145;
+$host = '127.0.0.1';
+foreach ($argv as $i => $a) {
+    if ($a === '--port' && isset($argv[$i + 1])) {
+        $port = (int)$argv[$i + 1];
+    }
+    if ($a === '--host' && isset($argv[$i + 1])) {
+        $host = $argv[$i + 1];
+        if ($host === '0.0.0.0') {
+            $host = '127.0.0.1';
+        }
+    }
+}
+
+\Tina4\DotEnv::loadEnv('.env');
+$inherit = getenv('TINA4_CSP');
+$wire = \Tina4\DotEnv::getEnv('TINA4_CSP', '<unset>');
+file_put_contents('dump.txt',
+    'TINA4_CSP=' . ($inherit === false ? '<unset>' : $inherit) . "\n" .
+    'WIRE=' . $wire . "\n"
+);
+
+$sock = stream_socket_server("tcp://{$host}:{$port}", $errno, $errstr);
+if (!$sock) {
+    fwrite(STDERR, "bind failed: $errstr\n");
+    exit(1);
+}
+while ($conn = @stream_socket_accept($sock, 30)) {
+    fread($conn, 2048);
+    $body = 'ok';
+    $hdr = "HTTP/1.1 200 OK\r\n"
+        . "Content-Security-Policy: {$wire}\r\n"
+        . "Content-Type: text/plain\r\n"
+        . "Content-Length: 2\r\n"
+        . "Connection: close\r\n\r\n"
+        . $body;
+    fwrite($conn, $hdr);
+    fclose($conn);
+}

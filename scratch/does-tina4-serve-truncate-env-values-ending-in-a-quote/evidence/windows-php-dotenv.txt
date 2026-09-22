@@ -1,0 +1,9 @@
+Guest: DESKTOP-2KQGEUM  Windows 11 10.0.26200.6584
+PHP 8.4.25 NTS VS17 x64  (VC++ redist installed this session)
+Child: php bin/tina4php using the real Tina4\DotEnv.php from tina4-php origin/v3
+Same port 7145. WIRE = Content-Security-Policy from DotEnv::getEnv after loadEnv.
+
+stock  serve        WIRE=default-src 'self'; form-action 'self
+stock  serve -p 7145 WIRE=default-src 'self'; form-action 'self'
+fixed  serve        WIRE=default-src 'self'; form-action 'self'
+fixed  serve -p 7145 WIRE=default-src 'self'; form-action 'self'
