@@ -1,0 +1,543 @@
+diff --git a/src/main.rs b/src/main.rs
+index 589471a..00933ec 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -1893,64 +1893,145 @@ fn update_framework_package() {
+     }
+ }
+ 
+-/// Detect and remove old v2 CLI binaries that may shadow the v3 CLI.
++/// What running `<cli> --version` says about which generation a binary is.
++///
++/// The point of this type is that "we could not tell" is a distinct answer from
++/// "it is v3". The old test had no such state: it asked whether the output
++/// contained `1.` or `2.` anywhere, so a v3 CLI printing its runtime's version
++/// -- `Tina4 PHP CLI 3.13.136 (PHP 8.2.1)` -- answered yes on the `8.2.1`, and
++/// the file was deleted. The substring was never evidence about the version.
++#[derive(Debug, PartialEq, Eq, Clone, Copy)]
++enum CliGeneration {
++    /// A version was parsed and its major is 1 or 2, or the output carries a
++    /// marker only the v2 CLI ever printed.
++    V2,
++    /// A version was parsed and its major is 3 or higher.
++    V3,
++    /// No version could be read. Says nothing either way -- and therefore is
++    /// never a reason to delete anything.
++    Unknown,
++}
++
++/// Read the first `<major>.<minor>` token out of a CLI's own `--version` text.
++///
++/// First, not any: a v3 CLI names itself before it names its runtime, so the
++/// leading token is the one that is about the program we ran. Anything later
++/// belongs to something else and must not decide this binary's fate.
++fn first_version_major(text: &str) -> Option<u32> {
++    let bytes = text.as_bytes();
++    let mut i = 0;
++    while i < bytes.len() {
++        if !bytes[i].is_ascii_digit() {
++            i += 1;
++            continue;
++        }
++        // A digit run that is preceded by a digit or a dot is the tail of a
++        // token we have already rejected (the `2` of `8.2.1`), not a new one.
++        if i > 0 && (bytes[i - 1] == b'.' || bytes[i - 1].is_ascii_digit()) {
++            i += 1;
++            continue;
++        }
++        let start = i;
++        while i < bytes.len() && bytes[i].is_ascii_digit() {
++            i += 1;
++        }
++        // `<digits>.<digits>` is a version; `7146` on its own is a port.
++        if i + 1 < bytes.len() && bytes[i] == b'.' && bytes[i + 1].is_ascii_digit() {
++            return text[start..i].parse::<u32>().ok();
++        }
++    }
++    None
++}
++
++/// Decide a binary's generation from its `--version` output.
++fn classify_cli_generation(text: &str) -> CliGeneration {
++    match first_version_major(text) {
++        Some(1..=2) => CliGeneration::V2,
++        Some(3..) => CliGeneration::V3,
++        // `Thor` is the v2 Ruby CLI's own banner and no v3 CLI prints it, so
++        // it gets a vote only where a version did not settle it. A leading
++        // major of 0 is not evidence either way -- tina4-python has shipped
++        // 0.2.x releases in the v3 era.
++        _ if text.contains("Thor") => CliGeneration::V2,
++        _ => CliGeneration::Unknown,
++    }
++}
++
++/// Ask before deleting, and treat silence as no.
++///
++/// Returns false without printing anything when stdin is not a terminal. A
++/// scaffold that prompts a pipe blocks for ever (`tina4 init` does exactly
++/// that today), and an unattended `tina4 update` in CI must not lose files
++/// because nobody was there to say no.
++fn confirm_removal(paths: &[String]) -> bool {
++    use std::io::{IsTerminal, Write};
++
++    if !std::io::stdin().is_terminal() {
++        println!(
++            "  {} Not a terminal, so nothing was removed. Delete manually if these are v2:",
++            icon_warn().yellow()
++        );
++        for p in paths {
++            println!("      rm {}", p);
++        }
++        return false;
++    }
++
++    print!("  Remove {} file(s)? [y/N]: ", paths.len());
++    std::io::stdout().flush().ok();
++    let mut input = String::new();
++    match std::io::stdin().read_line(&mut input) {
++        Ok(0) | Err(_) => false,
++        _ => matches!(input.trim().to_lowercase().as_str(), "y" | "yes"),
++    }
++}
++
++/// Run `<cli> --version` and read which generation answered.
++fn cli_generation_at(path: &std::path::Path) -> CliGeneration {
++    std::process::Command::new(path)
++        .arg("--version")
++        .output()
++        .map(|o| {
++            let out = String::from_utf8_lossy(&o.stdout).to_string()
++                + &String::from_utf8_lossy(&o.stderr);
++            classify_cli_generation(&out)
++        })
++        .unwrap_or(CliGeneration::Unknown)
++}
++
++/// Detect and offer to remove old v2 CLI binaries that may shadow the v3 CLI.
++///
++/// Nothing is deleted without a yes. These files are on `PATH`, they are not
++/// ours, `remove_file` has no undo, and the test that nominates them is a
++/// guess about text -- a wrong guess used to cost the user a working CLI with
++/// no prompt and no way back.
+ fn clean_v2_binaries() {
+     let stale_names = ["tina4python", "tina4php", "tina4ruby", "tina4nodejs"];
+-    let mut found_any = false;
++    let mut candidates: Vec<std::path::PathBuf> = Vec::new();
+ 
+     for name in &stale_names {
+         if let Ok(path) = which::which(name) {
+-            // Check if it's a global binary (not in vendor/bin or .venv)
++            // A binary inside a project's own dependency tree belongs to that
++            // project, whatever generation it is.
+             let path_str = path.to_string_lossy();
+-            if path_str.contains("vendor") || path_str.contains(".venv") || path_str.contains("node_modules") {
++            if path_str.contains("vendor")
++                || path_str.contains(".venv")
++                || path_str.contains("node_modules")
++            {
+                 continue;
+             }
+-
+-            // Try to detect if it's v2 by running --version
+-            let is_v2 = std::process::Command::new(&path)
+-                .arg("--version")
+-                .output()
+-                .map(|o| {
+-                    let out = String::from_utf8_lossy(&o.stdout).to_string()
+-                        + &String::from_utf8_lossy(&o.stderr);
+-                    // v2 indicators: Thor, old version numbers, deprecation warnings
+-                    out.contains("Thor") || out.contains("Deprecation") || out.contains("1.") || out.contains("2.")
+-                })
+-                .unwrap_or(false);
+-
+-            if is_v2 {
+-                if !found_any {
+-                    println!(
+-                        "\n{} Found old v2 CLI binaries on PATH:",
+-                        icon_warn().yellow()
+-                    );
+-                    found_any = true;
+-                }
+-                println!("  {} {} ({})", icon_fail().red(), name, path_str.dimmed());
+-
+-                // Remove it
+-                match std::fs::remove_file(&path) {
+-                    Ok(_) => println!("    {} Removed", icon_ok().green()),
+-                    Err(_) => {
+-                        // Try with .bat extension on Windows
+-                        let bat_path = path.with_extension("bat");
+-                        std::fs::remove_file(&bat_path).ok();
+-                        println!(
+-                            "    {} Cannot remove — delete manually: {}",
+-                            icon_warn().yellow(),
+-                            path_str
+-                        );
+-                    }
+-                }
++            if cli_generation_at(&path) == CliGeneration::V2 {
++                candidates.push(path);
+             }
+         }
+     }
+ 
+-    // Also check for old non-Rust tina4 binaries
++    // A second `tina4` on PATH that is not this executable. The rule here is
++    // its own -- "it does not even say tina4" -- and is left as it was; only
++    // the silent deletion changes.
+     if let Ok(tina4_path) = which::which("tina4") {
+         let current_exe = std::env::current_exe().unwrap_or_default();
+         if tina4_path != current_exe {
+-            // There's another tina4 on PATH that isn't us
+             let is_old = std::process::Command::new(&tina4_path)
+                 .arg("--version")
+                 .output()
+@@ -1960,36 +2041,54 @@ fn clean_v2_binaries() {
+                     out.contains("Thor") || out.contains("Deprecation") || !out.contains("tina4")
+                 })
+                 .unwrap_or(false);
+-
+             if is_old {
+-                if !found_any {
+-                    println!(
+-                        "\n{} Found old v2 CLI binaries on PATH:",
+-                        icon_warn().yellow()
+-                    );
+-                }
+-                let path_str = tina4_path.to_string_lossy();
+-                println!("  {} tina4 ({})", icon_fail().red(), path_str.dimmed());
+-                match std::fs::remove_file(&tina4_path) {
+-                    Ok(_) => {
+-                        // Also remove .bat wrapper if present
+-                        let bat = tina4_path.with_extension("bat");
+-                        std::fs::remove_file(bat).ok();
+-                        println!("    {} Removed", icon_ok().green());
+-                    }
+-                    Err(_) => println!(
+-                        "    {} Cannot remove — delete manually: {}",
+-                        icon_warn().yellow(),
+-                        path_str
+-                    ),
+-                }
++                candidates.push(tina4_path);
+             }
+         }
+     }
+ 
+-    if found_any {
++    if candidates.is_empty() {
++        return;
++    }
++
++    println!(
++        "\n{} Found what look like old v2 CLI binaries on PATH:",
++        icon_warn().yellow()
++    );
++    let shown: Vec<String> = candidates
++        .iter()
++        .map(|p| p.to_string_lossy().to_string())
++        .collect();
++    for p in &shown {
++        println!("  {} {}", icon_fail().red(), p.dimmed());
++    }
++
++    if !confirm_removal(&shown) {
+         println!();
++        return;
+     }
++
++    for path in &candidates {
++        let path_str = path.to_string_lossy().to_string();
++        match std::fs::remove_file(path) {
++            Ok(_) => {
++                // A Windows install is a shim plus a .bat wrapper; the wrapper
++                // is dead weight once the shim is gone.
++                std::fs::remove_file(path.with_extension("bat")).ok();
++                println!("    {} Removed {}", icon_ok().green(), path_str.dimmed());
++            }
++            Err(_) => {
++                std::fs::remove_file(path.with_extension("bat")).ok();
++                println!(
++                    "    {} Cannot remove — delete manually: {}",
++                    icon_warn().yellow(),
++                    path_str
++                );
++            }
++        }
++    }
++
++    println!();
+ }
+ 
+ fn get_latest_version() -> Option<String> {
+@@ -2493,6 +2592,86 @@ Always read and follow `.claude/skills/tina4-js/SKILL.md` when working with this
+ #[cfg(test)]
+ mod tests {
+ 
++    // ---- v2 cleanup: which binary is old ---------------------------------
++    //
++    // `tina4 update` deletes files off PATH as its first act. The test that
++    // nominates them used to be `out.contains("1.") || out.contains("2.")`
++    // over the whole of `<cli> --version`, which is a claim about text and
++    // not about a version: `Tina4 PHP CLI 3.13.136 (PHP 8.2.1)` matched on
++    // the PHP runtime's `2.`, and a current CLI was removed with no prompt
++    // and no undo.
++
++    use super::{classify_cli_generation, first_version_major, CliGeneration};
++
++    /// Positive: the generation this feature exists to clear out.
++    #[test]
++    fn classify_v2_positive_old_cli_is_v2() {
++        assert_eq!(classify_cli_generation("tina4ruby 2.1.4"), CliGeneration::V2);
++        assert_eq!(classify_cli_generation("tina4python 1.9.0"), CliGeneration::V2);
++    }
++
++    /// Negative: a current CLI is not a candidate at all.
++    #[test]
++    fn classify_v2_negative_current_cli_is_v3() {
++        assert_eq!(
++            classify_cli_generation("Tina4 PHP CLI 3.13.136"),
++            CliGeneration::V3
++        );
++    }
++
++    /// Positive edge — the guard must not be too tight. A v3 CLI that also
++    /// names its runtime is still v3. This is the case that was deleting
++    /// people's binaries, measured on the released 3.8.88.
++    #[test]
++    fn classify_v2_positive_edge_runtime_version_does_not_make_it_v2() {
++        for text in [
++            "Tina4 PHP CLI 3.13.136 (PHP 8.2.1)",
++            "Tina4 Python CLI 3.13.100 (Python 3.12.7)",
++            "Tina4 Node CLI 3.13.136 (node v22.1.0)",
++        ] {
++            assert_eq!(
++                classify_cli_generation(text),
++                CliGeneration::V3,
++                "the leading token is this CLI's own version: {text}"
++            );
++        }
++    }
++
++    /// Negative edge — the guard must not be too loose either. A genuine v2
++    /// still has to be caught, including one that prints no version but does
++    /// print the banner only the v2 Ruby CLI ever printed.
++    #[test]
++    fn classify_v2_negative_edge_still_catches_a_real_v2() {
++        assert_eq!(classify_cli_generation("tina4ruby 2.0.1"), CliGeneration::V2);
++        assert_eq!(
++            classify_cli_generation("Tina4 Ruby CLI (Thor)"),
++            CliGeneration::V2
++        );
++    }
++
++    /// A CLI that prints no version says nothing, and "nothing" is never a
++    /// reason to delete a file. Every shipped v3 CLI measured on 2026-09-22
++    /// lands here: none of them implements `--version`.
++    #[test]
++    fn classify_v2_unreadable_version_is_unknown_not_v2() {
++        let help = "Unknown command: --version\n\nTina4 Python — CLI\n\n\
++                    Usage: tina4python <command> [options]\n  \
++                    serve [--port P]   Start dev server (default: 0.0.0.0:7146)\n";
++        assert_eq!(classify_cli_generation(help), CliGeneration::Unknown);
++    }
++
++    /// A port, a path and a bare number are not versions.
++    #[test]
++    fn first_version_major_reads_a_version_not_any_digits() {
++        assert_eq!(first_version_major("listening on 0.0.0.0:7146"), Some(0));
++        assert_eq!(first_version_major("no numbers here"), None);
++        assert_eq!(first_version_major("port 7146"), None);
++        assert_eq!(first_version_major("tina4 3.8.88"), Some(3));
++        // The `2` of `8.2.1` is mid-token and must never start a match.
++        assert_eq!(first_version_major("Tina4 PHP CLI 3.13.136 (PHP 8.2.1)"), Some(3));
++    }
++
++
+     // ---- tina4js serve command (Windows npx-shim fix) --------------------
+ 
+     /// `tina4 serve` must launch a tina4js project's OWN Vite through `node`,
+diff --git a/tests/update_v2_cleanup.rs b/tests/update_v2_cleanup.rs
+new file mode 100644
+index 0000000..3d23cbd
+--- /dev/null
++++ b/tests/update_v2_cleanup.rs
+@@ -0,0 +1,179 @@
++//! `tina4 update` deletes files off PATH before it does anything else, and the
++//! deletion has no undo. These go through the real entry point on purpose: the
++//! unit tests cover the classification, and every one of them stays green while
++//! `clean_v2_binaries` is reverted to deleting silently, because none of them
++//! runs the command.
++//!
++//! The runs are hermetic. PATH contains only the decoy directory, so the CLI
++//! cannot find `curl` either, and `tina4 update` stops at the version check
++//! immediately after the cleanup step we are testing. Nothing on the machine's
++//! own PATH is reachable, and the binary under test is a copy, so an update
++//! that did proceed could not overwrite the build artifact.
++
++#![cfg(unix)]
++
++use std::io::Write;
++use std::os::unix::fs::PermissionsExt;
++use std::path::{Path, PathBuf};
++use std::process::{Command, Stdio};
++
++const BIN: &str = env!("CARGO_BIN_EXE_tina4");
++
++struct Sandbox {
++    root: PathBuf,
++}
++
++impl Drop for Sandbox {
++    fn drop(&mut self) {
++        std::fs::remove_dir_all(&self.root).ok();
++    }
++}
++
++fn sandbox(tag: &str) -> Sandbox {
++    let root = std::env::temp_dir().join(format!(
++        "tina4-v2clean-{}-{}-{}",
++        tag,
++        std::process::id(),
++        std::time::SystemTime::now()
++            .duration_since(std::time::UNIX_EPOCH)
++            .map(|d| d.subsec_nanos())
++            .unwrap_or(0)
++    ));
++    std::fs::create_dir_all(root.join("decoys")).expect("create the decoy directory");
++    std::fs::create_dir_all(root.join("home")).expect("create the sandbox home");
++    // Run a copy: `tina4 update` replaces its own executable, and the build
++    // artifact is not ours to destroy.
++    std::fs::copy(BIN, root.join("tina4")).expect("copy the binary under test");
++    let mut perms = std::fs::metadata(root.join("tina4")).unwrap().permissions();
++    perms.set_mode(0o755);
++    std::fs::set_permissions(root.join("tina4"), perms).unwrap();
++    Sandbox { root }
++}
++
++fn decoy(sb: &Sandbox, name: &str, prints: &str) -> PathBuf {
++    let path = sb.root.join("decoys").join(name);
++    let mut f = std::fs::File::create(&path).expect("write the decoy");
++    writeln!(f, "#!/bin/sh\necho \"{prints}\"").unwrap();
++    std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
++    path
++}
++
++/// `tina4 update` with a PATH that reaches the decoys and nothing else.
++fn run_update(sb: &Sandbox) -> String {
++    let out = Command::new(sb.root.join("tina4"))
++        .arg("update")
++        .env_clear()
++        .env("PATH", sb.root.join("decoys"))
++        .env("HOME", sb.root.join("home"))
++        .env("TERM", "dumb")
++        .current_dir(&sb.root)
++        .stdin(Stdio::null())
++        .output();
++
++    // Another test thread writing its own copy of the binary can leave this
++    // one exec'ing a file the kernel still sees as open for write (ETXTBSY).
++    // That is the harness, not the CLI, so retry rather than fail.
++    let out = match out {
++        Ok(out) => out,
++        Err(e) if e.raw_os_error() == Some(26) => {
++            std::thread::sleep(std::time::Duration::from_millis(100));
++            Command::new(sb.root.join("tina4"))
++                .arg("update")
++                .env_clear()
++                .env("PATH", sb.root.join("decoys"))
++                .env("HOME", sb.root.join("home"))
++                .env("TERM", "dumb")
++                .current_dir(&sb.root)
++                .stdin(Stdio::null())
++                .output()
++                .expect("run tina4 update after ETXTBSY")
++        }
++        Err(e) => panic!("run tina4 update: {e}"),
++    };
++    format!(
++        "{}{}",
++        String::from_utf8_lossy(&out.stdout),
++        String::from_utf8_lossy(&out.stderr)
++    )
++}
++
++/// Survival alone proves nothing here: the consent gate keeps every file alive
++/// on a pipe, so a test that only checks `exists()` stays green with the old
++/// substring classifier put back. What discriminates is whether the binary was
++/// ever NOMINATED -- the run prints every candidate it found.
++fn assert_not_nominated(path: &Path, text: &str, why: &str) {
++    assert!(
++        path.exists(),
++        "{why}\n`tina4 update` removed {}\nOutput was:\n{text}",
++        path.display()
++    );
++    assert!(
++        !text.contains(&path.to_string_lossy().to_string()),
++        "{why}\n{} was listed as an old v2 binary, so a yes would have deleted it.\nOutput was:\n{text}",
++        path.display()
++    );
++    assert!(
++        !text.contains("v2 CLI binaries"),
++        "{why}\nNothing should have been found at all.\nOutput was:\n{text}"
++    );
++}
++
++/// The defect, at the real entry point: a current CLI that also names its
++/// runtime was deleted, because `8.2.1` contains `2.`.
++#[test]
++fn update_leaves_a_current_cli_that_names_its_runtime() {
++    let sb = sandbox("runtime");
++    let php = decoy(&sb, "tina4php", "Tina4 PHP CLI 3.13.136 (PHP 8.2.1)");
++    let text = run_update(&sb);
++    assert_not_nominated(
++        &php,
++        &text,
++        "3.13.136 is current; the 2. came from the PHP version.",
++    );
++}
++
++/// A CLI that prints no version at all — which is every shipped v3 CLI as of
++/// 2026-09-22 — is not evidence of anything and must be left alone.
++#[test]
++fn update_leaves_a_cli_whose_version_cannot_be_read() {
++    let sb = sandbox("noversion");
++    let py = decoy(&sb, "tina4python", "Unknown command: --version");
++    let text = run_update(&sb);
++    assert_not_nominated(&py, &text, "No version was readable, so nothing is proven.");
++}
++
++/// Even a genuine v2 is not deleted when nobody can be asked. A prompt on a
++/// pipe would hang an unattended update instead; this must terminate, keep the
++/// file, and say how to remove it by hand.
++#[test]
++fn update_without_a_terminal_removes_nothing_and_says_so() {
++    let sb = sandbox("notty");
++    let rb = decoy(&sb, "tina4ruby", "tina4ruby 2.1.4");
++    let text = run_update(&sb);
++    assert!(
++        rb.exists(),
++        "stdin is not a terminal, so consent is absent, yet {} was deleted.\nOutput was:\n{text}",
++        rb.display()
++    );
++    assert!(
++        text.contains("Not a terminal"),
++        "the user has to be told what was found and how to remove it:\n{text}"
++    );
++    assert!(
++        text.contains(&rb.to_string_lossy().to_string()),
++        "the path it declined to delete has to be named:\n{text}"
++    );
++}
++
++/// The detection itself still works: a v2 is still found and reported, it is
++/// only the deletion that now needs a yes.
++#[test]
++fn update_still_identifies_a_real_v2() {
++    let sb = sandbox("identify");
++    decoy(&sb, "tina4ruby", "tina4ruby 2.1.4");
++    let text = run_update(&sb);
++    assert!(
++        text.contains("v2 CLI binaries"),
++        "a genuine v2 must still be reported:\n{text}"
++    );
++}

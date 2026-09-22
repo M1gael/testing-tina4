@@ -1,0 +1,43 @@
+
+  Tina4 Doctor — Environment Check  
+
+  Language     Status     Version              Pkg Mgr      Version
+  ──────────────────────────────────────────────────────────────────────
+  Python       ✓          3.14.7               ✗ uv         not installed
+  PHP          ✓          8.4.25               ✓ composer   2.10.3
+  Ruby         ✓          3.4.10               ✓ bundler    2.6.9
+  Node.js      ✓          22.22.2              ✓ npm        10.9.7
+
+  Tina4 CLIs
+  ──────────────────────────────────────────────────────────────────────
+  ✓ tina4python      Python       installed (global)
+  ✗ tina4php         PHP          not found  →  run: composer global require tina4stack/tina4php
+  ✗ tina4ruby        Ruby         not found  →  run: gem install tina4ruby
+  ✗ tina4nodejs      Node.js      not found  →  run: npm install -g tina4-nodejs
+  ✗ vite             tina4js      not found  →  run: npm install vite
+
+  Tina4 AI skills (global)
+  ──────────────────────────────────────────────────────────────────────
+  ✗ skills not installed  ->  run: tina4 skills claude
+      refresh writes ~/.claude/skills only - it never changes a project's CLAUDE.md
+
+  Tina4 AI skills (Codex)
+  ----------------------------------------------------------------------
+  ✗ skills not installed  ->  run: tina4 skills codex
+      refresh writes ~/.agents/skills only - it never changes a project's AGENTS.md
+
+  Tina4 AI skills (Cursor)
+  ----------------------------------------------------------------------
+  ✗ skills not installed  ->  run: tina4 skills cursor
+      refresh writes ~/.cursor/skills only - it never changes project .cursor/skills entrypoints
+
+  Ports
+  ──────────────────────────────────────────────────────────────────────
+  ✓ 7145   (PHP     ) free
+  ✓ 7146   (Python  ) free
+  ✓ 7147   (Ruby    ) free
+  ✓ 7148   (Node.js ) free
+  ✓ 5173   (tina4js ) free
+
+  ℹ No Tina4 project detected in current directory
+

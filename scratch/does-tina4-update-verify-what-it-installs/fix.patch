@@ -1,0 +1,611 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 4eb7a92..759c0c4 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -103,6 +103,15 @@ version = "2.11.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "843867be96c8daad0d758b57df9392b6d8d271134fce549de6ce169ff98a92af"
+ 
++[[package]]
++name = "block-buffer"
++version = "0.10.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
++dependencies = [
++ "generic-array",
++]
++
+ [[package]]
+ name = "block2"
+ version = "0.6.2"
+@@ -208,6 +217,25 @@ dependencies = [
+  "windows-sys 0.59.0",
+ ]
+ 
++[[package]]
++name = "cpufeatures"
++version = "0.2.17"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "59ed5838eebb26a2bb2e58f6d5b5316989ae9d08bab10e0e6d103e656d1b0280"
++dependencies = [
++ "libc",
++]
++
++[[package]]
++name = "crypto-common"
++version = "0.1.7"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "78c8292055d1c1df0cce5d180393dc8cce0abec0a7102adb6c7b1eef6016d60a"
++dependencies = [
++ "generic-array",
++ "typenum",
++]
++
+ [[package]]
+ name = "ctrlc"
+ version = "3.5.2"
+@@ -219,6 +247,16 @@ dependencies = [
+  "windows-sys 0.61.2",
+ ]
+ 
++[[package]]
++name = "digest"
++version = "0.10.7"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292"
++dependencies = [
++ "block-buffer",
++ "crypto-common",
++]
++
+ [[package]]
+ name = "dispatch2"
+ version = "0.3.1"
+@@ -365,6 +403,16 @@ dependencies = [
+  "slab",
+ ]
+ 
++[[package]]
++name = "generic-array"
++version = "0.14.7"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
++dependencies = [
++ "typenum",
++ "version_check",
++]
++
+ [[package]]
+ name = "getrandom"
+ version = "0.2.17"
+@@ -1350,6 +1398,17 @@ dependencies = [
+  "serde",
+ ]
+ 
++[[package]]
++name = "sha2"
++version = "0.10.9"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "a7507d819769d01a365ab707794a4084392c824f54a7a6a7862f8c3d0892b283"
++dependencies = [
++ "cfg-if",
++ "cpufeatures",
++ "digest",
++]
++
+ [[package]]
+ name = "shlex"
+ version = "1.3.0"
+@@ -1482,6 +1541,7 @@ dependencies = [
+  "reqwest",
+  "serde",
+  "serde_json",
++ "sha2",
+  "tokio",
+  "tree-sitter",
+  "tree-sitter-php",
+@@ -1708,6 +1768,12 @@ version = "0.2.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
+ 
++[[package]]
++name = "typenum"
++version = "1.20.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20"
++
+ [[package]]
+ name = "unicode-ident"
+ version = "1.0.24"
+diff --git a/Cargo.toml b/Cargo.toml
+index 6a562fc..d983586 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -49,6 +49,10 @@ notify = "7"
+ clap = { version = "4", features = ["derive"] }
+ colored = "2"
+ which = "7"
++# Self-update installs a binary over the running one. Every release publishes
++# SHA256SUMS and install.sh already refuses a mismatch; this is the same check
++# for the update path. Pure Rust, no system dependency, nothing to cross-compile.
++sha2 = "0.10"
+ # "termination" makes set_handler also catch SIGTERM and SIGHUP (not just
+ # SIGINT) on Unix, plus CTRL_CLOSE / LOGOFF / SHUTDOWN on Windows. The dev
+ # server child sits in its own process group, so without this a `kill` or a
+diff --git a/src/main.rs b/src/main.rs
+index 589471a..e5e90c4 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -1673,14 +1673,61 @@ fn handle_update() {
+         download_file_classified(&url, &tmp_path)
+     });
+ 
+-    if let Err(failure) = downloaded {
+-        eprintln!(
+-            "{} {}",
+-            icon_fail().red(),
+-            report_failed_download(&tmp_path, &failure, &candidates, &latest_tag)
+-        );
+-        // A failed update must be visible to whatever ran it.
+-        std::process::exit(1);
++    let asset = match downloaded {
++        Ok(name) => name,
++        Err(failure) => {
++            eprintln!(
++                "{} {}",
++                icon_fail().red(),
++                report_failed_download(&tmp_path, &failure, &candidates, &latest_tag)
++            );
++            // A failed update must be visible to whatever ran it.
++            std::process::exit(1);
++        }
++    };
++
++    // Step 4: check the download against the release's own SHA256SUMS before
++    // it goes anywhere near the running binary. Up to here the downloader's
++    // exit status was the whole acceptance test, so whatever curl left at the
++    // temp path was installed and the backup deleted -- install.sh has
++    // refused a mismatch since 3.8.53 and this is the same check for the
++    // update path.
++    let sums_path = current_exe.with_extension("sha256sums");
++    let sums_url = format!(
++        "https://github.com/{}/releases/download/{}/SHA256SUMS",
++        REPO, latest_tag
++    );
++    match download_file_classified(&sums_url, &sums_path) {
++        DownloadOutcome::Ok => {
++            let sums = std::fs::read_to_string(&sums_path).unwrap_or_default();
++            std::fs::remove_file(&sums_path).ok();
++            if let Err(why) = verify_asset_against_sums(&tmp_path, &sums, &asset) {
++                std::fs::remove_file(&tmp_path).ok();
++                eprintln!(
++                    "{} Refusing to install {} — {}",
++                    icon_fail().red(),
++                    asset.cyan(),
++                    why
++                );
++                eprintln!(
++                    "  The CLI you are running has not been touched. Download it by hand from:\n  https://github.com/{}/releases/tag/{}",
++                    REPO, latest_tag
++                );
++                std::process::exit(1);
++            }
++            println!("  {} Checksum verified (sha256)", icon_ok().green());
++        }
++        // Releases before 3.8.53 publish no SHA256SUMS. install.sh's rule is
++        // to verify strictly when it is there, so this matches it -- but it
++        // says so, because an unverified install is not the normal case.
++        _ => {
++            std::fs::remove_file(&sums_path).ok();
++            println!(
++                "  {} No SHA256SUMS published for {} — installing without verifying",
++                icon_warn().yellow(),
++                latest_tag
++            );
++        }
+     }
+ 
+     // Replace current binary
+@@ -1992,6 +2039,75 @@ fn clean_v2_binaries() {
+     }
+ }
+ 
++/// The sha256 of a file, lowercase hex, streamed so a 9 MB binary is not held
++/// in memory twice.
++fn sha256_file(path: &std::path::Path) -> std::io::Result<String> {
++    use sha2::{Digest, Sha256};
++    let mut file = std::fs::File::open(path)?;
++    let mut hasher = Sha256::new();
++    std::io::copy(&mut file, &mut hasher)?;
++    Ok(hasher
++        .finalize()
++        .iter()
++        .map(|b| format!("{b:02x}"))
++        .collect())
++}
++
++/// Pull one asset's expected digest out of a `SHA256SUMS` file.
++///
++/// The format is `sha256sum`'s own: `<64 hex>  <name>`, one per line. The name
++/// is compared whole -- `tina4-linux-amd64` must not be answered by the line
++/// for `tina4-linux-amd64.exe`.
++fn sha256_for_asset(sums: &str, asset: &str) -> Option<String> {
++    sums.lines().find_map(|line| {
++        let mut parts = line.split_whitespace();
++        let digest = parts.next()?;
++        let name = parts.next()?;
++        // `sha256sum -b` marks binary mode with a `*` before the name.
++        let name = name.strip_prefix('*').unwrap_or(name);
++        (name == asset && digest.len() == 64).then(|| digest.to_ascii_lowercase())
++    })
++}
++
++/// Why a downloaded asset was not accepted.
++#[derive(Debug, PartialEq, Eq)]
++enum VerifyError {
++    /// The release publishes sums, but not for this asset name.
++    NotListed,
++    /// The file on disk is not the file the release published.
++    Mismatch { expected: String, actual: String },
++    /// The file could not be read to hash it at all.
++    Unreadable(String),
++}
++
++impl std::fmt::Display for VerifyError {
++    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++        match self {
++            VerifyError::NotListed => write!(f, "the release's SHA256SUMS does not list this asset"),
++            VerifyError::Mismatch { expected, actual } => write!(
++                f,
++                "checksum mismatch — expected {expected}, got {actual}"
++            ),
++            VerifyError::Unreadable(e) => write!(f, "the download could not be read back: {e}"),
++        }
++    }
++}
++
++/// Check a downloaded asset against the release's own `SHA256SUMS`.
++fn verify_asset_against_sums(
++    file: &std::path::Path,
++    sums: &str,
++    asset: &str,
++) -> Result<(), VerifyError> {
++    let expected = sha256_for_asset(sums, asset).ok_or(VerifyError::NotListed)?;
++    let actual = sha256_file(file).map_err(|e| VerifyError::Unreadable(e.to_string()))?;
++    if actual == expected {
++        Ok(())
++    } else {
++        Err(VerifyError::Mismatch { expected, actual })
++    }
++}
++
+ fn get_latest_version() -> Option<String> {
+     let api_url = format!("https://api.github.com/repos/{}/releases/latest", REPO);
+ 
+@@ -2493,6 +2609,112 @@ Always read and follow `.claude/skills/tina4-js/SKILL.md` when working with this
+ #[cfg(test)]
+ mod tests {
+ 
++    // ---- self-update integrity -------------------------------------------
++    //
++    // `tina4 update` took the downloader's exit status as the whole acceptance
++    // test: whatever curl left at the temp path was chmod 755'd over the
++    // running binary and the backup deleted. Measured on 3.8.85 -> 3.8.88, a
++    // downloader that exited 0 having written 27 bytes of ASCII installed
++    // those 27 bytes as the CLI and printed "Updated tina4 CLI".
++
++    use super::{sha256_file, sha256_for_asset, verify_asset_against_sums, VerifyError};
++
++    /// A file with known contents, and the sha256 `sha256sum` gives for it.
++    fn scratch_file(tag: &str, bytes: &[u8]) -> std::path::PathBuf {
++        let path = std::env::temp_dir().join(format!(
++            "tina4-verify-{}-{}-{}",
++            tag,
++            std::process::id(),
++            std::time::SystemTime::now()
++                .duration_since(std::time::UNIX_EPOCH)
++                .map(|d| d.subsec_nanos())
++                .unwrap_or(0)
++        ));
++        std::fs::write(&path, bytes).expect("write the scratch file");
++        path
++    }
++
++    /// The hash is the real thing, not our own idea of it: this vector is the
++    /// published sha256 of the empty input.
++    #[test]
++    fn sha256_file_matches_the_known_vector() {
++        let f = scratch_file("empty", b"");
++        assert_eq!(
++            sha256_file(&f).unwrap(),
++            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
++        );
++        std::fs::remove_file(f).ok();
++    }
++
++    /// Positive: the published bytes are accepted.
++    #[test]
++    fn verify_positive_matching_digest_is_accepted() {
++        let f = scratch_file("match", b"the real release asset\n");
++        let digest = sha256_file(&f).unwrap();
++        let sums = format!("{digest}  tina4-linux-amd64\n");
++        assert_eq!(verify_asset_against_sums(&f, &sums, "tina4-linux-amd64"), Ok(()));
++        std::fs::remove_file(f).ok();
++    }
++
++    /// Negative: bytes the release did not publish are refused. This is the
++    /// case that installed 27 bytes of ASCII as the CLI.
++    #[test]
++    fn verify_negative_substituted_bytes_are_refused() {
++        let f = scratch_file("substituted", b"TOTALLY-NOT-A-TINA4-BINARY\n");
++        let sums = format!("{}  tina4-linux-amd64\n", "0".repeat(64));
++        match verify_asset_against_sums(&f, &sums, "tina4-linux-amd64") {
++            Err(VerifyError::Mismatch { expected, actual }) => {
++                assert_eq!(expected, "0".repeat(64));
++                assert_ne!(actual, expected);
++            }
++            other => panic!("substituted bytes must be refused, got {other:?}"),
++        }
++        std::fs::remove_file(f).ok();
++    }
++
++    /// Positive edge — the guard must not be too tight. A real SHA256SUMS has
++    /// nine assets, ours is not the first, `sha256sum -b` may mark binary mode
++    /// with a `*`, and a file written on Windows has CRLF line endings.
++    #[test]
++    fn verify_positive_edge_reads_a_real_sums_file() {
++        let f = scratch_file("realsums", b"the real release asset\n");
++        let digest = sha256_file(&f).unwrap();
++        let sums = format!(
++            "{d}  tina4-darwin-amd64\r\n{d}  tina4-darwin-arm64\r\n{digest} *tina4-linux-amd64\r\n{d}  tina4-windows-amd64.exe\r\n",
++            d = "1".repeat(64)
++        );
++        assert_eq!(verify_asset_against_sums(&f, &sums, "tina4-linux-amd64"), Ok(()));
++        std::fs::remove_file(f).ok();
++    }
++
++    /// Negative edge — the guard must not be too loose. One asset name is a
++    /// prefix of another, and the shorter one must never be answered by the
++    /// longer one's line.
++    #[test]
++    fn verify_negative_edge_a_prefix_name_does_not_match() {
++        let f = scratch_file("prefix", b"windows bytes\n");
++        let digest = sha256_file(&f).unwrap();
++        let sums = format!("{digest}  tina4-linux-amd64.exe\n");
++        assert_eq!(
++            verify_asset_against_sums(&f, &sums, "tina4-linux-amd64"),
++            Err(VerifyError::NotListed)
++        );
++        std::fs::remove_file(f).ok();
++    }
++
++    /// An asset the release does not list is not silently accepted.
++    #[test]
++    fn verify_an_unlisted_asset_is_not_accepted() {
++        let f = scratch_file("unlisted", b"bytes\n");
++        assert_eq!(sha256_for_asset("", "tina4-linux-amd64"), None);
++        assert_eq!(
++            verify_asset_against_sums(&f, "deadbeef  something-else\n", "tina4-linux-amd64"),
++            Err(VerifyError::NotListed)
++        );
++        std::fs::remove_file(f).ok();
++    }
++
++
+     // ---- tina4js serve command (Windows npx-shim fix) --------------------
+ 
+     /// `tina4 serve` must launch a tina4js project's OWN Vite through `node`,
+diff --git a/tests/update_verifies_download.rs b/tests/update_verifies_download.rs
+new file mode 100644
+index 0000000..0179f6f
+--- /dev/null
++++ b/tests/update_verifies_download.rs
+@@ -0,0 +1,208 @@
++//! `tina4 update` must not install bytes the release did not publish.
++//!
++//! These drive the real `tina4 update`. The unit tests cover the comparison
++//! itself and every one of them stays green while the verification is lifted
++//! back out of `handle_update` — nothing in them runs the command, and the
++//! whole user-visible defect is at the call site.
++//!
++//! The runs are hermetic: PATH holds one directory containing a stand-in
++//! `curl`, so there is no network and nothing else on the machine is
++//! reachable. The stand-in answers the release API with a version that forces
++//! the download path, then serves whatever this test wants the "download" to
++//! be. The binary under test is a copy, because a successful update replaces
++//! its own executable.
++
++#![cfg(unix)]
++
++use std::os::unix::fs::PermissionsExt;
++use std::path::PathBuf;
++use std::process::{Command, Stdio};
++
++const BIN: &str = env!("CARGO_BIN_EXE_tina4");
++const PAYLOAD: &str = "tina4 fake payload bytes\n";
++const PAYLOAD_SHA: &str = "054e3d2cff15fecd74bbc3724e807d0997ff4b770b3fd15e59c78c000d470e80";
++
++struct Sandbox {
++    root: PathBuf,
++}
++
++impl Drop for Sandbox {
++    fn drop(&mut self) {
++        std::fs::remove_dir_all(&self.root).ok();
++    }
++}
++
++impl Sandbox {
++    fn cli(&self) -> PathBuf {
++        self.root.join("tina4")
++    }
++}
++
++/// `sums` is what the stand-in serves for SHA256SUMS; empty means the release
++/// publishes none, which the stand-in reports as an HTTP failure.
++fn sandbox(tag: &str, sums: &str) -> Sandbox {
++    let root = std::env::temp_dir().join(format!(
++        "tina4-verify-dl-{}-{}-{}",
++        tag,
++        std::process::id(),
++        std::time::SystemTime::now()
++            .duration_since(std::time::UNIX_EPOCH)
++            .map(|d| d.subsec_nanos())
++            .unwrap_or(0)
++    ));
++    std::fs::create_dir_all(root.join("fakebin")).expect("create the stand-in bin directory");
++    std::fs::create_dir_all(root.join("home")).expect("create the sandbox home");
++    std::fs::copy(BIN, root.join("tina4")).expect("copy the binary under test");
++    std::fs::set_permissions(root.join("tina4"), std::fs::Permissions::from_mode(0o755)).unwrap();
++
++    // Only `printf` and `[` are used, both shell builtins, so the stand-in
++    // needs nothing on PATH but itself.
++    let script = format!(
++        "#!/bin/sh\n\
++         SUMS='{sums}'\n\
++         PAYLOAD='{payload}'\n\
++         dest=''\n\
++         url=''\n\
++         prev=''\n\
++         for a in \"$@\"; do\n\
++         \tif [ \"$prev\" = '-o' ]; then dest=\"$a\"; fi\n\
++         \tcase \"$a\" in http*) url=\"$a\";; esac\n\
++         \tprev=\"$a\"\n\
++         done\n\
++         case \"$url\" in\n\
++         \t*api.github.com*) printf '%s' '{{\"tag_name\": \"v9.9.9\"}}'; exit 0;;\n\
++         \t*SHA256SUMS) [ -n \"$SUMS\" ] || exit 22; printf '%s' \"$SUMS\" > \"$dest\"; exit 0;;\n\
++         \t*) printf '%s' \"$PAYLOAD\" > \"$dest\"; exit 0;;\n\
++         esac\n",
++        sums = sums,
++        payload = PAYLOAD,
++    );
++    let curl = root.join("fakebin").join("curl");
++    std::fs::write(&curl, script).expect("write the stand-in curl");
++    std::fs::set_permissions(&curl, std::fs::Permissions::from_mode(0o755)).unwrap();
++    Sandbox { root }
++}
++
++fn run_update(sb: &Sandbox) -> (i32, String) {
++    let out = Command::new(sb.cli())
++        .arg("update")
++        .env_clear()
++        .env("PATH", sb.root.join("fakebin"))
++        .env("HOME", sb.root.join("home"))
++        .env("TERM", "dumb")
++        .current_dir(&sb.root)
++        .stdin(Stdio::null())
++        .output();
++
++    // Another test thread writing its own copy of the binary can leave this
++    // one exec'ing a file the kernel still sees as open for write (ETXTBSY).
++    // That is the harness, not the CLI, so retry rather than fail.
++    let out = match out {
++        Ok(out) => out,
++        Err(e) if e.raw_os_error() == Some(26) => {
++            std::thread::sleep(std::time::Duration::from_millis(100));
++            Command::new(sb.cli())
++                .arg("update")
++                .env_clear()
++                .env("PATH", sb.root.join("fakebin"))
++                .env("HOME", sb.root.join("home"))
++                .env("TERM", "dumb")
++                .current_dir(&sb.root)
++                .stdin(Stdio::null())
++                .output()
++                .expect("run tina4 update after ETXTBSY")
++        }
++        Err(e) => panic!("run tina4 update: {e}"),
++    };
++    (
++        out.status.code().unwrap_or(-1),
++        format!(
++            "{}{}",
++            String::from_utf8_lossy(&out.stdout),
++            String::from_utf8_lossy(&out.stderr)
++        ),
++    )
++}
++
++fn installed(sb: &Sandbox) -> Vec<u8> {
++    std::fs::read(sb.cli()).expect("read the binary under test")
++}
++
++/// The defect: bytes the release never published were installed over the
++/// running CLI, reported as success, with the backup already deleted.
++#[test]
++fn update_refuses_a_download_that_does_not_match_the_published_checksum() {
++    let sums = format!("{}  tina4-linux-amd64\n", "a".repeat(64));
++    let sb = sandbox("mismatch", &sums);
++    let before = installed(&sb);
++
++    let (code, text) = run_update(&sb);
++
++    assert_ne!(
++        code, 0,
++        "a refused install must be visible to whatever ran it:\n{text}"
++    );
++    assert!(
++        text.contains("Refusing to install"),
++        "the refusal has to say so:\n{text}"
++    );
++    assert!(
++        !text.contains("Updated tina4 CLI"),
++        "nothing was installed, so nothing may claim it was:\n{text}"
++    );
++    assert_eq!(
++        installed(&sb),
++        before,
++        "the running CLI must be exactly as it was"
++    );
++}
++
++/// Positive control: bytes that DO match are installed. Without this the
++/// refusal above could be a self-update that simply never works.
++#[test]
++fn update_installs_a_download_that_matches_the_published_checksum() {
++    let sums = format!("{PAYLOAD_SHA}  tina4-linux-amd64\n");
++    let sb = sandbox("match", &sums);
++
++    let (_, text) = run_update(&sb);
++
++    assert!(
++        text.contains("Checksum verified"),
++        "a verified install has to say what it checked:\n{text}"
++    );
++    assert_eq!(
++        installed(&sb),
++        PAYLOAD.as_bytes(),
++        "the verified bytes are the ones that should land"
++    );
++}
++
++/// Negative edge — the guard must not be too tight. Releases before 3.8.53
++/// publish no SHA256SUMS, and install.sh's rule is to verify strictly only
++/// when it is present. The update path matches that, and says so out loud.
++#[test]
++fn update_without_a_published_checksum_installs_but_says_it_did_not_verify() {
++    let sb = sandbox("nosums", "");
++
++    let (_, text) = run_update(&sb);
++
++    assert!(
++        text.contains("without verifying"),
++        "an unverified install must not look like a verified one:\n{text}"
++    );
++    assert_eq!(installed(&sb), PAYLOAD.as_bytes());
++}
++
++/// Negative edge — an asset the release does not list is not a free pass.
++#[test]
++fn update_refuses_when_the_asset_is_not_listed_in_the_checksums() {
++    let sums = format!("{PAYLOAD_SHA}  some-other-asset\n");
++    let sb = sandbox("unlisted", &sums);
++    let before = installed(&sb);
++
++    let (code, text) = run_update(&sb);
++
++    assert_ne!(code, 0, "{text}");
++    assert!(text.contains("does not list this asset"), "{text}");
++    assert_eq!(installed(&sb), before);
++}

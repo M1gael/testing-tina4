@@ -1,0 +1,8 @@
+[32m▶[0m Checking for updates...
+
+[33m⚠[0m Found old v2 CLI binaries on PATH:
+  [31m✗[0m tina4python ([2m/var/home/work/.cache/tina4-update-probe/a/decoys/tina4python[0m)
+    [32m✓[0m Removed
+
+  [34mℹ[0m Current: [36m3.8.88[0m  Latest: [36m3.8.88[0m
+[32m✓[0m CLI already up to date

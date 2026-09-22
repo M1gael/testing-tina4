@@ -1,0 +1,58 @@
+Unknown command: --version
+
+Tina4 PHP CLI v3
+
+Usage: tina4php <command> [options]
+
+Commands:
+  init [dir]                                      Scaffold a new project
+  serve [host:port|port]                          Start dev server (default: 0.0.0.0:7145)
+  start                                           Alias for serve
+  migrate                                         Run pending migrations
+  migrate:create <desc>                           Create a new migration file
+  migrate:rollback                                Rollback last batch
+  migrate:status                                  Show migration status
+  seed                                            Run seeders from src/seeds/
+  routes                                          List all registered routes
+  metrics [--top N] [--json] [--fail-on warn|error] [--path DIR]  Rank top code-quality offenders
+  test                                            Run test suite
+  queue <work|stats|retry|clear> [topic]          Run queue workers and manage jobs
+  build [--tag NAME] [--file PATH]                Build the deployable Docker image
+  generate <what> <name> [options]                Generate scaffolding (see Generators below)
+  ai [--all]                                      Detect AI tools and install context
+  console                                         Interactive PHP REPL with Tina4 loaded
+  commands [--json]                               List available commands (add --json for machine form)
+  help                                            Show this help
+
+Delegated to the tina4 client (same behaviour in every framework):
+  doctor                                          Check installed languages and tools
+  setup                                           Guided, menu-driven setup: install everything + scaffold a ready-to-run project
+  deploy <docker|systemd|nginx|cpanel> [--force]  Generate deployment scaffolding (Dockerfile, systemd unit, nginx block, cPanel)
+  (these run the tina4 client — install: curl -fsSL https://tina4.com/install.sh | sh)
+
+Generators:
+  generate model <Name> [--fields "name:string,price:float"]  ORM model + matching migration
+  generate route <name> [--model Name] [--public]  CRUD route file, secure by default (--public opens writes)
+  generate crud <Name> [--fields "..."] [--public]  Model + migration + routes + form + view + test
+  generate migration <description>                Timestamped migration file
+  generate middleware <Name>                      Middleware with before/after hooks
+  generate test <name> [--model Name]             PHPUnit test file
+  generate form <Name> [--fields "..."]           Form template with typed inputs
+  generate view <Name> [--fields "..."]           List + detail view templates
+  generate auth                                   Login/register routes + User model + templates
+  generate service <Name> [--every 5m | --cron "..."]  Scheduled ServiceRunner task (src/services/)
+  generate queue <topic>                          Producer + consumer worker (src/services/)
+  generate validator <Name>                       Request-body Validator (src/validators/)
+  generate seeder <Model>                         FakeData seeder (src/seeds/)
+  generate websocket <path>                       Router::websocket handler (src/routes/)
+  generate listener <event>                       Events::on listener (src/listeners/)
+
+Scaffolding-first: logic-shaped generators emit wiring + an AI-FILL placeholder
+(throw \RuntimeException) where the custom logic goes; CRUD-shaped ones emit
+working code. Writes are secure by default — use --public to open them.
+
+Field types: string, int, float, bool, text, datetime, blob
+Table names: singular by default (Product -> product)
+
+https://tina4.com
+

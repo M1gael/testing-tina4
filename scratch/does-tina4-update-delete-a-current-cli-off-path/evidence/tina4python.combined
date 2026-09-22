@@ -1,0 +1,59 @@
+Unknown command: --version
+
+Tina4 Python — CLI
+
+Usage: tina4python <command> [options]
+
+Commands:
+  init [dir]                                      Scaffold a new project
+  serve [--port P] [--no-browser] [--no-reload]   Start dev server (default: 0.0.0.0:7146)
+  start                                           Alias for serve
+  migrate                                         Run pending database migrations
+  migrate:create <desc>                           Create a new migration file
+  migrate:rollback                                Rollback last migration batch
+  migrate:status                                  Show migration status
+  env-migrate [path]                              Rewrite .env to TINA4_-prefixed names (v3.12 migration)
+  seed                                            Run database seeders
+  routes                                          List all registered routes
+  test                                            Run test suite
+  queue <work|stats|retry|clear> [topic]          Run queue workers and manage jobs
+  build [--tag NAME] [--file PATH]                Build the deployable Docker image
+  ai [--all]                                      Install AI coding assistant context
+  generate <what> <name> [options]                Generate scaffolding (see Generators below)
+  console                                         Start interactive REPL with framework loaded
+  metrics [--top N] [--json] [--fail-on warn|error] [--path DIR]  Rank top code-quality offenders
+  commands [--json]                               List available commands (add --json for machine form)
+  help                                            Show this help
+
+Delegated to the tina4 client (same behaviour in every framework):
+  doctor                                          Check installed languages and tools
+  setup                                           Guided, menu-driven setup: install everything + scaffold a ready-to-run project
+  deploy <docker|systemd|nginx|cpanel> [--force]  Generate deployment scaffolding (Dockerfile, systemd unit, nginx block, cPanel)
+  (these run the tina4 client — install: curl -fsSL https://tina4.com/install.sh | sh)
+
+Generators:
+  generate model <Name> [--fields "name:string,price:float"]  ORM model + matching migration
+  generate route <name> [--model Name] [--public]  CRUD route file, secure by default (--public opens writes)
+  generate crud <Name> [--fields "..."] [--public]  Model + migration + routes + form + view + test
+  generate migration <description>                Timestamped migration file (UP/DOWN)
+  generate middleware <Name>                      Middleware with before/after hooks
+  generate test <name> [--model Name]             pytest test file
+  generate form <Name> [--fields "..."]           Form template with inputs matching model fields
+  generate view <Name> [--fields "..."]           List + detail view templates
+  generate auth                                   Login/register routes + User model + templates
+  generate service <Name> [--every 5m | --cron "..."]  Scheduled ServiceRunner task (src/services/)
+  generate queue <topic>                          Producer + consumer worker (src/services/)
+  generate validator <Name>                       Request-body Validator (src/validators/)
+  generate seeder <Model>                         FakeData + seed_orm seeder (src/seeds/)
+  generate websocket <path>                       @websocket handler (src/routes/)
+  generate listener <event>                       @on(event) listener (src/listeners/)
+
+Scaffolding-first: logic-shaped generators emit wiring + an AI-FILL placeholder
+(raise NotImplementedError) where the custom logic goes; CRUD-shaped ones emit
+working code. Writes are secure by default — use --public to open them.
+
+Field types: string, int, float, bool, text, datetime, blob
+Table names: singular by default (Product → product)
+
+https://tina4.com
+

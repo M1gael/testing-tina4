@@ -1,0 +1,12 @@
+▶ Checking for updates...
+
+⚠ Found old v2 CLI binaries on PATH:
+  ✗ tina4python (/var/home/work/.cache/tina4-update-probe/a/decoys/tina4python)
+    ✓ Removed
+  ✗ tina4ruby (/var/home/work/.cache/tina4-update-probe/a/decoys/tina4ruby)
+    ✓ Removed
+  ✗ tina4nodejs (/var/home/work/.cache/tina4-update-probe/a/decoys/tina4nodejs)
+    ✓ Removed
+
+  ℹ Current: 3.8.88  Latest: 3.8.88
+✓ CLI already up to date

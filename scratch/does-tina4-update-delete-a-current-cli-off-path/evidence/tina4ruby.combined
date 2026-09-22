@@ -1,0 +1,62 @@
+Unknown command: --version
+Tina4 Ruby CLI
+
+Usage: tina4ruby COMMAND [options]
+
+Commands:
+  init [NAME]                                     Initialize a new Tina4 project
+  start [options]                                 Start the Tina4 web server
+  serve                                           Alias for start
+  migrate [--create NAME] [--rollback N]          Run database migrations
+  migrate:create <desc>                           Create a new migration file
+  migrate:status                                  Show migration status (completed and pending)
+  migrate:rollback [-n N]                         Rollback the last batch of migrations
+  seed [--clear]                                  Run all seed files in seeds/
+  seed:create NAME                                Create a new seed file
+  test                                            Run inline tests
+  queue <work|stats|retry|clear> [topic]          Run queue workers and manage jobs
+  build [--tag NAME] [--file PATH]                Build the deployable Docker image
+  lint [--fix] [--no-install]                     Lint src/ + app.rb (rubocop, installed dev-only on demand, else ruby -c)
+  version                                         Show Tina4 version
+  routes                                          List all registered routes
+  console                                         Start an interactive console
+  generate <what> <name> [options]                Generate scaffolding (see Generators below)
+  ai [--all]                                      Detect AI tools and install context files
+  commands [--json]                               List available commands (add --json for machine form)
+  help                                            Show this help message
+
+Delegated to the tina4 client (same behaviour in every framework):
+  doctor                                          Check installed languages and tools
+  setup                                           Guided, menu-driven setup: install everything + scaffold a ready-to-run project
+  deploy <docker|systemd|nginx|cpanel> [--force]  Generate deployment scaffolding (Dockerfile, systemd unit, nginx block, cPanel)
+  (these run the tina4 client — install: curl -fsSL https://tina4.com/install.sh | sh)
+
+Generators:
+  generate model <Name> [--fields "name:string,price:float"] [--table-name <name>]  ORM model + matching migration
+  generate route <name> [--model Name] [--public]  CRUD route file, secure by default (--public opens writes)
+  generate crud <Name> [--fields "..."] [--public]  Model + migration + routes + form + view + test
+  generate migration <description>                Timestamped migration file (UP/DOWN)
+  generate middleware <Name>                      Middleware with before/after hooks
+  generate test <name> [--model Name]             RSpec test file
+  generate form <Name> [--fields "..."]           Form template with inputs matching model fields
+  generate view <Name> [--fields "..."]           List + detail view templates
+  generate auth                                   Login/register routes + User model + templates
+  generate service <Name> [--every 5m | --cron "..."]  Scheduled ServiceRunner task (src/services/)
+  generate queue <topic>                          Producer + consumer worker (src/services/)
+  generate validator <Name>                       Request-body Validator (src/validators/)
+  generate seeder <Model>                         FakeData + seed_orm seeder (seeds/)
+  generate websocket <path>                       Tina4.websocket handler (src/routes/)
+  generate listener <event>                       Tina4::Events.on listener (src/listeners/)
+
+Scaffolding-first: logic-shaped generators (route without --model, service,
+queue, validator, seeder, websocket, listener) emit wiring + an AI-FILL
+placeholder (raise NotImplementedError) where the custom logic goes; CRUD-
+shaped ones emit working code. Writes are secure by default; use --public
+to open them.
+
+Field types: string, int, float, bool, text, datetime, blob
+Table names: singular by default (Product -> product)
+
+https://tina4.com
+
+Run 'tina4ruby COMMAND --help' for more information on a command.
