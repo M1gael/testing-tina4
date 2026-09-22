@@ -1,66 +1,86 @@
 #!/usr/bin/env bash
-# f-cli-01 — does `tina4 init`'s Python scaffold gitignore the file the framework
-# writes the JWT signing secret into (.env.local)?
+# Proof: a scaffolded Tina4 project does not ignore the file the framework
+# writes its JWT signing secret into, so the secret is committable — in all
+# four backend languages.
 #
-# Reproduces from the EXACT template bytes each CLI emits, via `git check-ignore`
-# (no cargo build needed). Prints a verdict; exits non-zero if the fixed template
-# fails to protect .env.local or over-ignores a file a user wants tracked.
+#   ./prove.sh              build both trees if needed, then probe
+#   ./prove.sh --no-build   probe with whatever binaries are already built
 #
-# Optional real end-to-end: TINA4_BIN=/path/to/tina4 ./prove.sh
-set -u
+# Every probe prints PASS/FAIL against what SHOULD happen, so a green run
+# means the scaffold is behaving. Exit 0 = all properties hold, 2 = a property
+# broke. Global git excludes are neutralised in every measurement, so a result
+# never depends on the machine's own gitignore.
+set -uo pipefail
+cd "$(dirname "$0")"
 
-# Template literals, byte-for-byte:
-#   STOCK  = tina4/src/init.rs:626-630 @ origin/main 2bb1418 (v3.8.88)
-#   FIXED  = the candidate in fix.patch (reconciled with tina4-python cli/__init__.py:658-663)
-STOCK=$'.venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsecrets/\n.env\n'
-FIXED=$'.venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsessions/\nsecrets/\n*.db\n.env\n.env.local\n'
+WT="${TINA4_WORKTREES:-$HOME/.cache/tina4-worktrees}"
+STOCK="$WT/fcli01v2-stock"
+FIXED="$WT/fcli01v2-fixed"
+CLONE="${TINA4_CLONE:-$HOME/gitdir/tinaforks/tina4}"
+FAILURES=0
+G="git -c core.excludesFile=/dev/null -c init.defaultBranch=main"
 
-fail=0
-ci() {  # check-ignore: prints "ignored"/"tracked" for $2 under the .gitignore in $1
-  git -C "$1" check-ignore -q "$2" && echo ignored || echo tracked
+note() { printf '  %s\n' "$*"; }
+check() { # check <expected rc> <actual rc> <description>
+  if [ "$1" = "$2" ]; then printf '  PASS  %s\n' "$3"
+  else printf '  FAIL  %s (wanted rc=%s, got rc=%s)\n' "$3" "$1" "$2"; FAILURES=$((FAILURES+1)); fi
 }
 
-probe_template() {  # $1=label  $2=template-bytes  $3=expect .env.local (ignored|tracked)
-  local label="$1" tmpl="$2" expect="$3"
-  local d; d=$(mktemp -d); git -C "$d" init -q
-  printf '%s' "$tmpl" > "$d/.gitignore"
-  local secret example source
-  secret=$(ci "$d" .env.local)     # the auto-minted TINA4_SECRET file
-  example=$(ci "$d" .env.example)  # a file the user WANTS committed
-  source=$(ci "$d" app.py)         # scaffolded source
-  printf '  %-6s  .env.local=%-8s .env.example=%-8s app.py=%-8s\n' "$label" "$secret" "$example" "$source"
-  [ "$secret" = "$expect" ] || { echo "    !! .env.local expected $expect, got $secret"; fail=1; }
-  # a fix must never hide a file the user wants tracked:
-  if [ "$label" = FIXED ]; then
-    [ "$example" = tracked ] || { echo "    !! over-ignore: .env.example is $example"; fail=1; }
-    [ "$source"  = tracked ] || { echo "    !! over-ignore: app.py is $source"; fail=1; }
-  fi
-  rm -rf "$d"
-}
-
-echo "== template-level proof (git check-ignore on exact bytes) =="
-probe_template STOCK "$STOCK" tracked   # tracked == LEAK (the bug)
-probe_template FIXED "$FIXED" ignored    # ignored == secret protected
-
-if [ -n "${TINA4_BIN:-}" ]; then
-  echo "== real binary end-to-end ($TINA4_BIN) =="
-  d=$(mktemp -d)
-  ( cd "$d" && TINA4_INIT_NO_SERVE=1 timeout 120 "$TINA4_BIN" init python probe >/dev/null 2>&1 )
-  if [ -f "$d/probe/.gitignore" ]; then
-    git -C "$d/probe" init -q
-    r=$(ci "$d/probe" .env.local)
-    echo "  generated .gitignore -> .env.local=$r"
-    [ "$r" = ignored ] || { echo "    !! real binary still leaks .env.local"; fail=1; }
-  else
-    echo "  (init produced no project; skipped)"
-  fi
-  rm -rf "$d"
+if [ "${1:-}" != "--no-build" ]; then
+  for pair in "$STOCK:" "$FIXED:fix/scaffold-gitignores-the-dev-secret-file"; do
+    d=${pair%%:*}; br=${pair#*:}
+    if [ ! -d "$d" ]; then
+      note "creating worktree $d"
+      if [ -n "$br" ]; then git -C "$CLONE" worktree add -q -b "$br" "$d" origin/main
+      else git -C "$CLONE" worktree add -q --detach "$d" origin/main; fi
+      [ -n "$br" ] && python3 apply_fix.py "$d/src/init.rs"
+    fi
+    ( cd "$d" && cargo build --release ) >/dev/null 2>&1 || { echo "build failed: $d"; exit 2; }
+  done
 fi
+
+for t in "$STOCK" "$FIXED"; do
+  [ -x "$t/target/release/tina4" ] || { echo "missing binary in $t — run without --no-build"; exit 2; }
+done
+
+probe() { # probe <binary> <label> <expect_ignored: yes|no>
+  local BIN="$1" LABEL="$2" WANT="$3"
+  echo
+  echo "== $LABEL  (md5 $(md5sum "$BIN" | cut -c1-12))"
+  local ROOT; ROOT=$(mktemp -d -t prove-XXXXXX)
+  for LANG in python php ruby nodejs; do
+    case $LANG in python) EXT=py ;; php) EXT=php ;; ruby) EXT=rb ;; nodejs) EXT=ts ;; esac
+    local P="$ROOT/$LANG"
+    # install_deps runs after scaffolding and needs the network; cap it. The
+    # scaffold (and therefore the .gitignore) is complete before the cap bites.
+    ( cd "$ROOT" && TINA4_INIT_NO_SERVE=1 timeout 45 "$BIN" init "$LANG" "$LANG" ) >/dev/null 2>&1
+    [ -d "$P" ] || { echo "  FAIL  $LANG did not scaffold"; FAILURES=$((FAILURES+1)); continue; }
+    printf 'TINA4_SECRET=%s\n' "$(head -c32 /dev/urandom | od -An -tx1 | tr -d ' \n')" > "$P/.env.local"
+    mkdir -p "$P/src/routes/sessions" "$P/src/orm/sessions" "$P/tests/fixtures"
+    echo x > "$P/src/routes/sessions/get.$EXT"
+    echo x > "$P/src/orm/sessions/model.$EXT"
+    echo x > "$P/tests/fixtures/seed.db"
+    echo x > "$P/.env.example"
+    ( cd "$P" && $G init -q && $G add -A ) >/dev/null 2>&1
+    echo "  -- $LANG"
+    ( cd "$P" && $G check-ignore -q .env.local ); local rc=$?
+    if [ "$WANT" = yes ]; then check 0 "$rc" "$LANG: .env.local is ignored"
+    else check 1 "$rc" "$LANG: .env.local is NOT ignored (the defect)"; fi
+    # nothing a project needs tracked may be swallowed — this is what the
+    # superseded patch got wrong by adding unanchored sessions/ and *.db
+    for keep in ".env.example" "src/routes/sessions/get.$EXT" "src/orm/sessions/model.$EXT" "tests/fixtures/seed.db"; do
+      ( cd "$P" && $G check-ignore -q "$keep" ); check 1 "$?" "$LANG: $keep stays tracked"
+    done
+    # instrument validation: .env must be ignored in the same run, or a
+    # uniformly-rc1 check-ignore would "prove" anything we asked it.
+    ( cd "$P" && $G check-ignore -q .env ); check 0 "$?" "$LANG: instrument sane (.env ignored)"
+  done
+  rm -rf "$ROOT"
+}
+
+probe "$STOCK/target/release/tina4" "STOCK — the defect" no
+probe "$FIXED/target/release/tina4" "FIXED — leak closed, nothing over-ignored" yes
 
 echo
-if [ "$fail" -eq 0 ]; then
-  echo "VERDICT: stock LEAKS .env.local; fixed template protects it and over-ignores nothing. PASS"
-else
-  echo "VERDICT: FAIL — see !! lines above"
-fi
-exit "$fail"
+if [ "$FAILURES" -eq 0 ]; then echo "ALL PROPERTIES HOLD"; exit 0
+else echo "$FAILURES property/properties broke"; exit 2; fi

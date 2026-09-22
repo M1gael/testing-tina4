@@ -1,57 +1,79 @@
 diff --git a/src/init.rs b/src/init.rs
-index 0b6c237..e368ddf 100644
+index 0b6c237..9b5a1d5 100644
 --- a/src/init.rs
 +++ b/src/init.rs
-@@ -624,7 +624,9 @@ fn scaffold_python(path: &str) {
+@@ -624,7 +624,7 @@ fn scaffold_python(path: &str) {
      write_file(
          path,
          ".gitignore",
 -        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsecrets/\n.env\n",
-+        // .env.local carries the JWT signing secret the framework auto-mints
-+        // on first dev run; sessions/ and *.db match the tina4-python template.
-+        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsessions/\nsecrets/\n*.db\n.env\n.env.local\n",
++        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsecrets/\n.env\n.env.local\n",
      );
  
      let pyproject = format!(
-@@ -1467,6 +1469,24 @@ mod tests {
-     use super::*;
-     use std::fs;
+@@ -692,7 +692,7 @@ $app->handle();
+     write_file(
+         path,
+         ".gitignore",
+-        "vendor/\ndata/\nlogs/\ncache/\nsecrets/\n.env\n",
++        "vendor/\ndata/\nlogs/\ncache/\nsecrets/\n.env\n.env.local\n",
+     );
+ 
+     let composer = format!(
+@@ -813,7 +813,7 @@ Tina4.run!(__dir__)
+     write_file(
+         path,
+         ".gitignore",
+-        ".bundle/\nvendor/\ndata/\nlogs/\n.env\nGemfile.lock\n",
++        ".bundle/\nvendor/\ndata/\nlogs/\n.env\n.env.local\nGemfile.lock\n",
+     );
+ 
+     write_file(
+@@ -845,7 +845,7 @@ startServer();
+     write_file(
+         path,
+         ".gitignore",
+-        "node_modules/\ndist/\ndata/\nlogs/\n.env\n",
++        "node_modules/\ndist/\ndata/\nlogs/\n.env\n.env.local\n",
+     );
+ 
+     let package_json = format!(
+@@ -1486,6 +1486,38 @@ mod tests {
+         }
+     }
  
 +    #[test]
-+    fn python_scaffold_gitignores_the_secret_file() {
-+        // ensure_dev_secret() mints TINA4_SECRET into .env.local on first dev
-+        // run, and the framework documents that file as gitignored — so the
-+        // scaffold must ignore it, or the signing secret gets committed.
-+        let dir = std::env::temp_dir().join(format!("tina4_init_gi_{}", std::process::id()));
-+        let _ = fs::remove_dir_all(&dir);
-+        fs::create_dir_all(&dir).unwrap();
-+        scaffold_project("python", dir.to_str().unwrap());
-+        let gitignore =
-+            fs::read_to_string(dir.join(".gitignore")).expect("scaffold wrote a .gitignore");
-+        assert!(
-+            gitignore.lines().any(|l| l.trim() == ".env.local"),
-+            "python scaffold .gitignore must ignore .env.local (JWT secret leak):\n{gitignore}"
-+        );
-+        let _ = fs::remove_dir_all(&dir);
++    fn scaffold_gitignores_the_dev_secret_file() {
++        // On its first dev run the framework mints a JWT signing secret and
++        // writes it to .env.local. Every backend scaffold must ignore that file
++        // or the secret is committable — .env does not cover .env.local.
++        // The sentinel is a line unique to that language's own template, so the
++        // test also fails if the dispatcher routes a language to the wrong one.
++        for (lang, sentinel) in [
++            ("python", ".venv/"),
++            ("php", "cache/"),
++            ("ruby", "Gemfile.lock"),
++            ("nodejs", "node_modules/"),
++        ] {
++            let dir = std::env::temp_dir()
++                .join(format!("tina4_init_ignore_{lang}_{}", std::process::id()));
++            let _ = fs::remove_dir_all(&dir);
++            fs::create_dir_all(&dir).unwrap();
++            scaffold_project(lang, dir.to_str().unwrap());
++            let ignored = fs::read_to_string(dir.join(".gitignore"))
++                .expect("scaffold wrote a .gitignore");
++            assert!(
++                ignored.lines().any(|l| l.trim() == sentinel),
++                "{lang} must get its own template (sentinel {sentinel}), got:\n{ignored}"
++            );
++            assert!(
++                ignored.lines().any(|l| l.trim() == ".env.local"),
++                "{lang} .gitignore must ignore .env.local, got:\n{ignored}"
++            );
++            let _ = fs::remove_dir_all(&dir);
++        }
 +    }
 +
      #[test]
-     fn scaffold_binds_a_default_sqlite_database() {
-         // Every backend project must ship a bound database in its .env so a
-diff --git a/tests/scaffold.rs b/tests/scaffold.rs
-index 85ece9d..5e12295 100644
---- a/tests/scaffold.rs
-+++ b/tests/scaffold.rs
-@@ -129,6 +129,12 @@ fn init_python_scaffolds_runnable_project() {
-     assert!(proj.join("app.py").is_file());
-     assert!(proj.join("pyproject.toml").is_file());
-     assert!(proj.join(".env").is_file());
-+    let gitignore =
-+        fs::read_to_string(proj.join(".gitignore")).expect("scaffold wrote a .gitignore");
-+    assert!(
-+        gitignore.lines().any(|l| l.trim() == ".env.local"),
-+        ".gitignore must ignore .env.local (the auto-minted JWT secret):\n{gitignore}"
-+    );
-     let _ = fs::remove_dir_all(&base);
- }
- 
+     fn tina4js_scaffold_uses_the_current_framework_release() {
+         let dir = std::env::temp_dir().join(format!("tina4_init_js_{}", std::process::id()));

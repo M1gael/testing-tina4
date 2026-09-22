@@ -1,121 +1,143 @@
-# Does `tina4 init` gitignore the file it writes the JWT secret into?
+# Does `tina4 init` gitignore the JWT secret file?
 
-**No.** On the released Rust CLI the Python scaffold's `.gitignore` does not list
-`.env.local`, which is exactly the file the framework mints the JWT signing secret into on
-first dev run. A fresh project therefore stages and can commit its own signing secret.
+**No — in none of the four backend languages.** The scaffolded `.gitignore` covers `.env`
+but not `.env.local`, and `.env.local` is the file every Tina4 framework writes its
+auto-minted JWT signing secret into. `git add -A` stages it without a word.
 
-Ledger: `f-cli-01` (was `CLI-FW-13`). Measured **2026-09-21**.
+Pinned: Rust CLI `tina4` `origin/main` @ `2bb1418` = **v3.8.88**. Frameworks read at
+`origin/v3`: tina4-python `76fee07`, tina4-php `e0df3a97`, tina4-ruby `17b7b20`,
+tina4-nodejs `d89998c`. Linux, git 2.55, `core.excludesFile` neutralised in every
+measurement. Runtimes present: Python 3.14.7, PHP 8.4.25, Ruby 3.4.10, Node 22.22.2.
 
-- **tina4 CLI (Rust):** `origin/main` @ `2bb1418`, `version = "3.8.88"` (`~/gitdir/tinaforks/tina4`).
-- **tina4-python:** branch `v3`, current (`~/gitdir/tinaforks/tina4-python`).
+> **This supersedes an earlier, narrower write-up.** The first pass fixed python only and
+> also added unanchored `sessions/` and `*.db` lines that swallowed real source. Both
+> errors are documented below, with the run that caught them. The independent
+> verification that found them is preserved untouched in `verify/measurements.txt`.
 
-The `.gitignore` is emitted by the **Rust CLI**, not by the Python package — so the guarantee
-the Python source documents is not the guarantee the scaffolded user receives.
+## The defect
 
----
+On its first dev run each framework mints a random signing secret and persists it so it
+survives a restart. All four write it to `.env.local` in the project root:
 
-## Mechanism (to file:line)
+| Framework | Writes the secret at | Reads |
+|---|---|---|
+| tina4-python | `tina4_python/auth/__init__.py:101` `ensure_dev_secret()` | `:44,57` |
+| tina4-php | `Tina4/Auth.php:148` | via `App.php:252-262` |
+| tina4-ruby | `lib/tina4/auth.rb:100` | `:109` |
+| tina4-nodejs | `packages/core/src/auth.ts:108,117` `appendFileSync` | — |
 
-1. **The scaffold writes an incomplete ignore file.** `tina4 init python <name>` calls
-   `scaffold_python()` (`tina4/src/init.rs:599`), which writes a fixed `.gitignore` literal at
-   **`src/init.rs:626-630`**:
+Every one of them calls the file "gitignored" in its own docs. It is gitignored **in the
+framework's own repository**. It is not gitignored in a project the CLI scaffolds, because
+the template that project gets is written by the Rust CLI:
 
-   ```
-   .venv/ __pycache__/ *.pyc *.pyo data/ logs/ secrets/ .env
-   ```
+| Language | `src/init.rs` | Template as shipped |
+|---|---|---|
+| python | `:626` | `.venv/ __pycache__/ *.pyc *.pyo data/ logs/ secrets/ .env` |
+| php | `:694` | `vendor/ data/ logs/ cache/ secrets/ .env` |
+| ruby | `:815` | `.bundle/ vendor/ data/ logs/ .env Gemfile.lock` |
+| nodejs | `:847` | `node_modules/ dist/ data/ logs/ .env` |
 
-   No `.env.local`. (READ + RUN — string read in source, and emitted verbatim by the built
-   3.8.88 binary; see before/after below.)
+`.env` does not cover `.env.local` — different filename, no pattern relates them. Measured,
+not assumed: `.env` returns rc 0 and `.env.local` rc 1 from the same `git check-ignore`
+invocation, which is also what proves the instrument can emit both values.
 
-2. **The framework then writes the secret into `.env.local`.** On first dev run
-   `ensure_dev_secret()` (`tina4-python/tina4_python/auth/__init__.py:101`) mints a random
-   `TINA4_SECRET` and persists it to `.env.local`; `Auth()` reads `TINA4_SECRET` from the
-   environment to sign JWTs (`auth/__init__.py:44,57`). The framework asserts three times that
-   this is safe *because the file is gitignored* — `auth/__init__.py:95` ("automatically into
-   .env.local (gitignored)"), `:107`, `:117` ("only ever write to `.env.local` (gitignored) —
-   never `.env`"). (READ, current `v3`.)
+tina4-php's `CLAUDE.md:528` states that "the scaffolded project's `.gitignore` exclude[s]
+`.env.local`". That sentence is false against `src/init.rs:694`.
 
-3. **`.env` does not cover `.env.local`.** A gitignore line `.env` matches only the path
-   component `.env`, never `.env.local` — confirmed by `git check-ignore` (RUN), not by eye.
+Dispatch is `src/init.rs:588-596`; the writer is `write_file` at `:1434`.
 
-4. **The two scaffold templates disagree and the wrong one ships.** The Python package's own
-   template is already correct — `tina4-python/tina4_python/cli/__init__.py:658-663` writes
-   `.env\n.env.local\n__pycache__/\n*.pyc\n.venv/\ndata/\nlogs/\nsessions/\nsecrets/\n*.db\n`
-   (has `.env.local`, plus `sessions/` and `*.db` the CLI omits) — but `tina4 init` uses the
-   Rust template, which is missing all three. (READ, current `v3`.)
+## Reproduction — stock, real binary, populated project
 
-Note: the CLI writes `.gitignore` only when absent, so a project scaffolded once keeps the
-unsafe file permanently.
+`./prove.sh`. It builds both trees, scaffolds a real project per language, drops a
+realistic `.env.local`, and measures. rc 0 = ignored, rc 1 = not.
 
----
-
-## Before / after (real binaries, `git check-ignore`; rc 0 = ignored, rc 1 = NOT ignored)
-
-Both runs: `tina4 init python probe`, then in the project a real `.env.local` (fake 64-hex
-secret), a user-authored `.env.example`, an `app.db`, and `sessions/sess1` were created and
-tested against the generated `.gitignore`.
-
-| file | STOCK 3.8.88 | FIXED | meaning |
-|---|---|---|---|
-| `.env.local` (the secret) | **rc 1 — staged** | rc 0 — ignored | the leak, closed |
-| `.env` | rc 0 | rc 0 | unchanged |
-| `.env.example` (want tracked) | rc 1 | **rc 1** | not over-ignored |
-| `app.py` (source) | rc 1 | rc 1 | not over-ignored |
-| `app.db` | rc 1 | rc 0 | bonus gap closed |
-| `sessions/sess1` | rc 1 | rc 0 | bonus gap closed |
-
-STOCK `git add -An` staged `.env.local` (secret committed). FIXED did **not** stage
-`.env.local`, and still staged `.env.example`, `app.py`, `pyproject.toml`.
-
----
-
-## The fix (`fix.patch`, uncommitted in `~/.cache/tina4-worktrees/fcli01-fixed`)
-
-`tina4/src/init.rs:626` — reconcile the Python scaffold template with the Python package's:
+Stock (`2bb1418`, binary md5 `2907750cfbf944c9`) — identical in all four:
 
 ```
--        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsecrets/\n.env\n",
-+        ".venv/\n__pycache__/\n*.pyc\n*.pyo\ndata/\nlogs/\nsessions/\nsecrets/\n*.db\n.env\n.env.local\n",
+.env                        rc=0  .gitignore:8:.env
+.env.local                  rc=1
+>>> .env.local STAGED by git add -A: 1      <- the secret is committable
 ```
 
-Plus two regression guards:
-- `src/init.rs` unit test `python_scaffold_gitignores_the_secret_file` — calls the real
-  `scaffold_project("python", …)` and asserts the written `.gitignore` lists `.env.local`.
-  Runs in normal CI (no network). **RED on stock (`rc 101`), GREEN on fixed.**
-- `tests/scaffold.rs` — the existing gated `init_python_scaffolds_runnable_project` now also
-  asserts the generated `.gitignore` covers `.env.local` (end-to-end, `--ignored`).
+Fixed (md5 `0e2dce39864e521c`) — identical in all four:
 
-`cargo test --bin tina4`: **222 passed, 0 failed** (stock had 221; +1 is the new guard).
+```
+.env.local                  rc=0  .gitignore:9:.env.local
+>>> .env.local STAGED by git add -A: 0
+.env.example                rc=1        (still tracked)
+src/routes/sessions/get.py  rc=1        (still tracked)
+src/orm/sessions/model.py   rc=1        (still tracked)
+tests/fixtures/seed.db      rc=1        (still tracked)
+```
 
----
+## What the fix changes, and what it does not
 
-## Attacked
+One line added to each of the four backend templates: `.env.local`. Nothing else.
 
-- **Over-ignore?** `.env.local` matches only that exact file; `.env.example` and `app.py`
-  remain tracked on the fixed scaffold (RUN, table above). `sessions/` / `*.db` are dirs and a
-  db-suffix — they do not hide any file the template's own project needs tracked.
-- **Already fixed upstream?** No — reproduced on `origin/main` @ `2bb1418` (3.8.88), the
-  current tip (RUN).
-- **Does `.env` already cover it?** No — `git check-ignore .env.local` is rc 1 under the stock
-  template while `.env` itself is rc 0 (RUN).
-- **Does the secret really land in `.env.local`?** Yes on the Python path — documented and
-  coded at `auth/__init__.py:101/117` (READ). Other ports (php/ruby/node) also omit `.env.local`
-  from their templates, but whether their frameworks auto-mint into `.env.local` was **not**
-  verified here — out of scope for `f-cli-01` (py-only). Flagged, not fixed.
+It deliberately does **not** add `sessions/` or `*.db`. The superseded patch added both to
+"match the tina4-python template", and a run of a binary built from it shows what that
+costs — these are real measurements from that tree, not a prediction:
 
-## Sufficient?
+```
+src/routes/sessions/get.py   rc=0  <- .gitignore:7:sessions/
+src/orm/sessions/model.py    rc=0  <- .gitignore:7:sessions/
+docs/sessions/readme.md      rc=0  <- .gitignore:7:sessions/
+tests/fixtures/seed.db       rc=0  <- .gitignore:9:*.db
+```
 
-Closes the leak for **newly** scaffolded Python projects. **Residual paths (not closed by a
-template edit):**
-1. Projects scaffolded before the fix keep the unsafe `.gitignore` (CLI writes it only if
-   absent). The ledger's suggested belt-and-braces — have `ensure_dev_secret()` refuse/warn
-   when the target's ignore rules don't actually cover `.env.local` — is the only thing that
-   protects an already-scaffolded repo; it lives in tina4-python, not this patch.
-2. php/ruby/node templates share the omission (see Attacked) — separate finding if their
-   frameworks turn out to write a secret there.
+`src/routes/` and `src/orm/` are directories the scaffolder itself creates
+(`src/init.rs:557-568`) and are where a Tina4 project's code lives under file-based
+routing. A route group called `sessions` is an ordinary thing to write, and `git add -A`
+warns about none of it. `sessions/` is not even load-bearing: the session store defaults
+to `data/sessions` (`tina4_python/session/__init__.py:104`) and `data/` was already in the
+stock template. A control run — stock template plus `.env.local` alone — closes the leak
+with none of these collisions, so the extra lines were never necessary.
 
-## Reproduce
+`tina4js` is left alone: it writes no `.env`, mints no secret, and its scaffold is
+`node_modules/ dist/ *.tsbuildinfo` (run).
 
-`./prove.sh` — reproduces stock (leak) and fixed (safe) from the exact template bytes via
-`git check-ignore`, no build required, and prints a verdict. Set `TINA4_BIN=/path/to/tina4`
-to additionally drive a real binary end-to-end.
+## How the guard was established
+
+`scaffold_gitignores_the_dev_secret_file` in `src/init.rs`, beside the existing
+`scaffold_binds_a_default_sqlite_database`, which it mirrors. It calls `scaffold_project`
+— the real dispatcher — once per language and asserts two things: a sentinel line unique
+to that language's own template, and an exact `.env.local` line.
+
+Mutation-tested, each mutation applied to a canonical copy and reverted immediately after:
+
+| Mutation | Result |
+|---|---|
+| guard on stock templates (no template change) | **RED** |
+| revert python / php / ruby / nodejs template, one at a time | **RED** (4 of 4) |
+| reroute python / php / ruby / nodejs dispatch arm to another scaffold | **RED** (4 of 4) |
+| none (canonical fix) | GREEN |
+
+Suite: stock **221 passed**, fixed **222 passed**, 0 failed.
+
+The sentinel exists because of an attack that succeeded. The first version of the guard
+asserted only that a `.gitignore` containing `.env.local` had been written; rerouting the
+php dispatch arm to `scaffold_python` left it **green**, because python's template also
+satisfies that assertion. The guard was widened, not the fix.
+
+## Residual — stated, not implied
+
+- **An already-scaffolded project is never repaired.** `write_file` (`src/init.rs:1434-1443`)
+  returns early when the file exists, printing `⚠ .gitignore already exists, skipping`.
+  Run against a project with a pre-existing `.gitignore`: `.env.local` rc **1**, staged
+  **1**. A template edit cannot reach these projects; only a check on the framework side,
+  where the secret is written, can. That is a separate defect and has not been through a
+  reproduction of its own.
+- The npm-side node scaffolder (`packages/cli/src/commands/init.ts:112`) already writes
+  `.env.local` and is untouched here — the two node scaffolders disagree. **read**
+- Not visited: Windows path and case semantics, `.git/info/exclude`, CRLF templates, the
+  `tina4 setup` wrapper (`TINA4_INIT_NO_SERVE=1` was used), `cargo test -- --ignored`,
+  clippy. No framework was booted to watch `.env.local` appear — the minting is **read**
+  from each port's `origin/v3`, not observed at runtime.
+- `install_deps` is capped at 45s by the probe. Scaffolding completes before the cap, so
+  the `.gitignore` under test is complete; a partially-installed dependency tree is not.
+
+## Incidental, unpursued
+
+- The scaffolder binds `TINA4_DATABASE_URL=sqlite:///app.db` (`src/init.rs:585`), so a dev
+  database appears at the project root and no template ignores it. Not a secret, so it is
+  not folded into this fix — it is its own question.
