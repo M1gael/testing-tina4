@@ -1,75 +1,58 @@
 # known-issues
 
-**Not a project — the shared record.** Every project in `testing-tina4/` logs its confirmed
-findings *out* to here, and no project keeps a second list of its own. This is the one
-directory that more than one project writes into; that is deliberate, and it is the only
-exception to one-directory-per-project.
-
-**[`ledger.md`](ledger.md) is the only bug log in this repo.** Every confirmed problem
-in the Tina4 documentation and in framework code, across every language, one row each.
-**155 rows** as of 2026-09-21 (see the header of `ledger.md` for the live status mix — and for why the settled figure there over-counts by three).
+**The shared record, not a project.** Every project in `testing-tina4/` logs confirmed findings
+here; none keeps its own list.
 
 | File | What |
 |---|---|
-| [`ledger.md`](ledger.md) | The issue list. One row per bug or doc discrepancy. |
-| [`suggested-fixes.md`](suggested-fixes.md) | Long-form `FIX-NN` proposals. Not a second issue list — the ledger's `Fix` column points here (`→ FIX-NN`). |
+| [`ledger.md`](ledger.md) | The only issue list — one row per bug or doc discrepancy, schema at its top. |
+| [`ledger-check.py`](ledger-check.py) | Run after every ledger edit: `python3 known-issues/ledger-check.py --write`. |
+| [`suggested-fixes.md`](suggested-fixes.md) | Long `FIX-NN` proposals the ledger's `Fix` column points to. |
 
-**Not here:**
-
-- The proof that a row is real, and the fix built on it → [`scratch/`](../scratch/)
-- Chapter coverage → [`documentation-testing/coverage-ledger/`](../documentation-testing/coverage-ledger/)
-- Version-bump / retest history → [`documentation-testing/audit-log.md`](../documentation-testing/audit-log.md)
-- Work backlog → [`documentation-testing/outstanding-tasks.md`](../documentation-testing/outstanding-tasks.md)
-
-The `bug-hunting/`, `agent-testing/`, `codex/` and `comparison-testing/` directories were
-removed on 2026-08-19. Everything issue-shaped in them was migrated into `ledger.md` first,
-as self-contained rows carrying their own root cause, reproduction and suggested fix — so no
-row depends on a directory that no longer exists. Recover the originals from git history.
-
-A `PY-NN-NN` finding comes from walking a chapter. A `BH-<n>` row is an assigned hunt against an upstream `tina4-python` issue. Both are ledger rows. Never renumber a filed row.
+Not here: proofs and candidate fixes → [`scratch/`](../scratch/); chapter coverage →
+`documentation-testing/coverage-ledger/`; retest history → `documentation-testing/audit-log.md`;
+backlog → `documentation-testing/outstanding-tasks.md`.
 
 ## Adding a row
 
-Schema, column meanings, and the rules are at the top of [`ledger.md`](ledger.md). The two that
-get broken most often:
+1. **Reproduce first.** `Reproduce` is a command, not prose.
+2. **Version what you observed** — say if only the source was read.
+3. **`Port status` honestly.** Check every port; `clear` is a finding, `?` means nobody looked.
+4. **`Doc verified` per port**, only once that port is settled. A page fault the fix doesn't
+   address is a new `d-` row, never an edit.
+5. **`Status`, `Issue`, `Cause`, `Origin`** filled at creation — one line each; say if the report
+   came from Windows; `Not recorded.` beats a guess.
+6. **Never delete a row.**
 
-1. **Reproduce it before you write it.** How-to-reproduce is the command or the sequence, not
-   prose. Rows reading *not recorded* need one written the next time anyone touches them.
-2. **Version-stamp what you actually observed.** A found-version is not a reproduced-version.
-   If you only re-read the source, say so in the `Version` cell rather than implying a run.
-3. **Fill in `Port status` honestly.** Tina4 ships the same framework in six languages and the
-   ports are translated from one another, so a defect found in one usually travelled with the
-   translation. A row is not characterised until every port has been checked, and `clear` —
-   checked, defect absent — is a finding worth recording, not an omission. Write `?` when
-   nobody looked, and never write `clear` to make a row look finished.
-4. **Verify the documentation, per port, and say so.** A framework change is not finished
-   until the page documenting that behaviour has been read and compared against it — see the
-   rule in `gitdir/tinaforks/CLAUDE.md`. `Doc verified` has the same shape as `Port status`
-   because each language has its own page. A port's token stays `?` until that port's
-   `Port status` is settled; checking a page against code you are about to change measures
-   nothing. **A row is closed only when neither column has a `?` left.** `ok` and `silent` are
-   findings worth having; `stale` means a documentation PR is owed. Rows of kind
-   `documentation` are `n/a` throughout. If the check finds the page wrong in a way the fix
-   does not address, that is a **new row**, not an edit to the page.
+Before a fix, prove the row in `scratch/` — reproduced on released code, explained to
+`file:line`. Scratch is disposable; move anything that must survive into the row first.
 
-## Rows that become fixes
+## The ledger at every step — mandatory
 
-A row is a claim. Before anyone writes a fix for it, the claim gets proven in its own project
-under [`scratch/`](../scratch/) — reproduced on the released framework, explained down to the
-`file:line` that causes it, and only then used to demonstrate that a candidate fix closes it.
-That order is not bureaucracy: a fix built on a symptom rather than a mechanism is a guess, and
-three of the fixes on this ledger were blocked in review for exactly that reason.
+**Before a step:** read the row; re-check its PRs live (`gh pr view` — nothing tells us about a
+merge), the upstream tip, and whether the maintainer fixed it (`git log -S` / `--grep`). Fix the
+row if it is wrong.
 
-Note the proof project on the row, and keep the row the source of truth — `scratch/` is
-disposable and its projects are deleted once a fix is merged. Anything that must survive the
-project belongs in the row, self-contained, before the project goes.
+**After each step, update the row, dated, then run `ledger-check.py --write`:**
 
-There is no Status column — a row's state is whatever its ports say. A port reaches `filed#N`
-only when an issue or PR is actually open in *that port's* repository. A fix sitting on a local
-branch is `fixed`, and the Note must name the branch; that is a real state the old schema could
-not express, so branch work used to read as though nothing had been done.
+| Step | Row change |
+|---|---|
+| reproduced / checked absent on a port | `Port status` `affected`/`clear`, `Version`, `Reproduce` |
+| mechanism found | `Cause`; detail in the Note |
+| work picked up | `Status` (`Investigating`, `Fixing`, ...) |
+| fix written, gated, attacked | port `fixed`; Note: branch, commit, base commit |
+| all short of the PR done | `Status` `Ready`; Note per the ledger's `Ready` bar |
+| PR opened from the fork | `filed#N`, `Status` `Filed` |
+| CI finished and read (`statusCheckRollup`) | Note |
+| merged | `merged#N`, `Status` by what is still owed |
+| doc page read | that port's `Doc verified` |
+| scratch deleted | Note says so — only once the row stands alone |
 
-All ten Tina4 checkouts live in `gitdir/tinaforks/`, so a cross-port check needs no cloning —
-see that directory's `CLAUDE.md` for the layout and the fork-freshness rule. Keeping them in
-one directory is load-bearing: `sync-tina4-skills.sh` finds siblings relative to its own repo
-and silently compares nothing when they are split (`ALL-FW-05`).
+Can't update when it happens? Update before the next step. Why: on 2026-09-23 five merged PRs
+still read `filed` because rows were left for later.
+
+**`Ready` is where our fixes normally stop** until the user says PR. Uncommitted fixes go to
+`~/.cache/tina4-worktrees/<name>/fix.patch` — `gitdir/tinaforks/` is not backed up.
+
+All ten checkouts live in `gitdir/tinaforks/` (layout and fork-refresh rule in its `CLAUDE.md`);
+keep them together or `sync-tina4-skills.sh` silently compares nothing (`ALL-FW-05`).
