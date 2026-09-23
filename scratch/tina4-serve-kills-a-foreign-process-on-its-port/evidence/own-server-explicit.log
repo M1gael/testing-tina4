@@ -1,0 +1,7 @@
+⚠ Port 8944 in use — checking whether it is this project's dev server...
+✓ Port 8944 freed (stopped Tina4 dev server, PID 140113)
+✓ Detected python project
+▶ Starting tina4python on 0.0.0.0:8944
+✓ Server ready: http://localhost:8944
+👁 File watcher active (changes hot-reload in-process) — press Ctrl+C to stop
+✗ watcher started but watching ZERO directories — file changes won't fire

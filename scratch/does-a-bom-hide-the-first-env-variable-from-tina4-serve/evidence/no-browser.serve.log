@@ -1,0 +1,5 @@
+✓ Detected python project
+▶ Starting tina4python on 0.0.0.0:7146
+✓ Server ready: http://localhost:7146
+👁 File watcher active (changes hot-reload in-process) — press Ctrl+C to stop
+✗ watcher started but watching ZERO directories — file changes won't fire

@@ -1,0 +1,591 @@
+diff --git a/src/console.rs b/src/console.rs
+index 458a8b4..bb58a1d 100644
+--- a/src/console.rs
++++ b/src/console.rs
+@@ -123,56 +123,143 @@ pub fn find_available_port(start: u16, max_tries: u16) -> u16 {
+     start
+ }
+ 
+-/// Kill whatever process is listening on the given port.
+-/// Uses `lsof` on macOS/Linux. Returns true if a process was killed.
+-pub fn kill_port(port: u16) -> bool {
+-    // Check if port is actually in use
+-    if std::net::TcpListener::bind(("127.0.0.1", port)).is_ok() {
+-        return false; // Port is free, nothing to kill
++/// What `take_over_port` found on a busy port, and what it did about it.
++#[derive(Debug, PartialEq, Eq)]
++pub enum Takeover {
++    /// The holder was this project's own Tina4 dev server; it was stopped and
++    /// the port is free again.
++    Reclaimed(Vec<u32>),
++    /// The port is held by something that is not this project's Tina4 dev
++    /// server. Nothing was signalled.
++    Foreign(Vec<u32>),
++    /// The port is busy but its holder could not be identified or stopped.
++    Failed,
++}
++
++/// The per-port PID file a Tina4 dev server writes when it binds.
++///
++/// The same path every framework uses — `tina4_python/core/port_takeover.py`,
++/// `Tina4/PortTakeover.php`, `lib/tina4/cli.rb`, `packages/core/src/server.ts`
++/// — so a server started by any of them is recognised here.
++pub fn serve_pidfile(project_dir: &std::path::Path, port: u16) -> std::path::PathBuf {
++    project_dir.join("data").join(format!(".tina4-serve-{}.pid", port))
++}
++
++/// The PID recorded in a serve PID file, or None when absent or not a number.
++fn read_serve_pidfile(path: &std::path::Path) -> Option<u32> {
++    let text = std::fs::read_to_string(path).ok()?;
++    text.split_whitespace().next()?.parse().ok()
++}
++
++/// The holders that may be signalled: those whose PID is the one the dev server
++/// recorded. Everything else on the port is somebody else's.
++///
++/// PID 0 and 1 are never signalled whatever the file says — `kill(0, ..)`
++/// signals our own process group, and a garbage file must not be able to make
++/// `tina4 serve` stop itself — and neither is this process.
++fn tina4_holders(holders: &[u32], recorded: Option<u32>, me: u32) -> Vec<u32> {
++    match recorded {
++        Some(pid) if pid > 1 && pid != me => {
++            holders.iter().copied().filter(|h| *h == pid).collect()
++        }
++        _ => Vec::new(),
+     }
++}
+ 
++/// PIDs listening on `port`, as the platform reports them.
++fn port_listeners(port: u16) -> Vec<u32> {
+     #[cfg(unix)]
+     {
+-        // Find PID using lsof
+-        let output = std::process::Command::new("lsof")
+-            .args(["-ti", &format!("tcp:{}", port)])
+-            .output();
++        // LISTEN only: without it lsof also names every client connected to the
++        // port, and those were being killed along with the server.
++        std::process::Command::new("lsof")
++            .args(["-ti", &format!("tcp:{}", port), "-sTCP:LISTEN"])
++            .output()
++            .map(|o| parse_pids(&String::from_utf8_lossy(&o.stdout)))
++            .unwrap_or_default()
++    }
++    #[cfg(windows)]
++    {
++        std::process::Command::new("netstat")
++            .arg("-ano")
++            .output()
++            .map(|o| parse_netstat_listeners(&String::from_utf8_lossy(&o.stdout), port))
++            .unwrap_or_default()
++    }
++}
++
++/// Numeric tokens only, de-duplicated: a stray word never becomes PID 0.
++fn parse_pids(text: &str) -> Vec<u32> {
++    let mut pids = Vec::new();
++    for pid in text.split_whitespace().filter_map(|t| t.parse::<u32>().ok()) {
++        if !pids.contains(&pid) {
++            pids.push(pid);
++        }
++    }
++    pids
++}
+ 
+-        if let Ok(output) = output {
+-            let pids = String::from_utf8_lossy(&output.stdout);
+-            for pid_str in pids.trim().lines() {
+-                if let Ok(pid) = pid_str.trim().parse::<i32>() {
+-                    // Don't kill our own process
+-                    let our_pid = std::process::id() as i32;
+-                    if pid != our_pid {
+-                        unsafe {
+-                            libc::kill(pid, libc::SIGTERM);
+-                        }
+-                    }
++/// The owning PIDs of `LISTENING` rows in `netstat -ano` output whose local
++/// address ends in `:<port>`.
++#[cfg_attr(not(windows), allow(dead_code))]
++fn parse_netstat_listeners(text: &str, port: u16) -> Vec<u32> {
++    let suffix = format!(":{}", port);
++    let mut pids = Vec::new();
++    for line in text.lines() {
++        let cols: Vec<&str> = line.split_whitespace().collect();
++        // Proto, Local Address, Foreign Address, State, PID
++        if cols.len() == 5 && cols[0] == "TCP" && cols[1].ends_with(&suffix) && cols[3] == "LISTENING" {
++            if let Ok(pid) = cols[4].parse::<u32>() {
++                if !pids.contains(&pid) {
++                    pids.push(pid);
+                 }
+             }
+-            // Wait briefly for processes to exit
+-            std::thread::sleep(std::time::Duration::from_millis(500));
+-
+-            // Verify port is now free
+-            return std::net::TcpListener::bind(("127.0.0.1", port)).is_ok();
+         }
+     }
++    pids
++}
+ 
++fn stop_pid(pid: u32) {
++    #[cfg(unix)]
++    unsafe {
++        libc::kill(pid as i32, libc::SIGTERM);
++    }
+     #[cfg(windows)]
+     {
+-        // Windows: use netstat + taskkill
+-        let output = std::process::Command::new("cmd")
+-            .args(["/C", &format!("for /f \"tokens=5\" %a in ('netstat -aon ^| find \":{} \" ^| find \"LISTENING\"') do taskkill /F /PID %a", port)])
++        let _ = std::process::Command::new("taskkill")
++            .args(["/F", "/PID", &pid.to_string()])
+             .output();
+-
+-        if output.is_ok() {
+-            std::thread::sleep(std::time::Duration::from_millis(500));
+-            return std::net::TcpListener::bind(("127.0.0.1", port)).is_ok();
+-        }
+     }
++}
+ 
+-    false
++/// Reclaim a busy `port` only from this project's own Tina4 dev server.
++///
++/// This used to signal every PID on the port, with no check of what it was: an
++/// unrelated server, a database, a browser tab connected to it. The framework
++/// ports settled this already (TAKEOVER-DEC-01): a dev server writes
++/// `data/.tina4-serve-<port>.pid` when it binds, and only the process named
++/// there is taken over. Anything else is refused and left running — the worst
++/// case is that the developer frees the port by hand.
++pub fn take_over_port(port: u16, project_dir: &std::path::Path) -> Takeover {
++    let holders = port_listeners(port);
++    if holders.is_empty() {
++        return Takeover::Failed;
++    }
++    let pidfile = serve_pidfile(project_dir, port);
++    let ours = tina4_holders(&holders, read_serve_pidfile(&pidfile), std::process::id());
++    if ours.is_empty() {
++        return Takeover::Foreign(holders);
++    }
++    for pid in &ours {
++        stop_pid(*pid);
++    }
++    let _ = std::fs::remove_file(&pidfile);
++    std::thread::sleep(std::time::Duration::from_millis(500));
++    if std::net::TcpListener::bind(("127.0.0.1", port)).is_ok() {
++        Takeover::Reclaimed(ours)
++    } else {
++        Takeover::Failed
++    }
+ }
+ 
+ /// Open the default browser to the given URL. Cross-platform.
+@@ -218,3 +305,57 @@ pub fn php_vendor_bin(name: &str) -> String {
+         format!("vendor/bin/{}", name)
+     }
+ }
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn only_the_recorded_pid_is_ours() {
++        assert_eq!(tina4_holders(&[40, 41], Some(41), 7), vec![41]);
++    }
++
++    #[test]
++    fn a_holder_with_no_record_is_foreign() {
++        assert!(tina4_holders(&[40], None, 7).is_empty());
++    }
++
++    #[test]
++    fn a_record_naming_another_pid_makes_the_holder_foreign() {
++        assert!(tina4_holders(&[40], Some(999_999), 7).is_empty());
++    }
++
++    #[test]
++    fn a_garbage_record_never_names_our_group_init_or_ourselves() {
++        assert!(tina4_holders(&[0, 1, 7], Some(0), 7).is_empty());
++        assert!(tina4_holders(&[0, 1, 7], Some(1), 7).is_empty());
++        assert!(tina4_holders(&[0, 1, 7], Some(7), 7).is_empty());
++    }
++
++    #[test]
++    fn pid_tokens_are_numbers_only() {
++        assert_eq!(parse_pids("123\nabc\n123\n 456 \n"), vec![123, 456]);
++        assert!(parse_pids("lsof: WARNING").is_empty());
++    }
++
++    /// `netstat -ano` as Windows prints it: IPv4 and IPv6 rows, clients, UDP.
++    #[test]
++    fn netstat_rows_yield_listeners_on_the_port_only() {
++        let out = "\r\nActive Connections\r\n\r\n  Proto  Local Address          Foreign Address        State           PID\r\n  \
++                   TCP    0.0.0.0:7146           0.0.0.0:0              LISTENING       4120\r\n  \
++                   TCP    127.0.0.1:7146         127.0.0.1:51000        ESTABLISHED     4120\r\n  \
++                   TCP    127.0.0.1:51000        127.0.0.1:7146         ESTABLISHED     9001\r\n  \
++                   TCP    0.0.0.0:71460          0.0.0.0:0              LISTENING       5000\r\n  \
++                   TCP    [::]:7146              [::]:0                 LISTENING       4120\r\n  \
++                   UDP    0.0.0.0:7146           *:*                                    6000\r\n";
++        assert_eq!(parse_netstat_listeners(out, 7146), vec![4120]);
++    }
++
++    #[test]
++    fn the_pidfile_is_where_the_frameworks_write_it() {
++        assert_eq!(
++            serve_pidfile(std::path::Path::new("/p"), 7146),
++            std::path::Path::new("/p/data/.tina4-serve-7146.pid")
++        );
++    }
++}
+diff --git a/src/main.rs b/src/main.rs
+index d16c41c..9a42e1c 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -640,57 +640,13 @@ pub fn handle_serve(port: Option<u16>, host: &str, force_dev: bool, force_produc
+             .unwrap_or_else(|| info.default_port())
+     });
+ 
+-    // If --port was explicitly provided, kill whatever is on that port.
+-    // Otherwise, auto-increment to find a free port.
+-    let explicit_port = port.is_some();
+-    let port = if explicit_port {
+-        if std::net::TcpListener::bind(("127.0.0.1", requested_port)).is_err() {
+-            println!(
+-                "{} Port {} in use — killing existing process...",
+-                icon_warn().yellow(),
+-                requested_port.to_string().cyan()
+-            );
+-            if console::kill_port(requested_port) {
+-                println!(
+-                    "{} Port {} freed",
+-                    icon_ok().green(),
+-                    requested_port.to_string().cyan()
+-                );
+-            } else {
+-                eprintln!(
+-                    "{} Could not free port {} — process may require manual termination",
+-                    icon_fail().red(),
+-                    requested_port
+-                );
+-                std::process::exit(1);
+-            }
+-        }
+-        requested_port
+-    } else {
+-        // Default port: kill whatever is on it and take it over
+-        if std::net::TcpListener::bind(("127.0.0.1", requested_port)).is_err() {
+-            println!(
+-                "{} Port {} in use — killing existing process...",
+-                icon_warn().yellow(),
+-                requested_port.to_string().cyan()
+-            );
+-            if console::kill_port(requested_port) {
+-                println!(
+-                    "{} Port {} freed",
+-                    icon_ok().green(),
+-                    requested_port.to_string().cyan()
+-                );
+-            } else {
+-                eprintln!(
+-                    "{} Could not free port {} — process may require manual termination",
+-                    icon_fail().red(),
+-                    requested_port
+-                );
+-                std::process::exit(1);
+-            }
+-        }
+-        requested_port
+-    };
++    // A busy port, whether from --port or the default, is taken over only from
++    // this project's own Tina4 dev server. Anything else holding it is left
++    // running and serve stops, rather than killing it.
++    if std::net::TcpListener::bind(("127.0.0.1", requested_port)).is_err() {
++        take_over_port_or_exit(requested_port);
++    }
++    let port = requested_port;
+ 
+     println!(
+         "{} Detected {} project",
+@@ -967,6 +923,44 @@ enum ExitCause {
+     WaitError(std::io::Error),
+ }
+ 
++/// Free a busy port for `tina4 serve`, or say why not and exit.
++fn take_over_port_or_exit(port: u16) {
++    println!(
++        "{} Port {} in use — checking whether it is this project's dev server...",
++        icon_warn().yellow(),
++        port.to_string().cyan()
++    );
++    match console::take_over_port(port, std::path::Path::new(".")) {
++        console::Takeover::Reclaimed(pids) => println!(
++            "{} Port {} freed (stopped Tina4 dev server, PID {})",
++            icon_ok().green(),
++            port.to_string().cyan(),
++            join_pids(&pids)
++        ),
++        console::Takeover::Foreign(pids) => {
++            eprintln!(
++                "{} Port {} is held by PID {}, which is not this project's Tina4 dev server — it was left running.\n  Stop it yourself, or pick another port: tina4 serve --port <port>",
++                icon_fail().red(),
++                port,
++                join_pids(&pids)
++            );
++            std::process::exit(1);
++        }
++        console::Takeover::Failed => {
++            eprintln!(
++                "{} Could not free port {} — process may require manual termination",
++                icon_fail().red(),
++                port
++            );
++            std::process::exit(1);
++        }
++    }
++}
++
++fn join_pids(pids: &[u32]) -> String {
++    pids.iter().map(|p| p.to_string()).collect::<Vec<_>>().join(", ")
++}
++
+ /// Read a boolean-valued variable from the given `.env` file.
+ /// Returns true for values `true` / `1` / `yes` (case-insensitive), false otherwise.
+ /// Pure function of the path and contents — easy to test.
+diff --git a/tests/serve_port_takeover.rs b/tests/serve_port_takeover.rs
+new file mode 100644
+index 0000000..d25ce17
+--- /dev/null
++++ b/tests/serve_port_takeover.rs
+@@ -0,0 +1,230 @@
++//! `tina4 serve` must take a busy port over only from this project's own Tina4
++//! dev server, never from whatever else happens to hold it.
++//!
++//! On 3.8.88 serve signalled every PID `lsof` listed for the port — an
++//! unrelated `python3 -m http.server`, and even a client merely connected to
++//! it. The framework ports already identify their own server by the PID file it
++//! writes when it binds, `data/.tina4-serve-<port>.pid` (TAKEOVER-DEC-01); these
++//! drive the shipped binary to check the CLI now makes the same call.
++
++#![cfg(unix)]
++
++use std::fs;
++use std::os::unix::fs::PermissionsExt;
++use std::path::{Path, PathBuf};
++use std::process::{Child, Command, Stdio};
++use std::time::{Duration, Instant};
++
++fn temp_dir(tag: &str) -> PathBuf {
++    let dir = std::env::temp_dir().join(format!(
++        "tina4-takeover-{}-{}-{:?}",
++        tag,
++        std::process::id(),
++        std::thread::current().id()
++    ));
++    let _ = fs::remove_dir_all(&dir);
++    fs::create_dir_all(&dir).expect("create temp dir");
++    dir
++}
++
++fn free_port() -> u16 {
++    std::net::TcpListener::bind(("127.0.0.1", 0))
++        .unwrap()
++        .local_addr()
++        .unwrap()
++        .port()
++}
++
++/// A separate process listening on `port`, so a wrong kill is observable and
++/// cannot take the test harness down with it.
++fn holder(port: u16) -> Option<Child> {
++    let python = ["python3", "python"]
++        .into_iter()
++        .find(|p| Command::new(p).arg("-V").output().is_ok())?;
++    let child = Command::new(python)
++        .args([
++            "-c",
++            &format!(
++                "import socket,time\ns=socket.socket()\ns.bind(('127.0.0.1',{}))\ns.listen()\ntime.sleep(60)",
++                port
++            ),
++        ])
++        .stdout(Stdio::null())
++        .stderr(Stdio::null())
++        .spawn()
++        .ok()?;
++    let deadline = Instant::now() + Duration::from_secs(10);
++    while std::net::TcpListener::bind(("127.0.0.1", port)).is_ok() {
++        assert!(Instant::now() < deadline, "the holder never bound {}", port);
++        std::thread::sleep(Duration::from_millis(50));
++    }
++    Some(child)
++}
++
++fn alive(child: &mut Child) -> bool {
++    matches!(child.try_wait(), Ok(None))
++}
++
++/// A Python project whose "server" is a stub that records it was started and
++/// exits, so serve returns once it gets past the port.
++fn project(dir: &Path, env_file: Option<&str>) -> PathBuf {
++    fs::write(dir.join("requirements.txt"), "tina4_python\n").unwrap();
++    fs::write(dir.join("app.py"), "").unwrap();
++    if let Some(contents) = env_file {
++        fs::write(dir.join(".env"), contents).unwrap();
++    }
++    let bin = dir.join("stub-bin");
++    fs::create_dir_all(&bin).unwrap();
++    let stub = bin.join("python3");
++    let marker = dir.join("started");
++    fs::write(&stub, format!("#!/bin/sh\ntouch '{}'\nexit 0\n", marker.display())).unwrap();
++    fs::set_permissions(&stub, fs::Permissions::from_mode(0o755)).unwrap();
++    marker
++}
++
++fn serve(dir: &Path, args: &[&str]) -> (i32, String) {
++    let mut child = Command::new(env!("CARGO_BIN_EXE_tina4"))
++        .arg("serve")
++        .args(args)
++        .current_dir(dir)
++        .env_clear()
++        .env("PATH", format!("{}:/usr/bin:/bin", dir.join("stub-bin").display()))
++        .env("HOME", dir)
++        .env("TINA4_NO_BROWSER", "true")
++        .stdout(Stdio::piped())
++        .stderr(Stdio::piped())
++        .spawn()
++        .expect("spawn tina4 serve");
++    // A blown cap is a named failure, never a wedged run.
++    let deadline = Instant::now() + Duration::from_secs(30);
++    loop {
++        if let Ok(Some(_)) = child.try_wait() {
++            break;
++        }
++        if Instant::now() > deadline {
++            let _ = child.kill();
++            break;
++        }
++        std::thread::sleep(Duration::from_millis(100));
++    }
++    let out = child.wait_with_output().unwrap();
++    let text = String::from_utf8_lossy(&out.stdout).to_string()
++        + &String::from_utf8_lossy(&out.stderr);
++    (out.status.code().unwrap_or(-1), text)
++}
++
++#[test]
++fn a_foreign_holder_of_an_explicit_port_is_left_running() {
++    let dir = temp_dir("foreign-explicit");
++    let port = free_port();
++    let Some(mut other) = holder(port) else {
++        eprintln!("skipped: no python to hold the port");
++        return;
++    };
++    let started = project(&dir, None);
++
++    let (code, text) = serve(&dir, &["--port", &port.to_string()]);
++
++    assert!(alive(&mut other), "serve killed a process that is not Tina4's:\n{}", text);
++    assert_ne!(code, 0, "a refused port must be visible to the caller:\n{}", text);
++    assert!(text.contains(&other.id().to_string()), "name the holder:\n{}", text);
++    assert!(!started.exists(), "serve started anyway on a port it does not have");
++    let _ = other.kill();
++    let _ = fs::remove_dir_all(&dir);
++}
++
++#[test]
++fn a_foreign_holder_of_the_default_port_is_left_running() {
++    let dir = temp_dir("foreign-default");
++    let port = free_port();
++    let Some(mut other) = holder(port) else {
++        eprintln!("skipped: no python to hold the port");
++        return;
++    };
++    project(&dir, Some(&format!("TINA4_PORT={}\n", port)));
++
++    let (code, text) = serve(&dir, &[]);
++
++    assert!(alive(&mut other), "serve killed a process that is not Tina4's:\n{}", text);
++    assert_ne!(code, 0, "{}", text);
++    let _ = other.kill();
++    let _ = fs::remove_dir_all(&dir);
++}
++
++/// A record left by a crashed server names some other PID: still not ours.
++#[test]
++fn a_pid_file_naming_another_process_does_not_make_the_holder_ours() {
++    let dir = temp_dir("stale-record");
++    let port = free_port();
++    let Some(mut other) = holder(port) else {
++        eprintln!("skipped: no python to hold the port");
++        return;
++    };
++    project(&dir, None);
++    fs::create_dir_all(dir.join("data")).unwrap();
++    fs::write(dir.join("data").join(format!(".tina4-serve-{}.pid", port)), "999999\n").unwrap();
++
++    let (_, text) = serve(&dir, &["--port", &port.to_string()]);
++
++    assert!(alive(&mut other), "a stale record must not license a kill:\n{}", text);
++    let _ = other.kill();
++    let _ = fs::remove_dir_all(&dir);
++}
++
++/// The convenience the takeover exists for must survive: this project's own
++/// dev server, identified by its PID file, is still reclaimed.
++#[test]
++fn this_projects_own_dev_server_is_still_reclaimed() {
++    let dir = temp_dir("own");
++    let port = free_port();
++    let Some(mut ours) = holder(port) else {
++        eprintln!("skipped: no python to hold the port");
++        return;
++    };
++    let started = project(&dir, None);
++    fs::create_dir_all(dir.join("data")).unwrap();
++    let pidfile = dir.join("data").join(format!(".tina4-serve-{}.pid", port));
++    fs::write(&pidfile, format!("{}\n", ours.id())).unwrap();
++
++    let (_, text) = serve(&dir, &["--port", &port.to_string()]);
++
++    let deadline = Instant::now() + Duration::from_secs(5);
++    while alive(&mut ours) && Instant::now() < deadline {
++        std::thread::sleep(Duration::from_millis(50));
++    }
++    assert!(!alive(&mut ours), "the project's own stale server was not reclaimed:\n{}", text);
++    assert!(started.exists(), "serve did not go on to start the server:\n{}", text);
++    assert!(!pidfile.exists(), "the reclaimed server's record was left behind");
++    let _ = fs::remove_dir_all(&dir);
++}
++
++/// A client connected to the port is not its holder. `lsof` without a LISTEN
++/// filter names both, and 3.8.88 killed both; the refusal must name only the
++/// listener. The client here is this test process itself.
++#[test]
++fn a_connected_client_is_not_named_as_the_holder() {
++    let dir = temp_dir("client");
++    let port = free_port();
++    let Some(mut other) = holder(port) else {
++        eprintln!("skipped: no python to hold the port");
++        return;
++    };
++    let _conn = std::net::TcpStream::connect(("127.0.0.1", port)).expect("connect to holder");
++    project(&dir, None);
++
++    let (_, text) = serve(&dir, &["--port", &port.to_string()]);
++
++    let me = std::process::id().to_string();
++    let named = text
++        .lines()
++        .find(|l| l.contains("is held by PID"))
++        .unwrap_or_else(|| panic!("no refusal printed:\n{}", text));
++    assert!(named.contains(&other.id().to_string()), "{}", named);
++    assert!(
++        !named.split(|c: char| !c.is_ascii_digit()).any(|t| t == me),
++        "the connected client was named as a holder: {}",
++        named
++    );
++    let _ = other.kill();
++    let _ = fs::remove_dir_all(&dir);
++}

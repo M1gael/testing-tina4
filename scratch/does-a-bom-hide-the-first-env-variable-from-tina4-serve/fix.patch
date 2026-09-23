@@ -1,0 +1,263 @@
+diff --git a/src/env_config.rs b/src/env_config.rs
+index 89914d2..c336b51 100644
+--- a/src/env_config.rs
++++ b/src/env_config.rs
+@@ -284,6 +284,19 @@ fn interactive_features() -> Vec<Feature> {
+     ]
+ }
+ 
++/// The text of a `.env` file with a leading UTF-8 byte-order mark removed.
++///
++/// Windows PowerShell 5.1's `-Encoding utf8` writes one, as does any editor
++/// saving "UTF-8 with BOM", and `str::trim` does not strip it: U+FEFF is not
++/// Unicode whitespace. Every `.env` reader here splits lines
++/// and then keys on `=`, so the mark stayed glued to the FIRST key and that
++/// variable vanished — `tina4 serve` handed the framework `\u{feff}TINA4_CSP`
++/// instead of `TINA4_CSP`, with no warning. Every reader of a `.env` must go
++/// through this before it splits lines.
++pub(crate) fn strip_utf8_bom(contents: &str) -> &str {
++    contents.strip_prefix('\u{feff}').unwrap_or(contents)
++}
++
+ /// Strip at most one matching pair of wrapping quotes from a `.env` value.
+ ///
+ /// This replaces `trim().trim_matches('"').trim_matches('\'')`, the expression
+@@ -358,7 +371,7 @@ pub(crate) fn quote_env_value(value: &str) -> String {
+ fn read_env(path: &str) -> BTreeMap<String, String> {
+     let mut map = BTreeMap::new();
+     if let Ok(contents) = fs::read_to_string(path) {
+-        for line in contents.lines() {
++        for line in strip_utf8_bom(&contents).lines() {
+             let line = line.trim();
+             if line.is_empty() || line.starts_with('#') {
+                 continue;
+diff --git a/src/env_migrate.rs b/src/env_migrate.rs
+index f0101b5..d53c20b 100644
+--- a/src/env_migrate.rs
++++ b/src/env_migrate.rs
+@@ -95,7 +95,10 @@ pub fn run(yes: bool) {
+         }
+     };
+ 
+-    let plan = build_plan(&raw);
++    // The backup below keeps the file byte for byte; only the rewrite drops
++    // the mark, which would otherwise hide the first key from the plan.
++    let body = crate::env_config::strip_utf8_bom(&raw);
++    let plan = build_plan(body);
+     if plan.is_empty() {
+         println!(
+             "{} {} is already TINA4_* clean — no legacy keys found.",
+@@ -125,7 +128,7 @@ pub fn run(yes: bool) {
+         std::process::exit(1);
+     }
+ 
+-    let rewritten = apply_plan(&raw, &plan);
++    let rewritten = apply_plan(body, &plan);
+     if let Err(e) = fs::write(env_path, rewritten) {
+         eprintln!("{} could not write {}: {}", icon_warn().red(), env_path, e);
+         std::process::exit(1);
+diff --git a/src/main.rs b/src/main.rs
+index d16c41c..ddb066a 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -618,7 +618,7 @@ pub fn handle_serve(port: Option<u16>, host: &str, force_dev: bool, force_produc
+     let requested_port = port.unwrap_or_else(|| {
+         // Read .env file if it exists (don't override existing env vars)
+         if let Ok(contents) = std::fs::read_to_string(".env") {
+-            for line in contents.lines() {
++            for line in env_config::strip_utf8_bom(&contents).lines() {
+                 let line = line.trim();
+                 if line.is_empty() || line.starts_with('#') {
+                     continue;
+@@ -975,7 +975,7 @@ fn read_dotenv_bool_from<P: AsRef<std::path::Path>>(path: P, key: &str) -> bool
+         Ok(c) => c,
+         Err(_) => return false,
+     };
+-    for line in contents.lines() {
++    for line in env_config::strip_utf8_bom(&contents).lines() {
+         let line = line.trim();
+         if line.is_empty() || line.starts_with('#') {
+             continue;
+@@ -2936,6 +2936,15 @@ mod tests {
+         });
+     }
+ 
++    /// A `.env` saved as "UTF-8 with BOM" starts with the mark. Unstripped, it
++    /// glues onto the first key and `TINA4_NO_BROWSER=true` stops counting.
++    #[test]
++    fn dotenv_bool_reads_the_first_key_after_a_byte_order_mark() {
++        with_env_file("bom", "\u{feff}TINA4_NO_BROWSER=true\n", |p| {
++            assert!(read_dotenv_bool_from(p, "TINA4_NO_BROWSER"));
++        });
++    }
++
+     #[test]
+     fn installed_skills_refreshes_only_existing_targets() {
+         let root = std::env::temp_dir().join(format!(
+diff --git a/tests/env_dotenv_bom.rs b/tests/env_dotenv_bom.rs
+new file mode 100644
+index 0000000..7d08a82
+--- /dev/null
++++ b/tests/env_dotenv_bom.rs
+@@ -0,0 +1,161 @@
++//! A `.env` that starts with a UTF-8 byte-order mark must read like one that
++//! does not, through every entry point that reads it.
++//!
++//! Windows PowerShell 5.1's `-Encoding utf8` writes the mark, as does any editor
++//! saving "UTF-8 with BOM". On 3.8.88 it stayed glued to the first key, because
++//! `str::trim` does not strip U+FEFF:
++//!
++//!   * `tina4 serve` exported `\u{feff}FIRST_KEY`, so the framework never saw
++//!     `FIRST_KEY` at all — silently, every other variable intact;
++//!   * `tina4 env --sync` wrote the glued key back below the others, moving the
++//!     mark into the middle of the file where no parser strips it;
++//!   * `tina4 env --migrate` could not see a legacy first key to rename it.
++//!
++//! These drive the shipped binary: the defect was in what the entry points did
++//! with the file, not in any one helper.
++
++use std::fs;
++use std::path::{Path, PathBuf};
++use std::process::Command;
++use std::time::{Duration, Instant};
++
++const BOM: &str = "\u{feff}";
++
++fn temp_dir(tag: &str) -> PathBuf {
++    let dir = std::env::temp_dir().join(format!(
++        "tina4-dotenv-bom-{}-{}-{:?}",
++        tag,
++        std::process::id(),
++        std::thread::current().id()
++    ));
++    let _ = fs::remove_dir_all(&dir);
++    fs::create_dir_all(&dir).expect("create temp dir");
++    dir
++}
++
++/// Every key in a `.env`, read WITHOUT the CLI's parser and without stripping
++/// anything a real consumer would not strip — a mark mid-file stays in its key.
++fn keys_in(path: &Path) -> Vec<String> {
++    let contents = fs::read_to_string(path).expect("read .env");
++    let contents = contents.strip_prefix(BOM).unwrap_or(&contents);
++    contents
++        .lines()
++        .filter_map(|l| l.split_once('=').map(|(k, _)| k.trim().to_string()))
++        .collect()
++}
++
++fn run_tina4(dir: &Path, args: &[&str]) -> std::process::Output {
++    Command::new(env!("CARGO_BIN_EXE_tina4"))
++        .args(args)
++        .current_dir(dir)
++        .env("HOME", dir)
++        .output()
++        .expect("run tina4")
++}
++
++#[test]
++fn env_sync_keeps_the_first_key_and_does_not_move_the_mark() {
++    let dir = temp_dir("sync");
++    let env_path = dir.join(".env");
++    fs::write(&env_path, format!("{}FIRST_KEY=first\nSECOND_KEY=second\n", BOM)).unwrap();
++
++    let out = run_tina4(&dir, &["env", "--sync"]);
++    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
++
++    let written = fs::read_to_string(&env_path).unwrap();
++    let body = written.strip_prefix(BOM).unwrap_or(&written);
++    assert!(
++        !body.contains(BOM),
++        "--sync moved the byte-order mark into the file:\n{:?}",
++        written
++    );
++    let keys = keys_in(&env_path);
++    assert!(keys.iter().any(|k| k == "FIRST_KEY"), "FIRST_KEY lost: {:?}", keys);
++
++    let _ = fs::remove_dir_all(&dir);
++}
++
++#[test]
++fn env_migrate_renames_a_legacy_first_key_and_backs_up_byte_for_byte() {
++    let dir = temp_dir("migrate");
++    let env_path = dir.join(".env");
++    let original = format!("{}DATABASE_URL=sqlite:///x.db\nSECRET=s\n", BOM);
++    fs::write(&env_path, &original).unwrap();
++
++    let out = run_tina4(&dir, &["env", "--migrate", "--yes"]);
++    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
++
++    let keys = keys_in(&env_path);
++    assert!(
++        keys.iter().any(|k| k == "TINA4_DATABASE_URL"),
++        "the first key was not migrated: {:?}",
++        keys
++    );
++    assert!(keys.iter().any(|k| k == "TINA4_SECRET"), "{:?}", keys);
++    assert_eq!(
++        fs::read_to_string(dir.join(".env.bak")).unwrap(),
++        original,
++        "the backup must be the file as it was, mark included"
++    );
++
++    let _ = fs::remove_dir_all(&dir);
++}
++
++/// The language server inherits the CLI's environment; a stand-in dumps it.
++#[cfg(unix)]
++#[test]
++fn serve_exports_the_first_key_of_a_bom_env() {
++    use std::os::unix::fs::PermissionsExt;
++
++    let dir = temp_dir("serve");
++    let dump = dir.join("dump.txt");
++    let bin_dir = dir.join("stub-bin");
++    fs::create_dir_all(&bin_dir).unwrap();
++
++    // `tina4 serve` on a Python project runs `python3 app.py --managed`.
++    fs::write(dir.join("requirements.txt"), "tina4_python\n").unwrap();
++    fs::write(dir.join("app.py"), "").unwrap();
++    fs::write(
++        dir.join(".env"),
++        format!("{}FIRST_KEY=first\nSECOND_KEY=second\nTINA4_PORT=8923\n", BOM),
++    )
++    .unwrap();
++    let stub = bin_dir.join("python3");
++    fs::write(&stub, format!("#!/bin/sh\nenv > '{}'\nexit 0\n", dump.display())).unwrap();
++    fs::set_permissions(&stub, fs::Permissions::from_mode(0o755)).unwrap();
++
++    let mut child = Command::new(env!("CARGO_BIN_EXE_tina4"))
++        .arg("serve")
++        .current_dir(&dir)
++        .env_clear()
++        .env("PATH", format!("{}:/usr/bin:/bin", bin_dir.display()))
++        .env("HOME", &dir)
++        .env("TINA4_NO_BROWSER", "true")
++        .stdout(std::process::Stdio::null())
++        .stderr(std::process::Stdio::null())
++        .spawn()
++        .expect("spawn tina4 serve");
++
++    // A blown cap is a named failure, never a wedged run.
++    let deadline = Instant::now() + Duration::from_secs(30);
++    while !dump.exists() && Instant::now() < deadline {
++        std::thread::sleep(Duration::from_millis(100));
++    }
++    let _ = child.kill();
++    let _ = child.wait();
++    assert!(dump.exists(), "the stand-in server never started within 30s");
++
++    let dumped = fs::read_to_string(&dump).unwrap();
++    assert!(
++        dumped.lines().any(|l| l == "FIRST_KEY=first"),
++        "FIRST_KEY never reached the server:\n{}",
++        dumped
++    );
++    assert!(
++        !dumped.contains(BOM),
++        "a key reached the server with the mark glued on:\n{}",
++        dumped
++    );
++
++    let _ = fs::remove_dir_all(&dir);
++}

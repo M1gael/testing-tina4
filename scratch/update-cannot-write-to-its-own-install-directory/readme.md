@@ -9,6 +9,9 @@ case B performs a real update.
 writing is 3.8.86, so the download path runs rather than short-circuiting on
 "already up to date". Source read at `origin/main` `9993bc0`.
 
+**Run it hermetically:** `env -i HOME=$(mktemp -d) PATH=/usr/bin:/bin sh prove.sh ...`. `tina4 update`
+first runs `clean_v2_binaries` against `PATH` and can delete a real `tina4python` (`f-cli-19`).
+
 ## What was reported
 
 Two machines, 2026-09-10, both on 3.8.85 upgrading to 3.8.86.
