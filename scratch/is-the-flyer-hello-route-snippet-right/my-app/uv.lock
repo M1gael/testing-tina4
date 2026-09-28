@@ -1,0 +1,23 @@
+version = 1
+revision = 3
+requires-python = ">=3.12"
+
+[[package]]
+name = "my-app"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "tina4-python" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "tina4-python", specifier = ">=3.1.0" }]
+
+[[package]]
+name = "tina4-python"
+version = "3.13.139"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8c/06/dfeca5ed5ad332184be0fd501706ba714d5079a4afc476e6100519d4ef47/tina4_python-3.13.139.tar.gz", hash = "sha256:48e5a9b0758ad1da9233c3a2a8f2489d29e20041688cb90402925ea3707003d1", size = 1265659, upload-time = "2026-09-26T13:36:06.276Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b5/63/0032ebc3f179c20429ae796cff4fe3676d7c3212dea6bfa3d5ab3a94243c/tina4_python-3.13.139-py3-none-any.whl", hash = "sha256:ef24a572bbf00347286ce4f113308b0603b8626b925c5162b06ee16098364944", size = 1402078, upload-time = "2026-09-26T13:36:04.607Z" },
+]

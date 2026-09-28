@@ -1,0 +1,41 @@
+✓ Detected python project
+▶ Starting tina4python on 0.0.0.0:7146
+2026-09-28T15:40:59.553Z [DEBUG   ] Route registered: GET /__health (auth=public)
+2026-09-28T15:40:59.553Z [DEBUG   ] Route registered: GET /health (auth=public)
+2026-09-28T15:40:59.602Z [DEBUG   ] Route registered: GET /__frond/live/{name} (auth=public)
+2026-09-28T15:40:59.628Z [INFO    ] Auth: generated a development secret, saved to .env.local (gitignored)
+2026-09-28T15:40:59.631Z [DEBUG   ] Route registered: GET /api/hello/{name} (auth=public)
+2026-09-28T15:40:59.631Z [DEBUG   ] Loaded: src.routes.hello
+2026-09-28T15:40:59.640Z [INFO    ] Discovered 4 routes
+2026-09-28T15:40:59.641Z [DEBUG   ] WebSocket route registered: /__dev_reload (auth=public)
+2026-09-28T15:40:59.642Z [INFO    ] Discovered 4 routes
+2026-09-28T15:40:59.642Z [WARNING ] PORT is deprecated and will be removed in 3.14 - use TINA4_PORT instead (binding port 7146 from PORT)
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ `/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+
+  Tina4 Python v3.13.139 — The Intelligent Native Application 4ramework
+
+  Server:    http://localhost:7146 (asyncio)
+  Swagger:   http://localhost:7146/swagger
+  Dashboard: http://localhost:7146/__dev
+  Debug:     ON (Log level: ALL)
+  Test Port: http://localhost:8146 (stable — no hot-reload)
+
+2026-09-28T15:40:59.654Z [INFO    ] Server started http://localhost:7146 (asyncio)
+2026-09-28T15:40:59.654Z [INFO    ] Test port: http://localhost:8146 (stable — no hot-reload)
+2026-09-28T15:40:59.654Z [INFO    ] Development server: asyncio
+
+⚠ Tina4 CLI 3.8.93 available (you have 3.8.88). Run: tina4 update
+
+✓ Server ready: http://localhost:7146
+👁 File watcher active (changes hot-reload in-process) — press Ctrl+C to stop
+👁 watching /var/home/work/gitdir/testing-tina4/scratch/is-the-flyer-hello-route-snippet-right/r2/my-app/src
+👁 watching /var/home/work/gitdir/testing-tina4/scratch/is-the-flyer-hello-route-snippet-right/r2/my-app/migrations
+2026-09-28T15:41:09.431Z [WARNING ] [ea57a235] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-09-28T15:41:09.464Z [INFO    ] [ea57a235] GET /api/hello/Ada -> 200 (77.639ms)
+2026-09-28T15:41:19.368Z [INFO    ] Shutting down gracefully...
+2026-09-28T15:41:19.398Z [INFO    ] Server stopped.
