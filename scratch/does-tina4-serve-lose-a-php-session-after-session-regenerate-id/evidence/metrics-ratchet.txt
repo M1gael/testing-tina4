@@ -1,0 +1,19 @@
+# Metrics ratchet (#257, merged as f77ac9cf): tina4 CLI 3.8.95 (checksum-verified, as CI pins), 'tina4 metrics --path Tina4 --fail-on-regression'
+# run from a full checkout root, as CI does. (From a bare copy of Tina4/ alone the same CLI reports 584 offenders even for stock and fails, so only root runs compare.)
+
+## stock origin/v3 f77ac9cf: exit 0
+
+  Since last run (1h ago, 3.8.95)
+    offenders              422 -> 422    (+0)  same
+    duplicate lines        617 -> 617    (+0)  same
+    avg maintainability   36.6 -> 36.6   (+0.0)  same
+    avg complexity        3.74 -> 3.74   (+0.00)  same
+
+## origin/v3 f77ac9cf + fix.patch: exit 0
+
+  Since last run (1h ago, 3.8.95)
+    offenders              422 -> 422    (+0)  same
+    duplicate lines        617 -> 617    (+0)  same
+    avg maintainability   36.6 -> 36.6   (+0.0)  same
+    avg complexity        3.74 -> 3.74   (+0.00)  same
+    changed: App.php (cc 20->20), Server.php (cc 28->28)

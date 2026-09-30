@@ -1,0 +1,37 @@
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=0 · ob_app=0
+== v3.x-dev cli  probe: {"sapi":"cli","ob":"0","status":1,"headers_sent":"tina4php:2228","id":"","name":"PHPSESSID","pid":269758}
+/set        1 /null set:- | 2 /1 set:- | 3 /null set:-  lost
+/regen      1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/regen-keep 1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/t-set      1 8a1d74/null set:8a1d74 | 2 8a1d74/1 set:- | 3 8a1d74/1 set:-  kept
+/t-regen    1 4aec53/1 set:4aec53 | 2 ac7b01/2 set:ac7b01 | 3 ac7b01/2 set:-  kept
+   session files: native 0, app-started 0
+== v3.x-dev direct  probe: {"sapi":"cli","ob":"0","status":1,"headers_sent":"tina4php:2228","id":"","name":"PHPSESSID","pid":271429}
+/set        1 /null set:- | 2 /1 set:- | 3 /null set:-  lost
+/regen      1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/regen-keep 1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/t-set      1 6cac2f/null set:6cac2f | 2 6cac2f/1 set:- | 3 6cac2f/1 set:-  kept
+/t-regen    1 003711/1 set:003711 | 2 7f7795/2 set:7f7795 | 3 7f7795/2 set:-  kept
+   session files: native 0, app-started 0
+== v3.x-dev serial  probe: {"sapi":"cli","ob":"0","status":1,"headers_sent":"tina4php:2228","id":"","name":"PHPSESSID","pid":273088}
+/set        1 /null set:- | 2 /1 set:- | 3 /null set:-  lost
+/regen      1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/regen-keep 1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/t-set      1 59413f/null set:59413f | 2 59413f/1 set:- | 3 59413f/1 set:-  kept
+/t-regen    1 142a97/1 set:142a97 | 2 0987e1/2 set:0987e1 | 3 0987e1/2 set:-  kept
+   session files: native 0, app-started 0
+== v3.x-dev buffered  probe: {"sapi":"cli","ob":"4096","status":2,"headers_sent":false,"id":"b8206fc4cb462fcd1521115145c16939","name":"PHPSESSID","pid":274787}
+/set        1 b1035e/null set:b1035e | 2 b1035e/1 set:- | 3 b1035e/1 set:-  kept
+/regen      1 dd3e68/null set:dd3e68 | 2 3f043b/1 set:3f043b | 3 3f043b/1 set:-  kept
+/regen-keep 1 5c518b/null set:5c518b | 2 7baa52/1 set:7baa52 | 3 7baa52/1 set:-  kept
+/t-set      1 e1a388/null set:e1a388 | 2 e1a388/1 set:- | 3 e1a388/1 set:-  kept
+/t-regen    1 89d8a6/1 set:89d8a6 | 2 eb4330/2 set:eb4330 | 3 eb4330/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"b9d309fc43670403d0ffda29d0b30e7e","name":"PHPSESSID","pid":276480}
+/set        1 aa3c98/null set:aa3c98 | 2 aa3c98/1 set:- | 3 aa3c98/1 set:-  kept
+/regen      1 d772ef/null set:d772ef | 2 d86c43/1 set:d86c43 | 3 d86c43/1 set:-  kept
+/regen-keep 1 ec9e67/null set:ec9e67 | 2 7bf45e/1 set:7bf45e | 3 7bf45e/1 set:-  kept
+/t-set      1 fdaafb/null set:fdaafb | 2 fdaafb/1 set:- | 3 fdaafb/1 set:-  kept
+/t-regen    1 08f46a/1 set:08f46a | 2 093f77/2 set:093f77 | 3 093f77/2 set:-  kept
+   session files: native 8, app-started 0
+native $_SESSION not kept per client (/set or /regen) in 3 of 3 stock socket-server cells

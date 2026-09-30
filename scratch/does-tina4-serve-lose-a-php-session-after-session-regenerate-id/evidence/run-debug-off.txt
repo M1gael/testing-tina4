@@ -1,0 +1,16 @@
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=false · prestart=0
+== 3.13.141 cli  probe: {"sapi":"cli","ob":"0","status":1,"headers_sent":"tina4php:1496","id":"","name":"PHPSESSID","pid":142538}
+/set        1 /null set:- | 2 /1 set:- | 3 /null set:-  lost
+/regen      1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/regen-keep 1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/t-set      1 9fc64a/null set:9fc64a | 2 9fc64a/1 set:- | 3 9fc64a/1 set:-  kept
+/t-regen    1 b37419/1 set:b37419 | 2 d986cb/2 set:d986cb | 3 d986cb/2 set:-  kept
+   session files: native 0, app-started 0
+== 3.13.141 serial  probe: {"sapi":"cli","ob":"0","status":1,"headers_sent":"tina4php:1496","id":"","name":"PHPSESSID","pid":144209}
+/set        1 /null set:- | 2 /1 set:- | 3 /null set:-  lost
+/regen      1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/regen-keep 1 /null set:- | 2 ?/? set:- | 3 /null set:-  lost
+/t-set      1 391840/null set:391840 | 2 391840/1 set:- | 3 391840/1 set:-  kept
+/t-regen    1 475ad0/1 set:475ad0 | 2 3725a0/2 set:3725a0 | 3 3725a0/2 set:-  kept
+   session files: native 0, app-started 0
+native $_SESSION not kept per client (/set or /regen) in 2 of 2 stock socket-server cells

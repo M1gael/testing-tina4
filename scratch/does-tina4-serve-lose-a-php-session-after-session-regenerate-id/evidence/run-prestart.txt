@@ -1,0 +1,65 @@
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=1
+== 3.13.138 cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2215","id":"069969b58cd21e6e2e7386868d682685","name":"PHPSESSID","pid":127275}
+/set        1 069969/null set:- | 2 069969/1 set:- | 3 069969/null set:-  lost
+/regen      1 069969/null set:- | 2 ?/? set:- | 3 069969/null set:-  lost
+/regen-keep 1 069969/null set:- | 2 ?/? set:- | 3 069969/null set:-  lost
+/t-set      1 43b677/null set:43b677 | 2 43b677/1 set:- | 3 43b677/1 set:-  kept
+/t-regen    1 8349ad/1 set:8349ad | 2 5799f2/2 set:5799f2 | 3 5799f2/2 set:-  kept
+   session files: native 0, app-started 1
+== 3.13.138 serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2215","id":"2e77bf35155909e050e0fff6c6706cc7","name":"PHPSESSID","pid":128992}
+/set        1 2e77bf/null set:- | 2 2e77bf/1 set:- | 3 2e77bf/1 set:-  kept
+/regen      1 2e77bf/1 set:- | 2 ?/? set:- | 3 2e77bf/1 set:-  lost  SHARED: fresh client saw hit=1
+/regen-keep 1 2e77bf/1 set:- | 2 ?/? set:- | 3 2e77bf/1 set:-  lost  SHARED: fresh client saw hit=1
+/t-set      1 02683a/null set:02683a | 2 02683a/1 set:- | 3 02683a/1 set:-  kept
+/t-regen    1 aff1f8/1 set:aff1f8 | 2 53a152/2 set:53a152 | 3 53a152/2 set:-  kept
+   session files: native 0, app-started 1
+== 3.13.138 phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"f72d64586de96399a279f775c40894ae","name":"PHPSESSID","pid":130657}
+/set        1 eb07de/null set:eb07de | 2 eb07de/1 set:- | 3 eb07de/1 set:-  kept
+/regen      1 5de32a/null set:5de32a | 2 e7a2eb/1 set:e7a2eb | 3 e7a2eb/1 set:-  kept
+/regen-keep 1 1a89bb/null set:1a89bb | 2 54f760/1 set:54f760 | 3 54f760/1 set:-  kept
+/t-set      1 b0bab1/null set:b0bab1 | 2 b0bab1/1 set:- | 3 b0bab1/1 set:-  kept
+/t-regen    1 9dfec3/1 set:9dfec3 | 2 54fe1a/2 set:54fe1a | 3 54fe1a/2 set:-  kept
+   session files: native 0, app-started 8
+== 3.13.139 cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2228","id":"50610d66e80eed7f848ef8f28797be47","name":"PHPSESSID","pid":132360}
+/set        1 50610d/null set:- | 2 50610d/1 set:- | 3 50610d/null set:-  lost
+/regen      1 50610d/null set:- | 2 ?/? set:- | 3 50610d/null set:-  lost
+/regen-keep 1 50610d/null set:- | 2 ?/? set:- | 3 50610d/null set:-  lost
+/t-set      1 67424e/null set:67424e | 2 67424e/1 set:- | 3 67424e/1 set:-  kept
+/t-regen    1 f82680/1 set:f82680 | 2 47a70b/2 set:47a70b | 3 47a70b/2 set:-  kept
+   session files: native 0, app-started 1
+== 3.13.139 serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2228","id":"0acd6294d188180bc6ff7c631deef343","name":"PHPSESSID","pid":134030}
+/set        1 0acd62/null set:- | 2 0acd62/1 set:- | 3 0acd62/1 set:-  kept
+/regen      1 0acd62/1 set:- | 2 ?/? set:- | 3 0acd62/1 set:-  lost  SHARED: fresh client saw hit=1
+/regen-keep 1 0acd62/1 set:- | 2 ?/? set:- | 3 0acd62/1 set:-  lost  SHARED: fresh client saw hit=1
+/t-set      1 a69e01/null set:a69e01 | 2 a69e01/1 set:- | 3 a69e01/1 set:-  kept
+/t-regen    1 02dff0/1 set:02dff0 | 2 9129c4/2 set:9129c4 | 3 9129c4/2 set:-  kept
+   session files: native 0, app-started 1
+== 3.13.139 phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"2a7afa3d4b928d2e0aff9f5faf0d0584","name":"PHPSESSID","pid":135722}
+/set        1 a40fe8/null set:a40fe8 | 2 a40fe8/1 set:- | 3 a40fe8/1 set:-  kept
+/regen      1 6ce7df/null set:6ce7df | 2 b6cf5c/1 set:b6cf5c | 3 b6cf5c/1 set:-  kept
+/regen-keep 1 3c4cca/null set:3c4cca | 2 8f7015/1 set:8f7015 | 3 8f7015/1 set:-  kept
+/t-set      1 5689a9/null set:5689a9 | 2 5689a9/1 set:- | 3 5689a9/1 set:-  kept
+/t-regen    1 89b043/1 set:89b043 | 2 24bbbf/2 set:24bbbf | 3 24bbbf/2 set:-  kept
+   session files: native 0, app-started 8
+== 3.13.141 cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2228","id":"fee8dfc7e4e1720c4a5ddbb367b2b4c4","name":"PHPSESSID","pid":137412}
+/set        1 fee8df/null set:- | 2 fee8df/1 set:- | 3 fee8df/null set:-  lost
+/regen      1 fee8df/null set:- | 2 ?/? set:- | 3 fee8df/null set:-  lost
+/regen-keep 1 fee8df/null set:- | 2 ?/? set:- | 3 fee8df/null set:-  lost
+/t-set      1 569088/null set:569088 | 2 569088/1 set:- | 3 569088/1 set:-  kept
+/t-regen    1 4155c0/1 set:4155c0 | 2 cfcff1/2 set:cfcff1 | 3 cfcff1/2 set:-  kept
+   session files: native 0, app-started 1
+== 3.13.141 serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2228","id":"215392e75fd7c6bad34da11d73a21942","name":"PHPSESSID","pid":139134}
+/set        1 215392/null set:- | 2 215392/1 set:- | 3 215392/1 set:-  kept
+/regen      1 215392/1 set:- | 2 ?/? set:- | 3 215392/1 set:-  lost  SHARED: fresh client saw hit=1
+/regen-keep 1 215392/1 set:- | 2 ?/? set:- | 3 215392/1 set:-  lost  SHARED: fresh client saw hit=1
+/t-set      1 496c98/null set:496c98 | 2 496c98/1 set:- | 3 496c98/1 set:-  kept
+/t-regen    1 ac1fbb/1 set:ac1fbb | 2 b178b3/2 set:b178b3 | 3 b178b3/2 set:-  kept
+   session files: native 0, app-started 1
+== 3.13.141 phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"af0dc29d1a9c3e15cb9ff2b3a965cf68","name":"PHPSESSID","pid":140831}
+/set        1 0e6785/null set:0e6785 | 2 0e6785/1 set:- | 3 0e6785/1 set:-  kept
+/regen      1 e06581/null set:e06581 | 2 d29271/1 set:d29271 | 3 d29271/1 set:-  kept
+/regen-keep 1 a76c3c/null set:a76c3c | 2 0748d5/1 set:0748d5 | 3 0748d5/1 set:-  kept
+/t-set      1 1aa2df/null set:1aa2df | 2 1aa2df/1 set:- | 3 1aa2df/1 set:-  kept
+/t-regen    1 1f41ca/1 set:1f41ca | 2 976b1a/2 set:976b1a | 3 976b1a/2 set:-  kept
+   session files: native 0, app-started 8
+native $_SESSION not kept per client (/set or /regen) in 6 of 6 stock socket-server cells

@@ -1,0 +1,23 @@
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=1 · ob_app=0
+== v3.x-dev cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2228","id":"a2858ea0ca9c6d6c4757b5b5492667b2","name":"PHPSESSID","pid":285167}
+/set        1 a2858e/null set:- | 2 a2858e/1 set:- | 3 a2858e/null set:-  lost
+/regen      1 a2858e/null set:- | 2 ?/? set:- | 3 a2858e/null set:-  lost
+/regen-keep 1 a2858e/null set:- | 2 ?/? set:- | 3 a2858e/null set:-  lost
+/t-set      1 9ae8ff/null set:9ae8ff | 2 9ae8ff/1 set:- | 3 9ae8ff/1 set:-  kept
+/t-regen    1 0784ac/1 set:0784ac | 2 7525b3/2 set:7525b3 | 3 7525b3/2 set:-  kept
+   session files: native 0, app-started 1
+== v3.x-dev serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":"tina4php:2228","id":"e71aed36818fddb06c2ce1e1a7ae8e8a","name":"PHPSESSID","pid":286869}
+/set        1 e71aed/null set:- | 2 e71aed/1 set:- | 3 e71aed/1 set:-  kept
+/regen      1 e71aed/1 set:- | 2 ?/? set:- | 3 e71aed/1 set:-  lost  SHARED: fresh client saw hit=1
+/regen-keep 1 e71aed/1 set:- | 2 ?/? set:- | 3 e71aed/1 set:-  lost  SHARED: fresh client saw hit=1
+/t-set      1 0dd6eb/null set:0dd6eb | 2 0dd6eb/1 set:- | 3 0dd6eb/1 set:-  kept
+/t-regen    1 7e59f3/1 set:7e59f3 | 2 941fc0/2 set:941fc0 | 3 941fc0/2 set:-  kept
+   session files: native 0, app-started 1
+== v3.x-dev phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"275ff07cf8f1541797ff748d466273bb","name":"PHPSESSID","pid":288516}
+/set        1 f07725/null set:f07725 | 2 f07725/1 set:- | 3 f07725/1 set:-  kept
+/regen      1 5c4a77/null set:5c4a77 | 2 c944e4/1 set:c944e4 | 3 c944e4/1 set:-  kept
+/regen-keep 1 742d38/null set:742d38 | 2 56220d/1 set:56220d | 3 56220d/1 set:-  kept
+/t-set      1 efc0e6/null set:efc0e6 | 2 efc0e6/1 set:- | 3 efc0e6/1 set:-  kept
+/t-regen    1 3363c7/1 set:3363c7 | 2 de1a5b/2 set:de1a5b | 3 de1a5b/2 set:-  kept
+   session files: native 0, app-started 8
+native $_SESSION not kept per client (/set or /regen) in 2 of 2 stock socket-server cells

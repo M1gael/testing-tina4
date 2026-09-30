@@ -1,0 +1,11 @@
+tina4php v3.x-dev @ c48acab5 · PHP 8.4.25 · fixture from the same commit
+TINA4_SUPPRESS=true
+  1 GET /whoami   {"id":"9ef842a0de60e6b67115505c7d89bb64","hit":null}  set:PHPSESSID=9ef842
+  2 POST /regen   HTTP 200 {"id":"5c3c426d894b70100aa8b1b95f6f471e","hit":1}  set:PHPSESSID=5c3c42
+  3 GET /whoami   {"id":"5c3c426d894b70100aa8b1b95f6f471e","hit":1}  set:
+TINA4_SUPPRESS=false
+  1 GET /whoami   {"id":"","hit":null}  set:
+  2 POST /regen   HTTP 500 (HTML error page)  set:
+  3 GET /whoami   {"id":"","hit":null}  set:
+  log: session_regenerate_id(): Session ID cannot be regenerated when there is no active session
+verdict: kept only with the banner suppressed

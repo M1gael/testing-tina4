@@ -1,0 +1,15 @@
+stock `tina4 init php` · tina4php 3.13.141 @ 86906cae · tina4 3.8.94 · PHP 8.4.25
+1 GET  /whoami  {"id":"","hit":null}  cookie:
+2 POST /regen   HTTP 500   cookie:
+3 GET  /whoami  {"id":"","hit":null}  cookie:
+log: session_regenerate_id(): Session ID cannot be regenerated when there is no active session 
+verdict: lost
+exit 1
+
+stock `tina4 init php` · tina4php v3.x-dev @ c48acab5 · tina4 3.8.94 · PHP 8.4.25
+1 GET  /whoami  {"id":"","hit":null}  cookie:
+2 POST /regen   HTTP 500   cookie:
+3 GET  /whoami  {"id":"","hit":null}  cookie:
+log: session_regenerate_id(): Session ID cannot be regenerated when there is no active session 
+verdict: lost
+exit 1

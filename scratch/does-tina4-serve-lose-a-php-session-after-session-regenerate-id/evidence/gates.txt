@@ -1,0 +1,64 @@
+== fixed tree, unmutated copy: exit 0; 0 red of 12  OK (12 tests, 183 assertions)
+== G0 whole fix reverted (Tina4/App.php, Tina4/Server.php, bin/tina4php from origin/v3): exit 1; 12 red of 12  FAILURES! Tests: 12, Assertions: 43, Failures: 12.
+   ✘ serve row "debug on, tina4 CLI, fork per request"
+   ✘ serve row "debug on, bare with live reload, fork per request"
+   ✘ serve row "debug on, bare with --no-reload, fork per request"
+   ✘ serve row "debug off, tina4 CLI, fork per request"
+   ✘ serve row "debug on, tina4 CLI, one process"
+   ✘ serve row "debug on, bare with live reload, one process"
+   ✘ serve row "debug on, bare with --no-reload, one process"
+   ✘ serve row "debug off, tina4 CLI, one process"
+   ✘ Serve test port skipped notice leaves the native session working
+   ✘ App run starts the native session with its banner on
+   ✘ App run port in use notice leaves the native session working
+   ✘ Reclaiming the port from a stale server leaves the native session working
+== G1 bin/tina4php serve banner: exit 1; 10 red of 12  FAILURES! Tests: 12, Assertions: 63, Failures: 10.
+   ✘ serve row "debug on, tina4 CLI, fork per request"
+   ✘ serve row "debug on, bare with live reload, fork per request"
+   ✘ serve row "debug on, bare with --no-reload, fork per request"
+   ✘ serve row "debug off, tina4 CLI, fork per request"
+   ✘ serve row "debug on, tina4 CLI, one process"
+   ✘ serve row "debug on, bare with live reload, one process"
+   ✘ serve row "debug on, bare with --no-reload, one process"
+   ✘ serve row "debug off, tina4 CLI, one process"
+   ✘ Serve test port skipped notice leaves the native session working
+   ✘ Reclaiming the port from a stale server leaves the native session working
+== G2 bin/tina4php takeover refusal notice: exit 1; 2 red of 12  FAILURES! Tests: 12, Assertions: 159, Failures: 2.
+   ✘ serve row "debug off, tina4 CLI, fork per request"
+   ✘ serve row "debug off, tina4 CLI, one process"
+== G3 bin/tina4php takeover KILLED warning: exit 1; 1 red of 12  FAILURES! Tests: 12, Assertions: 171, Failures: 1.
+   ✘ Reclaiming the port from a stale server leaves the native session working
+== G4 Server.php Test Port line: exit 1; 7 red of 12  FAILURES! Tests: 12, Assertions: 99, Failures: 7.
+   ✘ serve row "debug on, tina4 CLI, fork per request"
+   ✘ serve row "debug on, bare with live reload, fork per request"
+   ✘ serve row "debug on, bare with --no-reload, fork per request"
+   ✘ serve row "debug on, tina4 CLI, one process"
+   ✘ serve row "debug on, bare with live reload, one process"
+   ✘ serve row "debug on, bare with --no-reload, one process"
+   ✘ Reclaiming the port from a stale server leaves the native session working
+== G5 Server.php Test Port SKIPPED (in use): exit 1; 1 red of 12  FAILURES! Tests: 12, Assertions: 171, Failures: 1.
+   ✘ Serve test port skipped notice leaves the native session working
+== G6 Server.php Test Port SKIPPED (exception): exit 0; 0 red of 12  OK (12 tests, 183 assertions)
+== G7 Server.php freePort KILLED: exit 0; 0 red of 12  OK (12 tests, 183 assertions)
+== G8 App.php port-in-use notice: exit 1; 1 red of 12  FAILURES! Tests: 12, Assertions: 173, Failures: 1.
+   ✘ App run port in use notice leaves the native session working
+== G9a App.php banner, all five lines: exit 1; 2 red of 12  FAILURES! Tests: 12, Assertions: 163, Failures: 2.
+   ✘ App run starts the native session with its banner on
+   ✘ App run port in use notice leaves the native session working
+== G9b App.php banner, last line only: exit 1; 2 red of 12  FAILURES! Tests: 12, Assertions: 163, Failures: 2.
+   ✘ App run starts the native session with its banner on
+   ✘ App run port in use notice leaves the native session working
+== G10 the helper itself echoes: exit 1; 12 red of 12  FAILURES! Tests: 12, Assertions: 43, Failures: 12.
+   ✘ serve row "debug on, tina4 CLI, fork per request"
+   ✘ serve row "debug on, bare with live reload, fork per request"
+   ✘ serve row "debug on, bare with --no-reload, fork per request"
+   ✘ serve row "debug off, tina4 CLI, fork per request"
+   ✘ serve row "debug on, tina4 CLI, one process"
+   ✘ serve row "debug on, bare with live reload, one process"
+   ✘ serve row "debug on, bare with --no-reload, one process"
+   ✘ serve row "debug off, tina4 CLI, one process"
+   ✘ Serve test port skipped notice leaves the native session working
+   ✘ App run starts the native session with its banner on
+   ✘ App run port in use notice leaves the native session working
+   ✘ Reclaiming the port from a stale server leaves the native session working
+copy removed

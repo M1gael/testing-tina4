@@ -1,0 +1,25 @@
+# PATCHED TREE: Packagist v3.x-dev 44b63aee with the fix overlaid, PRESTART=1, 2026-09-30T15:44:50Z
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=1 · ob_app=0
+== v3.x-dev cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"032d0bb6768a944458042957cf7e24f7","name":"PHPSESSID","pid":476723}
+/set        1 032d0b/null set:- | 2 032d0b/1 set:- | 3 032d0b/null set:-  lost
+/regen      1 032d0b/null set:- | 2 860346/1 set:- | 3 032d0b/null set:-  lost
+/regen-keep 1 032d0b/null set:- | 2 f06448/1 set:- | 3 032d0b/null set:-  lost
+/t-set      1 370127/null set:370127 | 2 370127/1 set:- | 3 370127/1 set:-  kept
+/t-regen    1 9bfbd9/1 set:9bfbd9 | 2 61f0e0/2 set:61f0e0 | 3 61f0e0/2 set:-  kept
+   session files: native 0, app-started 2
+== v3.x-dev direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"0a5f878a0bf8aaa76852cf28a8ae7732","name":"PHPSESSID","pid":478363}
+/set        1 0a5f87/null set:- | 2 0a5f87/1 set:- | 3 0a5f87/null set:-  lost
+/regen      1 0a5f87/null set:- | 2 3cd971/1 set:- | 3 0a5f87/null set:-  lost
+/regen-keep 1 0a5f87/null set:- | 2 8c88a6/1 set:- | 3 0a5f87/null set:-  lost
+/t-set      1 5b68ba/null set:5b68ba | 2 5b68ba/1 set:- | 3 5b68ba/1 set:-  kept
+/t-regen    1 7835e0/1 set:7835e0 | 2 731303/2 set:731303 | 3 731303/2 set:-  kept
+   session files: native 0, app-started 2
+== v3.x-dev serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"a39b05ef44411665096ba9adced7282e","name":"PHPSESSID","pid":480007}
+/set        1 a39b05/null set:- | 2 a39b05/1 set:- | 3 a39b05/1 set:-  kept
+/regen      1 a39b05/1 set:- | 2 19feb4/2 set:- | 3 19feb4/2 set:-  kept  SHARED: fresh client saw hit=1
+/regen-keep 1 19feb4/2 set:- | 2 4792fb/3 set:- | 3 4792fb/3 set:-  kept  SHARED: fresh client saw hit=2
+/t-set      1 0b70db/null set:0b70db | 2 0b70db/1 set:- | 3 0b70db/1 set:-  kept
+/t-regen    1 5e960b/1 set:5e960b | 2 cbfa63/2 set:cbfa63 | 3 cbfa63/2 set:-  kept
+   session files: native 0, app-started 2
+native $_SESSION not kept per client (/set or /regen) in 3 of 3 stock socket-server cells
+exit 1

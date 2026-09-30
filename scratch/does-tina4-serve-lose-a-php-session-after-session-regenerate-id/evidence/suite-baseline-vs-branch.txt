@@ -1,0 +1,39 @@
+# Whole upstream suite, origin/v3 44b63aee (baseline) vs the fix branch, same host, one after the other, 2026-09-30.
+# PHP 8.4.25, memory_limit=-1 (as CI's setup-php), Linux toolbox container (so PortTakeover reports inContainer).
+baseline: exit 2 in 239s
+ERRORS!
+Tests: 6467, Assertions: 24589, Errors: 1, Failures: 12, Skipped: 735.
+branch: exit 2 in 251s
+ERRORS!
+Tests: 6479, Assertions: 24772, Errors: 1, Failures: 12, Skipped: 736.
+done
+
+# Failing tests, baseline:
+failure DatabaseDriversTest::testFirebirdThrowsWithoutExtension
+        DatabaseDriversTest::testFirebirdThrowsWithoutExtension
+failure DatabaseDriversTest::testMySQLThrowsWithoutExtension
+        DatabaseDriversTest::testMySQLThrowsWithoutExtension
+failure DocStoreSubstitutabilityTest::testAMissingLibraryRaisesInsteadOfUsingTheLocalFile
+        DocStoreSubstitutabilityTest::testAMissingLibraryRaisesInsteadOfUsingTheLocalFile
+failure PortTakeoverContractTest::testAForeignHolderIsNotKilledAndTakeoverRefuses
+        PortTakeoverContractTest::testAForeignHolderIsNotKilledAndTakeoverRefuses
+failure PortTakeoverContractTest::testATina4DevServerHolderIsReclaimed
+        PortTakeoverContractTest::testATina4DevServerHolderIsReclaimed
+failure PortTakeoverContractTest::testTheRuntimePathAlsoSparesAForeignHolder
+        PortTakeoverContractTest::testTheRuntimePathAlsoSparesAForeignHolder
+failure QueueBackendTest::testMongoBackendDoesNotReportTheExtensionMissingWhenItIsPresent
+        QueueBackendTest::testMongoBackendDoesNotReportTheExtensionMissingWhenItIsPresent
+failure QueueBackendTest::testMongoBackendRequiresMongodbExtension
+        QueueBackendTest::testMongoBackendRequiresMongodbExtension
+error   QueueBackendValidationTest::testTheGuardStillAcceptsEveryDocumentedBackendName
+        QueueBackendValidationTest::testTheGuardStillAcceptsEveryDocumentedBackendName
+failure Tina4\Tests\SessionDatabaseEnginesTest::testConcurrentFirstUseIsSafeOnEveryEngine
+        Tina4\Tests\SessionDatabaseEnginesTest::testConcurrentFirstUseIsSafeOnEveryEngine
+failure Tina4\Tests\SessionDatabaseEnginesTest::testEveryEngineGetsItsOwnNativeColumnTypes
+        Tina4\Tests\SessionDatabaseEnginesTest::testEveryEngineGetsItsOwnNativeColumnTypes
+failure Tina4\Tests\SessionDatabaseEnginesTest::testTheDatabaseSessionBackendWorksOnEveryEngineItClaims
+        Tina4\Tests\SessionDatabaseEnginesTest::testTheDatabaseSessionBackendWorksOnEveryEngineItClaims
+failure WsdlTest::testMalformedXmlReturnsFault
+        WsdlTest::testMalformedXmlReturnsFault
+
+# Failing tests, branch: identical set (diff of names empty).

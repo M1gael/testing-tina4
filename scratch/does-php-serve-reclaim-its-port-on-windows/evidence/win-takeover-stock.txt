@@ -1,0 +1,28 @@
+# Windows 11 26200, PHP 8.4.25 NTS, tina4php origin/v3 44b63aee (stock Tina4/ and bin/tina4php), 2026-09-30T15:53:01Z
+PHP 8.4.25 / Microsoft Windows NT 10.0.26200.0 / posix_kill: false
+stale server: process 5432, answering as pid 5432
+pid files naming the port: C:\Users\mig\fix-serve-native-session\takeover-app\data\.tina4-serve-17992.pid
+after 8 s: stale running=True  second running=True  answering pid=5432
+-- second server's console:
+  Warning: Reclaimed port 17992 from Tina4 dev server (PID: 5432).
+2026-10-01T00:53:02.149Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\fix-serve-native-session\\takeover-app","development":false}
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ \`/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+
+  Tina4 PHP v3.13.141 ƒ?" The Intelligent Native Application 4ramework
+
+  Server:    http://127.0.0.1:17992 (tina4-server)
+  Swagger:   http://localhost:17992/swagger
+  Dashboard: http://localhost:17992/__dev
+  Debug:     ON (Log level: DEBUG)
+  Test Port: http://localhost:18992 (stable ƒ?" no hot-reload)
+'kill' is not recognized as an internal or external command,
+operable program or batch file.
+-- listeners on 17992:
+  ::1:17992 pid 4136
+  127.0.0.1:17992 pid 4136
+left listening on 17992 afterwards: 0

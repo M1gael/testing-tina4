@@ -1,0 +1,86 @@
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=0 · ob_app=1 · echo_first=0
+== 3.13.138 cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"e8eacf280cc97879c04925df8238efe6","name":"PHPSESSID","pid":221997}
+/set        1 1f0d87/null set:- | 2 1cab67/1 set:- | 3 59c7ed/null set:-  lost
+/regen      1 aaac35/null set:- | 2 53a0b3/1 set:- | 3 9df3b5/null set:-  lost
+/regen-keep 1 21caca/null set:- | 2 58be0c/1 set:- | 3 e13f45/null set:-  lost
+/t-set      1 c0506f/null set:c0506f | 2 c0506f/1 set:- | 3 c0506f/1 set:-  kept
+/t-regen    1 4a684e/1 set:4a684e | 2 ba11ee/2 set:ba11ee | 3 ba11ee/2 set:-  kept
+   session files: native 18, app-started 0
+== 3.13.138 direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"fba4fa6a012f58abc5a14ae472119442","name":"PHPSESSID","pid":223696}
+/set        1 143244/null set:- | 2 408d49/1 set:- | 3 60f8c3/null set:-  lost
+/regen      1 72a267/null set:- | 2 6225a8/1 set:- | 3 ee9384/null set:-  lost
+/regen-keep 1 a1c2b6/null set:- | 2 ac9a32/1 set:- | 3 a7bb01/null set:-  lost
+/t-set      1 1d03be/null set:1d03be | 2 1d03be/1 set:- | 3 1d03be/1 set:-  kept
+/t-regen    1 bed73c/1 set:bed73c | 2 bb83c6/2 set:bb83c6 | 3 bb83c6/2 set:-  kept
+   session files: native 18, app-started 0
+== 3.13.138 serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"bad6b855792b2f67335d0f6d900c6509","name":"PHPSESSID","pid":225376}
+/set        1 bad6b8/null set:- | 2 bad6b8/1 set:- | 3 bad6b8/1 set:-  kept
+/regen      1 bad6b8/1 set:- | 2 21648d/2 set:- | 3 21648d/2 set:-  kept  SHARED: fresh client saw hit=1
+/regen-keep 1 21648d/2 set:- | 2 671d7b/3 set:- | 3 671d7b/3 set:-  kept  SHARED: fresh client saw hit=2
+/t-set      1 1a43b4/null set:1a43b4 | 2 1a43b4/1 set:- | 3 1a43b4/1 set:-  kept
+/t-regen    1 dc99ef/1 set:dc99ef | 2 073716/2 set:073716 | 3 073716/2 set:-  kept
+   session files: native 2, app-started 0
+== 3.13.138 phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"19611b0f73b26ec579032018e7646575","name":"PHPSESSID","pid":227094}
+/set        1 f94184/null set:f94184 | 2 f94184/1 set:- | 3 f94184/1 set:-  kept
+/regen      1 426228/null set:426228 | 2 d991d6/1 set:d991d6 | 3 d991d6/1 set:-  kept
+/regen-keep 1 87903e/null set:87903e | 2 ed23ff/1 set:ed23ff | 3 ed23ff/1 set:-  kept
+/t-set      1 7d8922/null set:7d8922 | 2 7d8922/1 set:- | 3 7d8922/1 set:-  kept
+/t-regen    1 551e9b/1 set:551e9b | 2 306845/2 set:306845 | 3 306845/2 set:-  kept
+   session files: native 8, app-started 0
+== 3.13.139 cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"cb80737c8710abc438f523cf3aaeb1d2","name":"PHPSESSID","pid":228807}
+/set        1 6052a3/null set:6052a3 | 2 6052a3/1 set:- | 3 6052a3/1 set:-  kept
+/regen      1 def35f/null set:def35f | 2 9469cc/1 set:- | 3 0d081a/null set:0d081a  lost
+/regen-keep 1 623a26/null set:623a26 | 2 5d8c70/1 set:- | 3 623a26/null set:-  lost
+/t-set      1 c60800/null set:c60800 | 2 c60800/1 set:- | 3 c60800/1 set:-  kept
+/t-regen    1 af82fd/1 set:af82fd | 2 8758c3/2 set:8758c3 | 3 8758c3/2 set:-  kept
+   session files: native 9, app-started 0
+== 3.13.139 direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"f7b58d56059e1d5b331988ae7e14ec5c","name":"PHPSESSID","pid":230518}
+/set        1 d7c3b9/null set:d7c3b9 | 2 d7c3b9/1 set:- | 3 d7c3b9/1 set:-  kept
+/regen      1 f4fb2a/null set:f4fb2a | 2 7ceee0/1 set:- | 3 af2db3/null set:af2db3  lost
+/regen-keep 1 df36d0/null set:df36d0 | 2 adfa6c/1 set:- | 3 df36d0/null set:-  lost
+/t-set      1 0da1e7/null set:0da1e7 | 2 0da1e7/1 set:- | 3 0da1e7/1 set:-  kept
+/t-regen    1 ecf5ce/1 set:ecf5ce | 2 a15ea6/2 set:a15ea6 | 3 a15ea6/2 set:-  kept
+   session files: native 9, app-started 0
+== 3.13.139 serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"0815119a087b2fb11a21e583a2c45afd","name":"PHPSESSID","pid":232251}
+/set        1 bd4f86/null set:bd4f86 | 2 bd4f86/1 set:- | 3 bd4f86/1 set:-  kept
+/regen      1 b0704f/null set:b0704f | 2 4b3336/1 set:- | 3 7f6cf7/null set:7f6cf7  lost
+/regen-keep 1 b2d98d/null set:b2d98d | 2 cad8a6/1 set:- | 3 b2d98d/null set:-  lost
+/t-set      1 bb4deb/null set:bb4deb | 2 bb4deb/1 set:- | 3 bb4deb/1 set:-  kept
+/t-regen    1 dc271f/1 set:dc271f | 2 ff692c/2 set:ff692c | 3 ff692c/2 set:-  kept
+   session files: native 9, app-started 0
+== 3.13.139 phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"0846e36e1a5c4b980894c3521c3d977e","name":"PHPSESSID","pid":234105}
+/set        1 0f9325/null set:0f9325 | 2 0f9325/1 set:- | 3 0f9325/1 set:-  kept
+/regen      1 ad7463/null set:ad7463 | 2 b35de3/1 set:b35de3 | 3 b35de3/1 set:-  kept
+/regen-keep 1 ab6320/null set:ab6320 | 2 ac1d28/1 set:ac1d28 | 3 ac1d28/1 set:-  kept
+/t-set      1 6f813e/null set:6f813e | 2 6f813e/1 set:- | 3 6f813e/1 set:-  kept
+/t-regen    1 fae271/1 set:fae271 | 2 ead1f5/2 set:ead1f5 | 3 ead1f5/2 set:-  kept
+   session files: native 8, app-started 0
+== 3.13.141 cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"bb5389e785cc74e08ac4e099368c2802","name":"PHPSESSID","pid":235872}
+/set        1 e366cc/null set:e366cc | 2 e366cc/1 set:- | 3 e366cc/1 set:-  kept
+/regen      1 54eb22/null set:54eb22 | 2 5473ee/1 set:- | 3 db0ac2/null set:db0ac2  lost
+/regen-keep 1 5059a4/null set:5059a4 | 2 d15e69/1 set:- | 3 5059a4/null set:-  lost
+/t-set      1 fd77b1/null set:fd77b1 | 2 fd77b1/1 set:- | 3 fd77b1/1 set:-  kept
+/t-regen    1 e2bf13/1 set:e2bf13 | 2 0f1f71/2 set:0f1f71 | 3 0f1f71/2 set:-  kept
+   session files: native 9, app-started 0
+== 3.13.141 direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"59f342c0c5dafb66707c597bc7ce64d5","name":"PHPSESSID","pid":237570}
+/set        1 98bcf4/null set:98bcf4 | 2 98bcf4/1 set:- | 3 98bcf4/1 set:-  kept
+/regen      1 e29add/null set:e29add | 2 4d3bcb/1 set:- | 3 2c7dbc/null set:2c7dbc  lost
+/regen-keep 1 93667b/null set:93667b | 2 705ab3/1 set:- | 3 93667b/null set:-  lost
+/t-set      1 77f3f0/null set:77f3f0 | 2 77f3f0/1 set:- | 3 77f3f0/1 set:-  kept
+/t-regen    1 86656e/1 set:86656e | 2 04aa7e/2 set:04aa7e | 3 04aa7e/2 set:-  kept
+   session files: native 9, app-started 0
+== 3.13.141 serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"bf935a43fde2ef64ae6b2322f36c9c57","name":"PHPSESSID","pid":239293}
+/set        1 827a92/null set:827a92 | 2 827a92/1 set:- | 3 827a92/1 set:-  kept
+/regen      1 9d961b/null set:9d961b | 2 5e7338/1 set:- | 3 5e69f4/null set:5e69f4  lost
+/regen-keep 1 d275e1/null set:d275e1 | 2 9b927d/1 set:- | 3 d275e1/null set:-  lost
+/t-set      1 a2b1c1/null set:a2b1c1 | 2 a2b1c1/1 set:- | 3 a2b1c1/1 set:-  kept
+/t-regen    1 96c34e/1 set:96c34e | 2 c7e6f3/2 set:c7e6f3 | 3 c7e6f3/2 set:-  kept
+   session files: native 9, app-started 0
+== 3.13.141 phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"81328287c122f34f07741c0db4653e88","name":"PHPSESSID","pid":240971}
+/set        1 31cf32/null set:31cf32 | 2 31cf32/1 set:- | 3 31cf32/1 set:-  kept
+/regen      1 ab73c1/null set:ab73c1 | 2 261316/1 set:261316 | 3 261316/1 set:-  kept
+/regen-keep 1 9a18bd/null set:9a18bd | 2 16c7f1/1 set:16c7f1 | 3 16c7f1/1 set:-  kept
+/t-set      1 13aa60/null set:13aa60 | 2 13aa60/1 set:- | 3 13aa60/1 set:-  kept
+/t-regen    1 3fba9f/1 set:3fba9f | 2 35b6f5/2 set:35b6f5 | 3 35b6f5/2 set:-  kept
+   session files: native 8, app-started 0
+native $_SESSION not kept per client (/set or /regen) in 9 of 9 stock socket-server cells

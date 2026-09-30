@@ -1,0 +1,301 @@
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.25
+Configuration: C:\Users\mig\fix-serve-native-session\tree\phpunit.xml
+
+FFFFFFFFFFFS                                                      12 / 12 (100%)
+
+Time: 00:12.120, Memory: 10.00 MB
+
+Serve Native Session (Tests\ServeNativeSession)
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug on, tina4 CLI, fork per request"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:46.582Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49521 (tina4-server)
+   Γöé   Swagger:   http://localhost:49521/swagger
+   Γöé   Dashboard: http://localhost:49521/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: http://localhost:50521 (stable ΓÇö no hot-reload)
+   Γöé 2026-10-01T00:50:46.903Z [WARNING ] [5e24e554] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:46.905Z [INFO    ] [5e24e554] GET /probe -> 200 (4.012ms)
+   Γöé 2026-10-01T00:50:46.919Z [INFO    ] [36d04144] GET /probe -> 200 (0.769ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with live reload, fork per request"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:47.675Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49524 (tina4-server)
+   Γöé   Swagger:   http://localhost:49524/swagger
+   Γöé   Dashboard: http://localhost:49524/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: http://localhost:50524 (stable ΓÇö no hot-reload)
+   Γöé 2026-10-01T00:50:47.998Z [WARNING ] [bd8ba873] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:48.004Z [INFO    ] [bd8ba873] GET /probe -> 200 (7.871ms)
+   Γöé 2026-10-01T00:50:48.026Z [INFO    ] [38aad965] GET /probe -> 200 (0.831ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with --no-reload, fork per request"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:48.724Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49527 (tina4-server)
+   Γöé   Swagger:   http://localhost:49527/swagger
+   Γöé   Dashboard: http://localhost:49527/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: http://localhost:50527 (stable ΓÇö no hot-reload)
+   Γöé 2026-10-01T00:50:49.080Z [WARNING ] [9c72846f] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:49.082Z [INFO    ] [9c72846f] GET /probe -> 200 (4.332ms)
+   Γöé 2026-10-01T00:50:49.107Z [INFO    ] [fc9fd866] GET /probe -> 200 (0.835ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug off, tina4 CLI, fork per request"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:1496"}; console:   Port 49530 is in use; takeover is disabled outside dev mode -- free it or choose another port.
+   Γöé {"timestamp":"2026-10-01T00:50:49.694Z","level":"INFO","message":"Tina4 v3.13.141 started","context":{"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49530 (tina4-server)
+   Γöé   Debug:     OFF (Log level: DEBUG)
+   Γöé {"timestamp":"2026-10-01T00:50:50.161Z","level":"WARNING","message":"TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy \"default-src 'self'\" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP=\"default-src 'self'\".","request_id":"d9fb7ea0"}
+   Γöé
+   Γöé Failed asserting that 'tina4php:1496' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug on, tina4 CLI, one process"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:50.869Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49533 (tina4-server)
+   Γöé   Swagger:   http://localhost:49533/swagger
+   Γöé   Dashboard: http://localhost:49533/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: http://localhost:50533 (stable ΓÇö no hot-reload)
+   Γöé 2026-10-01T00:50:51.209Z [WARNING ] [edbf2323] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:51.211Z [INFO    ] [edbf2323] GET /probe -> 200 (4.017ms)
+   Γöé 2026-10-01T00:50:51.250Z [INFO    ] [a3ae69a1] GET /probe -> 200 (0.78ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with live reload, one process"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:51.979Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49536 (tina4-server)
+   Γöé   Swagger:   http://localhost:49536/swagger
+   Γöé   Dashboard: http://localhost:49536/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: http://localhost:50536 (stable ΓÇö no hot-reload)
+   Γöé 2026-10-01T00:50:52.303Z [WARNING ] [18ecaef8] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:52.305Z [INFO    ] [18ecaef8] GET /probe -> 200 (3.966ms)
+   Γöé 2026-10-01T00:50:52.333Z [INFO    ] [2f266e1c] GET /probe -> 200 (3.328ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with --no-reload, one process"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:53.045Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49539 (tina4-server)
+   Γöé   Swagger:   http://localhost:49539/swagger
+   Γöé   Dashboard: http://localhost:49539/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: http://localhost:50539 (stable ΓÇö no hot-reload)
+   Γöé 2026-10-01T00:50:53.369Z [WARNING ] [b0572e42] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:53.372Z [INFO    ] [b0572e42] GET /probe -> 200 (4.99ms)
+   Γöé 2026-10-01T00:50:53.411Z [INFO    ] [d6cdae9c] GET /probe -> 200 (0.957ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve starts the native session and keeps it through a regenerate with data set "debug off, tina4 CLI, one process"
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:1496"}; console:   Port 49542 is in use; takeover is disabled outside dev mode -- free it or choose another port.
+   Γöé {"timestamp":"2026-10-01T00:50:53.997Z","level":"INFO","message":"Tina4 v3.13.141 started","context":{"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49542 (tina4-server)
+   Γöé   Debug:     OFF (Log level: DEBUG)
+   Γöé {"timestamp":"2026-10-01T00:50:54.463Z","level":"WARNING","message":"TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy \"default-src 'self'\" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP=\"default-src 'self'\".","request_id":"002a6681"}
+   Γöé
+   Γöé Failed asserting that 'tina4php:1496' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:167
+   Γöé
+ Γ£ÿ Serve test port skipped notice leaves the native session working
+   Γöé
+   Γöé the server process has already sent output, so PHP refuses its native sessions: {"headers_sent":"tina4php:2228"}; console: 2026-10-01T00:50:55.157Z [INFO    ] Tina4 v3.13.141 started {"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp\\tina4_serve_native_session_7cc901794f89","development":false}
+   Γöé
+   Γöé   ______ _             __ __
+   Γöé  /_  __/(_)___  ____ _/ // /
+   Γöé   / /  / / __ \/ __ \`/ // /_
+   Γöé  / /  / / / / / /_/ /__  __/
+   Γöé /_/  /_/_/ /_/\__,_/  /_/
+   Γöé
+   Γöé   Tina4 PHP v3.13.141 ΓÇö The Intelligent Native Application 4ramework
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49545 (tina4-server)
+   Γöé   Swagger:   http://localhost:49545/swagger
+   Γöé   Dashboard: http://localhost:49545/__dev
+   Γöé   Debug:     ON (Log level: DEBUG)
+   Γöé   Test Port: SKIPPED (port 50545 in use)
+   Γöé 2026-10-01T00:50:55.511Z [WARNING ] [5ce43685] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+   Γöé 2026-10-01T00:50:55.513Z [INFO    ] [5ce43685] GET /probe -> 200 (4.069ms)
+   Γöé 2026-10-01T00:50:55.538Z [INFO    ] [bf4c2498] GET /probe -> 200 (1.063ms)
+   Γöé
+   Γöé Failed asserting that 'tina4php:2228' is false.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:261
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:182
+   Γöé
+ Γ£ÿ App run starts the native session with its banner on
+   Γöé
+   Γöé the first request must set a PHPSESSID cookie: HTTP/1.1 200 OK
+   Γöé X-Frame-Options: SAMEORIGIN
+   Γöé X-Content-Type-Options: nosniff
+   Γöé Content-Security-Policy: default-src 'self'
+   Γöé Referrer-Policy: strict-origin-when-cross-origin
+   Γöé X-XSS-Protection: 0
+   Γöé Permissions-Policy: camera=(), microphone=(), geolocation=()
+   Γöé Content-Type: application/json
+   Γöé Set-Cookie: tina4_session=c67b6882309fd8a0a96584a484a15d04; Expires=Thu, 01 Oct 2026 01:50:56 GMT; Path=/; HttpOnly; SameSite=Lax
+   Γöé ETag: "0a3ad8df0d35905d"
+   Γöé X-Request-ID: 84366ccd
+   Γöé Content-Length: 20
+   Γöé Connection: close; console: {"timestamp":"2026-10-01T00:50:56.120Z","level":"INFO","message":"Tina4 v3.13.141 started","context":{"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp/tina4_regen253_49548","development":false}}
+   Γöé
+   Γöé   Tina4 PHP v3.13.141
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49548
+   Γöé   Routes:    5
+   Γöé
+   Γöé   Press Ctrl+C to stop.
+   Γöé
+   Γöé {"timestamp":"2026-10-01T00:50:56.724Z","level":"WARNING","message":"TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy \"default-src 'self'\" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP=\"default-src 'self'\".","request_id":"6d8df895"}
+   Γöé
+   Γöé Failed asserting that null is not null.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:276
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:196
+   Γöé
+ Γ£ÿ App run port in use notice leaves the native session working
+   Γöé
+   Γöé the first request must set a PHPSESSID cookie: HTTP/1.1 200 OK
+   Γöé X-Frame-Options: SAMEORIGIN
+   Γöé X-Content-Type-Options: nosniff
+   Γöé Content-Security-Policy: default-src 'self'
+   Γöé Referrer-Policy: strict-origin-when-cross-origin
+   Γöé X-XSS-Protection: 0
+   Γöé Permissions-Policy: camera=(), microphone=(), geolocation=()
+   Γöé Content-Type: application/json
+   Γöé Set-Cookie: tina4_session=13c698e1d6499c9eb6fdd3e2b9dec43b; Expires=Thu, 01 Oct 2026 01:50:57 GMT; Path=/; HttpOnly; SameSite=Lax
+   Γöé ETag: "0a3ad8df0d35905d"
+   Γöé X-Request-ID: 93429d58
+   Γöé Content-Length: 20
+   Γöé Connection: close; console: {"timestamp":"2026-10-01T00:50:57.313Z","level":"INFO","message":"Tina4 v3.13.141 started","context":{"base_path":"C:\\Users\\mig\\AppData\\Local\\Temp/tina4_regen253_49552","development":false}}
+   Γöé Port 49552 is in use, using port 49553 instead.
+   Γöé
+   Γöé   Tina4 PHP v3.13.141
+   Γöé
+   Γöé   Server:    http://127.0.0.1:49553
+   Γöé   Routes:    5
+   Γöé
+   Γöé   Press Ctrl+C to stop.
+   Γöé
+   Γöé {"timestamp":"2026-10-01T00:50:57.916Z","level":"WARNING","message":"TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy \"default-src 'self'\" on every response. That default blocks runtime-injected inline styles, cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP=\"default-src 'self'\".","request_id":"e8163d8b"}
+   Γöé
+   Γöé Failed asserting that null is not null.
+   Γöé
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:276
+   Γöé C:\Users\mig\fix-serve-native-session\tree\tests\ServeNativeSessionTest.php:219
+   Γöé
+ Γå⌐ Reclaiming the port from a stale server leaves the native session working
+
+FAILURES!
+Tests: 12, Assertions: 39, Failures: 11, Skipped: 1.

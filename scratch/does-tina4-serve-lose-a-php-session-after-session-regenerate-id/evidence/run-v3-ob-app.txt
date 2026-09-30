@@ -1,0 +1,30 @@
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=0 · ob_app=1
+== v3.x-dev cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"88c8df67ae0f84acf0cdde5f96222276","name":"PHPSESSID","pid":278348}
+/set        1 eb3e3a/null set:eb3e3a | 2 eb3e3a/1 set:- | 3 eb3e3a/1 set:-  kept
+/regen      1 80ff4b/null set:80ff4b | 2 5e42c1/1 set:5e42c1 | 3 5e42c1/1 set:-  kept
+/regen-keep 1 a97c7e/null set:a97c7e | 2 a6c55a/1 set:a6c55a | 3 a6c55a/1 set:-  kept
+/t-set      1 b84413/null set:b84413 | 2 b84413/1 set:- | 3 b84413/1 set:-  kept
+/t-regen    1 6bfb98/1 set:6bfb98 | 2 295565/2 set:295565 | 3 295565/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"38b7b49596659d35bf65e308143ced3a","name":"PHPSESSID","pid":280038}
+/set        1 327734/null set:327734 | 2 327734/1 set:- | 3 327734/1 set:-  kept
+/regen      1 e59dc9/null set:e59dc9 | 2 ca432a/1 set:ca432a | 3 ca432a/1 set:-  kept
+/regen-keep 1 d5f28b/null set:d5f28b | 2 b2e55b/1 set:b2e55b | 3 b2e55b/1 set:-  kept
+/t-set      1 e0bac9/null set:e0bac9 | 2 e0bac9/1 set:- | 3 e0bac9/1 set:-  kept
+/t-regen    1 dd0581/1 set:dd0581 | 2 89a519/2 set:89a519 | 3 89a519/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"822a8d07506c78455af9e151a844256a","name":"PHPSESSID","pid":281704}
+/set        1 72969f/null set:72969f | 2 72969f/1 set:- | 3 72969f/1 set:-  kept
+/regen      1 00c1fd/null set:00c1fd | 2 8e9fa9/1 set:8e9fa9 | 3 8e9fa9/1 set:-  kept
+/regen-keep 1 16575b/null set:16575b | 2 7f6797/1 set:7f6797 | 3 7f6797/1 set:-  kept
+/t-set      1 c217c9/null set:c217c9 | 2 c217c9/1 set:- | 3 c217c9/1 set:-  kept
+/t-regen    1 d810d8/1 set:d810d8 | 2 f94c52/2 set:f94c52 | 3 f94c52/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"21afd165936da2923b6498632c11893a","name":"PHPSESSID","pid":283369}
+/set        1 c811d4/null set:c811d4 | 2 c811d4/1 set:- | 3 c811d4/1 set:-  kept
+/regen      1 a0524b/null set:a0524b | 2 d62877/1 set:d62877 | 3 d62877/1 set:-  kept
+/regen-keep 1 db565d/null set:db565d | 2 d25b72/1 set:d25b72 | 3 d25b72/1 set:-  kept
+/t-set      1 205162/null set:205162 | 2 205162/1 set:- | 3 205162/1 set:-  kept
+/t-regen    1 b2f682/1 set:b2f682 | 2 a5076a/2 set:a5076a | 3 a5076a/2 set:-  kept
+   session files: native 8, app-started 0
+native $_SESSION not kept per client (/set or /regen) in 0 of 3 stock socket-server cells

@@ -1,0 +1,25 @@
+# PATCHED TREE: Packagist v3.x-dev 44b63aee with the fix overlaid, OB_APP=1, 2026-09-30T15:44:38Z
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=0 · ob_app=1
+== v3.x-dev cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"af60178b77d0ce06d77a3ad06c5922d7","name":"PHPSESSID","pid":471725}
+/set        1 c065fb/null set:c065fb | 2 c065fb/1 set:- | 3 c065fb/1 set:-  kept
+/regen      1 15fed8/null set:15fed8 | 2 ee8bdf/1 set:ee8bdf | 3 ee8bdf/1 set:-  kept
+/regen-keep 1 435238/null set:435238 | 2 0f0fb1/1 set:0f0fb1 | 3 0f0fb1/1 set:-  kept
+/t-set      1 2b49c2/null set:2b49c2 | 2 2b49c2/1 set:- | 3 2b49c2/1 set:-  kept
+/t-regen    1 3c1a5f/1 set:3c1a5f | 2 721ce0/2 set:721ce0 | 3 721ce0/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"8c92e94d0983695fdd237943286c1916","name":"PHPSESSID","pid":473374}
+/set        1 233af7/null set:233af7 | 2 233af7/1 set:- | 3 233af7/1 set:-  kept
+/regen      1 b5328e/null set:b5328e | 2 061dfb/1 set:061dfb | 3 061dfb/1 set:-  kept
+/regen-keep 1 d618e0/null set:d618e0 | 2 794368/1 set:794368 | 3 794368/1 set:-  kept
+/t-set      1 579a79/null set:579a79 | 2 579a79/1 set:- | 3 579a79/1 set:-  kept
+/t-regen    1 60db2b/1 set:60db2b | 2 8b97af/2 set:8b97af | 3 8b97af/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"40727f8570669360278e0724ffbf8ee2","name":"PHPSESSID","pid":475010}
+/set        1 719e2d/null set:719e2d | 2 719e2d/1 set:- | 3 719e2d/1 set:-  kept
+/regen      1 1846ca/null set:1846ca | 2 a9048d/1 set:a9048d | 3 a9048d/1 set:-  kept
+/regen-keep 1 c0cb21/null set:c0cb21 | 2 2e3a3f/1 set:2e3a3f | 3 2e3a3f/1 set:-  kept
+/t-set      1 556e81/null set:556e81 | 2 556e81/1 set:- | 3 556e81/1 set:-  kept
+/t-regen    1 e10762/1 set:e10762 | 2 a79cf4/2 set:a79cf4 | 3 a79cf4/2 set:-  kept
+   session files: native 8, app-started 0
+native $_SESSION not kept per client (/set or /regen) in 0 of 3 stock socket-server cells
+exit 0

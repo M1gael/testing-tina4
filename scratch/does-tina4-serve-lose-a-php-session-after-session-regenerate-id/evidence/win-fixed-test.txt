@@ -1,0 +1,25 @@
+PHPUnit 11.5.55 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.25
+Configuration: C:\Users\mig\fix-serve-native-session\tree\phpunit.xml
+
+...........S                                                      12 / 12 (100%)
+
+Time: 00:13.172, Memory: 10.00 MB
+
+Serve Native Session (Tests\ServeNativeSession)
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug on, tina4 CLI, fork per request"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with live reload, fork per request"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with --no-reload, fork per request"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug off, tina4 CLI, fork per request"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug on, tina4 CLI, one process"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with live reload, one process"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug on, bare with --no-reload, one process"
+ Γ£ö Serve starts the native session and keeps it through a regenerate with data set "debug off, tina4 CLI, one process"
+ Γ£ö Serve test port skipped notice leaves the native session working
+ Γ£ö App run starts the native session with its banner on
+ Γ£ö App run port in use notice leaves the native session working
+ Γå⌐ Reclaiming the port from a stale server leaves the native session working
+
+OK, but some tests were skipped!
+Tests: 12, Assertions: 167, Skipped: 1.

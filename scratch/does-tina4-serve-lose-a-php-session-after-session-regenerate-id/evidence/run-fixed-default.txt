@@ -1,0 +1,39 @@
+# PATCHED TREE: Packagist v3.x-dev 44b63aee with the fix branch's Tina4/ and bin/tina4php overlaid (diff -rq identical), 2026-09-30T15:43:51Z
+CLI: tina4 3.8.94 · PHP 8.4.25 · debug=true · prestart=0 · ob_app=0
+== v3.x-dev cli  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"1908892f00f31cd5d0179ff03f6de326","name":"PHPSESSID","pid":458160}
+/set        1 39588c/null set:39588c | 2 39588c/1 set:- | 3 39588c/1 set:-  kept
+/regen      1 904afc/null set:904afc | 2 5858b3/1 set:5858b3 | 3 5858b3/1 set:-  kept
+/regen-keep 1 a662a4/null set:a662a4 | 2 746fc6/1 set:746fc6 | 3 746fc6/1 set:-  kept
+/t-set      1 1e5898/null set:1e5898 | 2 1e5898/1 set:- | 3 1e5898/1 set:-  kept
+/t-regen    1 fafde8/1 set:fafde8 | 2 5cbc62/2 set:5cbc62 | 3 5cbc62/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev direct  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"8416d3b9d32b4e0ae74e85700c114c9e","name":"PHPSESSID","pid":459819}
+/set        1 32e8fc/null set:32e8fc | 2 32e8fc/1 set:- | 3 32e8fc/1 set:-  kept
+/regen      1 71b634/null set:71b634 | 2 2d5c16/1 set:2d5c16 | 3 2d5c16/1 set:-  kept
+/regen-keep 1 2cb1ce/null set:2cb1ce | 2 4274de/1 set:4274de | 3 4274de/1 set:-  kept
+/t-set      1 0db630/null set:0db630 | 2 0db630/1 set:- | 3 0db630/1 set:-  kept
+/t-regen    1 3b5e17/1 set:3b5e17 | 2 33fc86/2 set:33fc86 | 3 33fc86/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev serial  probe: {"sapi":"cli","ob":"0","status":2,"headers_sent":false,"id":"bda68c16125382b030a5000c9290c37e","name":"PHPSESSID","pid":461457}
+/set        1 ce0836/null set:ce0836 | 2 ce0836/1 set:- | 3 ce0836/1 set:-  kept
+/regen      1 ec3351/null set:ec3351 | 2 0ed636/1 set:0ed636 | 3 0ed636/1 set:-  kept
+/regen-keep 1 ba472d/null set:ba472d | 2 809acc/1 set:809acc | 3 809acc/1 set:-  kept
+/t-set      1 50355a/null set:50355a | 2 50355a/1 set:- | 3 50355a/1 set:-  kept
+/t-regen    1 8bb262/1 set:8bb262 | 2 1fce43/2 set:1fce43 | 3 1fce43/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev buffered  probe: {"sapi":"cli","ob":"4096","status":2,"headers_sent":false,"id":"ab0840322e784a88662ce5782c527d0a","name":"PHPSESSID","pid":463090}
+/set        1 fb52b5/null set:fb52b5 | 2 fb52b5/1 set:- | 3 fb52b5/1 set:-  kept
+/regen      1 33cbe0/null set:33cbe0 | 2 2d95ad/1 set:2d95ad | 3 2d95ad/1 set:-  kept
+/regen-keep 1 87264e/null set:87264e | 2 e51aa3/1 set:e51aa3 | 3 e51aa3/1 set:-  kept
+/t-set      1 8d2b87/null set:8d2b87 | 2 8d2b87/1 set:- | 3 8d2b87/1 set:-  kept
+/t-regen    1 7e3579/1 set:7e3579 | 2 c260ce/2 set:c260ce | 3 c260ce/2 set:-  kept
+   session files: native 8, app-started 0
+== v3.x-dev phps  probe: {"sapi":"cli-server","ob":"4096","status":2,"headers_sent":false,"id":"62a3efead996d37b4d86b9f4905514c1","name":"PHPSESSID","pid":464777}
+/set        1 7cb25d/null set:7cb25d | 2 7cb25d/1 set:- | 3 7cb25d/1 set:-  kept
+/regen      1 246c11/null set:246c11 | 2 8c2b6a/1 set:8c2b6a | 3 8c2b6a/1 set:-  kept
+/regen-keep 1 3f8eeb/null set:3f8eeb | 2 badc8a/1 set:badc8a | 3 badc8a/1 set:-  kept
+/t-set      1 c2d9a5/null set:c2d9a5 | 2 c2d9a5/1 set:- | 3 c2d9a5/1 set:-  kept
+/t-regen    1 1575bd/1 set:1575bd | 2 69e22a/2 set:69e22a | 3 69e22a/2 set:-  kept
+   session files: native 8, app-started 0
+native $_SESSION not kept per client (/set or /regen) in 0 of 3 stock socket-server cells
+exit 0

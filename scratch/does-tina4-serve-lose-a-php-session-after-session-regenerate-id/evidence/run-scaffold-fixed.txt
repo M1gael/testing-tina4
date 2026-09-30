@@ -1,0 +1,16 @@
+# STOCK: fresh tina4 init php + Packagist v3.x-dev, 2026-09-30T15:45:22Z
+stock `tina4 init php` · tina4php v3.x-dev @ 44b63aee · tina4 3.8.94 · PHP 8.4.25
+1 GET  /whoami  {"id":"","hit":null}  cookie:
+2 POST /regen   HTTP 500   cookie:
+3 GET  /whoami  {"id":"","hit":null}  cookie:
+log: session_regenerate_id(): Session ID cannot be regenerated when there is no active session 
+verdict: lost
+exit 1
+
+# PATCHED TREE: the same project, the fix branch's App.php, Server.php and bin/tina4php overlaid, 2026-09-30T15:45:37Z
+stock `tina4 init php` · tina4php v3.x-dev @ 44b63aee · tina4 3.8.94 · PHP 8.4.25
+1 GET  /whoami  {"id":"141d5b793bc07f9b31d930f25e4c27e8","hit":null}  cookie:PHPSESSID=141d5b
+2 POST /regen   HTTP 200 {"id":"f4dcc53fedfe2f10a772b1be3564794a","hit":1}  cookie:PHPSESSID=f4dcc5
+3 GET  /whoami  {"id":"f4dcc53fedfe2f10a772b1be3564794a","hit":1}  cookie:
+verdict: kept
+exit 0
