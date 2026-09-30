@@ -1,0 +1,338 @@
+﻿2026-09-28T17:08:54.1896704Z Current runner version: '2.337.0'
+2026-09-28T17:08:54.1926697Z ##[group]Runner Image Provisioner
+2026-09-28T17:08:54.1927677Z Hosted Compute Agent
+2026-09-28T17:08:54.1928333Z Version: 20260828.587
+2026-09-28T17:08:54.1929340Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-28T17:08:54.1930123Z Build Date: 2026-08-28T16:44:25Z
+2026-09-28T17:08:54.1930846Z Worker ID: {374469bf-78fc-4d6a-9aa2-91b226af9ebb}
+2026-09-28T17:08:54.1931677Z Azure Region: eastus2
+2026-09-28T17:08:54.1932313Z ##[endgroup]
+2026-09-28T17:08:54.1933749Z ##[group]Operating System
+2026-09-28T17:08:54.1934406Z Ubuntu
+2026-09-28T17:08:54.1934963Z 24.04.5
+2026-09-28T17:08:54.1935958Z LTS
+2026-09-28T17:08:54.1936546Z ##[endgroup]
+2026-09-28T17:08:54.1937109Z ##[group]Runner Image
+2026-09-28T17:08:54.1937799Z Image: ubuntu-24.04
+2026-09-28T17:08:54.1938445Z Version: 20260920.314.1
+2026-09-28T17:08:54.1940055Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260920.314/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-28T17:08:54.1941655Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260920.314
+2026-09-28T17:08:54.1942727Z ##[endgroup]
+2026-09-28T17:08:54.1943990Z ##[group]GITHUB_TOKEN Permissions
+2026-09-28T17:08:54.1946335Z Attestations: write
+2026-09-28T17:08:54.1946979Z Contents: write
+2026-09-28T17:08:54.1947656Z Metadata: read
+2026-09-28T17:08:54.1948247Z ##[endgroup]
+2026-09-28T17:08:54.1950622Z Secret source: Actions
+2026-09-28T17:08:54.1951788Z Cache mode: write
+2026-09-28T17:08:54.1952702Z Prepare workflow directory
+2026-09-28T17:08:54.2404487Z Prepare all required actions
+2026-09-28T17:08:54.2471692Z Getting action download info
+2026-09-28T17:08:54.5049467Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-28T17:08:54.5855678Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-09-28T17:08:54.8076446Z Download action repository 'actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a' (SHA:977bb373ede98d70efdf65b84cb5f73e068dcc2a)
+2026-09-28T17:08:54.9815068Z Download action repository 'actions/attest-sbom@4651f806c01d8637787e274ac3bdf724ef169f34' (SHA:4651f806c01d8637787e274ac3bdf724ef169f34)
+2026-09-28T17:08:55.1129093Z Download action repository 'softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65' (SHA:3bb12739c298aeb8a4eeaf626c5b8d85266b0e65)
+2026-09-28T17:08:55.3526944Z Getting action download info
+2026-09-28T17:08:55.4699804Z Download action repository 'actions/attest-build-provenance@864457a58d4733d7f1574bd8821fa24e02cf7538' (SHA:864457a58d4733d7f1574bd8821fa24e02cf7538)
+2026-09-28T17:08:55.6341394Z Download action repository 'actions/attest@daf44fb950173508f38bd2406030372c1d1162b1' (SHA:daf44fb950173508f38bd2406030372c1d1162b1)
+2026-09-28T17:08:55.8196582Z Getting action download info
+2026-09-28T17:08:55.9262818Z Download action repository 'actions/attest-sbom@55e972012fb8695c1b0049174547f1fcb4baa8a5' (SHA:55e972012fb8695c1b0049174547f1fcb4baa8a5)
+2026-09-28T17:08:56.1068415Z Complete job name: publish
+2026-09-28T17:08:56.1930589Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-09-28T17:08:56.1932325Z with:
+2026-09-28T17:08:56.1933113Z   repository: tina4stack/tina4-php
+2026-09-28T17:08:56.1936671Z   token: ***
+2026-09-28T17:08:56.1937442Z   ssh-strict: true
+2026-09-28T17:08:56.1938197Z   ssh-user: git
+2026-09-28T17:08:56.1939144Z   persist-credentials: true
+2026-09-28T17:08:56.1939949Z   clean: true
+2026-09-28T17:08:56.1940723Z   sparse-checkout-cone-mode: true
+2026-09-28T17:08:56.1941542Z   fetch-depth: 1
+2026-09-28T17:08:56.1942286Z   fetch-tags: false
+2026-09-28T17:08:56.1943076Z   show-progress: true
+2026-09-28T17:08:56.1943844Z   lfs: false
+2026-09-28T17:08:56.1944586Z   submodules: false
+2026-09-28T17:08:56.1945350Z   set-safe-directory: true
+2026-09-28T17:08:56.1946181Z   allow-unsafe-pr-checkout: false
+2026-09-28T17:08:56.1947601Z ##[endgroup]
+2026-09-28T17:08:56.3035040Z Syncing repository: tina4stack/tina4-php
+2026-09-28T17:08:56.3038817Z ##[group]Getting Git version info
+2026-09-28T17:08:56.3040321Z Working directory is '/home/runner/work/tina4-php/tina4-php'
+2026-09-28T17:08:56.3042560Z [command]/usr/bin/git version
+2026-09-28T17:08:56.3139112Z git version 2.55.0
+2026-09-28T17:08:56.3150638Z ##[endgroup]
+2026-09-28T17:08:56.3156093Z Temporarily overriding HOME='/home/runner/work/_temp/1300761b-1115-4ae0-aef8-ff1791e23a34' before making global git config changes
+2026-09-28T17:08:56.3157543Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-28T17:08:56.3159081Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tina4-php/tina4-php
+2026-09-28T17:08:56.3199761Z Deleting the contents of '/home/runner/work/tina4-php/tina4-php'
+2026-09-28T17:08:56.3205557Z ##[group]Initializing the repository
+2026-09-28T17:08:56.3209636Z [command]/usr/bin/git init /home/runner/work/tina4-php/tina4-php
+2026-09-28T17:08:56.3314526Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-28T17:08:56.3316290Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-28T17:08:56.3317478Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-28T17:08:56.3318464Z hint: call:
+2026-09-28T17:08:56.3319680Z hint:
+2026-09-28T17:08:56.3320576Z hint: 	git config --global init.defaultBranch <name>
+2026-09-28T17:08:56.3321457Z hint:
+2026-09-28T17:08:56.3322334Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-28T17:08:56.3323469Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-28T17:08:56.3324445Z hint:
+2026-09-28T17:08:56.3325192Z hint: 	git branch -m <name>
+2026-09-28T17:08:56.3325971Z hint:
+2026-09-28T17:08:56.3326922Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-28T17:08:56.3331633Z Initialized empty Git repository in /home/runner/work/tina4-php/tina4-php/.git/
+2026-09-28T17:08:56.3343157Z [command]/usr/bin/git remote add origin https://github.com/tina4stack/tina4-php
+2026-09-28T17:08:56.3394540Z ##[endgroup]
+2026-09-28T17:08:56.3395862Z ##[group]Disabling automatic garbage collection
+2026-09-28T17:08:56.3399223Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-28T17:08:56.3433706Z ##[endgroup]
+2026-09-28T17:08:56.3435133Z ##[group]Setting up auth
+2026-09-28T17:08:56.3440849Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-28T17:08:56.3476333Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-28T17:08:56.3871285Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-28T17:08:56.3914777Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-28T17:08:56.4167612Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-28T17:08:56.4208115Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-28T17:08:56.4452829Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-28T17:08:56.4496876Z ##[endgroup]
+2026-09-28T17:08:56.4498232Z ##[group]Fetching the repository
+2026-09-28T17:08:56.4505942Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +211490df44f4b7c58e1b3648b9f70fdd8d33aa17:refs/tags/3.13.140
+2026-09-28T17:08:57.3862128Z From https://github.com/tina4stack/tina4-php
+2026-09-28T17:08:57.3862733Z  * [new ref]         211490df44f4b7c58e1b3648b9f70fdd8d33aa17 -> 3.13.140
+2026-09-28T17:08:57.3865646Z ##[endgroup]
+2026-09-28T17:08:57.3866133Z ##[group]Determining the checkout info
+2026-09-28T17:08:57.3868473Z ##[endgroup]
+2026-09-28T17:08:57.3875726Z [command]/usr/bin/git sparse-checkout disable
+2026-09-28T17:08:57.3934413Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-28T17:08:57.3979952Z ##[group]Checking out the ref
+2026-09-28T17:08:57.3984261Z [command]/usr/bin/git checkout --progress --force refs/tags/3.13.140
+2026-09-28T17:08:57.5067993Z Note: switching to 'refs/tags/3.13.140'.
+2026-09-28T17:08:57.5078694Z 
+2026-09-28T17:08:57.5079179Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-09-28T17:08:57.5079966Z changes and commit them, and you can discard any commits you make in this
+2026-09-28T17:08:57.5080726Z state without impacting any branches by switching back to a branch.
+2026-09-28T17:08:57.5081181Z 
+2026-09-28T17:08:57.5081541Z If you want to create a new branch to retain commits you create, you may
+2026-09-28T17:08:57.5082283Z do so (now or later) by using -c with the switch command. Example:
+2026-09-28T17:08:57.5082679Z 
+2026-09-28T17:08:57.5082873Z   git switch -c <new-branch-name>
+2026-09-28T17:08:57.5083153Z 
+2026-09-28T17:08:57.5083337Z Or undo this operation with:
+2026-09-28T17:08:57.5083602Z 
+2026-09-28T17:08:57.5083740Z   git switch -
+2026-09-28T17:08:57.5084198Z 
+2026-09-28T17:08:57.5084898Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-09-28T17:08:57.5085744Z 
+2026-09-28T17:08:57.5086313Z HEAD is now at 211490d Merge pull request #248 from tina4stack/chore/release-3.13.140
+2026-09-28T17:08:57.5089059Z ##[endgroup]
+2026-09-28T17:08:57.5150941Z [command]/usr/bin/git log -1 --format=%H
+2026-09-28T17:08:57.5182633Z 211490df44f4b7c58e1b3648b9f70fdd8d33aa17
+2026-09-28T17:08:57.5547976Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-09-28T17:08:57.5548853Z with:
+2026-09-28T17:08:57.5549183Z   name: release-package-php
+2026-09-28T17:08:57.5549602Z   path: dist
+2026-09-28T17:08:57.5549928Z   merge-multiple: false
+2026-09-28T17:08:57.5550303Z   repository: tina4stack/tina4-php
+2026-09-28T17:08:57.5550693Z   run-id: 36456033200
+2026-09-28T17:08:57.5551054Z ##[endgroup]
+2026-09-28T17:08:57.7067637Z Downloading single artifact
+2026-09-28T17:08:57.7231373Z (node:2260) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-28T17:08:57.7232538Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-28T17:08:57.8369808Z Preparing to download the following artifacts:
+2026-09-28T17:08:57.8370994Z - release-package-php (ID: 10985099036, Size: 1913026, Expected Digest: sha256:2dd1605c46482d2e98dab614d6127348ee91bb3a9b01fccbeadf25522859205a)
+2026-09-28T17:08:57.9634953Z Redirecting to blob download url: https://productionresultssa9.blob.core.windows.net/actions-results/75068754-63c4-47c0-bf83-2238f0ae4f26/workflow-job-run-120a0ffb-ecc2-5029-ac08-966432cdaa42/artifacts/56a935bf89fa6a01a695ac076dd35cc00a14c7e6a1e04b166bbe98076cacd586.zip
+2026-09-28T17:08:57.9636982Z Starting download of artifact to: /home/runner/work/tina4-php/tina4-php/dist
+2026-09-28T17:08:58.1348518Z (node:2260) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-28T17:08:58.1750833Z SHA256 digest of downloaded artifact is 2dd1605c46482d2e98dab614d6127348ee91bb3a9b01fccbeadf25522859205a
+2026-09-28T17:08:58.1751685Z Artifact download completed successfully.
+2026-09-28T17:08:58.1752038Z Total of 1 artifact(s) downloaded
+2026-09-28T17:08:58.1756579Z Download artifact has finished successfully
+2026-09-28T17:08:58.1895163Z ##[group]Run cd dist && sha256sum --check SHA256SUMS
+2026-09-28T17:08:58.1895623Z cd dist && sha256sum --check SHA256SUMS
+2026-09-28T17:08:58.2152407Z shell: /usr/bin/bash -e {0}
+2026-09-28T17:08:58.2152711Z ##[endgroup]
+2026-09-28T17:08:58.2281095Z sbom.spdx.json: OK
+2026-09-28T17:08:58.2297101Z tina4php-3.13.140.tar.gz: OK
+2026-09-28T17:08:58.2391360Z ##[group]Run actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a
+2026-09-28T17:08:58.2391820Z with:
+2026-09-28T17:08:58.2392047Z   subject-path: dist/*
+2026-09-28T17:08:58.2392299Z   push-to-registry: false
+2026-09-28T17:08:58.2392540Z   show-summary: true
+2026-09-28T17:08:58.2395165Z   github-token: ***
+2026-09-28T17:08:58.2395407Z ##[endgroup]
+2026-09-28T17:08:58.2452917Z ##[start-action display=Run actions/attest-build-provenance/predicate@864457a58d4733d7f1574bd8821fa24e02cf7538;id=__actions_attest-build-provenance.generate-build-provenance-predicate]
+2026-09-28T17:08:58.2485929Z ##[group]Run actions/attest-build-provenance/predicate@864457a58d4733d7f1574bd8821fa24e02cf7538
+2026-09-28T17:08:58.2486401Z ##[endgroup]
+2026-09-28T17:08:58.5355583Z ##[end-action id=__actions_attest-build-provenance.generate-build-provenance-predicate;outcome=success;conclusion=success;duration_ms=290]
+2026-09-28T17:08:58.5365418Z ##[start-action display=Run actions/attest@daf44fb950173508f38bd2406030372c1d1162b1;id=__actions_attest-build-provenance.attest]
+2026-09-28T17:08:58.5405513Z ##[group]Run actions/attest@daf44fb950173508f38bd2406030372c1d1162b1
+2026-09-28T17:08:58.5405882Z with:
+2026-09-28T17:08:58.5406111Z   subject-path: dist/*
+2026-09-28T17:08:58.5406414Z   predicate-type: https://slsa.dev/provenance/v1
+2026-09-28T17:08:58.5409530Z   predicate: {"buildDefinition":{"buildType":"https://actions.github.io/buildtypes/workflow/v1","externalParameters":{"workflow":{"ref":"refs/tags/3.13.140","repository":"https://github.com/tina4stack/tina4-php","path":".github/workflows/publish.yml"}},"internalParameters":{"github":{"event_name":"push","repository_id":"177258204","repository_owner_id":"82961293","runner_environment":"github-hosted"}},"resolvedDependencies":[{"uri":"git+https://github.com/tina4stack/tina4-php@refs/tags/3.13.140","digest":{"gitCommit":"211490df44f4b7c58e1b3648b9f70fdd8d33aa17"}}]},"runDetails":{"builder":{"id":"https://github.com/tina4stack/tina4-php/.github/workflows/publish.yml@refs/tags/3.13.140"},"metadata":{"invocationId":"https://github.com/tina4stack/tina4-php/actions/runs/36456033200/attempts/1"}}}
+2026-09-28T17:08:58.5412137Z   push-to-registry: false
+2026-09-28T17:08:58.5412406Z   show-summary: true
+2026-09-28T17:08:58.5415159Z   github-token: ***
+2026-09-28T17:08:58.5415405Z env:
+2026-09-28T17:08:58.5415650Z   NODE_OPTIONS: --max-http-header-size=32768
+2026-09-28T17:08:58.5415954Z ##[endgroup]
+2026-09-28T17:09:00.4044642Z Attestation created for 3 subjects
+2026-09-28T17:09:00.4046666Z ##[group]Attestation signed using certificate from Public Good Sigstore instance
+2026-09-28T17:09:00.4049075Z -----BEGIN CERTIFICATE-----
+2026-09-28T17:09:00.4049988Z MIIHNzCCBr2gAwIBAgIUZ6p+cgS2AFU5jU5dqMJat4j5XAwwCgYIKoZIzj0EAwMw
+2026-09-28T17:09:00.4051040Z NzEVMBMGA1UEChMMc2lnc3RvcmUuZGV2MR4wHAYDVQQDExVzaWdzdG9yZS1pbnRl
+2026-09-28T17:09:00.4052192Z cm1lZGlhdGUwHhcNMjYwOTI4MTcwODU4WhcNMjYwOTI4MTcxODU4WjAAMFkwEwYH
+2026-09-28T17:09:00.4053331Z KoZIzj0CAQYIKoZIzj0DAQcDQgAE+HV0B7Nz/taT0fh0b3KD2WTZpsTvB/fRfm35
+2026-09-28T17:09:00.4054339Z jdhOIyAqjR6N048qwtiCF1JPH4hqF9VPpnw/auBGNU0iw8eNvKOCBdwwggXYMA4G
+2026-09-28T17:09:00.4055665Z A1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzAdBgNVHQ4EFgQU30eZ
+2026-09-28T17:09:00.4056743Z MNiQYbAW2BrwbnkEw7FmzsYwHwYDVR0jBBgwFoAU39Ppz1YkEZb5qNjpKFWixi4Y
+2026-09-28T17:09:00.4057799Z ZD8wZgYDVR0RAQH/BFwwWoZYaHR0cHM6Ly9naXRodWIuY29tL3RpbmE0c3RhY2sv
+2026-09-28T17:09:00.4059790Z dGluYTQtcGhwLy5naXRodWIvd29ya2Zsb3dzL3B1Ymxpc2gueW1sQHJlZnMvdGFn
+2026-09-28T17:09:00.4060845Z cy8zLjEzLjE0MDA5BgorBgEEAYO/MAEBBCtodHRwczovL3Rva2VuLmFjdGlvbnMu
+2026-09-28T17:09:00.4062234Z Z2l0aHVidXNlcmNvbnRlbnQuY29tMBIGCisGAQQBg78wAQIEBHB1c2gwNgYKKwYB
+2026-09-28T17:09:00.4063328Z BAGDvzABAwQoMjExNDkwZGY0NGY0YjdjNThlMWIzNjQ4YjlmNzBmZGQ4ZDMzYWEx
+2026-09-28T17:09:00.4064381Z NzAuBgorBgEEAYO/MAEEBCBSZWxlYXNlIHBhY2thZ2VzIGFuZCBwdWJsaWNhdGlv
+2026-09-28T17:09:00.4065411Z bjAiBgorBgEEAYO/MAEFBBR0aW5hNHN0YWNrL3RpbmE0LXBocDAgBgorBgEEAYO/
+2026-09-28T17:09:00.4066949Z MAEGBBJyZWZzL3RhZ3MvMy4xMy4xNDAwOwYKKwYBBAGDvzABCAQtDCtodHRwczov
+2026-09-28T17:09:00.4068043Z L3Rva2VuLmFjdGlvbnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tMGgGCisGAQQBg78w
+2026-09-28T17:09:00.4069329Z AQkEWgxYaHR0cHM6Ly9naXRodWIuY29tL3RpbmE0c3RhY2svdGluYTQtcGhwLy5n
+2026-09-28T17:09:00.4070377Z aXRodWIvd29ya2Zsb3dzL3B1Ymxpc2gueW1sQHJlZnMvdGFncy8zLjEzLjE0MDA4
+2026-09-28T17:09:00.4071697Z BgorBgEEAYO/MAEKBCoMKDIxMTQ5MGRmNDRmNGI3YzU4ZTFiMzY0OGI5ZjcwZmRk
+2026-09-28T17:09:00.4072862Z OGQzM2FhMTcwHQYKKwYBBAGDvzABCwQPDA1naXRodWItaG9zdGVkMDcGCisGAQQB
+2026-09-28T17:09:00.4097855Z g78wAQwEKQwnaHR0cHM6Ly9naXRodWIuY29tL3RpbmE0c3RhY2svdGluYTQtcGhw
+2026-09-28T17:09:00.4099388Z MDgGCisGAQQBg78wAQ0EKgwoMjExNDkwZGY0NGY0YjdjNThlMWIzNjQ4YjlmNzBm
+2026-09-28T17:09:00.4100749Z ZGQ4ZDMzYWExNzAiBgorBgEEAYO/MAEOBBQMEnJlZnMvdGFncy8zLjEzLjE0MDAZ
+2026-09-28T17:09:00.4102719Z BgorBgEEAYO/MAEPBAsMCTE3NzI1ODIwNDAtBgorBgEEAYO/MAEQBB8MHWh0dHBz
+2026-09-28T17:09:00.4103912Z Oi8vZ2l0aHViLmNvbS90aW5hNHN0YWNrMBgGCisGAQQBg78wAREECgwIODI5NjEy
+2026-09-28T17:09:00.4105129Z OTMwaAYKKwYBBAGDvzABEgRaDFhodHRwczovL2dpdGh1Yi5jb20vdGluYTRzdGFj
+2026-09-28T17:09:00.4106324Z ay90aW5hNC1waHAvLmdpdGh1Yi93b3JrZmxvd3MvcHVibGlzaC55bWxAcmVmcy90
+2026-09-28T17:09:00.4107488Z YWdzLzMuMTMuMTQwMDgGCisGAQQBg78wARMEKgwoMjExNDkwZGY0NGY0YjdjNThl
+2026-09-28T17:09:00.4108808Z MWIzNjQ4YjlmNzBmZGQ4ZDMzYWExNzAUBgorBgEEAYO/MAEUBAYMBHB1c2gwWwYK
+2026-09-28T17:09:00.4109965Z KwYBBAGDvzABFQRNDEtodHRwczovL2dpdGh1Yi5jb20vdGluYTRzdGFjay90aW5h
+2026-09-28T17:09:00.4111231Z NC1waHAvYWN0aW9ucy9ydW5zLzM2NDU2MDMzMjAwL2F0dGVtcHRzLzEwFgYKKwYB
+2026-09-28T17:09:00.4112404Z BAGDvzABFgQIDAZwdWJsaWMwFwYKKwYBBAGDvzABFwQJDAdyZWxlYXNlMD0GCisG
+2026-09-28T17:09:00.4113516Z AQQBg78wARgELwwtcmVwbzp0aW5hNHN0YWNrL3RpbmE0LXBocDplbnZpcm9ubWVu
+2026-09-28T17:09:00.4114613Z dDpyZWxlYXNlMIGJBgorBgEEAdZ5AgQCBHsEeQB3AHUA3T0wasbHETJjGR4cmWc3
+2026-09-28T17:09:00.4115632Z AqJKXrjePK3/h4pygC8p7o4AAAGg6P2/9gAABAMARjBEAiAhXVYgrrZiWFCpKf7y
+2026-09-28T17:09:00.4116657Z zhqxVgUdkEKXWOJoIdxDK+3OqAIgBMx1J7TxhpjCIFv6JVnG7B7hYFWPOhcZCrAo
+2026-09-28T17:09:00.4133346Z k8j1RlAwCgYIKoZIzj0EAwMDaAAwZQIwXg/JWaSm+Hth4WriA9J41YRpodjcN2g7
+2026-09-28T17:09:00.4134761Z 7Bn+x0QOY4r1SmvzSb1ZAybrWywgAGqaAjEA1bQ9EOrdTEHHr3lvUt1rgbWMjwR0
+2026-09-28T17:09:00.4150960Z uU3lKZSNToQdnmjSNwJKsoGMAAEii7yps/De
+2026-09-28T17:09:00.4152015Z -----END CERTIFICATE-----
+2026-09-28T17:09:00.4152494Z 
+2026-09-28T17:09:00.4153245Z ##[endgroup]
+2026-09-28T17:09:00.4154220Z Attestation signature uploaded to Rekor transparency log
+2026-09-28T17:09:00.4155124Z https://search.sigstore.dev?logIndex=2984959756
+2026-09-28T17:09:00.4155985Z Attestation uploaded to repository
+2026-09-28T17:09:00.4156805Z https://github.com/tina4stack/tina4-php/attestations/50845721
+2026-09-28T17:09:00.4394985Z ##[end-action id=__actions_attest-build-provenance.attest;outcome=success;conclusion=success;duration_ms=1902]
+2026-09-28T17:09:00.4533634Z ##[group]Run actions/attest-sbom@4651f806c01d8637787e274ac3bdf724ef169f34
+2026-09-28T17:09:00.4534064Z with:
+2026-09-28T17:09:00.4534293Z   subject-path: dist/*.tar.gz
+2026-09-28T17:09:00.4534576Z   sbom-path: dist/sbom.spdx.json
+2026-09-28T17:09:00.4534852Z   push-to-registry: false
+2026-09-28T17:09:00.4535115Z   show-summary: true
+2026-09-28T17:09:00.4537692Z   github-token: ***
+2026-09-28T17:09:00.4537934Z ##[endgroup]
+2026-09-28T17:09:00.4542523Z ##[start-action display=Run actions/attest-sbom/predicate@55e972012fb8695c1b0049174547f1fcb4baa8a5;id=__actions_attest-sbom.generate-sbom-predicate]
+2026-09-28T17:09:00.4566275Z ##[group]Run actions/attest-sbom/predicate@55e972012fb8695c1b0049174547f1fcb4baa8a5
+2026-09-28T17:09:00.4566694Z with:
+2026-09-28T17:09:00.4566922Z   sbom-path: dist/sbom.spdx.json
+2026-09-28T17:09:00.4567188Z ##[endgroup]
+2026-09-28T17:09:00.5297553Z ##[end-action id=__actions_attest-sbom.generate-sbom-predicate;outcome=success;conclusion=success;duration_ms=75]
+2026-09-28T17:09:00.5302229Z ##[start-action display=Run actions/attest@daf44fb950173508f38bd2406030372c1d1162b1;id=__actions_attest-sbom.attest]
+2026-09-28T17:09:00.5353243Z ##[group]Run actions/attest@daf44fb950173508f38bd2406030372c1d1162b1
+2026-09-28T17:09:00.5353820Z with:
+2026-09-28T17:09:00.5354152Z   subject-path: dist/*.tar.gz
+2026-09-28T17:09:00.5354662Z   predicate-type: https://spdx.dev/Document/v2.3
+2026-09-28T17:09:00.5355313Z   predicate-path: /home/runner/work/_temp/3FepsE/predicate.json
+2026-09-28T17:09:00.5355890Z   push-to-registry: false
+2026-09-28T17:09:00.5356278Z   show-summary: true
+2026-09-28T17:09:00.5361369Z   github-token: ***
+2026-09-28T17:09:00.5361728Z env:
+2026-09-28T17:09:00.5362088Z   NODE_OPTIONS: --max-http-header-size=32768
+2026-09-28T17:09:00.5362552Z ##[endgroup]
+2026-09-28T17:09:02.4644650Z Attestation created for tina4php-3.13.140.tar.gz@sha256:601f0721f7931541c0b33bee101b039cda22391e72ad9e6a96f58ca876ff0883
+2026-09-28T17:09:02.4646698Z ##[group]Attestation signed using certificate from Public Good Sigstore instance
+2026-09-28T17:09:02.4647765Z -----BEGIN CERTIFICATE-----
+2026-09-28T17:09:02.4648268Z MIIHNzCCBr6gAwIBAgIUL2W/4O3qy/V3/axCHeAFKTKM2NQwCgYIKoZIzj0EAwMw
+2026-09-28T17:09:02.4649576Z NzEVMBMGA1UEChMMc2lnc3RvcmUuZGV2MR4wHAYDVQQDExVzaWdzdG9yZS1pbnRl
+2026-09-28T17:09:02.4650418Z cm1lZGlhdGUwHhcNMjYwOTI4MTcwOTAwWhcNMjYwOTI4MTcxOTAwWjAAMFkwEwYH
+2026-09-28T17:09:02.4651225Z KoZIzj0CAQYIKoZIzj0DAQcDQgAE85R/gVQNpVl8di3b4Sp1CDjy+Ta8FYmKdBU0
+2026-09-28T17:09:02.4652032Z 8gVLjtBinUYanI3/y10NziwERqNPg9qNckQHCgtquSIIfax43KOCBd0wggXZMA4G
+2026-09-28T17:09:02.4652854Z A1UdDwEB/wQEAwIHgDATBgNVHSUEDDAKBggrBgEFBQcDAzAdBgNVHQ4EFgQURfCa
+2026-09-28T17:09:02.4653723Z MnljR0gY+5QaRdOVhrGmmrgwHwYDVR0jBBgwFoAU39Ppz1YkEZb5qNjpKFWixi4Y
+2026-09-28T17:09:02.4654552Z ZD8wZgYDVR0RAQH/BFwwWoZYaHR0cHM6Ly9naXRodWIuY29tL3RpbmE0c3RhY2sv
+2026-09-28T17:09:02.4655394Z dGluYTQtcGhwLy5naXRodWIvd29ya2Zsb3dzL3B1Ymxpc2gueW1sQHJlZnMvdGFn
+2026-09-28T17:09:02.4656233Z cy8zLjEzLjE0MDA5BgorBgEEAYO/MAEBBCtodHRwczovL3Rva2VuLmFjdGlvbnMu
+2026-09-28T17:09:02.4657045Z Z2l0aHVidXNlcmNvbnRlbnQuY29tMBIGCisGAQQBg78wAQIEBHB1c2gwNgYKKwYB
+2026-09-28T17:09:02.4657933Z BAGDvzABAwQoMjExNDkwZGY0NGY0YjdjNThlMWIzNjQ4YjlmNzBmZGQ4ZDMzYWEx
+2026-09-28T17:09:02.4658987Z NzAuBgorBgEEAYO/MAEEBCBSZWxlYXNlIHBhY2thZ2VzIGFuZCBwdWJsaWNhdGlv
+2026-09-28T17:09:02.4659781Z bjAiBgorBgEEAYO/MAEFBBR0aW5hNHN0YWNrL3RpbmE0LXBocDAgBgorBgEEAYO/
+2026-09-28T17:09:02.4660617Z MAEGBBJyZWZzL3RhZ3MvMy4xMy4xNDAwOwYKKwYBBAGDvzABCAQtDCtodHRwczov
+2026-09-28T17:09:02.4661475Z L3Rva2VuLmFjdGlvbnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tMGgGCisGAQQBg78w
+2026-09-28T17:09:02.4662329Z AQkEWgxYaHR0cHM6Ly9naXRodWIuY29tL3RpbmE0c3RhY2svdGluYTQtcGhwLy5n
+2026-09-28T17:09:02.4663183Z aXRodWIvd29ya2Zsb3dzL3B1Ymxpc2gueW1sQHJlZnMvdGFncy8zLjEzLjE0MDA4
+2026-09-28T17:09:02.4664037Z BgorBgEEAYO/MAEKBCoMKDIxMTQ5MGRmNDRmNGI3YzU4ZTFiMzY0OGI5ZjcwZmRk
+2026-09-28T17:09:02.4664820Z OGQzM2FhMTcwHQYKKwYBBAGDvzABCwQPDA1naXRodWItaG9zdGVkMDcGCisGAQQB
+2026-09-28T17:09:02.4665976Z g78wAQwEKQwnaHR0cHM6Ly9naXRodWIuY29tL3RpbmE0c3RhY2svdGluYTQtcGhw
+2026-09-28T17:09:02.4666741Z MDgGCisGAQQBg78wAQ0EKgwoMjExNDkwZGY0NGY0YjdjNThlMWIzNjQ4YjlmNzBm
+2026-09-28T17:09:02.4667497Z ZGQ4ZDMzYWExNzAiBgorBgEEAYO/MAEOBBQMEnJlZnMvdGFncy8zLjEzLjE0MDAZ
+2026-09-28T17:09:02.4668216Z BgorBgEEAYO/MAEPBAsMCTE3NzI1ODIwNDAtBgorBgEEAYO/MAEQBB8MHWh0dHBz
+2026-09-28T17:09:02.4669549Z Oi8vZ2l0aHViLmNvbS90aW5hNHN0YWNrMBgGCisGAQQBg78wAREECgwIODI5NjEy
+2026-09-28T17:09:02.4670311Z OTMwaAYKKwYBBAGDvzABEgRaDFhodHRwczovL2dpdGh1Yi5jb20vdGluYTRzdGFj
+2026-09-28T17:09:02.4671118Z ay90aW5hNC1waHAvLmdpdGh1Yi93b3JrZmxvd3MvcHVibGlzaC55bWxAcmVmcy90
+2026-09-28T17:09:02.4671982Z YWdzLzMuMTMuMTQwMDgGCisGAQQBg78wARMEKgwoMjExNDkwZGY0NGY0YjdjNThl
+2026-09-28T17:09:02.4672763Z MWIzNjQ4YjlmNzBmZGQ4ZDMzYWExNzAUBgorBgEEAYO/MAEUBAYMBHB1c2gwWwYK
+2026-09-28T17:09:02.4673540Z KwYBBAGDvzABFQRNDEtodHRwczovL2dpdGh1Yi5jb20vdGluYTRzdGFjay90aW5h
+2026-09-28T17:09:02.4674436Z NC1waHAvYWN0aW9ucy9ydW5zLzM2NDU2MDMzMjAwL2F0dGVtcHRzLzEwFgYKKwYB
+2026-09-28T17:09:02.4675319Z BAGDvzABFgQIDAZwdWJsaWMwFwYKKwYBBAGDvzABFwQJDAdyZWxlYXNlMD0GCisG
+2026-09-28T17:09:02.4676121Z AQQBg78wARgELwwtcmVwbzp0aW5hNHN0YWNrL3RpbmE0LXBocDplbnZpcm9ubWVu
+2026-09-28T17:09:02.4677235Z dDpyZWxlYXNlMIGKBgorBgEEAdZ5AgQCBHwEegB4AHYA3T0wasbHETJjGR4cmWc3
+2026-09-28T17:09:02.4678030Z AqJKXrjePK3/h4pygC8p7o4AAAGg6P3HPgAABAMARzBFAiBFySNTm3scHMPKXvtO
+2026-09-28T17:09:02.4679107Z 20sEx1+oTI6Wyu/JIxdzbwBgHgIhAOeITluM26GuA6oXx05Z3g2LOfigjFdtfySg
+2026-09-28T17:09:02.4679963Z CoUfm4cKMAoGCCqGSM49BAMDA2cAMGQCMBc9SwV9YDAX7cH6MqftWTxoRIxGVDYI
+2026-09-28T17:09:02.4680771Z mGUauTtwpsFanwMXwWbKQczwe/0bWwHyXwIwfRhWhrzO1Yilzl/HVn7wWT2Kdmbv
+2026-09-28T17:09:02.4681427Z Qh2rYyozjM7zTwORLFXcxqhkcWtOhOchyIb+
+2026-09-28T17:09:02.4681908Z -----END CERTIFICATE-----
+2026-09-28T17:09:02.4682171Z 
+2026-09-28T17:09:02.4682703Z ##[endgroup]
+2026-09-28T17:09:02.4683428Z Attestation signature uploaded to Rekor transparency log
+2026-09-28T17:09:02.4684133Z https://search.sigstore.dev?logIndex=2984960353
+2026-09-28T17:09:02.4684800Z Attestation uploaded to repository
+2026-09-28T17:09:02.4685412Z https://github.com/tina4stack/tina4-php/attestations/50845729
+2026-09-28T17:09:02.4963246Z ##[end-action id=__actions_attest-sbom.attest;outcome=success;conclusion=success;duration_ms=1965]
+2026-09-28T17:09:02.4996751Z ##[group]Run python3 - <<'PYNOTES'
+2026-09-28T17:09:02.4997099Z python3 - <<'PYNOTES'
+2026-09-28T17:09:02.4997369Z import os
+2026-09-28T17:09:02.4997609Z from pathlib import Path
+2026-09-28T17:09:02.4997918Z text = Path('CHANGELOG.md').read_text()
+2026-09-28T17:09:02.4998297Z marker = '## ' + os.environ['GITHUB_REF_NAME'] + '\n'
+2026-09-28T17:09:02.4999011Z notes = text.split(marker, 1)[1].split('\n## ', 1)[0].strip()
+2026-09-28T17:09:02.4999377Z if not notes:
+2026-09-28T17:09:02.4999678Z     raise SystemExit('Release changelog is empty')
+2026-09-28T17:09:02.5000093Z Path('/tmp/release-notes.md').write_text(notes + '\n')
+2026-09-28T17:09:02.5000430Z PYNOTES
+2026-09-28T17:09:02.5068817Z shell: /usr/bin/bash -e {0}
+2026-09-28T17:09:02.5069112Z ##[endgroup]
+2026-09-28T17:09:02.6361096Z Traceback (most recent call last):
+2026-09-28T17:09:02.6361718Z   File "<stdin>", line 5, in <module>
+2026-09-28T17:09:02.6362168Z IndexError: list index out of range
+2026-09-28T17:09:02.6523289Z ##[error]Process completed with exit code 1.
+2026-09-28T17:09:02.6637566Z Post job cleanup.
+2026-09-28T17:09:02.7541206Z [command]/usr/bin/git version
+2026-09-28T17:09:02.7587601Z git version 2.55.0
+2026-09-28T17:09:02.7630716Z Temporarily overriding HOME='/home/runner/work/_temp/70281396-73e4-4d42-b182-8e7e542a90c5' before making global git config changes
+2026-09-28T17:09:02.7632716Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-28T17:09:02.7637067Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tina4-php/tina4-php
+2026-09-28T17:09:02.7918013Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-28T17:09:02.7966298Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-28T17:09:02.8347900Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-28T17:09:02.9295150Z http.https://github.com/.extraheader
+2026-09-28T17:09:02.9310505Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-09-28T17:09:03.0895673Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-28T17:09:03.1147451Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-28T17:09:03.1185760Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-28T17:09:03.1591507Z Cleaning up orphan processes
+2026-09-28T17:09:03.1896622Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

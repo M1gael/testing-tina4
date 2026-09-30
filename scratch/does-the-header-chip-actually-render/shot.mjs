@@ -1,0 +1,13 @@
+import puppeteer from "/var/home/work/gitdir/tina4-simple-agent-work/scratch/node_modules/puppeteer-core/lib/puppeteer/puppeteer-core.js";
+const out = process.argv[3];
+const browser = await puppeteer.launch({ executablePath: "/usr/bin/chromium-browser", headless: true, args: ["--no-sandbox"] });
+const page = await browser.newPage();
+await page.setViewport({ width: 1600, height: 900, deviceScaleFactor: 2 });
+await page.goto(`http://127.0.0.1:${process.argv[2]}/`, { waitUntil: "networkidle2", timeout: 30000 });
+await new Promise(r => setTimeout(r, 2500));
+const el = await page.$(".top-right");
+const box = await el.boundingBox();
+await page.screenshot({ path: out, clip: { x: Math.max(0, box.x - 12), y: Math.max(0, box.y - 10), width: box.width + 24, height: box.height + 20 } });
+await page.screenshot({ path: out.replace(/\.png$/, "-full.png") });
+console.log("wrote", out);
+await browser.close();

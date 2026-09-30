@@ -1,0 +1,292 @@
+Mandatory Label\Medium Mandatory Level                        Label            S-1-16-8192                                                    
+privilege-line-count follows 
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 1 install, 0 updates, 0 removals
+  - Locking tina4stack/tina4php (3.13.140)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 1 install, 0 updates, 0 removals
+  - Downloading tina4stack/tina4php (3.13.140)
+  - Installing tina4stack/tina4php (3.13.140): Extracting archive
+    Install of tina4stack/tina4php failed
+
+In ZipDownloader.php line 193:
+                                                                                                                       
+  Failed to extract tina4stack/tina4php: (2) C:\Program Files\7-Zip\7z.EXE x -bb0 -y C:\Users\mig\php7z\proj-f26-140-  
+  nozip\vendor\composer\tmp-4747641119e9f5eaa4e51c6408f892c6.zip -oC:\Users\mig\php7z\proj-f26-140-nozip\vendor\compo  
+  ser\083b85c9                                                                                                         
+                                                                                                                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\10-mysqlnd.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\10-opcache.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\10-pdo.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\15-xml.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-bcmath.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-calendar.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-ctype.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-curl.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-dom.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-exif.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-ffi.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-fileinfo.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-ftp.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-gettext.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-iconv.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-imap.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-interbase.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-intl.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-mbstring.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-mongodb.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-mysqli.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-odbc.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pdo_dblib.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pdo_firebird.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pdo_mysql.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pdo_odbc.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pdo_pgsql.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pdo_sqlite.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-pgsql.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-phar.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-posix.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-readline.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-shmop.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-simplexml.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-sockets.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-sqlite3.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-sysvmsg.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-sysvsem.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-sysvshm.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-tokenizer.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-xmlreader.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-xmlwriter.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-xsl.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_clean\20-zip.ini                              
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\10-mysqlnd.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\10-opcache.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\10-pdo.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\15-xml.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-bcmath.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-calendar.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-ctype.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-curl.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-dom.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-exif.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-ffi.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-fileinfo.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-ftp.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-gettext.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-iconv.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-imap.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-interbase.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-intl.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-mbstring.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-mongodb.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-mysqli.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-odbc.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_dblib.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_firebird.ini                    
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_mysql.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_odbc.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_pgsql.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_sqlite.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-pgsql.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-phar.ini                            
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-posix.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-readline.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-shmop.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-simplexml.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-sockets.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-sqlite3.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-sysvmsg.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-sysvsem.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-sysvshm.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-tokenizer.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-xmlreader.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-xmlwriter.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-xsl.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\20-zip.ini                             
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_nogrpc\99-openswoole.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\10-mysqlnd.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\10-opcache.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\10-pdo.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\15-xml.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-bcmath.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-calendar.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-ctype.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-curl.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-dom.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-exif.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-ffi.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-fileinfo.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-ftp.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-gettext.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-grpc.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-iconv.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-imap.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-interbase.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-intl.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-mbstring.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-mongodb.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-mysqli.ini                        
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-odbc.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_dblib.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_firebird.ini                  
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_mysql.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_odbc.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_pgsql.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_sqlite.ini                    
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-pgsql.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-phar.ini                          
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-posix.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-readline.ini                      
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-shmop.ini                         
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-simplexml.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-sockets.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-sqlite3.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-sysvmsg.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-sysvsem.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-sysvshm.ini                       
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-tokenizer.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-xmlreader.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-xmlwriter.ini                     
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-xsl.ini                           
+  ERROR: Cannot create symbolic link : A required privilege is not held by the client. : C:\Users\mig\php7z\proj-f26-  
+  140-nozip\vendor\composer\083b85c9\tina4stack-tina4-php-211490d\.confd_withgrpc\20-zip.ini                           
+                                                                                                                       
+
+update [--with WITH] [--prefer-source] [--prefer-dist] [--prefer-install PREFER-INSTALL] [--dry-run] [--dev] [--no-dev] [--lock] [--no-install] [--no-audit] [--audit-format AUDIT-FORMAT] [--no-security-blocking] [--no-blocking] [--no-autoloader] [--no-suggest] [--no-progress] [-w|--with-dependencies] [-W|--with-all-dependencies] [-v|vv|vvv|--verbose] [-o|--optimize-autoloader] [-a|--classmap-authoritative] [--strict-psr-autoloader] [--apcu-autoloader] [--apcu-autoloader-prefix APCU-AUTOLOADER-PREFIX] [--ignore-platform-req IGNORE-PLATFORM-REQ] [--ignore-platform-reqs] [--prefer-stable] [--prefer-lowest] [-m|--minimal-changes] [--patch-only] [-i|--interactive] [--root-reqs] [--bump-after-update [BUMP-AFTER-UPDATE]] [--] [<packages>...]
+
+rc=1 

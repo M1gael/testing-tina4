@@ -1,0 +1,15 @@
+Mandatory Label\Medium Mandatory Level                        Label            S-1-16-8192                                                    
+privilege-line-count follows 
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 1 install, 0 updates, 0 removals
+  - Locking tina4stack/tina4php (3.13.141)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 1 install, 0 updates, 0 removals
+  - Downloading tina4stack/tina4php (3.13.141)
+  - Installing tina4stack/tina4php (3.13.141): Extracting archive
+6 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating autoload files
+No security vulnerability advisories found.
+rc=0 

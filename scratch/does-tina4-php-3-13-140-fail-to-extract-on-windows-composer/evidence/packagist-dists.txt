@@ -1,0 +1,5 @@
+# repo.packagist.org/p2/tina4stack/tina4php.json, fetched 2026-09-30
+3.13.141  2026-09-29T18:13:44+00:00  https://api.github.com/repos/tina4stack/tina4-php/zipball/86906caed249467fe79f538624794fcae0ce0832
+3.13.140  2026-09-28T17:05:05+00:00  https://api.github.com/repos/tina4stack/tina4-php/zipball/211490df44f4b7c58e1b3648b9f70fdd8d33aa17
+3.13.139  2026-09-26T13:13:40+00:00  https://api.github.com/repos/tina4stack/tina4-php/zipball/50d798606b1ba23a4a47bb5d287bbcbb5f4473b5
+3.13.138  2026-09-24T17:55:29+00:00  https://api.github.com/repos/tina4stack/tina4-php/zipball/0e0de4523069c6df613804cb3f4abb3e8fef4726

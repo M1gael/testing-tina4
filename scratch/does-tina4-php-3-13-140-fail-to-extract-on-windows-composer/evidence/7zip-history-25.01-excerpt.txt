@@ -1,0 +1,5 @@
+55:25.01          2025-08-03
+56--------------------------
+57-- CVE-2025-55188 : The code for handling symbolic links has been changed
+58-  to provide greater security when extracting files from archives.
+59-  Command line switch -snld20 can be used to bypass default security

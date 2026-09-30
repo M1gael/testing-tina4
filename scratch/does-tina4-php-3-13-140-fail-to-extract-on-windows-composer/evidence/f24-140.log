@@ -1,0 +1,154 @@
+Mandatory Label\Medium Mandatory Level                        Label            S-1-16-8192                                                    
+privilege-line-count follows 
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 1 install, 0 updates, 0 removals
+  - Locking tina4stack/tina4php (3.13.140)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 1 install, 0 updates, 0 removals
+  - Downloading tina4stack/tina4php (3.13.140)
+  - Installing tina4stack/tina4php (3.13.140): Extracting archive
+    Failed to extract tina4stack/tina4php: (2) C:\Program Files\7-Zip\7z.EXE x -bb0 -y C:\Users\mig\php7z\proj-f24-140\vendor\composer\tmp-8e99021ac05539a4a4efcbf5d85d576b.zip -oC:\Users\mig\php7z\proj-f24-140\vendor\composer\590cd368
+
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\10-mysqlnd.ini : /etc/php/8.3/cli/conf.d/10-mysqlnd.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\10-opcache.ini : /etc/php/8.3/cli/conf.d/10-opcache.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\10-pdo.ini : /etc/php/8.3/cli/conf.d/10-pdo.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\15-xml.ini : /etc/php/8.3/cli/conf.d/15-xml.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-bcmath.ini : /etc/php/8.3/cli/conf.d/20-bcmath.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-calendar.ini : /etc/php/8.3/cli/conf.d/20-calendar.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-ctype.ini : /etc/php/8.3/cli/conf.d/20-ctype.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-curl.ini : /etc/php/8.3/cli/conf.d/20-curl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-dom.ini : /etc/php/8.3/cli/conf.d/20-dom.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-exif.ini : /etc/php/8.3/cli/conf.d/20-exif.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-ffi.ini : /etc/php/8.3/cli/conf.d/20-ffi.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-fileinfo.ini : /etc/php/8.3/cli/conf.d/20-fileinfo.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-ftp.ini : /etc/php/8.3/cli/conf.d/20-ftp.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-gettext.ini : /etc/php/8.3/cli/conf.d/20-gettext.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-iconv.ini : /etc/php/8.3/cli/conf.d/20-iconv.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-imap.ini : /etc/php/8.3/cli/conf.d/20-imap.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-interbase.ini : /etc/php/8.3/cli/conf.d/20-interbase.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-intl.ini : /etc/php/8.3/cli/conf.d/20-intl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-mbstring.ini : /etc/php/8.3/cli/conf.d/20-mbstring.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-mongodb.ini : /etc/php/8.3/cli/conf.d/20-mongodb.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-mysqli.ini : /etc/php/8.3/cli/conf.d/20-mysqli.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-odbc.ini : /etc/php/8.3/cli/conf.d/20-odbc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pdo_dblib.ini : /etc/php/8.3/cli/conf.d/20-pdo_dblib.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pdo_firebird.ini : /etc/php/8.3/cli/conf.d/20-pdo_firebird.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pdo_mysql.ini : /etc/php/8.3/cli/conf.d/20-pdo_mysql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pdo_odbc.ini : /etc/php/8.3/cli/conf.d/20-pdo_odbc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pdo_pgsql.ini : /etc/php/8.3/cli/conf.d/20-pdo_pgsql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pdo_sqlite.ini : /etc/php/8.3/cli/conf.d/20-pdo_sqlite.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-pgsql.ini : /etc/php/8.3/cli/conf.d/20-pgsql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-phar.ini : /etc/php/8.3/cli/conf.d/20-phar.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-posix.ini : /etc/php/8.3/cli/conf.d/20-posix.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-readline.ini : /etc/php/8.3/cli/conf.d/20-readline.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-shmop.ini : /etc/php/8.3/cli/conf.d/20-shmop.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-simplexml.ini : /etc/php/8.3/cli/conf.d/20-simplexml.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-sockets.ini : /etc/php/8.3/cli/conf.d/20-sockets.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-sqlite3.ini : /etc/php/8.3/cli/conf.d/20-sqlite3.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-sysvmsg.ini : /etc/php/8.3/cli/conf.d/20-sysvmsg.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-sysvsem.ini : /etc/php/8.3/cli/conf.d/20-sysvsem.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-sysvshm.ini : /etc/php/8.3/cli/conf.d/20-sysvshm.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-tokenizer.ini : /etc/php/8.3/cli/conf.d/20-tokenizer.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-xmlreader.ini : /etc/php/8.3/cli/conf.d/20-xmlreader.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-xmlwriter.ini : /etc/php/8.3/cli/conf.d/20-xmlwriter.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-xsl.ini : /etc/php/8.3/cli/conf.d/20-xsl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_clean\20-zip.ini : /etc/php/8.3/cli/conf.d/20-zip.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\10-mysqlnd.ini : /etc/php/8.3/cli/conf.d/10-mysqlnd.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\10-opcache.ini : /etc/php/8.3/cli/conf.d/10-opcache.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\10-pdo.ini : /etc/php/8.3/cli/conf.d/10-pdo.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\15-xml.ini : /etc/php/8.3/cli/conf.d/15-xml.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-bcmath.ini : /etc/php/8.3/cli/conf.d/20-bcmath.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-calendar.ini : /etc/php/8.3/cli/conf.d/20-calendar.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-ctype.ini : /etc/php/8.3/cli/conf.d/20-ctype.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-curl.ini : /etc/php/8.3/cli/conf.d/20-curl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-dom.ini : /etc/php/8.3/cli/conf.d/20-dom.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-exif.ini : /etc/php/8.3/cli/conf.d/20-exif.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-ffi.ini : /etc/php/8.3/cli/conf.d/20-ffi.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-fileinfo.ini : /etc/php/8.3/cli/conf.d/20-fileinfo.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-ftp.ini : /etc/php/8.3/cli/conf.d/20-ftp.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-gettext.ini : /etc/php/8.3/cli/conf.d/20-gettext.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-iconv.ini : /etc/php/8.3/cli/conf.d/20-iconv.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-imap.ini : /etc/php/8.3/cli/conf.d/20-imap.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-interbase.ini : /etc/php/8.3/cli/conf.d/20-interbase.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-intl.ini : /etc/php/8.3/cli/conf.d/20-intl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-mbstring.ini : /etc/php/8.3/cli/conf.d/20-mbstring.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-mongodb.ini : /etc/php/8.3/cli/conf.d/20-mongodb.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-mysqli.ini : /etc/php/8.3/cli/conf.d/20-mysqli.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-odbc.ini : /etc/php/8.3/cli/conf.d/20-odbc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_dblib.ini : /etc/php/8.3/cli/conf.d/20-pdo_dblib.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_firebird.ini : /etc/php/8.3/cli/conf.d/20-pdo_firebird.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_mysql.ini : /etc/php/8.3/cli/conf.d/20-pdo_mysql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_odbc.ini : /etc/php/8.3/cli/conf.d/20-pdo_odbc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_pgsql.ini : /etc/php/8.3/cli/conf.d/20-pdo_pgsql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pdo_sqlite.ini : /etc/php/8.3/cli/conf.d/20-pdo_sqlite.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-pgsql.ini : /etc/php/8.3/cli/conf.d/20-pgsql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-phar.ini : /etc/php/8.3/cli/conf.d/20-phar.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-posix.ini : /etc/php/8.3/cli/conf.d/20-posix.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-readline.ini : /etc/php/8.3/cli/conf.d/20-readline.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-shmop.ini : /etc/php/8.3/cli/conf.d/20-shmop.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-simplexml.ini : /etc/php/8.3/cli/conf.d/20-simplexml.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-sockets.ini : /etc/php/8.3/cli/conf.d/20-sockets.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-sqlite3.ini : /etc/php/8.3/cli/conf.d/20-sqlite3.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-sysvmsg.ini : /etc/php/8.3/cli/conf.d/20-sysvmsg.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-sysvsem.ini : /etc/php/8.3/cli/conf.d/20-sysvsem.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-sysvshm.ini : /etc/php/8.3/cli/conf.d/20-sysvshm.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-tokenizer.ini : /etc/php/8.3/cli/conf.d/20-tokenizer.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-xmlreader.ini : /etc/php/8.3/cli/conf.d/20-xmlreader.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-xmlwriter.ini : /etc/php/8.3/cli/conf.d/20-xmlwriter.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-xsl.ini : /etc/php/8.3/cli/conf.d/20-xsl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\20-zip.ini : /etc/php/8.3/cli/conf.d/20-zip.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_nogrpc\99-openswoole.ini : /etc/php/8.3/cli/conf.d/99-openswoole.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\10-mysqlnd.ini : /etc/php/8.3/cli/conf.d/10-mysqlnd.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\10-opcache.ini : /etc/php/8.3/cli/conf.d/10-opcache.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\10-pdo.ini : /etc/php/8.3/cli/conf.d/10-pdo.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\15-xml.ini : /etc/php/8.3/cli/conf.d/15-xml.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-bcmath.ini : /etc/php/8.3/cli/conf.d/20-bcmath.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-calendar.ini : /etc/php/8.3/cli/conf.d/20-calendar.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-ctype.ini : /etc/php/8.3/cli/conf.d/20-ctype.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-curl.ini : /etc/php/8.3/cli/conf.d/20-curl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-dom.ini : /etc/php/8.3/cli/conf.d/20-dom.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-exif.ini : /etc/php/8.3/cli/conf.d/20-exif.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-ffi.ini : /etc/php/8.3/cli/conf.d/20-ffi.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-fileinfo.ini : /etc/php/8.3/cli/conf.d/20-fileinfo.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-ftp.ini : /etc/php/8.3/cli/conf.d/20-ftp.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-gettext.ini : /etc/php/8.3/cli/conf.d/20-gettext.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-grpc.ini : /etc/php/8.3/cli/conf.d/20-grpc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-iconv.ini : /etc/php/8.3/cli/conf.d/20-iconv.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-imap.ini : /etc/php/8.3/cli/conf.d/20-imap.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-interbase.ini : /etc/php/8.3/cli/conf.d/20-interbase.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-intl.ini : /etc/php/8.3/cli/conf.d/20-intl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-mbstring.ini : /etc/php/8.3/cli/conf.d/20-mbstring.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-mongodb.ini : /etc/php/8.3/cli/conf.d/20-mongodb.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-mysqli.ini : /etc/php/8.3/cli/conf.d/20-mysqli.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-odbc.ini : /etc/php/8.3/cli/conf.d/20-odbc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_dblib.ini : /etc/php/8.3/cli/conf.d/20-pdo_dblib.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_firebird.ini : /etc/php/8.3/cli/conf.d/20-pdo_firebird.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_mysql.ini : /etc/php/8.3/cli/conf.d/20-pdo_mysql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_odbc.ini : /etc/php/8.3/cli/conf.d/20-pdo_odbc.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_pgsql.ini : /etc/php/8.3/cli/conf.d/20-pdo_pgsql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pdo_sqlite.ini : /etc/php/8.3/cli/conf.d/20-pdo_sqlite.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-pgsql.ini : /etc/php/8.3/cli/conf.d/20-pgsql.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-phar.ini : /etc/php/8.3/cli/conf.d/20-phar.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-posix.ini : /etc/php/8.3/cli/conf.d/20-posix.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-readline.ini : /etc/php/8.3/cli/conf.d/20-readline.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-shmop.ini : /etc/php/8.3/cli/conf.d/20-shmop.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-simplexml.ini : /etc/php/8.3/cli/conf.d/20-simplexml.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-sockets.ini : /etc/php/8.3/cli/conf.d/20-sockets.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-sqlite3.ini : /etc/php/8.3/cli/conf.d/20-sqlite3.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-sysvmsg.ini : /etc/php/8.3/cli/conf.d/20-sysvmsg.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-sysvsem.ini : /etc/php/8.3/cli/conf.d/20-sysvsem.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-sysvshm.ini : /etc/php/8.3/cli/conf.d/20-sysvshm.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-tokenizer.ini : /etc/php/8.3/cli/conf.d/20-tokenizer.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-xmlreader.ini : /etc/php/8.3/cli/conf.d/20-xmlreader.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-xmlwriter.ini : /etc/php/8.3/cli/conf.d/20-xmlwriter.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-xsl.ini : /etc/php/8.3/cli/conf.d/20-xsl.ini
+ERROR: Dangerous link path was ignored : tina4stack-tina4-php-211490d\.confd_withgrpc\20-zip.ini : /etc/php/8.3/cli/conf.d/20-zip.ini
+
+    The archive may contain identical file names with different capitalization (which fails on case insensitive filesystems)
+    Unzip with 7z command failed, falling back to ZipArchive class
+6 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating autoload files
+No security vulnerability advisories found.
+rc=0 
