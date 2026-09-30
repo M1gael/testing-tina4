@@ -114,7 +114,8 @@ head.
 - As an instrument, one `ob_start()` was added to that `index.php` on v3 and later reverted.
   With it, the same script reported the session kept through `/regen`.
 
-`upstream-comment-253.md` is a comment drafted for the closed issue. It has not been posted.
+`upstream-comment-253.md` is the comment posted on the closed issue on 2026-09-30
+(https://github.com/tina4stack/tina4-php/issues/253#issuecomment-5917365652).
 
 All output is in `evidence/`: `run-*.txt` on Linux, `win-run-*.txt` on Windows.
 
