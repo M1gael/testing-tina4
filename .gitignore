@@ -13,3 +13,6 @@
 # `git rm --cached CLAUDE.md`; the file stays on disk.
 /CLAUDE.md
 known-issues/ledger.md
+
+# Security reproductions: never pushed (the repo is public).
+/scratch/private/
