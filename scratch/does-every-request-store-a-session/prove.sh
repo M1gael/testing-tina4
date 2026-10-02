@@ -44,7 +44,7 @@ held() { ss -ltnp "sport = :$1" 2>/dev/null | grep LISTEN; }
 start() {  # lang port
   if held "$2" > /dev/null; then echo "$1: port $2 is already in use"; return 1; fi
   export TINA4_SECRET; TINA4_SECRET=$(head -c32 /dev/urandom | od -An -tx1 | tr -d ' \n')
-  export TINA4_DEBUG=false TINA4_AUTO_MIGRATE=false TINA4_NO_BROWSER=true TINA4_OVERRIDE_CLIENT=true PORT=$2
+  export TINA4_CSRF=true TINA4_DEBUG=false TINA4_AUTO_MIGRATE=false TINA4_NO_BROWSER=true TINA4_OVERRIDE_CLIENT=true PORT=$2
   export TINA4_SESSION_PATH=$W/$1-sessions TINA4_PHP_SESSION_PATH=$W/$1-native
   mkdir -p "$W/$1-native"
   [ "${TINA4_SESSION_BACKEND:-file}" = database ] && export TINA4_DATABASE_URL="sqlite:///$W/$1.db"
@@ -146,6 +146,13 @@ for lang in "${PORTS[@]}"; do
     n0=$(files "$nat")
     curl -s -o /dev/null -D "$W/h" -H "Cookie: PHPSESSID=$(head -c16 /dev/urandom | od -An -tx1 | tr -d ' \n')" "$u/native-read"
     printf '  flow %-25s native files +%s, Set-Cookie: %s (PHP adopts an unknown id unless strict mode; not this row)\n' unknown-native-cookie "$(( $(files "$nat") - n0 ))" "$(cookies "$W/h")"
+    # a logged-in user posts a form: form_token() binds to the native session id (Frond), and
+    # CsrfMiddleware (TINA4_CSRF=true) refuses a post from any other id
+    rm -f "$W/jar"; curl -s -o /dev/null -b "$W/jar" -c "$W/jar" "$u/login-token"
+    tok=$(curl -s -b "$W/jar" -c "$W/jar" "$u/form")
+    code=$(curl -s -o "$W/body" -w '%{http_code}' -b "$W/jar" -c "$W/jar" -d "formToken=$tok" "$u/submit")
+    if [ "$code" = 200 ]; then v=ok; else v="BROKEN: wanted 200 'submitted'"; status=1; fi
+    printf '  flow %-25s POST /submit %s %-26s %s\n' logged-in-form-post "$code" "'$(tr -d '\n ' < "$W/body" | head -c 24)'" "$v"
     native_flow native-write-then-read native=set /native-write /native-read
     native_flow native-login-then-read native=set /native-login /native-read
     native_flow native-plain-write-read native=set /plain /native-write /native-read

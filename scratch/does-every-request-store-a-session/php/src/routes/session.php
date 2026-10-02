@@ -32,3 +32,8 @@ Router::get('/native-login', function ($request, $response) {
 // when one is active (Frond formToken: session_id()).
 Router::get('/form', fn ($request, $response) => $response((new \Tina4\Frond())->renderString('{{ form_token_value() }}')));
 Router::post('/submit', fn ($request, $response) => $response('submitted'));
+// A logged-in user: the identity token lives in the Tina4 session, which the auth gate reads.
+Router::get('/login-token', function ($request, $response) {
+    $request->session->set('token', \Tina4\Auth::getToken(['sub' => 'alice']));
+    return $response('token stored');
+});

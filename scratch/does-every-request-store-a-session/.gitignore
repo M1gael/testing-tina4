@@ -1,0 +1,5 @@
+# runtime output of the apps
+*/data/
+*/logs/
+*/secrets/
+nodejs/.app-run.mts
