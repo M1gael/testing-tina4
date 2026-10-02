@@ -1,0 +1,112 @@
+== php (phps), session code: /var/home/work/.cache/tina4-worktrees/fauth03-php/Tina4/Session.php
+  static               200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  write                200  x3: session files +3, native files +0, Set-Cookie: tina4_session              ok
+  native-read          200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  native-write         200  x3: session files +0, native files +3, Set-Cookie: PHPSESSID                  ok
+  unknown-cookie-read  200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+  flow native-stored-read        native files +0, Set-Cookie: 
+  flow unknown-native-cookie     native files +1, Set-Cookie:  (PHP adopts an unknown id unless strict mode; not this row)
+  flow native-write-then-read    last body 'native=set'       ok
+  flow native-login-then-read    last body 'native=set'       ok
+  flow native-plain-write-read   last body 'native=set'       ok
+exit=0
+== php (serve), session code: /var/home/work/.cache/tina4-worktrees/fauth03-php/Tina4/Session.php
+  static               200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  write                200  x3: session files +3, native files +0, Set-Cookie: tina4_session              ok
+  native-read          200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  native-write         200  x3: session files +0, native files +0, Set-Cookie: none                       not counted: under serve the native session never starts (f-auth-01)
+  unknown-cookie-read  200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+  flow native-stored-read        native files +0, Set-Cookie: 
+  flow unknown-native-cookie     native files +0, Set-Cookie:  (PHP adopts an unknown id unless strict mode; not this row)
+  flow native-write-then-read    last body 'native=-'         BROKEN: wanted 'native=set'
+    (serve: f-auth-01, not counted)
+  flow native-login-then-read    last body 'native=-'         BROKEN: wanted 'native=set'
+    (serve: f-auth-01, not counted)
+  flow native-plain-write-read   last body 'native=-'         BROKEN: wanted 'native=set'
+    (serve: f-auth-01, not counted)
+exit=0
+== php (buffered), session code: /var/home/work/.cache/tina4-worktrees/fauth03-php/Tina4/Session.php
+  static               200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  write                200  x3: session files +3, native files +0, Set-Cookie: tina4_session              ok
+  native-read          200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  native-write         200  x3: session files +0, native files +3, Set-Cookie: PHPSESSID                  ok
+  unknown-cookie-read  200  x3: session files +0, native files +0, Set-Cookie: none                       ok
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+  flow native-stored-read        native files +0, Set-Cookie: 
+  flow unknown-native-cookie     native files +0, Set-Cookie:  (PHP adopts an unknown id unless strict mode; not this row)
+  flow native-write-then-read    last body 'native=set'       ok
+  flow native-login-then-read    last body 'native=set'       ok
+  flow native-plain-write-read   last body 'native=set'       ok
+exit=0
+== python, session code: /var/home/work/.cache/tina4-worktrees/fauth03-py/tina4_python/session/__init__.py
+  static               200  x3: session files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, Set-Cookie: none                       ok
+  write                200  x3: session files +3, Set-Cookie: tina4_session              ok
+  unknown-cookie-read  200  x3: session files +0, Set-Cookie: none                       ok
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: tina4_session 
+== ruby, session code: /var/home/work/.cache/tina4-worktrees/fauth03-rb/lib/tina4/session.rb
+  static               200  x3: session files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, Set-Cookie: none                       ok
+  write                200  x3: session files +3, Set-Cookie: tina4_session              ok
+  unknown-cookie-read  200  x3: session files +0, Set-Cookie: none                       ok
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+== nodejs, session code: file:///var/home/work/.cache/tina4-worktrees/fauth03-nd/packages/core/src/session.ts
+  static               200  x3: session files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, Set-Cookie: none                       ok
+  write                200  x3: session files +3, Set-Cookie: tina4_session              ok
+  unknown-cookie-read  200  x3: session files +0, Set-Cookie: none                       ok
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+exit=0

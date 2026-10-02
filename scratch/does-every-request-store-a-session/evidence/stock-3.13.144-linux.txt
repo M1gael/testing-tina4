@@ -1,0 +1,95 @@
+== php (phps), session code: /var/home/work/.cache/tina4-worktrees/fauth03-php-stock/Tina4/Session.php
+  static               200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  404                  404  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  health               200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  plain                200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  read                 200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  write                200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: a tina4 session write also stored a native session
+  native-read          200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  native-write         200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: a $_SESSION write also stored a tina4 session
+  unknown-cookie-read  200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+  flow native-write-then-read    last body 'native=set'       ok
+  flow native-login-then-read    last body 'native=set'       ok
+  flow native-plain-write-read   last body 'native=set'       ok
+exit=1
+== php (serve), session code: /var/home/work/.cache/tina4-worktrees/fauth03-php-stock/Tina4/Session.php
+  static               200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  404                  404  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  health               200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  plain                200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  read                 200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  write                200  x3: session files +3, native files +0, Set-Cookie: tina4_session              ok
+  native-read          200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  native-write         200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: a $_SESSION write also stored a tina4 session
+  unknown-cookie-read  200  x3: session files +3, native files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+  flow native-write-then-read    last body 'native=-'         BROKEN: wanted 'native=set'
+  flow native-login-then-read    last body 'native=-'         BROKEN: wanted 'native=set'
+  flow native-plain-write-read   last body 'native=-'         BROKEN: wanted 'native=set'
+exit=1
+== php (buffered), session code: /var/home/work/.cache/tina4-worktrees/fauth03-php-stock/Tina4/Session.php
+  static               200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  404                  404  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  health               200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  plain                200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  read                 200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  write                200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: a tina4 session write also stored a native session
+  native-read          200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  native-write         200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: a $_SESSION write also stored a tina4 session
+  unknown-cookie-read  200  x3: session files +3, native files +3, Set-Cookie: PHPSESSID tina4_session    BUG: stores or sets a cookie without a write
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+  flow native-write-then-read    last body 'native=set'       ok
+  flow native-login-then-read    last body 'native=set'       ok
+  flow native-plain-write-read   last body 'native=set'       ok
+exit=1
+python: server never came up on port 18900
+    _kill_port(start)
+    ~~~~~~~~~~^^^^^^^
+  File "/var/home/work/.cache/tina4-worktrees/fauth03-py-stock/tina4_python/core/server.py", line 3783, in _kill_port
+    raise RuntimeError(result.message)
+RuntimeError: Port 18900 is in use; takeover is disabled outside dev mode -- free it or choose another port.
+== ruby, session code: /var/home/work/.cache/tina4-worktrees/fauth03-rb-stock/lib/tina4/session.rb
+  static               200  x3: session files +0, Set-Cookie: none                       ok
+  404                  404  x3: session files +0, Set-Cookie: none                       ok
+  health               200  x3: session files +0, Set-Cookie: none                       ok
+  plain                200  x3: session files +0, Set-Cookie: none                       ok
+  read                 200  x3: session files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  write                200  x3: session files +3, Set-Cookie: tina4_session              ok
+  unknown-cookie-read  200  x3: session files +0, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+== nodejs, session code: file:///var/home/work/.cache/tina4-worktrees/fauth03-nd-stock/packages/core/src/session.ts
+  static               200  x3: session files +3, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  404                  404  x3: session files +3, Set-Cookie: none                       BUG: stores or sets a cookie without a write
+  health               200  x3: session files +3, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  plain                200  x3: session files +3, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  read                 200  x3: session files +3, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  write                200  x3: session files +3, Set-Cookie: tina4_session              ok
+  unknown-cookie-read  200  x3: session files +3, Set-Cookie: tina4_session              BUG: stores or sets a cookie without a write
+  flow write-then-read           last body 'user=alice'       ok
+  flow login-then-read           last body 'user=alice'       ok
+  flow plain-then-login-then-read last body 'user=alice'       ok
+  flow flash-once                last body 'flash=saved'      ok
+  flow flash-gone                last body 'flash=-'          ok
+  flow stored-read               session files +0, Set-Cookie: 
+exit=1

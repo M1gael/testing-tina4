@@ -1,0 +1,11 @@
+{
+    "name": "tina4/my-project",
+    "require": {
+        "tina4stack/tina4-php": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/app/"
+        }
+    }
+}

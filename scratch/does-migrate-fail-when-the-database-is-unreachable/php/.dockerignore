@@ -1,0 +1,7 @@
+vendor
+.git
+.claude
+.env
+*.log
+tests
+tmp
