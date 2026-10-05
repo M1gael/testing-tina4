@@ -1,0 +1,312 @@
+2026-10-05T09:53:01.490Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.494Z [WARNING ] [7be2906e] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T09:53:01.495Z [INFO    ] [7be2906e] GET /hello -> 200 (2.216ms)
+2026-10-05T09:53:01.496Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.496Z [INFO    ] [f089b50a] GET /__dev/api/routes -> 403 (0.177ms)
+2026-10-05T09:53:01.497Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.497Z [INFO    ] [1e7aac0e] GET /hello -> 200 (0.225ms)
+2026-10-05T09:53:01.498Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.498Z [INFO    ] [482d618a] GET /__dev/api/routes -> 403 (0.136ms)
+2026-10-05T09:53:01.498Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.499Z [INFO    ] [34b54958] GET /hello -> 200 (0.195ms)
+2026-10-05T09:53:01.499Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.500Z [INFO    ] [2f15b775] GET /__dev/api/routes -> 403 (0.13ms)
+2026-10-05T09:53:01.500Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.500Z [INFO    ] [cf9e738e] GET /__dev/api/routes -> 403 (0.173ms)
+2026-10-05T09:53:01.501Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:01.501Z [INFO    ] [0c3856b4] GET /__dev/api/routes -> 200 (0.315ms)
+2026-10-05T09:53:28.296Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.299Z [WARNING ] [0d50edc8] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T09:53:28.300Z [INFO    ] [0d50edc8] GET /hello -> 200 (2.156ms)
+2026-10-05T09:53:28.301Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.302Z [INFO    ] [9d3f659e] GET /__dev/api/routes -> 403 (0.208ms)
+2026-10-05T09:53:28.303Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.303Z [INFO    ] [2495024b] GET /hello -> 200 (0.226ms)
+2026-10-05T09:53:28.304Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.304Z [INFO    ] [2b19bfba] GET /__dev/api/routes -> 403 (0.135ms)
+2026-10-05T09:53:28.304Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.305Z [INFO    ] [424658f9] GET /hello -> 200 (0.196ms)
+2026-10-05T09:53:28.305Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.306Z [INFO    ] [109f0b92] GET /__dev/api/routes -> 403 (0.136ms)
+2026-10-05T09:53:28.306Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.306Z [INFO    ] [21ca3d03] GET /__dev/api/routes -> 403 (0.138ms)
+2026-10-05T09:53:28.307Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:28.307Z [INFO    ] [ae875dac] GET /__dev/api/routes -> 200 (0.322ms)
+2026-10-05T09:53:54.735Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.740Z [INFO    ] [45114fcb] GET /hello -> 200 (2.023ms)
+2026-10-05T09:53:54.740Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.741Z [INFO    ] [035f0224] GET /__dev/api/routes -> 200 (0.347ms)
+2026-10-05T09:53:54.741Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.742Z [INFO    ] [2fa77d82] GET /hello -> 200 (0.216ms)
+2026-10-05T09:53:54.742Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.743Z [INFO    ] [94456d8b] GET /__dev/api/routes -> 403 (0.143ms)
+2026-10-05T09:53:54.743Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.744Z [INFO    ] [8277a6c1] GET /hello -> 200 (0.234ms)
+2026-10-05T09:53:54.744Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.744Z [INFO    ] [ee1c44fe] GET /__dev/api/routes -> 403 (0.134ms)
+2026-10-05T09:53:54.745Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.745Z [INFO    ] [f400f3e6] GET /__dev/api/routes -> 403 (0.156ms)
+2026-10-05T09:53:54.746Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.746Z [INFO    ] [f30f52fc] GET /__dev/api/routes -> 403 (0.142ms)
+2026-10-05T09:53:54.747Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.747Z [INFO    ] [29d445e6] GET /__dev/api/routes -> 200 (0.292ms)
+2026-10-05T09:53:54.748Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T09:53:54.748Z [INFO    ] [ca3d00a8] GET /__dev/api/routes -> 200 (0.279ms)
+2026-10-05T10:02:10.732Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.743Z [INFO    ] [d293f6f1] GET /hello -> 200 (3.744ms)
+2026-10-05T10:02:10.744Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.745Z [INFO    ] [7818f18f] GET /__dev/api/routes -> 200 (0.694ms)
+2026-10-05T10:02:10.746Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.747Z [INFO    ] [b63dc469] GET /hello -> 200 (0.472ms)
+2026-10-05T10:02:10.749Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.752Z [INFO    ] [9354a996] GET /__dev/api/routes -> 403 (2.079ms)
+2026-10-05T10:02:10.754Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.755Z [INFO    ] [b86d744c] GET /hello -> 200 (0.485ms)
+2026-10-05T10:02:10.756Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.757Z [INFO    ] [04dda89d] GET /__dev/api/routes -> 403 (0.336ms)
+2026-10-05T10:02:10.758Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.759Z [INFO    ] [2da630c5] GET /__dev/api/routes -> 403 (0.313ms)
+2026-10-05T10:02:10.760Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.760Z [INFO    ] [a327ef12] GET /__dev/api/routes -> 403 (0.326ms)
+2026-10-05T10:02:10.761Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.764Z [INFO    ] [7f42cb64] GET /__dev/api/routes -> 200 (2.147ms)
+2026-10-05T10:02:10.767Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.768Z [INFO    ] [e1cded4f] GET /__dev/api/routes -> 200 (0.688ms)
+2026-10-05T10:02:10.967Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.980Z [INFO    ] [2a2eb2b5] GET /hello -> 200 (5.077ms)
+2026-10-05T10:02:10.981Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.983Z [INFO    ] [80caa1b2] GET /__dev/api/routes -> 200 (1.894ms)
+2026-10-05T10:02:10.987Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.987Z [INFO    ] [7f2c97a4] GET /hello -> 200 (0.572ms)
+2026-10-05T10:02:10.989Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.990Z [INFO    ] [5fac686e] GET /__dev/api/routes -> 403 (0.385ms)
+2026-10-05T10:02:10.991Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.992Z [INFO    ] [41e9c123] GET /hello -> 200 (0.463ms)
+2026-10-05T10:02:10.993Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.994Z [INFO    ] [a6fbb239] GET /__dev/api/routes -> 403 (0.295ms)
+2026-10-05T10:02:10.995Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.996Z [INFO    ] [5e72e69a] GET /__dev/api/routes -> 403 (0.348ms)
+2026-10-05T10:02:10.997Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:10.997Z [INFO    ] [92f6ce7b] GET /__dev/api/routes -> 403 (0.331ms)
+2026-10-05T10:02:10.998Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:11.001Z [INFO    ] [1baa962f] GET /__dev/api/routes -> 200 (2.395ms)
+2026-10-05T10:02:11.004Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T10:02:11.005Z [INFO    ] [fe3e7097] GET /__dev/api/routes -> 200 (0.953ms)
+2026-10-05T11:22:53.536Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.542Z [WARNING ] [2f9abbc6] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:22:53.543Z [INFO    ] [2f9abbc6] GET /hello -> 200 (3.244ms)
+2026-10-05T11:22:53.544Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.544Z [INFO    ] [18f821e6] GET /__dev/api/routes -> 200 (0.485ms)
+2026-10-05T11:22:53.545Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.546Z [INFO    ] [39fb31b2] GET /hello -> 200 (0.413ms)
+2026-10-05T11:22:53.547Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.547Z [INFO    ] [21d8c6c7] GET /__dev/api/routes -> 403 (0.202ms)
+2026-10-05T11:22:53.548Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.549Z [INFO    ] [4c6e1dd4] GET /hello -> 200 (0.295ms)
+2026-10-05T11:22:53.549Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.550Z [INFO    ] [7b6f2f56] GET /__dev/api/routes -> 403 (0.196ms)
+2026-10-05T11:22:53.551Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.551Z [INFO    ] [9797aebf] GET /__dev/api/routes -> 403 (0.185ms)
+2026-10-05T11:22:53.552Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.552Z [INFO    ] [c9dd1495] GET /__dev/api/routes -> 403 (0.183ms)
+2026-10-05T11:22:53.553Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.553Z [INFO    ] [85c13c9c] GET /__dev/api/routes -> 200 (0.443ms)
+2026-10-05T11:22:53.554Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.555Z [INFO    ] [18257ee3] GET /__dev/api/routes -> 200 (0.372ms)
+2026-10-05T11:22:53.700Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.708Z [WARNING ] [0e0e93c9] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:22:53.709Z [INFO    ] [0e0e93c9] GET /hello -> 200 (4.029ms)
+2026-10-05T11:22:53.710Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.710Z [INFO    ] [c28d5794] GET /__dev/api/routes -> 200 (0.425ms)
+2026-10-05T11:22:53.711Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.712Z [INFO    ] [bd0f5a06] GET /hello -> 200 (0.421ms)
+2026-10-05T11:22:53.713Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.713Z [INFO    ] [46203e77] GET /__dev/api/routes -> 403 (0.244ms)
+2026-10-05T11:22:53.714Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.715Z [INFO    ] [14056518] GET /hello -> 200 (0.246ms)
+2026-10-05T11:22:53.715Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.716Z [INFO    ] [d3fca86d] GET /__dev/api/routes -> 403 (0.164ms)
+2026-10-05T11:22:53.716Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.717Z [INFO    ] [d37119e6] GET /__dev/api/routes -> 403 (0.163ms)
+2026-10-05T11:22:53.717Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.718Z [INFO    ] [197f4c4d] GET /__dev/api/routes -> 403 (0.156ms)
+2026-10-05T11:22:53.718Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.719Z [INFO    ] [f9e2a8da] GET /__dev/api/routes -> 200 (0.373ms)
+2026-10-05T11:22:53.720Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:22:53.720Z [INFO    ] [2a621123] GET /__dev/api/routes -> 200 (0.355ms)
+2026-10-05T11:23:03.749Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.753Z [WARNING ] [5ecf8a9e] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:23:03.754Z [INFO    ] [5ecf8a9e] GET /hello -> 200 (2.163ms)
+2026-10-05T11:23:03.754Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.755Z [INFO    ] [cc691323] GET /__dev/api/routes -> 200 (0.328ms)
+2026-10-05T11:23:03.756Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.756Z [INFO    ] [473bd190] GET /hello -> 200 (0.201ms)
+2026-10-05T11:23:03.756Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.757Z [INFO    ] [d43a8228] GET /__dev/api/routes -> 403 (0.154ms)
+2026-10-05T11:23:03.757Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.758Z [INFO    ] [719c1190] GET /hello -> 200 (0.194ms)
+2026-10-05T11:23:03.758Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.758Z [INFO    ] [3f18dbb7] GET /__dev/api/routes -> 403 (0.13ms)
+2026-10-05T11:23:03.759Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.759Z [INFO    ] [8c090738] GET /__dev/api/routes -> 403 (0.157ms)
+2026-10-05T11:23:03.760Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.760Z [INFO    ] [ef571e74] GET /__dev/api/routes -> 403 (0.151ms)
+2026-10-05T11:23:03.761Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.761Z [INFO    ] [cf26c3ab] GET /__dev/api/routes -> 200 (0.303ms)
+2026-10-05T11:23:03.762Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.762Z [INFO    ] [a98847e9] GET /__dev/api/routes -> 200 (0.313ms)
+2026-10-05T11:23:03.859Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.863Z [WARNING ] [3fb28dca] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:23:03.864Z [INFO    ] [3fb28dca] GET /hello -> 200 (2.147ms)
+2026-10-05T11:23:03.865Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.865Z [INFO    ] [ef74cae1] GET /__dev/api/routes -> 200 (0.321ms)
+2026-10-05T11:23:03.866Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.866Z [INFO    ] [051b7883] GET /hello -> 200 (0.194ms)
+2026-10-05T11:23:03.867Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.867Z [INFO    ] [f23f3ee8] GET /__dev/api/routes -> 403 (0.351ms)
+2026-10-05T11:23:03.868Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.869Z [INFO    ] [05de40ba] GET /hello -> 200 (0.235ms)
+2026-10-05T11:23:03.869Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.869Z [INFO    ] [5ed96ee0] GET /__dev/api/routes -> 403 (0.138ms)
+2026-10-05T11:23:03.870Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.870Z [INFO    ] [a4a29c60] GET /__dev/api/routes -> 403 (0.15ms)
+2026-10-05T11:23:03.871Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.871Z [INFO    ] [1d299c51] GET /__dev/api/routes -> 403 (0.129ms)
+2026-10-05T11:23:03.872Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.872Z [INFO    ] [8cb02f57] GET /__dev/api/routes -> 200 (0.309ms)
+2026-10-05T11:23:03.873Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:23:03.873Z [INFO    ] [ae22abe0] GET /__dev/api/routes -> 200 (0.282ms)
+2026-10-05T11:24:08.853Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.859Z [WARNING ] [10011c96] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:24:08.859Z [INFO    ] [10011c96] GET /hello -> 200 (2.641ms)
+2026-10-05T11:24:08.860Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.860Z [ERROR   ] [9e4b6dec] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:08.864Z [INFO    ] [9e4b6dec] GET /boom -> 500 (3.245ms)
+2026-10-05T11:24:08.864Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.873Z [INFO    ] [fff57efc] GET /missing -> 404 (7.988ms)
+2026-10-05T11:24:08.873Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.874Z [INFO    ] [96db31fe] GET /hello -> 200 (0.297ms)
+2026-10-05T11:24:08.875Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.875Z [ERROR   ] [03b6f43b] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:08.877Z [INFO    ] [03b6f43b] GET /boom -> 500 (1.997ms)
+2026-10-05T11:24:08.878Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.878Z [INFO    ] [9290a63d] GET /missing -> 404 (0.378ms)
+2026-10-05T11:24:08.879Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.879Z [INFO    ] [8b365046] GET /hello -> 200 (0.268ms)
+2026-10-05T11:24:08.880Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.880Z [ERROR   ] [9f678891] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:08.883Z [INFO    ] [9f678891] GET /boom -> 500 (2.413ms)
+2026-10-05T11:24:08.883Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:08.884Z [INFO    ] [2b1c59c0] GET /missing -> 404 (0.417ms)
+2026-10-05T11:24:09.002Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.007Z [WARNING ] [a5b21954] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:24:09.008Z [INFO    ] [a5b21954] GET /hello -> 200 (2.815ms)
+2026-10-05T11:24:09.009Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.009Z [ERROR   ] [49aea60d] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:09.013Z [INFO    ] [49aea60d] GET /boom -> 500 (3.807ms)
+2026-10-05T11:24:09.014Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.022Z [INFO    ] [57ad2c67] GET /missing -> 404 (7.745ms)
+2026-10-05T11:24:09.023Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.023Z [INFO    ] [2c625cb0] GET /hello -> 200 (0.329ms)
+2026-10-05T11:24:09.024Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.024Z [ERROR   ] [f830f0ec] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:09.026Z [INFO    ] [f830f0ec] GET /boom -> 500 (2.02ms)
+2026-10-05T11:24:09.027Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.028Z [INFO    ] [a714968f] GET /missing -> 404 (0.756ms)
+2026-10-05T11:24:09.030Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.030Z [INFO    ] [87e2855c] GET /hello -> 200 (0.268ms)
+2026-10-05T11:24:09.031Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.031Z [ERROR   ] [d2a26d1c] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:09.033Z [INFO    ] [d2a26d1c] GET /boom -> 500 (2.049ms)
+2026-10-05T11:24:09.034Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:09.034Z [INFO    ] [56f83490] GET /missing -> 404 (0.42ms)
+2026-10-05T11:24:40.537Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:24:40.541Z [WARNING ] [adc17f72] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:24:40.541Z [ERROR   ] [adc17f72] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:24:40.544Z [INFO    ] [adc17f72] GET /boom -> 500 (4.871ms)
+2026-10-05T11:25:09.379Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.384Z [WARNING ] [5630da26] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:25:09.385Z [INFO    ] [5630da26] GET /hello -> 200 (2.843ms)
+2026-10-05T11:25:09.386Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.386Z [ERROR   ] [72ee36ac] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:25:09.389Z [INFO    ] [72ee36ac] GET /boom -> 500 (3.43ms)
+2026-10-05T11:25:09.390Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.399Z [INFO    ] [983ca3b6] GET /missing -> 404 (7.931ms)
+2026-10-05T11:25:09.400Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.400Z [INFO    ] [da71813d] GET /hello -> 200 (0.386ms)
+2026-10-05T11:25:09.401Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.401Z [ERROR   ] [7199cd95] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:25:09.403Z [INFO    ] [7199cd95] GET /boom -> 500 (2.087ms)
+2026-10-05T11:25:09.404Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.405Z [INFO    ] [4157caea] GET /missing -> 404 (0.481ms)
+2026-10-05T11:25:09.405Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.406Z [INFO    ] [c2198001] GET /hello -> 200 (0.346ms)
+2026-10-05T11:25:09.407Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.407Z [ERROR   ] [58b53b0c] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:25:09.409Z [INFO    ] [58b53b0c] GET /boom -> 500 (2.042ms)
+2026-10-05T11:25:09.410Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.415Z [INFO    ] [aeeef5be] GET /missing -> 404 (4.962ms)
+2026-10-05T11:25:09.541Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.546Z [WARNING ] [66ca8630] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T11:25:09.547Z [INFO    ] [66ca8630] GET /hello -> 200 (2.823ms)
+2026-10-05T11:25:09.548Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.548Z [ERROR   ] [f29a46d4] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:25:09.551Z [INFO    ] [f29a46d4] GET /boom -> 500 (3.242ms)
+2026-10-05T11:25:09.552Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.560Z [INFO    ] [62f53667] GET /missing -> 404 (8.421ms)
+2026-10-05T11:25:09.561Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.562Z [INFO    ] [d76d9b1e] GET /hello -> 200 (0.289ms)
+2026-10-05T11:25:09.563Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.563Z [ERROR   ] [24243f49] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:25:09.565Z [INFO    ] [24243f49] GET /boom -> 500 (1.887ms)
+2026-10-05T11:25:09.566Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.567Z [INFO    ] [0bf6ae40] GET /missing -> 404 (1.409ms)
+2026-10-05T11:25:09.568Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.568Z [INFO    ] [74882119] GET /hello -> 200 (0.251ms)
+2026-10-05T11:25:09.569Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.569Z [ERROR   ] [ef5f3890] Route error: RuntimeException: boom from a route {"method":"GET","path":"/boom"}
+2026-10-05T11:25:09.571Z [INFO    ] [ef5f3890] GET /boom -> 500 (1.831ms)
+2026-10-05T11:25:09.572Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T11:25:09.572Z [INFO    ] [c72e2685] GET /missing -> 404 (0.357ms)
+2026-10-05T12:27:54.478Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.483Z [WARNING ] [ae625984] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T12:27:54.484Z [INFO    ] [ae625984] GET /hello -> 200 (2.857ms)
+2026-10-05T12:27:54.484Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.485Z [INFO    ] [acf71d66] GET /__dev/api/routes -> 200 (0.348ms)
+2026-10-05T12:27:54.486Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.486Z [INFO    ] [e7d60b95] GET /hello -> 200 (0.206ms)
+2026-10-05T12:27:54.486Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.487Z [INFO    ] [a2499581] GET /__dev/api/routes -> 403 (0.134ms)
+2026-10-05T12:27:54.487Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.488Z [INFO    ] [adca793e] GET /hello -> 200 (0.221ms)
+2026-10-05T12:27:54.488Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.488Z [INFO    ] [abc7f0bc] GET /__dev/api/routes -> 403 (0.136ms)
+2026-10-05T12:27:54.489Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.489Z [INFO    ] [c87f2f42] GET /__dev/api/routes -> 403 (0.146ms)
+2026-10-05T12:27:54.490Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.490Z [INFO    ] [fb842308] GET /__dev/api/routes -> 403 (0.129ms)
+2026-10-05T12:27:54.491Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.491Z [INFO    ] [bddb7085] GET /__dev/api/routes -> 200 (0.346ms)
+2026-10-05T12:27:54.492Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.492Z [INFO    ] [6034c2a5] GET /__dev/api/routes -> 200 (0.302ms)
+2026-10-05T12:27:54.598Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.604Z [WARNING ] [96dd484e] TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy "default-src 'self'" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP="default-src 'self'".
+2026-10-05T12:27:54.605Z [INFO    ] [96dd484e] GET /hello -> 200 (4.19ms)
+2026-10-05T12:27:54.605Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.606Z [INFO    ] [6db47292] GET /__dev/api/routes -> 200 (0.334ms)
+2026-10-05T12:27:54.607Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.607Z [INFO    ] [11d29231] GET /hello -> 200 (0.205ms)
+2026-10-05T12:27:54.608Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.608Z [INFO    ] [4c4bb35a] GET /__dev/api/routes -> 403 (0.134ms)
+2026-10-05T12:27:54.608Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.609Z [INFO    ] [f325f306] GET /hello -> 200 (0.193ms)
+2026-10-05T12:27:54.609Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.609Z [INFO    ] [729bfd55] GET /__dev/api/routes -> 403 (0.131ms)
+2026-10-05T12:27:54.610Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.610Z [INFO    ] [aafc3103] GET /__dev/api/routes -> 403 (0.141ms)
+2026-10-05T12:27:54.611Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.611Z [INFO    ] [c1810188] GET /__dev/api/routes -> 403 (0.153ms)
+2026-10-05T12:27:54.612Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.612Z [INFO    ] [7bf1d8a0] GET /__dev/api/routes -> 200 (0.298ms)
+2026-10-05T12:27:54.613Z [INFO    ] Tina4 v3.13.147 started {"base_path":"/var/home/work/gitdir/testing-tina4/scratch/the-dev-toolbar-loads-for-a-peer-it-will-refuse/app","development":false}
+2026-10-05T12:27:54.613Z [INFO    ] [98578508] GET /__dev/api/routes -> 200 (0.291ms)
