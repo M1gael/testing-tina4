@@ -41,6 +41,7 @@ row if it is wrong.
 | mechanism found | `Cause`; detail in the Note |
 | work picked up | `Status` (`Investigating`, `Fixing`, ...) |
 | fix written, gated, attacked | port `fixed`; Note: branch, commit, base commit |
+| a fix is no longer true in all senses | `Status` `fix-fail`; one short Note sentence on what still fails |
 | all short of the PR done | `Status` `Ready`; Note per the ledger's `Ready` bar |
 | PR opened from the fork | `filed#N`, `Status` `Filed` |
 | CI finished and read (`statusCheckRollup`) | Note |

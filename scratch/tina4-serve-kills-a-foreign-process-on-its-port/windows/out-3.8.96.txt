@@ -1,0 +1,15 @@
+Guest DESKTOP-2KQGEUM Windows 11 10.0.26200.9457, headless QEMU, ssh -p 22221.
+Binary: released tina4-windows-amd64.exe v3.8.96, sha256 9aa07e0134102904d272d7487218107196f51da51dee8f28eb8c13eb21a39c9b.
+
+tina4 serve (foreign -p, foreign default, stale pid file, own pid file):
+all four printed "Port N in use — killing existing process..." then
+"Could not free port N — process may require manual termination".
+Listener stayed alive. Connected client stayed alive.
+
+The for/f command as CreateProcess quotes it:
+  "tokens=5" was unexpected at this time.
+  listener stayed alive.
+
+The same command without that extra quoting:
+  taskkill /F /PID <listener> SUCCESS
+  listener dead, client alive (LISTENING filter).

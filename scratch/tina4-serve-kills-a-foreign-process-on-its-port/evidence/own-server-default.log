@@ -1,5 +1,5 @@
 ⚠ Port 8945 in use — checking whether it is this project's dev server...
-✓ Port 8945 freed (stopped Tina4 dev server, PID 140145)
+✓ Port 8945 freed (stopped Tina4 dev server, PID 107195)
 ✓ Detected python project
 ▶ Starting tina4python on 0.0.0.0:8945
 ✓ Server ready: http://localhost:8945

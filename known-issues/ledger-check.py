@@ -21,7 +21,7 @@ PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ledger.md')
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPLIT = re.compile(r'(?<!\\)\|')
 KEYS = ['py', 'php', 'rb', 'nd', 'js', 'dlp', 'cli']
-ORDER = ['Investigating', 'Discussing', 'Fixing', 'Verifying', 'Backporting', 'Queued',
+ORDER = ['Investigating', 'Discussing', 'Fixing', 'Verifying', 'fix-fail', 'Backporting', 'Queued',
          'Blocked', 'Ready', 'Filed', 'Found', 'Merged', 'Closed', 'Dropped']
 STATUS = re.compile(r'^(%s) (\d{4}-\d{2}-\d{2})$' % '|'.join(ORDER))
 BEGIN, END = '<!-- counts:begin -->', '<!-- counts:end -->'
