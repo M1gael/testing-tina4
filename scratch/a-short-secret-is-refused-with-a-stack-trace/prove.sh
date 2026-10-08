@@ -26,13 +26,13 @@ WT=${WT:-$(getent passwd "$(id -un)" | cut -d: -f6)/.cache/tina4-worktrees}
 TREE=${TREE:-$WT/gi147-stock-php}
 PORT=${PORT:-$((18400 + RANDOM % 200))}
 W=$(mktemp -d)
-cleanup() { fuser -k "$PORT"/tcp 2>/dev/null; rm -rf "$W"; }
+cleanup() { fuser -k "$PORT"/tcp >/dev/null 2>&1; rm -rf "$W"; }
 trap cleanup EXIT
 status=0
 GOOD=$(head -c32 /dev/urandom | od -An -tx1 | tr -d ' \n')
 
 start() {  # secret display_errors
-  fuser -k "$PORT"/tcp 2>/dev/null; sleep 0.2
+  fuser -k "$PORT"/tcp >/dev/null 2>&1; sleep 0.2
   rm -rf "$W/logs" "$W/php-error.log"; mkdir -p "$W/logs"
   (cd "$B/app" && TREE=$TREE TINA4_SECRET=$1 TINA4_DEBUG=false TINA4_LOG_DIR=$W/logs \
      exec php -d display_errors="$2" -d log_errors=1 -d error_log="$W/php-error.log" \
@@ -76,11 +76,11 @@ start short Off || exit 2; probe "5-byte secret, display_errors=Off" /hello refu
 start "$GOOD" On || exit 2
 probe "32-byte secret, /hello   (control)"                           /hello 200
 probe "32-byte secret, /boom    (handler IS installed)"              /boom  handled
-fuser -k "$PORT"/tcp 2>/dev/null; sleep 0.2
+fuser -k "$PORT"/tcp >/dev/null 2>&1; sleep 0.2
 
 echo
 echo "--- tina4 serve, its own server (not a front controller), 5-byte secret:"
-SPORT=$((PORT + 1)); fuser -k "$SPORT"/tcp 2>/dev/null
+SPORT=$(python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));print(s.getsockname()[1])')
 (cd "$B/app" && TREE=$TREE TINA4_SECRET=short TINA4_NO_BROWSER=true \
    timeout 20 php "$TREE/bin/tina4php" serve --host 127.0.0.1 --port "$SPORT" --no-browser --no-reload) \
    > "$W/serve.log" 2>&1

@@ -1,0 +1,60 @@
+=== TREE=gi148-stock-php
+tree: 4891b8d0 (0 modified framework files), 8.4.26
+--- peer.php
+peer (as its browser dials it)  GET /hello                  GET /__dev/api/routes
+--------------------------  --------------------------  ----------------------------------
+loopback    127.0.0.1       200  toolbar INJECTED    200 ALLOWED
+docker gw   172.17.0.1      200  toolbar INJECTED    403 host not allowed
+LAN         192.168.0.50    200  toolbar INJECTED    403 host not allowed
+
+Every documented opt-in, for the docker-gateway peer dialling 172.17.0.1:
+  TINA4_HOST only                                      403 non-loopback peer
+  TINA4_HOST + TINA4_MCP_TOKEN, no header (browser)    403 non-loopback peer
+  TINA4_HOST + TINA4_MCP_TOKEN, Bearer   (curl)        200 ALLOWED
+  TINA4_HOST + TINA4_MCP_TOKEN, X-MCP-Token (curl)     200 ALLOWED
+--- boom.php
+peer           page         status dev toolbar elements in body
+127.0.0.1      html page    200    1 (trace shown: no)
+127.0.0.1      500 overlay  500    2 (trace shown: yes)
+127.0.0.1      404 page     404    1 (trace shown: no)
+172.17.0.1     html page    200    1 (trace shown: no)
+172.17.0.1     500 overlay  500    2 (trace shown: yes)
+172.17.0.1     404 page     404    1 (trace shown: no)
+203.0.113.7    html page    200    1 (trace shown: no)
+203.0.113.7    500 overlay  500    2 (trace shown: yes)
+203.0.113.7    404 page     404    1 (trace shown: no)
+--- reporter-shape.php
+peer         /hello                 /nothing-here (404)    /boom (500 overlay)    /__dev/toolbar.js
+127.0.0.1    200 toolbar=1          404 toolbar=1          500 toolbar=2          200 
+172.17.0.1   200 toolbar=1          404 toolbar=1          500 toolbar=2          403 non-loopback peer
+192.168.0.50 200 toolbar=1          404 toolbar=1          500 toolbar=2          403 non-loopback peer
+=== TREE=fdev02
+tree: 4891b8d0 (3 modified framework files), 8.4.26
+--- peer.php
+peer (as its browser dials it)  GET /hello                  GET /__dev/api/routes
+--------------------------  --------------------------  ----------------------------------
+loopback    127.0.0.1       200  toolbar INJECTED    200 ALLOWED
+docker gw   172.17.0.1      200  no toolbar          403 host not allowed
+LAN         192.168.0.50    200  no toolbar          403 host not allowed
+
+Every documented opt-in, for the docker-gateway peer dialling 172.17.0.1:
+  TINA4_HOST only                                      403 non-loopback peer
+  TINA4_HOST + TINA4_MCP_TOKEN, no header (browser)    403 non-loopback peer
+  TINA4_HOST + TINA4_MCP_TOKEN, Bearer   (curl)        200 ALLOWED
+  TINA4_HOST + TINA4_MCP_TOKEN, X-MCP-Token (curl)     200 ALLOWED
+--- boom.php
+peer           page         status dev toolbar elements in body
+127.0.0.1      html page    200    1 (trace shown: no)
+127.0.0.1      500 overlay  500    2 (trace shown: yes)
+127.0.0.1      404 page     404    1 (trace shown: no)
+172.17.0.1     html page    200    0 (trace shown: no)
+172.17.0.1     500 overlay  500    0 (trace shown: yes)
+172.17.0.1     404 page     404    0 (trace shown: no)
+203.0.113.7    html page    200    0 (trace shown: no)
+203.0.113.7    500 overlay  500    0 (trace shown: yes)
+203.0.113.7    404 page     404    0 (trace shown: no)
+--- reporter-shape.php
+peer         /hello                 /nothing-here (404)    /boom (500 overlay)    /__dev/toolbar.js
+127.0.0.1    200 toolbar=1          404 toolbar=1          500 toolbar=2          200 
+172.17.0.1   200 toolbar=0          404 toolbar=0          500 toolbar=0          403 non-loopback peer
+192.168.0.50 200 toolbar=0          404 toolbar=0          500 toolbar=0          403 non-loopback peer

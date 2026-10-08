@@ -1,0 +1,22 @@
+===== stock
+tree: 4891b8d0 (0 modified framework files), 8.4.26, silent relay on 44841
+timeout property: present, visibility=private, value=30s
+constructor parameters: host, port, username, password, fromAddress, fromName, encryption, useTls, imapHost, imapPort, imapUsername, imapPassword, imapEncryption
+a timeout parameter:    NO
+a public timeout setter: NONE
+elapsed: 30.0s  (send() returned success=false, message=SMTP error: Lost connection to SMTP server)
+silent peer    fgets=false after 1.0s  timed_out=true eof=false
+peer hangs up  fgets=false after 0.0s  timed_out=false eof=true
+===== fix
+tree: 4891b8d0 (1 modified framework files), 8.4.26, silent relay on 33991
+constructor timeout: 2      -> 2.0s
+TINA4_MAIL_TIMEOUT=3        -> 3.0s
+constructor 2 beats env 3   -> 2.0s
+{"timestamp":"2026-10-08T13:31:38.967Z","level":"WARNING","message":"TINA4_MAIL_TIMEOUT must be a whole number of seconds and at least 1, got 'banana' -- using the default of 30 seconds"}
+TINA4_MAIL_TIMEOUT=banana   -> resolves to 30s (the default)
+{"timestamp":"2026-10-08T13:31:38.967Z","level":"WARNING","message":"TINA4_MAIL_TIMEOUT must be a whole number of seconds and at least 1, got '0' -- using the default of 30 seconds"}
+TINA4_MAIL_TIMEOUT=0        -> resolves to 30s (the default)
+nothing set                 -> resolves to 30s
+constructor 0               -> InvalidArgumentException: Messenger timeout must be at least 1 second, got 0.
+silent peer    fgets=false after 1.0s  timed_out=true eof=false
+peer hangs up  fgets=false after 0.0s  timed_out=false eof=true

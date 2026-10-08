@@ -1,0 +1,17 @@
+tree: 53182271, version = "3.13.148", Python 3.13.13, psycopg2 2.9.13
+== unreachable database, migrations/ holds 000001_noop.sql (default log level)
+   GET /hello: 200, 38 bytes
+   GET /health: 200, 56 bytes, {"status":"ok","uptime":0.13,"framework":"tina4-python"}
+   GET /: 404, 1686 bytes
+   log lines about the database or migrations:
+== same, TINA4_LOG_LEVEL=DEBUG
+   GET /hello: 200, 38 bytes
+   GET /health: 200, 56 bytes, {"status":"ok","uptime":0.12,"framework":"tina4-python"}
+   GET /: 404, 1686 bytes
+   log lines about the database or migrations:
+     | {"timestamp":"2026-10-08T13:14:52.468Z","level":"DEBUG","message":"Startup migrations skipped (no database configured): Database: could not connect to postgres://127.0.0.1:1/x: connection to server at \"127.0.0.1\", port
+== control: unreachable database, no migrations/ folder
+   GET /hello: 200, 38 bytes
+   GET /health: 200, 56 bytes, {"status":"ok","uptime":0.15,"framework":"tina4-python"}
+   GET /: 404, 1686 bytes
+   log lines about the database or migrations:

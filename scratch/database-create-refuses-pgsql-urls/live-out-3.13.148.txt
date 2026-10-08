@@ -1,0 +1,16 @@
+== gi148-stock-php
+postgres   Database::create      row answer=42 via Database
+postgres   PdoPostgresAdapter    row answer=42 via PdoPostgresAdapter
+postgresql Database::create      row answer=42 via Database
+postgresql PdoPostgresAdapter    row answer=42 via PdoPostgresAdapter
+pgsql      Database::create      FAILED InvalidArgumentException: Database: Unsupported database scheme 'pgsql'. Supported: sqlite, post
+pgsql      PdoPostgresAdapter    row answer=42 via PdoPostgresAdapter
+pgsql env  App::getDatabase()    FAILED InvalidArgumentException: Database: Unsupported database scheme 'pgsql'. Supported: sqlite, post
+== form08
+postgres   Database::create      row answer=42 via Database
+postgres   PdoPostgresAdapter    row answer=42 via PdoPostgresAdapter
+postgresql Database::create      row answer=42 via Database
+postgresql PdoPostgresAdapter    row answer=42 via PdoPostgresAdapter
+pgsql      Database::create      row answer=42 via Database
+pgsql      PdoPostgresAdapter    row answer=42 via PdoPostgresAdapter
+pgsql env  App::getDatabase()    row answer=42 via Database

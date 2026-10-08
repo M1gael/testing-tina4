@@ -1,0 +1,14 @@
+tree: 4891b8d0 (0 modified framework files), 8.4.26
+TINA4_DEBUG=false GET /        200   601 bytes  trace=YES fwpaths=YES  Fatal error:  Uncaught Tina4\LogConfigurationE
+TINA4_DEBUG=false GET /health  200   601 bytes  trace=YES fwpaths=YES  Fatal error:  Uncaught Tina4\LogConfigurationE
+TINA4_DEBUG=false server output names the setting: 3
+TINA4_DEBUG=true  GET /        200   601 bytes  trace=YES fwpaths=YES  Fatal error:  Uncaught Tina4\LogConfigurationE
+TINA4_DEBUG=true  GET /health  200   601 bytes  trace=YES fwpaths=YES  Fatal error:  Uncaught Tina4\LogConfigurationE
+TINA4_DEBUG=true  server output names the setting: 3
+tree: 4891b8d0 (1 modified framework files), 8.4.26
+TINA4_DEBUG=false GET /        500    13 bytes  trace=no  fwpaths=no  Server Error 
+TINA4_DEBUG=false GET /health  500    13 bytes  trace=no  fwpaths=no  Server Error 
+TINA4_DEBUG=false server output names the setting: 3
+TINA4_DEBUG=true  GET /        500    56 bytes  trace=no  fwpaths=no  TINA4_LOG_FORMAT=xml is not valid; accepted: text, json 
+TINA4_DEBUG=true  GET /health  500    56 bytes  trace=no  fwpaths=no  TINA4_LOG_FORMAT=xml is not valid; accepted: text, json 
+TINA4_DEBUG=true  server output names the setting: 3

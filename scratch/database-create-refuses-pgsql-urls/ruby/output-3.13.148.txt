@@ -1,0 +1,4 @@
+tree: d2057cb (3.13.148)
+pgsql      DatabaseUrl engine=postgres; driver="postgres"; listener connections so far=0; Tina4::DatabaseConnectionError: PG::Error: missing "=" after "pgsql://127.0.0.1:46659/x" in connection info string
+postgres   DatabaseUrl engine=postgres; driver="postgres"; listener connections so far=1; Tina4::DatabaseConnectionError: PG::ConnectionBad: connection to server at "127.0.0.1", port 46659 failed: server closed t
+postgresql DatabaseUrl engine=postgres; driver="postgres"; listener connections so far=2; Tina4::DatabaseConnectionError: PG::ConnectionBad: connection to server at "127.0.0.1", port 46659 failed: server closed t

@@ -1,0 +1,11 @@
+tree: d2057cb (3.13.148)
+[closed-port postgres, migrations/ with one .sql] server UP
+    GET / -> 404 1684 bytes: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" conte
+    GET /health -> 200 75 bytes: {"status":"ok","version":"3.13.148","uptime":0.17,"framework":"tina4-ruby"}
+    GET /hello -> 200 40 bytes: <html><body><h1>hello</h1></body></html>
+    log: Database connected: postgres://127.0.0.1:1/x|Database connection failed: connection to server at \|Startup auto-migration failed: Database not connected (postgres -> postgres://127.0.0.1:1/x): PG::ConnectionBad: connection to serve|
+[closed-port postgres, no migrations/ (control) ] server UP
+    GET / -> 404 1684 bytes: <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" conte
+    GET /health -> 200 75 bytes: {"status":"ok","version":"3.13.148","uptime":0.18,"framework":"tina4-ruby"}
+    GET /hello -> 200 40 bytes: <html><body><h1>hello</h1></body></html>
+    log: Database connected: postgres://127.0.0.1:1/x|Database connection failed: connection to server at \|

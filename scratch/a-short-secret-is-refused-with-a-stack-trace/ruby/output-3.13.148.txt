@@ -1,0 +1,6 @@
+tree: d2057cb (3.13.148)
+[20-byte secret, TINA4_DEBUG=false] process EXITED rc=1; no listener (curl: 000)
+    first error line: <tree>/lib/tina4/auth.rb:134:in 'Tina4::Auth.require_boot_secret!': Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your envi
+[20-byte secret, TINA4_DEBUG=true ] process EXITED rc=1; no listener (curl: 000)
+    first error line: <tree>/lib/tina4/auth.rb:134:in 'Tina4::Auth.require_boot_secret!': Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your envi
+[64-hex secret (control)          ] server UP; GET /hello -> 200; trace/paths in body: 0

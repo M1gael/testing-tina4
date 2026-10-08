@@ -1,0 +1,16 @@
+===== gi148-stock-php
+tree: 4891b8d0 (0 modified framework files), 8.4.26
+TINA4_DEBUG=false GET /        200     0 bytes  
+TINA4_DEBUG=false GET /health  200     0 bytes  
+TINA4_DEBUG=false server output names the rename: 3
+TINA4_DEBUG=true  GET /        200     0 bytes  
+TINA4_DEBUG=true  GET /health  200     0 bytes  
+TINA4_DEBUG=true  server output names the rename: 3
+===== fauth04
+tree: 4891b8d0 (1 modified framework files), 8.4.26
+TINA4_DEBUG=false GET /        500    13 bytes  Server Error 
+TINA4_DEBUG=false GET /health  500    13 bytes  Server Error 
+TINA4_DEBUG=false server output names the rename: 3
+TINA4_DEBUG=true  GET /        500  1051 bytes   ────────────────�
+TINA4_DEBUG=true  GET /health  500  1051 bytes   ────────────────�
+TINA4_DEBUG=true  server output names the rename: 3

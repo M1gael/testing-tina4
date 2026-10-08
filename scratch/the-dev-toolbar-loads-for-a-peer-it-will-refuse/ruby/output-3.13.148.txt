@@ -1,0 +1,11 @@
+tree: d2057cb (3.13.148); non-loopback peer: LAN address
+[loopback peer    ] GET /hello -> 200; toolbar markup injected: 1
+[loopback peer    ] GET /nothing-here -> 404; toolbar markup injected: 1
+[loopback peer    ] GET /__dev/toolbar.js -> 200 
+[loopback peer    ] GET /__dev/toolbar.css -> 200 
+[loopback peer    ] GET /__dev -> 200 
+[non-loopback peer] GET /hello -> 200; toolbar markup injected: 1
+[non-loopback peer] GET /nothing-here -> 404; toolbar markup injected: 1
+[non-loopback peer] GET /__dev/toolbar.js -> 403 {"ok":false,"error":"dev-admin: refused (non-loopback peer)"}
+[non-loopback peer] GET /__dev/toolbar.css -> 403 {"ok":false,"error":"dev-admin: refused (non-loopback peer)"}
+[non-loopback peer] GET /__dev -> 403 {"ok":false,"error":"dev-admin: refused (non-loopback peer)"}

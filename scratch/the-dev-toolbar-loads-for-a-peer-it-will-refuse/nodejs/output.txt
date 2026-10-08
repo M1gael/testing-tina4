@@ -1,0 +1,13 @@
+tree: bc1f378 (3.13.148); node v22.22.2; LAN peer 192.168.0.8
+== peer 127.0.0.1
+   /__dev               200  
+   /__dev/toolbar.js    200  
+   /__dev/toolbar.css   200  
+   /hello               200  toolbar markup: 1, toolbar.css link: 1, toolbar.js script: 1
+   /nothing-here        404  toolbar markup: 1, toolbar.css link: 1, toolbar.js script: 1
+== peer 192.168.0.8
+   /__dev               403  {"ok":false,"error":"dev-admin: refused (non-loopback peer)"}
+   /__dev/toolbar.js    403  {"ok":false,"error":"dev-admin: refused (non-loopback peer)"}
+   /__dev/toolbar.css   403  {"ok":false,"error":"dev-admin: refused (non-loopback peer)"}
+   /hello               200  toolbar markup: 1, toolbar.css link: 1, toolbar.js script: 1
+   /nothing-here        404  toolbar markup: 1, toolbar.css link: 1, toolbar.js script: 1

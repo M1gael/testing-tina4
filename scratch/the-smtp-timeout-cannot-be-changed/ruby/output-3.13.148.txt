@@ -1,0 +1,4 @@
+tree: d2057cb (3.13.148)
+[constructor timeout: 2   ] ELAPSED=0.0 OUTCOME=ArgumentError: unknown keyword: :timeout
+[TINA4_MAIL_TIMEOUT=2      ] ELAPSED=30.0 OUTCOME=success=false message=127.0.0.1 did not respond within 30s
+[default                  ] ELAPSED=30.0 OUTCOME=success=false message=127.0.0.1 did not respond within 30s

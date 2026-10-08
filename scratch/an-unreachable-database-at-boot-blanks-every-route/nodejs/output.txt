@@ -1,0 +1,21 @@
+tree: bc1f378 (3.13.148); node v22.22.2
+== migrations-and-orm-dir (migrations/: yes, src/orm/: yes) listener: yes
+/       HTTP/1.1 404 Not Found, 1685 bytes: <!DOCTYPE html>   <html lang="en"> <head> <meta charset="utf-8"> <meta
+/health HTTP/1.1 200 OK, 77 bytes: {"status":"ok","version":"3.13.148","uptime":0.19,"framework":"tina4-n
+/hello  HTTP/1.1 200 OK, 2 bytes: ok
+   console:   ORM not available (install @tina4/orm to enable): Error: connect ECONNREFUSED 127.0.0.1:1|  code: 'ECONNREFUSED',|{"timestamp":"2026-10-08T13:15:33.380Z","level":"DEBUG","message":"Startup migrations skipped (no database configured): No database adapter configured. Call set|
+== migrations-no-orm-dir (migrations/: yes, src/orm/: no) listener: yes
+/       HTTP/1.1 404 Not Found, 1685 bytes: <!DOCTYPE html>   <html lang="en"> <head> <meta charset="utf-8"> <meta
+/health HTTP/1.1 200 OK, 77 bytes: {"status":"ok","version":"3.13.148","uptime":0.19,"framework":"tina4-n
+/hello  HTTP/1.1 200 OK, 2 bytes: ok
+   console: 
+== control-orm-dir-no-migrations (migrations/: no, src/orm/: yes) listener: yes
+/       HTTP/1.1 404 Not Found, 1685 bytes: <!DOCTYPE html>   <html lang="en"> <head> <meta charset="utf-8"> <meta
+/health HTTP/1.1 200 OK, 76 bytes: {"status":"ok","version":"3.13.148","uptime":0.2,"framework":"tina4-no
+/hello  HTTP/1.1 200 OK, 2 bytes: ok
+   console:   ORM not available (install @tina4/orm to enable): Error: connect ECONNREFUSED 127.0.0.1:1|  code: 'ECONNREFUSED',|
+== control-neither (migrations/: no, src/orm/: no) listener: yes
+/       HTTP/1.1 404 Not Found, 1685 bytes: <!DOCTYPE html>   <html lang="en"> <head> <meta charset="utf-8"> <meta
+/health HTTP/1.1 200 OK, 77 bytes: {"status":"ok","version":"3.13.148","uptime":0.14,"framework":"tina4-n
+/hello  HTTP/1.1 200 OK, 2 bytes: ok
+   console: 

@@ -1,0 +1,6 @@
+tree: bc1f378 (3.13.148); node v22.22.2
+default:                  ELAPSED=30.0s OUTCOME=success=false message=SMTP error: SMTP connection to 127.0.0.1:42557 timed out after 30s
+TINA4_MAIL_TIMEOUT=2:     ELAPSED=30.0s OUTCOME=success=false message=SMTP error: SMTP connection to 127.0.0.1:42557 timed out after 30s
+option {timeout: 2}:      ELAPSED=30.0s OUTCOME=success=false message=SMTP error: SMTP connection to 127.0.0.1:42557 timed out after 30s
+connect, SYN dropped:     ELAPSED=133.2s OUTCOME=success=false message=SMTP error: connect ETIMEDOUT 127.0.0.1:43965
+implicit TLS (ssl):       ELAPSED>=90s OUTCOME=still waiting when capped (timeout rc=124)

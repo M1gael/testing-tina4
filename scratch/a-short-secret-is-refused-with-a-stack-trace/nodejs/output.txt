@@ -1,0 +1,13 @@
+tree: bc1f378 (3.13.148); node v22.22.2
+== short-secret-prod (TINA4_DEBUG=false, secret 20 bytes)
+   listener: no; curl rc=7; status: <none>; body: 
+   body trace: no; body paths: no; process: exited 1
+   server console (first lines): (node:208290) ExperimentalWarning: SQLite is an experimental feature and might change at any time|  if (message) throw new Error(message);|Error: Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 byt
+== short-secret-dev (TINA4_DEBUG=true, secret 20 bytes)
+   listener: no; curl rc=7; status: <none>; body: 
+   body trace: no; body paths: no; process: exited 1
+   server console (first lines): (node:208352) ExperimentalWarning: SQLite is an experimental feature and might change at any time|  if (message) throw new Error(message);|Error: Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 byt
+== control-64-hex (TINA4_DEBUG=false, secret 64 bytes)
+   listener: yes; curl rc=0; status: HTTP/1.1 200 OK; body: ok
+   body trace: no; body paths: no; process: running
+   server console (first lines): (node:208401) ExperimentalWarning: SQLite is an experimental feature and might change at any time|  No routes directory found at <tmp>

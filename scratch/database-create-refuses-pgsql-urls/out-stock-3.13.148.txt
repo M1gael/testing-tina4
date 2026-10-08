@@ -1,0 +1,10 @@
+tree 4891b8d0
+sqlite       DatabaseUrl engine sqlite     Database::create: opened
+sqlite3      DatabaseUrl engine sqlite     Database::create: opened
+postgres     DatabaseUrl engine postgres   Database::create: attempted (RuntimeException)
+postgresql   DatabaseUrl engine postgres   Database::create: attempted (RuntimeException)
+pgsql        DatabaseUrl engine postgres   Database::create: REFUSED BY SCHEME
+mysql        DatabaseUrl engine mysql      Database::create: attempted (DatabaseDriverMissing)
+mssql        DatabaseUrl engine mssql      Database::create: attempted (DatabaseDriverMissing)
+sqlserver    DatabaseUrl engine mssql      Database::create: attempted (DatabaseDriverMissing)
+firebird     DatabaseUrl engine firebird   Database::create: attempted (DatabaseDriverMissing)

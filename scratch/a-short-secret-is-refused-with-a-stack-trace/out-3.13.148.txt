@@ -1,0 +1,28 @@
+===== gi148-stock-php
+tree: /var/home/work/.cache/tina4-worktrees/gi148-stock-php  (3.13.148)
+php:  8.4.26  front controller under php -S
+
+5-byte secret, display_errors=On         status=200  trace=YES  fwpaths=YES  tina4-log=no   php-log=YES  BUG
+5-byte secret, display_errors=Off        status=500  trace=no   fwpaths=no   tina4-log=no   php-log=YES  BUG
+32-byte secret, /hello   (control)       status=200  trace=no   fwpaths=no   tina4-log=no   php-log=no   ok
+32-byte secret, /boom    (handler IS installed) status=500  trace=no   fwpaths=no   tina4-log=no   php-log=no   ok
+
+--- tina4 serve, its own server (not a front controller), 5-byte secret:
+rc=255
+  Port 34851 is in use; takeover is disabled outside dev mode -- free it or choose another port.
+PHP Fatal error:  Uncaught RuntimeException: Auth: TINA4_SECRET is 5 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your environment or .env. in /var/home/work/.cache/tina4-worktrees/gi148-stock-php/Tina4/Auth.php:347
+Stack trace:
+===== fauth04
+tree: /var/home/work/.cache/tina4-worktrees/fauth04  (3.13.148)
+php:  8.4.26  front controller under php -S
+
+5-byte secret, display_errors=On         status=500  trace=no   fwpaths=no   tina4-log=YES  php-log=no   ok
+5-byte secret, display_errors=Off        status=500  trace=no   fwpaths=no   tina4-log=YES  php-log=no   ok
+32-byte secret, /hello   (control)       status=200  trace=no   fwpaths=no   tina4-log=no   php-log=no   ok
+32-byte secret, /boom    (handler IS installed) status=500  trace=no   fwpaths=no   tina4-log=no   php-log=no   ok
+
+--- tina4 serve, its own server (not a front controller), 5-byte secret:
+rc=255
+  Port 37173 is in use; takeover is disabled outside dev mode -- free it or choose another port.
+PHP Fatal error:  Uncaught RuntimeException: Auth: TINA4_SECRET is 5 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your environment or .env. in /var/home/work/.cache/tina4-worktrees/fauth04/Tina4/Auth.php:347
+Stack trace:

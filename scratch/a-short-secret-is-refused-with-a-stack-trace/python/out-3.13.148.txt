@@ -1,0 +1,27 @@
+tree: 53182271, version = "3.13.148", Python 3.13.13
+== 20-byte secret
+   server running: no, exit 1
+   client: no answer (curl exit 7)
+   trace or source path in the HTTP body: 0
+   server output:
+     |   Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your environment or .env.
+== 20-byte secret, TINA4_DEBUG=true
+   server running: no, exit 1
+   client: no answer (curl exit 7)
+   trace or source path in the HTTP body: 0
+   server output:
+     |   Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your environment or .env.
+== 64-byte secret (control)
+   server running: yes
+   client: HTTP/1.1 200 OK
+   trace or source path in the HTTP body: 0
+   server output:
+     | {"timestamp":"2026-10-08T13:14:36.334Z","level":"INFO","message":"Discovered 4 routes"}
+     |   ______ _             __ __
+     |  /_  __/(_)___  ____ _/ // /
+     |   / /  / / __ \/ __ `/ // /_
+     |  / /  / / / / / /_/ /__  __/
+     | /_/  /_/_/ /_/\__,_/  /_/
+== asgi() with a 20-byte secret (no ASGI server needed to see the refusal)
+   | Auth: TINA4_SECRET is 20 bytes; an HMAC JWT secret must be at least 32 bytes. Generate one with `openssl rand -hex 32` and set TINA4_SECRET in your environment or .env.
+   exit 1

@@ -1,0 +1,5 @@
+tree: 53182271, version = "3.13.148", Python 3.13.13; silent listener on 36223
+== no setting:                       success=False message='Connection unexpectedly closed: timed out' after 30.0 s
+== TINA4_MAIL_TIMEOUT=2:             success=False message='Connection unexpectedly closed: timed out' after 30.0 s
+== socket.setdefaulttimeout(2):      success=False message='Connection unexpectedly closed: timed out' after 30.0 s
+== constructor timeout=2:            raised TypeError: Messenger.__init__() got an unexpected keyword argument 'timeout' after 0.0 s
