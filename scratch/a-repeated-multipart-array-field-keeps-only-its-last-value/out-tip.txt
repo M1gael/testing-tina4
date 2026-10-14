@@ -1,0 +1,24 @@
+== python  tree 005f03a1, 0 uncommitted paths
+   multipart   {"body":{"tags[]":"blue","colour[]":"green","name":"x"}}
+   tags[] lost a value: BUG
+   urlencoded  {"body":{"tags[]":["red","blue"],"colour[]":"green","name":"x","f[a]":"1"}}
+   query       {"query":{"tags[]":["red","blue"],"f[a]":"1","p":["1","2"]}}
+   nested mp   {"body":{"f[a]":"1","f[b][]":"2","plain":"q"}}
+== php  tree 0a453208, 0 uncommitted paths
+   multipart   {"body":{"tags[]":"blue","colour[]":"green","name":"x"}}
+   tags[] lost a value: BUG
+   urlencoded  {"body":{"tags":["red","blue"],"colour":["green"],"name":"x","f":{"a":"1"}}}
+   query       {"query":{"tags":["red","blue"],"f":{"a":"1"},"p":"2"}}
+   nested mp   {"body":{"f[a]":"1","f[b][]":"2","plain":"q"}}
+== ruby  tree 0c8f3b5, 0 uncommitted paths
+   multipart   {"body":{"tags":["red","blue"],"colour":["green"],"name":"x"}}
+   tags[] both values kept: ok
+   urlencoded  {"body":{"tags[]":"blue","colour[]":"green","name":"x","f[a]":"1"}}
+   query       {"query":{"tags[]":"blue","f[a]":"1","p":"2"}}
+   nested mp   {"body":{"f":{"a":"1","b":["2"]},"plain":"q"}}
+== nodejs  tree b2078dc, 0 uncommitted paths
+   multipart   {"body":{"tags[]":"blue","colour[]":"green","name":"x"}}
+   tags[] lost a value: BUG
+   urlencoded  {"body":{"tags[]":"blue","colour[]":"green","name":"x","f[a]":"1"}}
+   query       {"query":{"tags[]":"blue","f[a]":"1","p":"2"}}
+   nested mp   {"body":{"f[a]":"1","f[b][]":"2","plain":"q"}}

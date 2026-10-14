@@ -1,0 +1,4 @@
+sync-run TestClient FAIL: RuntimeError can't start new thread
+<exec>:9: RuntimeWarning: coroutine 'app' was never awaited
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+direct await app: 200 b'{"hi":"Ann"}'

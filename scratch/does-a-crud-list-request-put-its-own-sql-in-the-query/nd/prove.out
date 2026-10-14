@@ -1,0 +1,39 @@
+ORACLE = (CASE WHEN (SELECT token FROM secrets)='TOPSECRET' THEN -age ELSE id END)
+== AutoCrud list
+control sort=name dir=desc                   200 rows=Zed,O'Brien,Ann total=3
+control search=O'Brien                       200 rows=O'Brien total=1
+search=%' OR 1=1 --                          200 rows= total=0
+control sort=age                             200 rows=Zed,Ann,O'Brien total=3
+sort=ORACLE (raw => O'Brien,Ann,Zed)         400 {"error": true, "code": "UNKNOWN_FIELD", "message": "Unknown sort field '(CASE WHEN (SELECT token FROM secrets)='TOPSECRET' THEN -age ELSE id END)'", "status": 
+sort=name; --                                400 {"error": true, "code": "UNKNOWN_FIELD", "message": "Unknown sort field 'name; --'", "status": 400}
+sort=(select token from secrets)             400 {"error": true, "code": "UNKNOWN_FIELD", "message": "Unknown sort field '(select token from secrets)'", "status": 400}
+sort=name dir=desc, (select 1)               200 rows=Ann,O'Brien,Zed total=3
+sort=-name (inline desc control)             200 rows=Zed,O'Brien,Ann total=3
+limit=1 union select 1,token,1 ...           200 rows=Ann total=3
+offset=1; --                                 200 rows=Ann,O'Brien,Zed total=3
+page=2 per_page=1 control                    200 rows=O'Brien total=3
+control filter[name]=O'Brien                 200 rows=O'Brien total=1
+filter[name]=x' OR '1'='1                    200 rows= total=0
+filter[name = name OR 1]=1                   400 {"error": true, "code": "UNKNOWN_FIELD", "message": "Unknown filter field 'name = name OR 1'", "status": 400}
+== AutoCrud by id
+control id=2                                 200 {"data": {"id": 2, "name": "O'Brien", "age": 40}}
+id=2 OR 1=1                                  404 {"error": "Not Found", "statusCode": 404}
+DELETE id=9 OR 1=1                           404 {"error": "Not Found", "statusCode": 404}
+  list after delete (want 3)                 200 rows=Ann,O'Brien,Zed total=3
+== Crud.to_crud grid (model)
+control sort=name dir=desc                   200 grid=Zed,O'Brien,Ann 
+control search=O'Brien                       200 grid=O'Brien 
+search=%' OR 1=1 --                          200 grid= 
+control sort=age                             200 grid=Zed,Ann,O'Brien 
+sort=ORACLE (raw => O'Brien,Ann,Zed)         200 grid=Ann,O'Brien,Zed 
+sort=age; --                                 200 grid=Ann,O'Brien,Zed 
+sort=(select token from secrets)             200 grid=Ann,O'Brien,Zed 
+page=1 union select ...                      200 grid=Ann,O'Brien,Zed 
+== Crud.to_crud grid (custom sql)
+control sort=name dir=desc                   200 grid=Zed,O'Brien,Ann 
+control search=O'Brien                       200 grid=O'Brien 
+search=%' OR 1=1 --                          200 grid= 
+control sort=age                             200 grid=Zed,Ann,O'Brien 
+sort=ORACLE (raw => O'Brien,Ann,Zed)         200 grid=Ann,O'Brien,Zed 
+sort=name desc --                            200 grid=Ann,O'Brien,Zed 
+sort=(select token from secrets)             200 grid=Ann,O'Brien,Zed 
