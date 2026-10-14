@@ -42,3 +42,6 @@ Runtime facts, run on py `074fa2eb`:
 - JupyterLite: the TestClient fails (`f-rt-08`), a SQLite file on `/drive` fails (a JupyterLite limitation), and `!cat` / `%load` reveals don't work.
 
 `make-reveal-notebook.py` is the reveal probe.
+
+**Moved 2026-10-14:** the workshop repo, the builders (`build/`) and a copy of their repo now live
+in the shell `gitdir/tina4-workshop/`. Start from its `HANDOVER.md`.
