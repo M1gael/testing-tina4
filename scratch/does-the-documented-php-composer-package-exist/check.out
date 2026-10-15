@@ -1,0 +1,8 @@
+== docs fix
+OK all 12 package names exist
+== docs stock
+MISSING tina4stack/tina4-php (404): docs/nodejs/37-feature-list.md docs/php/34-deployment.md docs/php/36-releases.md 
+== book fix
+OK all 1 package names exist
+== book stock
+MISSING tina4stack/tina4-php (404): book-1-python/Tina4-for-Python-Developers.pdf book-1-python/chapters/38-feature-list.md book-2-php/Tina4-for-PHP-Developers.pdf 
