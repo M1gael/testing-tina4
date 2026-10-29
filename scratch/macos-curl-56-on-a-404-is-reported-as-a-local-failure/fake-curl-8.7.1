@@ -1,0 +1,43 @@
+#!/bin/sh
+# Stand-in for macOS /usr/bin/curl 8.7.1 as seen in the field: runs the real curl,
+# but an HTTP error under --fail (real exit 22) comes back as exit 56 with "(56)"
+# in the message, and a write failure (real exit 23) comes back as 56 with curl's
+# "Failure writing output to destination" text.
+# FAKE_LATEST=vX.Y.Z makes `releases/latest` resolve to that tag; FAKE_SERVE_FROM=vA.B.C
+# fetches that tag's real assets when FAKE_LATEST's are asked for. FAKE_404_URL=<substring>
+# swaps any URL containing it for one that 404s.
+REAL=${REAL_CURL:-/usr/bin/curl}
+for a in "$@"; do
+  case "$a" in
+    *github.com/tina4stack/tina4/releases/latest)
+      if [ -n "$FAKE_LATEST" ]; then
+        printf '<meta property="og:url" content="https://github.com/tina4stack/tina4/releases/tag/%s">\n' "$FAKE_LATEST"
+        exit 0
+      fi ;;
+  esac
+done
+if [ -n "$FAKE_SERVE_FROM" ]; then
+  n=$#; i=0
+  for a in "$@"; do
+    i=$((i+1))
+    case "$a" in */releases/download/"$FAKE_LATEST"/*) a=$(printf %s "$a" | sed "s#/download/$FAKE_LATEST/#/download/$FAKE_SERVE_FROM/#") ;; esac
+    set -- "$@" "$a"
+  done
+  shift $n
+fi
+if [ -n "$FAKE_404_URL" ]; then
+  n=$#
+  for a in "$@"; do
+    case "$a" in *"$FAKE_404_URL"*) a=https://github.com/tina4stack/tina4/releases/download/v9.9.8/none ;; esac
+    set -- "$@" "$a"
+  done
+  shift $n
+fi
+err=$(mktemp); "$REAL" "$@" 2>"$err"; rc=$?
+[ -n "$REAL_PASSTHRU" ] && { cat "$err" >&2; rm -f "$err"; exit $rc; }
+case $rc in
+  22) sed 's/^curl: (22)/curl: (56)/' "$err" >&2; rc=56 ;;
+  23) echo "curl: (56) Failure writing output to destination, passed 1369 returned 4294967295" >&2; rc=56 ;;
+  *) cat "$err" >&2 ;;
+esac
+rm -f "$err"; exit $rc

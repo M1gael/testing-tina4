@@ -1,0 +1,12 @@
+PASS static docs: 0 route-block returns (ch03 sections 6/8/10, excluded unless STRICT=1: 3)
+PASS static book: 0 route-block returns (ch03 sections 6/8/10, excluded unless STRICT=1: 3)
+PASS serve docs ch02 POST products: POST /api/products -> 400
+PASS serve docs ch08 form token: POST /profile/update -> 403
+PASS serve docs ch10 dashboard: GET /dashboard -> 302
+PASS serve docs ch11 cache hit: GET /api/products/1 -> 200
+PASS serve book ch02 POST products: POST /api/products -> 400
+PASS serve book ch08 form token: POST /profile/update -> 403
+PASS serve book ch10 dashboard: GET /dashboard -> 302
+PASS serve book ch11 cache hit: GET /api/products/1 -> 200
+PASS serve control def-return: GET /control -> 200
+VERDICT PASS ok=11 bad=0

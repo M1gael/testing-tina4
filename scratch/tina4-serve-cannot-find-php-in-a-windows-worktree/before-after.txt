@@ -1,0 +1,44 @@
+##### tina4-stock.exe / wt
+=== [wt\public_html] A php.exe on PATH (worktree)  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] B only php.bat on PATH  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [wt\public_html] C vendor\bin\tina4php missing  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [wt\public_html] D php.bat in a dir with spaces  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [wt\public_html] E php.cmd ahead of php.exe  http=200  doctor=PHP 8.4.25
+##### tina4-stock.exe / repo
+=== [repo\public_html] A php.exe on PATH (worktree)  http=200  doctor=PHP 8.4.25
+=== [repo\public_html] B only php.bat on PATH  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [repo\public_html] C vendor\bin\tina4php missing  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [repo\public_html] D php.bat in a dir with spaces  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [repo\public_html] E php.cmd ahead of php.exe  http=200  doctor=PHP 8.4.25
+##### tina4-fixed.exe / wt
+=== [wt\public_html] A php.exe on PATH (worktree)  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] B only php.bat on PATH  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] C vendor\bin\tina4php missing  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [wt\public_html] D php.bat in a dir with spaces  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] E php.cmd ahead of php.exe  http=200  doctor=PHP 8.4.25
+##### tina4-fixed.exe / repo
+=== [repo\public_html] A php.exe on PATH (worktree)  http=200  doctor=PHP 8.4.25
+=== [repo\public_html] B only php.bat on PATH  http=200  doctor=PHP 8.4.25
+=== [repo\public_html] C vendor\bin\tina4php missing  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [repo\public_html] D php.bat in a dir with spaces  http=200  doctor=PHP 8.4.25
+=== [repo\public_html] E php.cmd ahead of php.exe  http=200  doctor=PHP 8.4.25
+=== tina4-stock.exe routes: exit 1
+  tina4-stock.exe : x Failed to run php vendor\bin\tina4php routes: program not found
+  +   $out = & "$T\tools\$exe" routes 2>&1 | Out-String
+=== tina4-fixed.exe routes: exit 0
+  Total: 0 routes
+##### tina4-pr121.exe (64e2bbd) / wt
+=== [wt\public_html] A php.exe on PATH (worktree)  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] B only php.bat on PATH  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] C vendor\bin\tina4php missing  http=no answer  doctor=PHP 8.4.25
+  x Could not spawn the php server: program not found
+=== [wt\public_html] D php.bat in a dir with spaces  http=200  doctor=PHP 8.4.25
+=== [wt\public_html] E php.cmd ahead of php.exe  http=200  doctor=PHP 8.4.25

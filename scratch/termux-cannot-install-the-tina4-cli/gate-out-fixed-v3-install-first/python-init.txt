@@ -1,0 +1,34 @@
+
+▶ Initialising python project at /data/data/com.termux/files/home/g/app
+
+▶ Checking python runtime...
+  ✓ python3 found
+
+▶ Checking package manager...
+  ✓ uv found
+  ✓ Created directory /data/data/com.termux/files/home/g/app
+
+▶ Scaffolding python project...
+  ✓ Created directory structure
+  ✓ Created .env
+  ✓ Created app.py
+  ✓ Created .gitignore
+  ✓ Created pyproject.toml
+  ✓ Created Python scaffold
+
+▶ Installing dependencies...
+  ▶ Running: uv sync (in /data/data/com.termux/files/home/g/app)
+Using CPython 3.14.8 interpreter at: /data/data/com.termux/files/usr/bin/python3
+Creating virtual environment at: .venv
+Resolved 2 packages in 8ms
+Installed 1 package in 38ms
+ + tina4-python==3.13.151
+  ✓ Dependencies installed
+
+✓ Project created at /data/data/com.termux/files/home/g/app
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/g/app
+    tina4 serve
+
+INIT_RC=0

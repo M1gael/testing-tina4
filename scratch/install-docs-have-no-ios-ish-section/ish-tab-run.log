@@ -1,0 +1,62 @@
+### cat /etc/alpine-release; uname -r
+3.14.10
+4.20.69-ish
+### apk add curl
+Executing busybox-1.33.1-r8.trigger
+Executing ca-certificates-20230506-r0.trigger
+OK: 8 MiB in 19 packages
+### curl -fsSL https://tina4.com/install.sh | sh
+  Install to:   /usr/local/bin/tina4
+
+Downloading tina4-linux-musl-386...
+Checksum verified (sha256).
+
+✓ tina4 v3.8.112 installed successfully
+
+Get started (these work any time):
+  tina4 setup    — Guided onboarding: language + AI tool + first project
+  tina4 doctor   — Check your environment
+  tina4 serve    — Start the dev server
+
+### tina4 --version; tina4 setup </dev/null; echo setup-rc=$?
+
+
+  ℹ Setup is interactive and needs a real terminal.
+  ▶ Open a new terminal and run:  tina4 setup
+
+setup-rc=0
+### timeout 900 tina4 install python; echo rc=$?
+(8/13) Installing mpdecimal (2.5.1-r1)
+(9/13) Installing ncurses-terminfo-base (6.2_p20210612-r1)
+(10/13) Installing ncurses-libs (6.2_p20210612-r1)
+(11/13) Installing readline (8.1.0-r0)
+(12/13) Installing sqlite-libs (3.35.5-r0)
+(13/13) Installing python3 (3.9.17-r0)
+Executing busybox-1.33.1-r8.trigger
+OK: 58 MiB in 32 packages
+  ✓ Installed successfully
+  ⚠ Python 3.9 is too old - Tina4 needs 3.12+, which Alpine ships from v3.20.
+  ℹ On iSH, point apk at a current Alpine, then upgrade and re-run:
+      printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories
+      apk upgrade --available
+rc=0
+### timeout 900 tina4 install ruby; echo rc=$?
+(2/7) Installing yaml (0.2.5-r0)
+(3/7) Installing ruby-libs (2.7.8-r0)
+(4/7) Installing ruby (2.7.8-r0)
+(5/7) Installing ruby-etc (2.7.8-r0)
+(6/7) Installing ruby-io-console (2.7.8-r0)
+(7/7) Installing ruby-bundler (2.2.20-r0)
+Executing busybox-1.33.1-r8.trigger
+OK: 75 MiB in 39 packages
+  ✓ Installed successfully
+  ⚠ Ruby 2.7 is too old - Tina4 needs 3.1+.
+  ℹ On iSH, point apk at a current Alpine, then upgrade and re-run:
+      printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories
+      apk upgrade --available
+rc=0
+### timeout 300 tina4 install php; echo rc=$?
+
+▶ Installing PHP...
+  ✗ Not available on iSH (iOS): PHP projects need Composer, which cannot run under iSH: the emulator computes PHP's SHA-512 wrongly, so Composer fails its own signature check (and PHP 8.5 crashes on start).
+rc=0

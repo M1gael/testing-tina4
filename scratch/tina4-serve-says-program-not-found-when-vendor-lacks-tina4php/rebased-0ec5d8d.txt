@@ -1,0 +1,10 @@
+== stock
+FAIL serve-vendor-without-tina4php
+FAIL routes-vendor-without-tina4php
+PASS serve-no-vendor
+PASS routes-with-tina4php
+== f61
+PASS serve-vendor-without-tina4php
+PASS routes-vendor-without-tina4php
+PASS serve-no-vendor
+PASS routes-with-tina4php

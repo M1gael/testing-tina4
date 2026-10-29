@@ -1,0 +1,21 @@
+red    file docs/python  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD docs/python 
+red    file docs/php  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD docs/php 
+red    file docs/ruby  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD docs/ruby 
+red    file docs/nodejs  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD docs/nodejs 
+red    file book-1-python  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD book/python 
+red    file book-2-php  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD book/php 
+red    file book-3-ruby  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD book/ruby 
+red    file book-4-nodejs  rc=1  VERDICT: FAIL ok=7 bad=1 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+BAD book/nodejs 
+red    group intro (all 8 files)  rc=1  VERDICT: FAIL ok=0 bad=8 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+red    group block (all 8 files)  rc=1  VERDICT: FAIL ok=0 bad=8 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+red    group table (all 8 files)  rc=1  VERDICT: FAIL ok=0 bad=8 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+red    group crud (all 8 files)  rc=1  VERDICT: FAIL ok=0 bad=8 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/d book=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/gate/b)
+GATE: red=12 green=0

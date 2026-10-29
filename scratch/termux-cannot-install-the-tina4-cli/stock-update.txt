@@ -1,0 +1,5 @@
+▶ Checking for updates...
+  ℹ Current: 3.8.102  Latest: 3.8.102
+✓ CLI already up to date
+rc=0
+tina4 3.8.102

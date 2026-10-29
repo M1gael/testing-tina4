@@ -1,0 +1,39 @@
+OK  docs/python
+      . ran `tina4python generate model Product --fields name:string,price:float` rc=0 new=['migrations/20261029120245_create_product.down.sql', 'migrations/20261029120245_create_product.sql', 'src/orm/Product.py', 'tests/test_product_model.py']
+      . ran `tina4python generate route products --model Product` rc=0 new=['src/routes/products.py', 'tests/test_products.py']
+      . --no-migration: model only, new=['src/orm/Gadget.py', 'tests/test_gadget_model.py']
+      . generate form Product: new=['src/templates/forms/product.twig']
+      . generate view Product: new=['src/templates/pages/product.twig', 'src/templates/pages/products.twig']
+      . generate test Product: new=['tests/test_product.py']
+      . generate crud Product: model+migration+route+templates+test (9 files)
+OK  docs/php
+      . forwarded verbatim: tina4php generate model Product --fields name:string,price:float
+      . ran `tina4 generate model Product --fields name:string,price:float` rc=0 new=['migrations/20261029100246_create_product.down.sql', 'migrations/20261029100246_create_product.sql', 'src/orm/Product.php', 'tests/ProductModelTest.php']
+      . forwarded verbatim: tina4php generate route products --model Product
+      . ran `tina4 generate route products --model Product` rc=0 new=['src/routes/products.php', 'tests/ProductsTest.php']
+      . --no-migration: model only, new=['src/orm/Gadget.php', 'tests/GadgetModelTest.php']
+      . generate form Product: new=['src/templates/forms/product.twig']
+      . generate view Product: new=['src/templates/pages/product.twig', 'src/templates/pages/products.twig']
+      . generate test Product: new=['tests/ProductTest.php']
+      . generate crud Product: model+migration+route+templates+test (9 files)
+OK  docs/ruby
+      . forwarded verbatim: tina4ruby generate model Product --fields name:string,price:float
+      . ran `tina4 generate model Product --fields name:string,price:float` rc=0 new=['migrations/20261029120247_create_product.down.sql', 'migrations/20261029120247_create_product.sql', 'spec/product_model_spec.rb', 'src/orm/product.rb']
+      . forwarded verbatim: tina4ruby generate route products --model Product
+      . ran `tina4 generate route products --model Product` rc=0 new=['spec/products_spec.rb', 'src/routes/products.rb']
+      . --no-migration: model only, new=['spec/gadget_model_spec.rb', 'src/orm/gadget.rb']
+      . generate form Product: new=['src/templates/forms/product.twig']
+      . generate view Product: new=['src/templates/pages/product.twig', 'src/templates/pages/products.twig']
+      . generate test Product: new=['spec/product_spec.rb']
+      . generate crud Product: model+migration+route+templates+test (9 files)
+OK  docs/nodejs
+      . forwarded verbatim: tina4nodejs generate model Product --fields name:string,price:float
+      . ran `tina4 generate model Product --fields name:string,price:float` rc=0 new=['migrations/20261029120251_create_product.down.sql', 'migrations/20261029120251_create_product.sql', 'src/models/Product.ts', 'tests/product_model.test.ts']
+      . forwarded verbatim: tina4nodejs generate route products --model Product
+      . ran `tina4 generate route products --model Product` rc=0 new=['src/routes/api/products/[id]/delete.ts', 'src/routes/api/products/[id]/get.ts', 'src/routes/api/products/[id]/put.ts', 'src/routes/api/products/get.ts', 'src/routes/api/products/post.ts', 'tests/products.test.ts']
+      . --no-migration: model only, new=['src/models/Gadget.ts', 'tests/gadget_model.test.ts']
+      . generate form Product: new=['src/templates/forms/product.twig']
+      . generate view Product: new=['src/templates/pages/product.twig', 'src/templates/pages/products.twig']
+      . generate test Product: new=['tests/product.test.ts']
+      . generate crud Product: model+migration+route+templates+test (9 files)
+VERDICT: PASS ok=4 bad=0 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/fixed-docs book=none)

@@ -1,0 +1,7 @@
+
+▶ Installing Node.js...
+  ▶ Running: sh -c curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt-get install -y nodejs
+/data/data/com.termux/files/usr/bin/sh: 1: sudo: not found
+  ✗ Could not install automatically. Please install manually.
+  ✗ Node.js/npm is not on PATH. If Node just installed, open a NEW terminal and re-run `tina4 install nodejs`. Otherwise install Node LTS from https://nodejs.org (or `winget install OpenJS.NodeJS.LTS`) and re-run.
+rc=0

@@ -1,0 +1,6 @@
+
+▶ Installing Ruby...
+  ✗ Could not install automatically. Please install manually.
+  ▶ Installing Bundler...
+  ⚠ Cannot install tina4ruby — gem not found
+rc=0

@@ -1,0 +1,65 @@
+### cat /etc/alpine-release; uname -r
+3.14.10
+4.20.69-ish
+### apk add curl
+Executing ca-certificates-20230506-r0.trigger
+OK: 8 MiB in 19 packages
+### curl -fsSL https://tina4.com/install.sh | sh
+  tina4 doctor   — Check your environment
+  tina4 serve    — Start the dev server
+
+### tina4 --version
+tina4 3.8.112
+### cd /root && timeout 1800 tina4 init python app-py </dev/null; echo init-rc=$?; python3 --version; ls app-py 2>&1 | head -5
+  ⚠ iOS (iSH) support is experimental.
+  ▶ Running: apk add python3
+(1/13) Installing libbz2 (1.0.8-r1)
+(2/13) Installing expat (2.5.0-r0)
+(3/13) Installing libffi (3.3-r2)
+(4/13) Installing gdbm (1.19-r0)
+(5/13) Installing xz-libs (5.2.5-r1)
+(6/13) Installing libgcc (10.3.1_git20210424-r2)
+(7/13) Installing libstdc++ (10.3.1_git20210424-r2)
+(8/13) Installing mpdecimal (2.5.1-r1)
+(9/13) Installing ncurses-terminfo-base (6.2_p20210612-r1)
+(10/13) Installing ncurses-libs (6.2_p20210612-r1)
+(11/13) Installing readline (8.1.0-r0)
+(12/13) Installing sqlite-libs (3.35.5-r0)
+(13/13) Installing python3 (3.9.17-r0)
+Executing busybox-1.33.1-r8.trigger
+OK: 58 MiB in 32 packages
+  ✓ Installed successfully
+  ⚠ Python 3.9 is too old - Tina4 needs 3.12+, which Alpine ships from v3.20.
+  ℹ On iSH, point apk at a current Alpine, then upgrade and re-run:
+      printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories
+      apk upgrade --available
+init-rc=1
+Python 3.9.17
+ls: app-py: No such file or directory
+### cd /root && timeout 1800 tina4 init ruby app-rb </dev/null; echo init-rc=$?; ruby --version; ls app-rb 2>&1 | head -5
+
+▶ Initialising ruby project at /root/app-rb
+
+▶ Checking ruby runtime...
+  ⚠ iOS (iSH) support is experimental.
+  ▶ Running: apk add ruby ruby-bundler
+(1/7) Installing gmp (6.2.1-r1)
+(2/7) Installing yaml (0.2.5-r0)
+(3/7) Installing ruby-libs (2.7.8-r0)
+(4/7) Installing ruby (2.7.8-r0)
+(5/7) Installing ruby-etc (2.7.8-r0)
+(6/7) Installing ruby-io-console (2.7.8-r0)
+(7/7) Installing ruby-bundler (2.2.20-r0)
+Executing busybox-1.33.1-r8.trigger
+OK: 75 MiB in 39 packages
+  ✓ Installed successfully
+  ⚠ Ruby 2.7 is too old - Tina4 needs 3.1+.
+  ℹ On iSH, point apk at a current Alpine, then upgrade and re-run:
+      printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories
+      apk upgrade --available
+init-rc=1
+ruby 2.7.8p225 (2023-03-30 revision 1f4d455848) [i586-linux-musl]
+ls: app-rb: No such file or directory
+### cd /root/app-py 2>/dev/null && timeout 120 tina4 serve </dev/null & sleep 60; wget -qO- http://localhost:7146/ 2>&1 | head -3; echo serve-probe-done; kill %1 2>/dev/null
+wget: can't connect to remote host: Connection refused
+serve-probe-done

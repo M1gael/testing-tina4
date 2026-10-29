@@ -1,0 +1,7 @@
+▶ Checking for updates...
+  ℹ Current: 3.8.107  Latest: 9.9.9
+▶ Trying tina4-linux-amd64 ...
+curl: (56) Failure writing output to destination, passed 1369 returned 4294967295
+✗ Could not download tina4-linux-amd64 to /tmp/tmp.cxdDuMS78b/tina4.tmp (curl exited 56 -- it could not write the file).
+  The release asset is fine -- trying another asset name would not have helped.
+  This failed on this machine: check free space with `df -h` and that you can write to /tmp/tmp.cxdDuMS78b.

@@ -1,0 +1,14 @@
+
+▶ Initialising python project at /data/data/com.termux/files/home/g/app
+
+▶ Checking python runtime...
+  ✓ python3 found
+
+▶ Checking package manager...
+  ⚠ uv not found — installing
+  ▶ Running: sh -c curl -LsSf https://astral.sh/uv/install.sh | sh
+ERROR: there isn't a download for your platform x86_64-linux-android
+  ✗ Command failed (exit Some(1))
+  ✗ Failed to install uv. Install it manually:
+      curl -LsSf https://astral.sh/uv/install.sh | sh
+INIT_RC=1

@@ -1,0 +1,19 @@
+CASE ok   nd: 'tina4nodejs build', no Dockerfile           rc=1 docker_argv=[] dist/=absent :: ✗ No Dockerfile found.
+CASE ok   nd: 'tina4nodejs build', Dockerfile, docker shim rc=0 docker_argv=[build -t ndapp:latest -f Dockerfile .] dist/=absent :: ✓ Built image ndapp:latest
+CASE ok   nd: 'tina4nodejs build', Dockerfile, no docker   rc=1 docker_argv=[] dist/=absent :: ✗ docker was not found on PATH.
+CASE ok   nd: 'tina4 build', no Dockerfile                 rc=1 docker_argv=[] dist/=absent :: ✗ No Dockerfile found.
+CASE ok   nd: 'tina4 build', Dockerfile, docker shim       rc=0 docker_argv=[build -t ndapp:latest -f Dockerfile .] dist/=absent :: ✓ Built image ndapp:latest
+CASE ok   nd: 'tina4 build', Dockerfile, no docker         rc=1 docker_argv=[] dist/=absent :: ✗ docker was not found on PATH.
+CASE ok   rb: 'tina4ruby build', no Dockerfile             rc=1 docker_argv=[] dist/=absent :: ✗ No Dockerfile found.
+CASE ok   rb: 'tina4ruby build', Dockerfile, docker shim   rc=0 docker_argv=[build -t rbapp:latest -f Dockerfile .] dist/=absent :: ✓ Built image rbapp:latest
+CASE ok   rb: 'tina4ruby build', Dockerfile, no docker     rc=1 docker_argv=[] dist/=absent :: ✗ docker was not found on PATH.
+CASE ok   rb: 'tina4 build', no Dockerfile                 rc=1 docker_argv=[] dist/=absent :: ✗ No Dockerfile found.
+CASE ok   rb: 'tina4 build', Dockerfile, docker shim       rc=0 docker_argv=[build -t rbapp:latest -f Dockerfile .] dist/=absent :: ✓ Built image rbapp:latest
+CASE ok   rb: 'tina4 build', Dockerfile, no docker         rc=1 docker_argv=[] dist/=absent :: ✗ docker was not found on PATH.
+CASE ok   nd: 'tina4 build' compiles SCSS then docker      rc=0 docker_argv=[build -t ndapp:latest -f Dockerfile .] dist/=absent :: ✓ Built image ndapp:latest
+CASE ok   nd: src/public/css/app.min.css after tina4 build: present (body{color:red})
+CASE ok   nd: §13 set -e script, plain server: rc=1, migrate step reached: no
+CASE ok   nd: tina4 deploy docker rc=0, Dockerfile present
+CASE ok   nd: 'tina4 build' with deploy-docker Dockerfile  rc=0 docker_argv=[build -t ndapp:latest -f Dockerfile .] dist/=absent :: Run: docker run -p 7148:7148 ndapp:latest
+INFO nd: 'tina4 build' via npx (node_modules present): rc=0 docker_argv=[build -t ndapp:latest -f Dockerfile .] output=[  Building image ndapp:latest from Dockerfile ...   ✓ Built image ndapp:latest  ]
+BEHAVIOUR: PASS 17/17 cases as claimed (cli=tina4 3.8.112)

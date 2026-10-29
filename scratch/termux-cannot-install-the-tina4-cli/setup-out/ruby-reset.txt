@@ -1,0 +1,1 @@
+fresh Termux ready: ssh -p 8022 127.0.0.1

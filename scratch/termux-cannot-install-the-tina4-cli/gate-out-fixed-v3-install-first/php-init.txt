@@ -1,0 +1,43 @@
+
+▶ Initialising php project at /data/data/com.termux/files/home/g/app
+
+▶ Checking php runtime...
+  ✓ php found
+
+▶ Checking package manager...
+  ✓ composer found
+  ✓ Created directory /data/data/com.termux/files/home/g/app
+
+▶ Scaffolding php project...
+  ✓ Created directory structure
+  ✓ Created .env
+  ✓ Created index.php
+  ✓ Created .gitignore
+  ✓ Created composer.json
+  ✓ Created .htaccess
+  ✓ Created nginx.conf.example
+  ✓ Created PHP scaffold
+
+▶ Installing dependencies...
+  ▶ Running: composer install (in /data/data/com.termux/files/home/g/app)
+No composer.lock file present. Updating dependencies to latest instead of installing from lock file. See https://getcomposer.org/install for more information.
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 1 install, 0 updates, 0 removals
+  - Locking tina4stack/tina4php (3.13.151)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 1 install, 0 updates, 0 removals
+  - Downloading tina4stack/tina4php (3.13.151)
+  - Installing tina4stack/tina4php (3.13.151): Extracting archive
+6 package suggestions were added by new dependencies, use `composer suggest` to see details.
+Generating autoload files
+  ✓ Dependencies installed
+
+✓ Project created at /data/data/com.termux/files/home/g/app
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/g/app
+    tina4 serve
+
+INIT_RC=0

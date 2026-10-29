@@ -1,0 +1,20 @@
+{
+  "tag_name": "v9.9.9",
+  "assets": [
+    {
+      "name": "tina4-android-arm64"
+    },
+    {
+      "name": "tina4-android-amd64"
+    },
+    {
+      "name": "tina4-linux-amd64"
+    },
+    {
+      "name": "tina4-linux-musl-amd64"
+    },
+    {
+      "name": "SHA256SUMS"
+    }
+  ]
+}

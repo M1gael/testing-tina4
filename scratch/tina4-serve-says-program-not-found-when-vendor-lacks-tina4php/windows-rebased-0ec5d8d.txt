@@ -1,0 +1,28 @@
+##### tina4-stock108.exe / wt
+=== [C:\Users\mig\t120\wt\public_html] A php.exe on PATH (worktree)  http=200
+=== [C:\Users\mig\t120\wt\public_html] B only php.bat on PATH  http=200
+=== [C:\Users\mig\t120\wt\public_html] C vendor\bin\tina4php missing  http=no answer
+=== [C:\Users\mig\t120\wt\public_html] D php.bat in a dir with spaces  http=200
+=== [C:\Users\mig\t120\wt\public_html] E php.cmd ahead of php.exe  http=200
+  case C stderr:
+      x Could not spawn the php server: program not found
+         php is not on PATH for this process. Confirm `where php` resolves it from THIS directory, then retry.
+    x Failed to start the php server. See the error above.
+##### tina4-f61.exe (own target dir) / wt
+=== [C:\Users\mig\t120\wt\public_html] A php.exe on PATH (worktree)  http=200
+=== [C:\Users\mig\t120\wt\public_html] B only php.bat on PATH  http=200
+=== [C:\Users\mig\t120\wt\public_html] C vendor\bin\tina4php missing  http=no answer
+=== [C:\Users\mig\t120\wt\public_html] D php.bat in a dir with spaces  http=200
+=== [C:\Users\mig\t120\wt\public_html] E php.cmd ahead of php.exe  http=200
+  case C stderr:
+    x vendor\bin\tina4php is missing. Run: composer install
+    x Failed to start the php server. See the error above.
+##### tina4-f61.exe (own target dir) / repo
+=== [C:\Users\mig\t120\repo\public_html] A php.exe on PATH (worktree)  http=200
+=== [C:\Users\mig\t120\repo\public_html] B only php.bat on PATH  http=200
+=== [C:\Users\mig\t120\repo\public_html] C vendor\bin\tina4php missing  http=no answer
+=== [C:\Users\mig\t120\repo\public_html] D php.bat in a dir with spaces  http=200
+=== [C:\Users\mig\t120\repo\public_html] E php.cmd ahead of php.exe  http=200
+  case C stderr:
+    x vendor\bin\tina4php is missing. Run: composer install
+    x Failed to start the php server. See the error above.

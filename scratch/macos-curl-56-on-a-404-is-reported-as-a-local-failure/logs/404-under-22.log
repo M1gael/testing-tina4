@@ -1,0 +1,9 @@
+▶ Checking for updates...
+  ℹ Current: 3.8.107  Latest: 9.9.8
+▶ Trying tina4-linux-amd64 ...
+curl: (22) The requested URL returned error: 404
+▶ Trying tina4-linux-x86_64 ...
+curl: (22) The requested URL returned error: 404
+✗ Release v9.9.8 publishes no asset this build knows how to ask for (tried: tina4-linux-amd64, tina4-linux-x86_64).
+  Download manually from:
+  https://github.com/tina4stack/tina4/releases

@@ -1,0 +1,10 @@
+api remaining: 0
+
+  Tina4 CLI Installer
+  ===================
+  Version:    v3.8.39
+  Install to: C:\Users\mig\AppData\Local\Temp\t4inst-mawz2kdp.0wz\tina4\tina4.exe
+
+Downloading tina4-windows-amd64.exe...
+threw: SHA256SUMS is not available for v3.8.39 - refusing to install an unverified binary.
+RESULT FAIL

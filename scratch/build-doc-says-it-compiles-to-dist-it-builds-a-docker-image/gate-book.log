@@ -1,0 +1,5 @@
+GATE RED book-3-ruby_chapters_31-cli.md: VERDICT: FAIL wrong=2 missing=1
+GATE RED book-4-nodejs_chapters_31-cli.md: VERDICT: FAIL wrong=4 missing=1
+GATE RED book-4-nodejs_chapters_34-deployment.md.hunk1: VERDICT: FAIL wrong=4 missing=1
+GATE RED book-4-nodejs_chapters_34-deployment.md.hunk2: VERDICT: FAIL wrong=1 missing=0
+GATE SUMMARY book: red=4 not_gated=0

@@ -1,0 +1,7 @@
+
+▶ Installing PHP...
+  ✗ Could not install automatically. Please install manually.
+  ▶ Installing Composer...
+sh: 1: php: not found
+  ℹ Install tina4php: composer global require tina4stack/tina4php
+rc=0

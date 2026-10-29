@@ -1,0 +1,8 @@
+
+▶ Installing PHP...
+  ✓ PHP already installed
+  ▶ Installing Composer...
+The defined install dir (/usr/local/bin) does not exist.
+  ℹ Install tina4php: composer global require tina4stack/tina4php
+INSTALL_RC=0
+MANAGER_MISSING

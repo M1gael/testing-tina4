@@ -1,0 +1,4 @@
+python: http=200 tina4-in-body=18 serve-alive=yes
+php: http=200 tina4-in-body=18 serve-alive=yes
+ruby: http=200 tina4-in-body=18 serve-alive=yes
+nodejs: http=200 tina4-in-body=16 serve-alive=yes

@@ -1,0 +1,70 @@
+
+▶ Installing Node.js...
+  ▶ Running: pkg install -y nodejs-lts
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://packages-cf.termux.dev/apt/termux-main: ok
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://packages-cf.termux.dev/apt/termux-main stable InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+74 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  c-ares libicu libsqlite npm
+Suggested packages:
+  clang make pkg-config python
+The following NEW packages will be installed:
+  c-ares libicu libsqlite nodejs-lts npm
+0 upgraded, 5 newly installed, 0 to remove and 74 not upgraded.
+Need to get 23.5 MB of archives.
+After this operation, 115 MB of additional disk space will be used.
+Get:1 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 c-ares x86_64 1.34.9 [211 kB]
+Get:2 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libicu x86_64 78.3 [10.3 MB]
+Get:3 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libsqlite x86_64 3.54.1 [815 kB]
+Get:4 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 nodejs-lts x86_64 24.18.0-1 [10.2 MB]
+Get:5 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 npm all 11.21.1 [2033 kB]
+Fetched 23.5 MB in 2s (10.6 MB/s)
+Selecting previously unselected package c-ares.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5292 files and directories currently installed.)
+Preparing to unpack .../c-ares_1.34.9_x86%5f64.deb ...
+Unpacking c-ares (1.34.9) ...
+Selecting previously unselected package libicu.
+Preparing to unpack .../libicu_78.3_x86%5f64.deb ...
+Unpacking libicu (78.3) ...
+Selecting previously unselected package libsqlite.
+Preparing to unpack .../libsqlite_3.54.1_x86%5f64.deb ...
+Unpacking libsqlite (3.54.1) ...
+Selecting previously unselected package nodejs-lts.
+Preparing to unpack .../nodejs-lts_24.18.0-1_x86%5f64.deb ...
+Unpacking nodejs-lts (24.18.0-1) ...
+Selecting previously unselected package npm.
+Preparing to unpack .../archives/npm_11.21.1_all.deb ...
+Unpacking npm (11.21.1) ...
+Setting up libicu (78.3) ...
+Setting up libsqlite (3.54.1) ...
+Setting up c-ares (1.34.9) ...
+Setting up nodejs-lts (24.18.0-1) ...
+Setting up npm (11.21.1) ...
+Earlier versions of npm bundled with nodejs and nodejs-lts used to set npm config foreground-scripts to true.
+This is no longer the case. If you had set this config, you might want to unset it now.
+You can do this by running: npm config delete foreground-scripts
+  ✓ Installed successfully
+  ✓ npm found
+  ▶ Installing tina4nodejs...
+
+added 1 package in 1s
+npm notice
+npm notice New major version of npm available! 11.21.1 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+INSTALL_RC=0

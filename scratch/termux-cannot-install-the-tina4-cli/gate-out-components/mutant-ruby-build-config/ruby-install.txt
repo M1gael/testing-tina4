@@ -1,0 +1,6 @@
+
+▶ Installing Ruby...
+  ✓ Ruby already installed (ruby 4.0.7 (2026-09-15 revision 229531a6cf) +PRISM [x86_64-linux-android])
+  ✓ Bundler already installed
+  ✓ tina4ruby already installed
+INSTALL_RC=0

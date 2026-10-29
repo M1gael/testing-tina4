@@ -1,0 +1,7 @@
+
+▶ Initialising php project at /data/data/com.termux/files/home/g/app
+
+▶ Checking php runtime...
+  ⚠ php not found — attempting install
+  ✗ Please install PHP: https://www.php.net/downloads
+INIT_RC=1

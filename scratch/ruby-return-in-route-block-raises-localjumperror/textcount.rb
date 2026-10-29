@@ -1,0 +1,1 @@
+ARGV.each{|f| l=File.readlines(f); i=0; while i<l.size; if l[i]=~/\A\s*```ruby\s*\z/; j=i+1; while j<l.size && l[j]!~/\A\s*```\s*\z/; puts "#{f}:#{j+1}" if l[j]=~/(^|[^.\w"])return\b/ && l[j] !~ /^\s*#/; j+=1; end; i=j; end; i+=1; end}

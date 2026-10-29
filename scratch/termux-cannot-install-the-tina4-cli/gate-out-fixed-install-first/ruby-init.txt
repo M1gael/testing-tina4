@@ -1,0 +1,38 @@
+
+▶ Initialising ruby project at /data/data/com.termux/files/home/g/app
+
+▶ Checking ruby runtime...
+  ✓ ruby found
+
+▶ Checking package manager...
+  ✓ bundler found
+  ✓ Bundler set to build sqlite3 against Termux's SQLite
+  ✓ Created directory /data/data/com.termux/files/home/g/app
+
+▶ Scaffolding ruby project...
+  ✓ Created directory structure
+  ✓ Created .env
+  ✓ Created app.rb
+  ✓ Created .gitignore
+  ✓ Created Gemfile
+  ✓ Created Ruby scaffold
+
+▶ Installing dependencies...
+  ▶ Running: bundle install (in /data/data/com.termux/files/home/g/app)
+Fetching gem metadata from https://rubygems.org/.....
+Resolving dependencies...
+Fetching mini_portile2 2.8.9
+Fetching sqlite3 2.10.1
+Installing mini_portile2 2.8.9
+Installing sqlite3 2.10.1 with native extensions
+Bundle complete! 2 Gemfile dependencies, 3 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+  ✓ Dependencies installed
+
+✓ Project created at /data/data/com.termux/files/home/g/app
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/g/app
+    tina4 serve
+
+INIT_RC=0

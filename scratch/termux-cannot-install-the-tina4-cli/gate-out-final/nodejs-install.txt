@@ -1,0 +1,8 @@
+
+▶ Installing Node.js...
+  ✓ Node.js already installed
+  ✓ npm found
+  ▶ Installing tina4nodejs...
+
+added 1 package in 458ms
+INSTALL_RC=0

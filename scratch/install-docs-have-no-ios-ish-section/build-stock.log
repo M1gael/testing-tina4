@@ -1,0 +1,7 @@
+build rc=0 built 283 page(s)
+  MISS index.html: class="tp-tab">iOS (iSH, experimental)</button>
+  MISS get-started/index.html: <strong>iOS (iSH, experimental):</strong>
+  MISS get-started/index.html: etc/apk/repositories
+  MISS general/cli/index.html: On iOS, inside
+  MISS install-security/index.html: iSH's root user is the app's sandbox
+VERDICT build_rc=0 missing=5/5

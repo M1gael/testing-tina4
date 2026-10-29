@@ -1,0 +1,13 @@
+
+▶ Installing Python...
+  ✓ Python and uv already installed
+  ▶ Installing tina4python...
+Resolved 1 package in 4ms
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 1 package in 42ms
+ + tina4-python==3.13.151
+Installed 1 executable: tina4python
+warning: `/data/data/com.termux/files/home/.local/bin` is not on your PATH. To use installed tools, run `export PATH="/data/data/com.termux/files/home/.local/bin:$PATH"` or `uv tool update-shell`.
+INSTALL_RC=0

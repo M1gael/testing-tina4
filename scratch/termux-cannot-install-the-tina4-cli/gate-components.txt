@@ -1,0 +1,12 @@
+mutant init-runtime [php init-first]: red (good) :: php: FAIL  init_rc=1 http=none tina4_marks=0 install_rc=0 install_failures=0 doctor=yes
+mutant init-uv [python init-first +pre]: red (good) :: python: FAIL  init_rc=1 http=none tina4_marks=0 install_rc=0 install_failures=0 doctor=yes
+mutant init-composer [php init-first +pre]: red (good) :: php: FAIL  init_rc=1 http=none tina4_marks=0 install_rc=0 install_failures=0 doctor=yes
+mutant ruby-build-config [ruby init-first]: red (good) :: ruby: FAIL  init_rc=0 http=000 tina4_marks=0 install_rc=0 install_failures=0 doctor=yes
+mutant libsqlite-header [ruby init-first +pre]: STAYED GREEN :: ruby: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+mutant install-php [php install-first]: red (good) :: php: FAIL  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=1 doctor=yes
+mutant install-composer [php install-first +pre]: STAYED GREEN :: php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+mutant install-ruby [ruby install-first]: red (good) :: ruby: FAIL  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=2 doctor=yes
+mutant install-node [nodejs install-first]: red (good) :: nodejs: FAIL  init_rc=0 http=200 tina4_marks=16 install_rc=0 install_failures=3 doctor=no-cli
+mutant local-bin-path [python install-first]: red (good) :: python: FAIL  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=no-cli
+mutant uv-link-mode [python init-first]: red (good) :: python: FAIL  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes+hardlink-warning
+control python init-first  pkg install -y python >/dev/null 2>&1|py-only: RED :: /var/home/work/gitdir/testing-tina4/scratch/termux-cannot-install-the-tina4-cli/gate.sh: line 72: `done'

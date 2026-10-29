@@ -1,0 +1,185 @@
+
+▶ Initialising ruby project at /data/data/com.termux/files/home/g/app
+
+▶ Checking ruby runtime...
+  ✓ ruby found
+
+▶ Checking package manager...
+  ✓ bundler found
+  ✓ Bundler set to build sqlite3 against Termux's SQLite
+  ✓ Created directory /data/data/com.termux/files/home/g/app
+
+▶ Scaffolding ruby project...
+  ✓ Created directory structure
+  ✓ Created .env
+  ✓ Created app.rb
+  ✓ Created .gitignore
+  ✓ Created Gemfile
+  ✓ Created Ruby scaffold
+
+▶ Installing dependencies...
+  ▶ Running: bundle install (in /data/data/com.termux/files/home/g/app)
+Fetching gem metadata from https://rubygems.org/.....
+Resolving dependencies...
+Fetching mini_portile2 2.8.9
+Fetching sqlite3 2.10.1
+Fetching tina4ruby 3.13.151
+Installing mini_portile2 2.8.9
+Installing tina4ruby 3.13.151
+Installing sqlite3 2.10.1 with native extensions
+Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+
+current directory:
+/data/data/com.termux/files/usr/lib/ruby/gems/4.0.0/gems/sqlite3-2.10.1/ext/sqlite3
+/data/data/com.termux/files/usr/bin/ruby extconf.rb --enable-system-libraries
+Building sqlite3-ruby using system sqlite3.
+checking for pkg-config for sqlite3... not found
+checking for whether -fvisibility=hidden is accepted as CFLAGS... yes
+checking for sqlite3.h... no
+
+Could not find sqlite3.h.
+Please visit https://github.com/sparklemotion/sqlite3-ruby for installation
+instructions.
+
+*** extconf.rb failed ***
+Could not create Makefile due to some reason, probably lack of necessary
+libraries and/or headers.  Check the mkmf.log file for more details.  You may
+need configuration options.
+
+Provided configuration options:
+	--with-opt-dir
+	--without-opt-dir
+	--with-opt-include=${opt-dir}/include
+	--without-opt-include
+	--with-opt-lib=${opt-dir}/lib
+	--without-opt-lib
+	--with-make-prog
+	--without-make-prog
+	--srcdir=.
+	--curdir
+	--ruby=/data/data/com.termux/files/usr/bin/$(RUBY_BASE_NAME)
+	--help
+	--download-dependencies
+	--with-sqlcipher
+	--without-sqlcipher
+	--with-sqlcipher-dir
+	--without-sqlcipher-dir
+	--with-sqlcipher-include
+	--without-sqlcipher-include
+	--with-sqlcipher-lib
+	--without-sqlcipher-lib
+	--enable-system-libraries
+	--with-sqlcipher
+	--without-sqlcipher
+	--with-sqlcipher-dir
+	--without-sqlcipher-dir
+	--with-sqlcipher-include
+	--without-sqlcipher-include
+	--with-sqlcipher-lib
+	--without-sqlcipher-lib
+	--with-sqlcipher
+	--without-sqlcipher
+	--with-sqlcipher-dir
+	--without-sqlcipher-dir
+	--with-sqlcipher-include
+	--without-sqlcipher-include
+	--with-sqlcipher-lib
+	--without-sqlcipher-lib
+	--with-sqlite3-dir
+	--without-sqlite3-dir
+	--with-sqlite3-include=${sqlite3-dir}/include
+	--without-sqlite3-include
+	--with-sqlite3-lib=${sqlite3-dir}/lib
+	--without-sqlite3-lib
+	--with-sqlite3-config
+	--without-sqlite3-config
+	--with-pkg-config
+	--without-pkg-config
+	--with-sqlcipher
+	--without-sqlcipher
+	--with-sqlcipher-dir
+	--without-sqlcipher-dir
+	--with-sqlcipher-include
+	--without-sqlcipher-include
+	--with-sqlcipher-lib
+	--without-sqlcipher-lib
+	--with-sqlcipher
+	--without-sqlcipher
+	--with-sqlcipher-dir
+	--without-sqlcipher-dir
+	--with-sqlcipher-include
+	--without-sqlcipher-include
+	--with-sqlcipher-lib
+	--without-sqlcipher-lib
+
+To see why this extension failed to compile, please check the mkmf.log which can
+be found here:
+
+/data/data/com.termux/files/usr/lib/ruby/gems/4.0.0/extensions/x86_64-linux-android/4.0.0/sqlite3-2.10.1/mkmf.log
+
+extconf failed, exit code 1
+
+Gem files will remain installed in
+/data/data/com.termux/files/usr/lib/ruby/gems/4.0.0/gems/sqlite3-2.10.1 for
+inspection.
+Results logged to
+/data/data/com.termux/files/usr/lib/ruby/gems/4.0.0/extensions/x86_64-linux-android/4.0.0/sqlite3-2.10.1/gem_make.out
+
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/ext/builder.rb:147:in
+'Gem::Ext::Builder.run'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/ext/ext_conf_builder.rb:30:in
+'Gem::Ext::ExtConfBuilder.build'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/ext/builder.rb:241:in
+'Gem::Ext::Builder#build_extension'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/ext/builder.rb:273:in
+'block in Gem::Ext::Builder#build_extensions'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/ext/builder.rb:272:in
+'Array#each'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/ext/builder.rb:272:in
+'Gem::Ext::Builder#build_extensions'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems/installer.rb:822:in
+'Gem::Installer#build_extensions'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/rubygems_gem_installer.rb:125:in
+'Bundler::RubyGemsGemInstaller#build_extensions'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/rubygems_gem_installer.rb:35:in
+'Bundler::RubyGemsGemInstaller#install'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/source/rubygems.rb:223:in
+'block in Bundler::Source::Rubygems#install'
+  /data/data/com.termux/files/usr/lib/ruby/4.0.0/rubygems.rb:1053:in 'Gem.time'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/source/rubygems.rb:222:in
+'Bundler::Source::Rubygems#install'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/installer/gem_installer.rb:68:in
+'Bundler::GemInstaller#install'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/installer/gem_installer.rb:17:in
+'Bundler::GemInstaller#install_from_spec'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/installer/parallel_installer.rb:209:in
+'Bundler::ParallelInstaller#do_install'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/installer/parallel_installer.rb:179:in
+'block in Bundler::ParallelInstaller#worker_pool'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/worker.rb:70:in
+'Bundler::Worker#apply_func'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/worker.rb:65:in 'block
+in Bundler::Worker#process_queue'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/worker.rb:56:in
+'Kernel#loop'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/worker.rb:56:in
+'Bundler::Worker#process_queue'
+/data/data/com.termux/files/usr/lib/ruby/4.0.0/bundler/worker.rb:98:in 'block
+(2 levels) in Bundler::Worker#create_threads'
+
+An error occurred while installing sqlite3 (2.10.1), and Bundler cannot
+continue.
+
+In Gemfile:
+  sqlite3
+  ⚠ Dependency install failed — you can run it manually later
+
+✓ Project created at /data/data/com.termux/files/home/g/app
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/g/app
+    tina4 serve
+
+  ✗ Command failed (exit Some(5)). You can run it manually:
+      cd /data/data/com.termux/files/home/g/app && bundle install
+INIT_RC=0

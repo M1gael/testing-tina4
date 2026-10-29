@@ -1,0 +1,120 @@
+FAIL static docs: 54 route-block returns (ch03 sections 6/8/10, excluded unless STRICT=1: 3)
+    02-routing.md:823
+    05-database.md:363
+    05-database.md:931
+    05-database.md:953
+    05-database.md:979
+    08-authentication.md:141
+    08-authentication.md:145
+    08-authentication.md:153
+    08-authentication.md:199
+    08-authentication.md:211
+    08-authentication.md:216
+    08-authentication.md:501
+    08-authentication.md:531
+    08-authentication.md:671
+    08-authentication.md:678
+    08-authentication.md:698
+    08-authentication.md:709
+    08-authentication.md:736
+    08-authentication.md:754
+    08-authentication.md:780
+    08-authentication.md:784
+    08-authentication.md:790
+    09-sessions-cookies.md:397
+    09-sessions-cookies.md:553
+    09-sessions-cookies.md:593
+    09-sessions-cookies.md:615
+    10-middleware-security.md:1078
+    10-middleware-security.md:1120
+    11-caching.md:345
+    11-caching.md:356
+    11-caching.md:584
+    11-caching.md:704
+    11-caching.md:740
+    12-queues.md:515
+    16-email.md:410
+    20-swagger.md:154
+    20-swagger.md:322
+    20-swagger.md:389
+    20-swagger.md:417
+    20-swagger.md:445
+    20-swagger.md:449
+    30-dev-tools.md:363
+    30-dev-tools.md:407
+    30-dev-tools.md:422
+    31-cli.md:291
+    31-cli.md:314
+    31-cli.md:331
+    35-complete-app.md:232
+    35-complete-app.md:236
+    35-complete-app.md:254
+    35-complete-app.md:376
+    35-complete-app.md:388
+    35-complete-app.md:434
+    35-complete-app.md:478
+FAIL static book: 54 route-block returns (ch03 sections 6/8/10, excluded unless STRICT=1: 3)
+    02-routing.md:851
+    05-database.md:350
+    05-database.md:918
+    05-database.md:940
+    05-database.md:966
+    08-authentication.md:141
+    08-authentication.md:145
+    08-authentication.md:153
+    08-authentication.md:199
+    08-authentication.md:211
+    08-authentication.md:216
+    08-authentication.md:459
+    08-authentication.md:489
+    08-authentication.md:629
+    08-authentication.md:636
+    08-authentication.md:656
+    08-authentication.md:667
+    08-authentication.md:694
+    08-authentication.md:712
+    08-authentication.md:738
+    08-authentication.md:742
+    08-authentication.md:748
+    09-sessions-cookies.md:346
+    09-sessions-cookies.md:502
+    09-sessions-cookies.md:542
+    09-sessions-cookies.md:564
+    10-middleware-security.md:1066
+    10-middleware-security.md:1108
+    11-caching.md:345
+    11-caching.md:356
+    11-caching.md:584
+    11-caching.md:704
+    11-caching.md:740
+    12-queues.md:526
+    16-email.md:394
+    20-swagger.md:154
+    20-swagger.md:322
+    20-swagger.md:389
+    20-swagger.md:417
+    20-swagger.md:445
+    20-swagger.md:449
+    30-dev-tools.md:363
+    30-dev-tools.md:407
+    30-dev-tools.md:422
+    31-cli.md:291
+    31-cli.md:314
+    31-cli.md:331
+    35-complete-app.md:232
+    35-complete-app.md:236
+    35-complete-app.md:254
+    35-complete-app.md:376
+    35-complete-app.md:388
+    35-complete-app.md:434
+    35-complete-app.md:478
+FAIL serve docs ch02 POST products: POST /api/products -> 500 (want 400) [unexpected return]
+FAIL serve docs ch08 form token: POST /profile/update -> 500 (want 403) [unexpected return]
+FAIL serve docs ch10 dashboard: GET /dashboard -> 500 (want 302) [unexpected return]
+FAIL serve docs ch11 cache hit: GET /api/products/1 -> 500 (want 200) [unexpected return]
+FAIL serve book ch02 POST products: POST /api/products -> 500 (want 400) [unexpected return]
+FAIL serve book ch08 form token: POST /profile/update -> 500 (want 403) [unexpected return]
+FAIL serve book ch10 dashboard: GET /dashboard -> 500 (want 302) [unexpected return]
+FAIL serve book ch11 cache hit: GET /api/products/1 -> 500 (want 200) [unexpected return]
+PASS serve control def-return: GET /control -> 200
+VERDICT FAIL ok=1 bad=10

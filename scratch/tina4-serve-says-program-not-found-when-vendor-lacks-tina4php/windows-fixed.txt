@@ -1,0 +1,17 @@
+##### tina4-f61.exe / wt
+=== [C:\Users\mig\t120\wt\public_html] A php.exe on PATH (worktree)  http=200
+=== [C:\Users\mig\t120\wt\public_html] B only php.bat on PATH  http=200
+=== [C:\Users\mig\t120\wt\public_html] C vendor\bin\tina4php missing  http=no answer
+  x Failed to start the php server. See the error above.
+=== [C:\Users\mig\t120\wt\public_html] D php.bat in a dir with spaces  http=200
+=== [C:\Users\mig\t120\wt\public_html] E php.cmd ahead of php.exe  http=200
+##### tina4-f61.exe / repo
+=== [C:\Users\mig\t120\repo\public_html] A php.exe on PATH (worktree)  http=200
+=== [C:\Users\mig\t120\repo\public_html] B only php.bat on PATH  http=200
+=== [C:\Users\mig\t120\repo\public_html] C vendor\bin\tina4php missing  http=no answer
+  x Failed to start the php server. See the error above.
+=== [C:\Users\mig\t120\repo\public_html] D php.bat in a dir with spaces  http=200
+=== [C:\Users\mig\t120\repo\public_html] E php.cmd ahead of php.exe  http=200
+# probe.ps1 filters on spawn|not found|Fail, so the new line is not shown above. p-7423.log.err (case C, last run = repo):
+  x vendor\bin\tina4php is missing. Run: composer install
+  x Failed to start the php server. See the error above.

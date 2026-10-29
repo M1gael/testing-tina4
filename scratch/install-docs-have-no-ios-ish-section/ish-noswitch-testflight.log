@@ -1,0 +1,67 @@
+### cat /etc/alpine-release; uname -r
+3.19.9
+4.20.69-ish
+### apk add curl
+Executing ca-certificates-20261020-r0.trigger
+OK: 11 MiB in 24 packages
+### curl -fsSL https://tina4.com/install.sh | sh
+  tina4 doctor   — Check your environment
+  tina4 serve    — Start the dev server
+
+### tina4 --version
+tina4 3.8.112
+### cd /root && timeout 1800 tina4 init python app-py </dev/null; echo init-rc=$?; python3 --version; ls app-py 2>&1 | head -5
+(3/17) Installing libffi (3.4.4-r3)
+(4/17) Installing gdbm (1.23-r1)
+(5/17) Installing xz-libs (5.4.5-r1)
+(6/17) Installing libgcc (13.2.1_git20231014-r0)
+(7/17) Installing libstdc++ (13.2.1_git20231014-r0)
+(8/17) Installing mpdecimal (2.5.1-r2)
+(9/17) Installing ncurses-terminfo-base (6.4_p20231125-r0)
+(10/17) Installing libncursesw (6.4_p20231125-r0)
+(11/17) Installing libpanelw (6.4_p20231125-r0)
+(12/17) Installing readline (8.2.1-r2)
+(13/17) Installing sqlite-libs (3.44.2-r2)
+(14/17) Installing python3 (3.11.14-r0)
+(15/17) Installing python3-pycache-pyc0 (3.11.14-r0)
+(16/17) Installing pyc (3.11.14-r0)
+(17/17) Installing python3-pyc (3.11.14-r0)
+Executing busybox-1.36.1-r20.trigger
+OK: 55 MiB in 41 packages
+  ✓ Installed successfully
+  ⚠ Python 3.11 is too old - Tina4 needs 3.12+, which Alpine ships from v3.20.
+  ℹ On iSH, point apk at a current Alpine, then upgrade and re-run:
+      printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories
+      apk upgrade --available
+init-rc=1
+Python 3.11.14
+ls: app-py: No such file or directory
+### cd /root && timeout 1800 tina4 init ruby app-rb </dev/null; echo init-rc=$?; ruby --version; ls app-rb 2>&1 | head -5
+application for all non-root users on this machine.
+Fetching gem metadata from https://rubygems.org/.....
+Resolving dependencies...
+Using bundler 2.4.15
+Fetching tina4ruby 3.13.155
+Fetching sqlite3 2.10.2 (x86-linux-musl)
+Installing tina4ruby 3.13.155
+Installing sqlite3 2.10.2 (x86-linux-musl)
+Bundle complete! 2 Gemfile dependencies, 3 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+  ✓ Dependencies installed
+
+✓ Project created at /root/app-rb
+
+  Start the server now? [Y/n]:   To start later:
+    cd /root/app-rb
+    tina4 serve
+
+init-rc=0
+ruby 3.2.8 (2025-03-26 revision 13f495dc2c) [i586-linux-musl]
+Gemfile
+Gemfile.lock
+app.rb
+data
+logs
+### cd /root/app-py 2>/dev/null && timeout 120 tina4 serve </dev/null & sleep 60; wget -qO- http://localhost:7146/ 2>&1 | head -3; echo serve-probe-done; kill %1 2>/dev/null
+wget: can't connect to remote host: Connection refused
+serve-probe-done

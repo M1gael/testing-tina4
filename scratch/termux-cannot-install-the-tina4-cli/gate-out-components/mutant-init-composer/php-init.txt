@@ -1,0 +1,10 @@
+
+▶ Initialising php project at /data/data/com.termux/files/home/g/app
+
+▶ Checking php runtime...
+  ✓ php found
+
+▶ Checking package manager...
+  ⚠ composer not found — attempting install
+  ✗ Please install Composer: https://getcomposer.org/download/
+INIT_RC=1

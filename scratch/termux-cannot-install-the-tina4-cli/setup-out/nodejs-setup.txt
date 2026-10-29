@@ -1,0 +1,171 @@
+
+  [36mTina4 Setup[0m
+  [2mA few questions and you'll be building.[0m
+
+  Which language do you want to build with?
+    1. Python[32m  (default)[0m  [2m— recommended · APIs, AI, data[0m
+    2. Node.js  [2m— real-time apps, JS/TS teams[0m
+    3. PHP  [2m— classic web, shared hosting[0m
+    4. Ruby  [2m— rapid prototyping[0m
+  Choose 1-4 [[2m1[0m]: 2
+
+  Which AI tool do you want to build with?
+    1. [1mClaude Desktop[0m  [2m(default) — the chat app; opens your project ready to build[0m
+    2. [1mClaude Code[0m  [2m— AI in your terminal, opens a real coding session in your project[0m
+    3. [1mCodex[0m  [2m— OpenAI coding agent in your terminal or desktop app[0m
+    4. [1mCursor[0m  [2m— AI-native IDE; installs skills into ~/.cursor/skills[0m
+    5. [1mAll AI tools[0m  [2m— Claude, Codex, and Cursor[0m
+    6. [1mJust my code editor[0m  [2m— no AI[0m
+  Choose 1-6 [[2m1[0m]: 6
+
+  Where should your projects live? (created if it doesn't exist)
+  Projects folder [[2m/data/data/com.termux/files/home/projects[0m]: 
+  Name of your first project [[2mtina4example[0m]: 
+
+[32m▶[0m Setting up — this can take a few minutes...
+
+
+[32m▶[0m Installing Node.js...
+  [32m▶[0m Running: pkg install -y nodejs-lts
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://packages-cf.termux.dev/apt/termux-main: ok
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Hit:1 https://packages-cf.termux.dev/apt/termux-main stable InRelease
+[33m                                                        0% [Working][0m[33m20% [Working][0m             Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... 98%Reading package lists... 98%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 14%Reading state information... Done
+74 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 14%Reading state information... Done
+The following additional packages will be installed:
+  c-ares libicu libsqlite npm
+Suggested packages:
+  clang make pkg-config python
+The following NEW packages will be installed:
+  c-ares libicu libsqlite nodejs-lts npm
+0 upgraded, 5 newly installed, 0 to remove and 74 not upgraded.
+Need to get 23.5 MB of archives.
+After this operation, 115 MB of additional disk space will be used.
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Get:1 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 c-ares x86_64 1.34.9 [211 kB]
+[33m                                                        0% [1 c-ares 4107 B/211 kB 2%][0m[33m                              5% [Waiting for headers][0m                        Get:2 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libicu x86_64 78.3 [10.3 MB]
+[33m5% [2 libicu 3380 B/10.3 MB 0%][0m[33m                               44% [Waiting for headers][0m                         Get:3 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libsqlite x86_64 3.54.1 [815 kB]
+[33m44% [3 libsqlite 32.9 kB/815 kB 4%][0m[33m                                   51% [Waiting for headers][0m                         Get:4 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 nodejs-lts x86_64 24.18.0-1 [10.2 MB]
+[33m51% [4 nodejs-lts 15.5 kB/10.2 MB 0%][0m[33m                                     89% [Waiting for headers][0m                         Get:5 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 npm all 11.21.1 [2033 kB]
+[33m89% [5 npm 0 B/2033 kB 0%][0m[33m                          100% [Working][0m              Fetched 23.5 MB in 2s (14.4 MB/s)
+Selecting previously unselected package c-ares.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5292 files and directories currently installed.)
+Preparing to unpack .../c-ares_1.34.9_x86%5f64.deb ...
+Unpacking c-ares (1.34.9) ...
+Selecting previously unselected package libicu.
+Preparing to unpack .../libicu_78.3_x86%5f64.deb ...
+Unpacking libicu (78.3) ...
+Selecting previously unselected package libsqlite.
+Preparing to unpack .../libsqlite_3.54.1_x86%5f64.deb ...
+Unpacking libsqlite (3.54.1) ...
+Selecting previously unselected package nodejs-lts.
+Preparing to unpack .../nodejs-lts_24.18.0-1_x86%5f64.deb ...
+Unpacking nodejs-lts (24.18.0-1) ...
+Selecting previously unselected package npm.
+Preparing to unpack .../archives/npm_11.21.1_all.deb ...
+Unpacking npm (11.21.1) ...
+Setting up libicu (78.3) ...
+Setting up libsqlite (3.54.1) ...
+Setting up c-ares (1.34.9) ...
+Setting up nodejs-lts (24.18.0-1) ...
+Setting up npm (11.21.1) ...
+Earlier versions of npm bundled with nodejs and nodejs-lts used to set npm config foreground-scripts to true.
+This is no longer the case. If you had set this config, you might want to unset it now.
+You can do this by running: npm config delete foreground-scripts
+  [32m✓[0m Installed successfully
+  [32m✓[0m npm found
+  [32m▶[0m Installing tina4nodejs...
+⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K
+added 1 package in 2s
+⠧[1G[0K[1mnpm[22m [96mnotice[39m
+[1mnpm[22m [96mnotice[39m New [31mmajor[39m version of npm available! [31m11.21.1[39m -> [34m12.2.0[39m
+[1mnpm[22m [96mnotice[39m Changelog: [34mhttps://github.com/npm/cli/releases/tag/v12.2.0[39m
+[1mnpm[22m [96mnotice[39m To update run: [4mnpm install -g npm@12.2.0[24m
+[1mnpm[22m [96mnotice[39m
+⠧[1G[0K  [32m▶[0m Installing Git...
+  [32m▶[0m Running: pkg install -y git
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://packages-cf.termux.dev/apt/termux-main: ok
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Hit:1 https://packages-cf.termux.dev/apt/termux-main stable InRelease
+[33m                                                        0% [Working][0m[33m20% [Working][0m             Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... 98%Reading package lists... 98%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 9%Reading state information... Done
+74 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 9%Reading state information... Done
+The following additional packages will be installed:
+  libexpat
+Suggested packages:
+  perl
+The following NEW packages will be installed:
+  git libexpat
+0 upgraded, 2 newly installed, 0 to remove and 74 not upgraded.
+Need to get 4763 kB of archives.
+After this operation, 26.1 MB of additional disk space will be used.
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Get:1 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libexpat x86_64 2.9.0 [106 kB]
+[33m                                                        0% [1 libexpat 3260 B/106 kB 3%][0m[33m                                12% [Waiting for headers][0m                         Get:2 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 git x86_64 2.56.0 [4657 kB]
+[33m12% [2 git 3379 B/4657 kB 0%][0m[33m                             100% [Working][0m              Fetched 4763 kB in 1s (5944 kB/s)
+Selecting previously unselected package libexpat.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 8404 files and directories currently installed.)
+Preparing to unpack .../libexpat_2.9.0_x86%5f64.deb ...
+Unpacking libexpat (2.9.0) ...
+Selecting previously unselected package git.
+Preparing to unpack .../git_2.56.0_x86%5f64.deb ...
+Unpacking git (2.56.0) ...
+Setting up libexpat (2.9.0) ...
+Setting up git (2.56.0) ...
+  [32m✓[0m Installed successfully
+  [32m✓[0m Projects folder: [36m/data/data/com.termux/files/home/projects[0m
+
+[32m▶[0m Initialising [36mnodejs[0m project at [36m/data/data/com.termux/files/home/projects/tina4example[0m
+
+[32m▶[0m Checking [36mnodejs[0m runtime...
+  [32m✓[0m node found
+
+[32m▶[0m Checking package manager...
+  [32m✓[0m npm found
+  [32m✓[0m Created directory /data/data/com.termux/files/home/projects/tina4example
+
+[32m▶[0m Scaffolding [36mnodejs[0m project...
+  [32m✓[0m Created directory structure
+  [32m✓[0m Created .env
+  [32m✓[0m Created app.ts
+  [32m✓[0m Created .gitignore
+  [32m✓[0m Created package.json
+  [32m✓[0m Created tsconfig.json
+  [32m✓[0m Created Node.js scaffold
+
+[32m▶[0m Installing dependencies...
+  [32m▶[0m Running: npm install (in /data/data/com.termux/files/home/projects/tina4example)
+⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K⠙[1G[0K⠹[1G[0K⠸[1G[0K⠼[1G[0K⠴[1G[0K⠦[1G[0K⠧[1G[0K⠇[1G[0K⠏[1G[0K⠋[1G[0K
+added 7 packages, and audited 8 packages in 4s
+⠋[1G[0K
+found [32m[1m0[22m[39m vulnerabilities
+⠋[1G[0K[1mnpm[22m [33mwarn[39m [94minstall-scripts[39m 1 package has install scripts not yet covered by allowScripts:
+[1mnpm[22m [33mwarn[39m [94minstall-scripts[39m   esbuild@0.28.2 (postinstall: node install.js)
+[1mnpm[22m [33mwarn[39m [94minstall-scripts[39m
+[1mnpm[22m [33mwarn[39m [94minstall-scripts[39m Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+⠋[1G[0K  [32m✓[0m Dependencies installed
+
+[32m✓[0m Project created at /data/data/com.termux/files/home/projects/tina4example
+
+  [32m✓[0m Wrote [36mCLAUDE.md[0m
+  [32m✓[0m Wrote .mcp.json (Claude Code → live tina4 tools at /__dev/mcp)
+
+  [32m✓[0m Your project is ready: [36m/data/data/com.termux/files/home/projects/tina4example[0m
+
+  Start it any time:
+    cd /data/data/com.termux/files/home/projects/tina4example
+    tina4 serve        [2m# opens your app in the browser[0m
+
+  Start it now and open it in your browser? [[2my[0m]: n
+  [34mℹ[0m No problem — run [36mtina4 serve[0m when you're ready.
+SETUP_RC=0
+Connection to 127.0.0.1 closed.

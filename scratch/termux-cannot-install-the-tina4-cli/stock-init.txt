@@ -1,0 +1,34 @@
+pkg=0
+/data/data/com.termux/files/home/.local/bin/tina4python
+=== init python
+✓ Project created at /data/data/com.termux/files/home/t/app-python
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/t/app-python
+    tina4 serve
+
+rc=0
+=== init php
+✓ Project created at /data/data/com.termux/files/home/t/app-php
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/t/app-php
+    tina4 serve
+
+rc=0
+=== init ruby
+✓ Project created at /data/data/com.termux/files/home/t/app-ruby
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/t/app-ruby
+    tina4 serve
+
+rc=0
+=== init nodejs
+✓ Project created at /data/data/com.termux/files/home/t/app-nodejs
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/t/app-nodejs
+    tina4 serve
+
+rc=0

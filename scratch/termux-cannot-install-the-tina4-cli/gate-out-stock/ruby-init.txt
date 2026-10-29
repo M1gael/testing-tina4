@@ -1,0 +1,7 @@
+
+▶ Initialising ruby project at /data/data/com.termux/files/home/g/app
+
+▶ Checking ruby runtime...
+  ⚠ ruby not found — attempting install
+INIT_RC=1
+  ✗ Please install Ruby: https://www.ruby-lang.org/en/downloads/

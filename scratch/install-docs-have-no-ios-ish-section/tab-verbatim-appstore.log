@@ -1,0 +1,25 @@
+## tab commands:
+printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories
+apk upgrade --available
+apk add curl
+curl -fsSL https://tina4.com/install.sh | sh
+### cat /etc/alpine-release
+3.14.10
+### set -e; printf '%s\n' https://dl-cdn.alpinelinux.org/alpine/latest-stable/main https://dl-cdn.alpinelinux.org/alpine/latest-stable/community > /etc/apk/repositories;apk upgrade --available;apk add curl;curl -fsSL https://tina4.com/install.sh | sh; echo tab-rc=0
+  tina4 doctor   — Check your environment
+  tina4 serve    — Start the dev server
+
+tab-rc=0
+### cat /etc/alpine-release; tina4 --version
+3.14.10
+tina4 3.8.112
+### cd /root && timeout 1800 tina4 init python app-py </dev/null; echo init-py-rc=$?; app-py/.venv/bin/python --version
+    tina4 serve
+
+init-py-rc=0
+Python 3.14.10
+### cd /root && timeout 1800 tina4 init ruby app-rb </dev/null; echo init-rb-rc=$?; ruby --version
+    tina4 serve
+
+init-rb-rc=0
+ruby 3.4.12 (2026-10-23 revision 366f5fdc00) +PRISM [i586-linux-musl]

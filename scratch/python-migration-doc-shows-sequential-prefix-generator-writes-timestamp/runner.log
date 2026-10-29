@@ -1,0 +1,12 @@
+== migrate
+  Migrated: 000001_create_notes.sql
+  Migrated: 000002_seed_notes.sql
+2 migration(s) executed.
+== rows
+[('seeded',)]
+== rollback
+  Rolled back: 000002_seed_notes.down.sql
+  Rolled back: 000001_create_notes.down.sql
+2 migration(s) rolled back.
+== tables after rollback
+[]

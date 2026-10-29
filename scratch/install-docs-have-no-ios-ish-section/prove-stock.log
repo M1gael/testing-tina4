@@ -1,0 +1,7 @@
+md files scanned: 283; files naming iSH: none
+  no iSH in ./index.md
+  no iSH in ./get-started/index.md
+  no iSH in ./general/cli.md
+  no iSH in ./install-security.md
+VERDICT pages_with_iSH=0/4 apk_switch=0 languages_stated=0 install.sh=equal install.ps1=DIFFERS(out of scope)
+rc=1

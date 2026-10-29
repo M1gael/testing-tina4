@@ -1,0 +1,25 @@
+RED   docs 02-routing.md: rc=1, 1 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 05-database.md: rc=1, 4 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 08-authentication.md: rc=1, 17 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 09-sessions-cookies.md: rc=1, 4 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 10-middleware-security.md: rc=1, 2 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 11-caching.md: rc=1, 5 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 12-queues.md: rc=1, 1 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 16-email.md: rc=1, 1 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 20-swagger.md: rc=1, 6 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 30-dev-tools.md: rc=1, 3 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 31-cli.md: rc=1, 3 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   docs 35-complete-app.md: rc=1, 7 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 02-routing.md: rc=1, 1 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 05-database.md: rc=1, 4 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 08-authentication.md: rc=1, 17 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 09-sessions-cookies.md: rc=1, 4 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 10-middleware-security.md: rc=1, 2 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 11-caching.md: rc=1, 5 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 12-queues.md: rc=1, 1 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 16-email.md: rc=1, 1 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 20-swagger.md: rc=1, 6 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 30-dev-tools.md: rc=1, 3 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 31-cli.md: rc=1, 3 lines flagged, VERDICT FAIL ok=1 bad=1
+RED   book 35-complete-app.md: rc=1, 7 lines flagged, VERDICT FAIL ok=1 bad=1
+GATE PASS: every piece goes red alone

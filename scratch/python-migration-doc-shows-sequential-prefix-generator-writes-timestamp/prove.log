@@ -1,0 +1,34 @@
+## stock docs
+generator wrote: 20261029114750_create_notes_table.sql (prefix 14 digits)
+WRONG stock/docs/docs/python/05-database.md:576 000001_create_notes_table.sql
+WRONG stock/docs/docs/python/05-database.md:577 000001_create_notes_table.down.sql
+WRONG stock/docs/docs/python/05-database.md:587 000001_create_notes_table.sql
+WRONG stock/docs/docs/python/05-database.md:606 000001_create_notes_table.down.sql
+WRONG stock/docs/docs/python/05-database.md:614 000001_create_notes_table.sql
+WRONG stock/docs/docs/python/05-database.md:614 000001_create_notes_table.down.sql
+WRONG stock/docs/docs/python/05-database.md:775 000001_create_notes_table.sql
+WRONG stock/docs/docs/python/05-database.md:792 000001_create_notes_table.down.sql
+WRONG gotcha5 stock/docs/docs/python/05-database.md:1088
+VERDICT: FAIL 9 wrong of 8 refs + 1 gotcha(s)
+rc=1
+## stock book
+generator wrote: 20261029114750_create_notes_table.sql (prefix 14 digits)
+WRONG stock/book/book-1-python/chapters/05-database.md:576 000001_create_notes_table.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:577 000001_create_notes_table.down.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:587 000001_create_notes_table.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:606 000001_create_notes_table.down.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:614 000001_create_notes_table.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:614 000001_create_notes_table.down.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:775 000001_create_notes_table.sql
+WRONG stock/book/book-1-python/chapters/05-database.md:792 000001_create_notes_table.down.sql
+WRONG gotcha5 stock/book/book-1-python/chapters/05-database.md:1103
+VERDICT: FAIL 9 wrong of 8 refs + 1 gotcha(s)
+rc=1
+## fixed docs
+generator wrote: 20261029114751_create_notes_table.sql (prefix 14 digits)
+VERDICT: PASS 0 wrong of 8 refs + 1 gotcha(s)
+rc=0
+## fixed book
+generator wrote: 20261029114751_create_notes_table.sql (prefix 14 digits)
+VERDICT: PASS 0 wrong of 8 refs + 1 gotcha(s)
+rc=0

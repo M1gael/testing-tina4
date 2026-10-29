@@ -1,0 +1,14 @@
+# scan.py hits that this fix deliberately leaves alone; one regex per line, matched against a scan line.
+# Adding `await` cannot make these correct: the framework calls them synchronously (separate defects).
+#
+# ch18 tests() blocks: runAll() calls fn() without awaiting (core/src/testing.ts:108-175), so an async
+# test returns a Promise, which expectTrue counts as truthy: the test passes vacuously.
+18-testing\.md:[0-9]+: \[5\. Testing ORM Models\]
+18-testing\.md:[0-9]+: \[Test One Thing Per Function\]
+# ch29 mcpResource handlers: _handleResourcesRead calls resource.handler() without await
+# (core/src/mcp.ts:654) and JSON.stringify's the Promise to "{}". Tools are awaited (:615); resources not.
+29-custom-mcp-servers\.md:[0-9]+: \[4\. Registering Resources with mcpResource\] \(\) => db\.fetch\(
+29-custom-mcp-servers\.md:[0-9]+: \[8\. Complete Example: CRM MCP Server\] \(\) => db\.fetch\(
+29-custom-mcp-servers\.md:[0-9]+: \[8\. Complete Example: CRM MCP Server\] const (customers|orders) = db\.fetch\(
+# general/frond.md liveSource: LiveProvider is typed sync and called without await (frond/src/engine.ts:30, :3657).
+frond\.md:[0-9]+: \[Ruby\] Frond\.liveSource\(

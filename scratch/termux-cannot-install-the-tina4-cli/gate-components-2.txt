@@ -1,0 +1,6 @@
+mutant libsqlite-header [ruby init-first +pre]: red (good) :: ruby: FAIL  init_rc=0 http=000 tina4_marks=0 install_rc=0 install_failures=0 doctor=yes
+mutant install-composer [php install-first +pre]: red (good) :: php: FAIL  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=1 doctor=yes
+control python init-first py-only: green (good) :: python: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+control php init-first php-only: green (good) :: php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+control php install-first php-only: green (good) :: php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+control ruby init-first ruby-bare: green (good) :: ruby: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes

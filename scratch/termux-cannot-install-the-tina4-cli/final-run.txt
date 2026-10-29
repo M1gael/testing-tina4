@@ -1,0 +1,26 @@
+== disk at start: 43G free
+== component pass 2
+mutant libsqlite-header [ruby init-first +pre]: red (good) :: ruby: FAIL  init_rc=0 http=000 tina4_marks=0 install_rc=0 install_failures=0 doctor=yes
+mutant install-composer [php install-first +pre]: red (good) :: php: FAIL  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=1 doctor=yes
+control python init-first py-only: green (good) :: python: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+control php init-first php-only: green (good) :: php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+control php install-first php-only: green (good) :: php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+control ruby init-first ruby-bare: green (good) :: ruby: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+== installer (hosted install.sh, local release with tina4-android-amd64)
+installer: PASS  rc=0 installed_at=/data/data/com.termux/files/usr/bin/tina4 runs=1 sudo_mentions=0  [Platform:     linux/amd64 (Android/Termux) - native Android build]
+== tina4 setup, fresh Termux, each language
+python setup: PASS  setup_rc=0 git=yes http=200 failures_in_output=0
+nodejs setup: PASS  setup_rc=0 git=yes http=200 failures_in_output=0
+php setup: PASS  setup_rc=0 git=yes http=200 failures_in_output=0
+ruby setup: PASS  setup_rc=0 git=yes http=200 failures_in_output=0
+== final gate, both orders
+php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+ruby: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+nodejs: PASS  init_rc=0 http=200 tina4_marks=16 install_rc=0 install_failures=0 doctor=yes
+python: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+ruby: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+nodejs: PASS  init_rc=0 http=200 tina4_marks=16 install_rc=0 install_failures=0 doctor=yes
+python: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+== disk at end: 43G free
+== FINISHED

@@ -1,0 +1,8 @@
+ .github/workflows/release.yml |  21 +++++--
+ README.md                     |   8 +++
+ src/doctor.rs                 |  11 ++++
+ src/init.rs                   |  20 ++++++-
+ src/install.rs                | 134 +++++++++++++++++++++++++++++++++++++++++-
+ src/main.rs                   |  16 +++++
+ src/setup.rs                  |   2 +
+ 7 files changed, 204 insertions(+), 8 deletions(-)

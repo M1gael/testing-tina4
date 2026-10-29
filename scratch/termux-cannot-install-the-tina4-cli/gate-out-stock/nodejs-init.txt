@@ -1,0 +1,7 @@
+
+▶ Initialising nodejs project at /data/data/com.termux/files/home/g/app
+
+▶ Checking nodejs runtime...
+  ⚠ node not found — attempting install
+  ✗ Please install Node.js: https://nodejs.org/
+INIT_RC=1

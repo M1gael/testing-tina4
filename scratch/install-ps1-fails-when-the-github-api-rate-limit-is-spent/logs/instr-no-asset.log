@@ -1,0 +1,10 @@
+api remaining: 0
+
+  Tina4 CLI Installer
+  ===================
+  Version:    v9.9.8
+  Install to: C:\Users\mig\AppData\Local\Temp\t4inst-aswvh3kf.weh\tina4\tina4.exe
+
+Downloading tina4-windows-amd64.exe...
+threw: Could not download tina4-windows-amd64.exe from release v9.9.8: The request was aborted: The connection was closed unexpectedly.
+RESULT FAIL

@@ -1,0 +1,8 @@
+
+▶ Installing Python...
+  ⚠ iOS (iSH) support is experimental.
+  ℹ Projects get tina4-python in their own .venv: tina4 init python <name>
+alpine-baselayout-3.7.2-r1
+alpine-baselayout-data-3.7.2-r1
+NAME="Alpine Linux"
+ID=alpine

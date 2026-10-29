@@ -1,0 +1,5 @@
+php: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+ruby: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+nodejs: PASS  init_rc=0 http=200 tina4_marks=16 install_rc=0 install_failures=0 doctor=yes
+python: PASS  init_rc=0 http=200 tina4_marks=18 install_rc=0 install_failures=0 doctor=yes
+exit=0

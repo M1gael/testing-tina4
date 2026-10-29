@@ -1,0 +1,12 @@
+FAIL serve-vendor-without-tina4php
+    ▶ Starting tina4php on 0.0.0.0:7491
+      ✗ Could not spawn the php server: No such file or directory (os error 2)
+    ✗ Failed to start the php server. See the error above.
+FAIL routes-vendor-without-tina4php
+    ✗ Failed to run tina4php routes: No such file or directory (os error 2)
+PASS serve-no-vendor
+    ▶ Starting tina4php on 0.0.0.0:7492
+    ✗ Dependencies not installed. Run: composer install
+    ✗ Failed to start the php server. See the error above.
+PASS routes-with-tina4php
+    STUB tina4php routes

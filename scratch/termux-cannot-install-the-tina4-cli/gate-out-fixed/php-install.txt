@@ -1,0 +1,6 @@
+
+▶ Installing PHP...
+  ✓ PHP already installed
+  ✓ Composer already installed
+  ℹ Install tina4php: composer global require tina4stack/tina4php
+INSTALL_RC=0

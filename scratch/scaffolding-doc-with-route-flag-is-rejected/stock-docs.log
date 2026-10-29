@@ -1,0 +1,40 @@
+BAD docs/python
+      . generate crud Product: model+migration+route+templates+test (9 files)
+      ! `tina4python generate model Product --fields name:string,price:float --with-route --with-migration` rc=1: Unknown option --with-route for "generate model".
+      ! documents --with; generate model rejects it: Unknown option --with for "generate model".
+      ! documents --with-form; generate model rejects it: Unknown option --with-form for "generate model".
+      ! documents --with-migration; generate model rejects it: Unknown option --with-migration for "generate model". Did you mean --no-migration?
+      ! documents --with-route; generate model rejects it: Unknown option --with-route for "generate model".
+      ! documents --with-test; generate model rejects it: Unknown option --with-test for "generate model".
+      ! documents --with-view; generate model rejects it: Unknown option --with-view for "generate model".
+BAD docs/php
+      . forwarded verbatim: tina4php generate model Product --fields name:string,price:float --with-route --with-migration
+      . generate crud Product: model+migration+route+templates+test (9 files)
+      ! `tina4 generate model Product --fields name:string,price:float --with-route --with-migration` rc=1: Unknown option --with-route for "generate model".
+      ! documents --with; generate model rejects it: Unknown option --with for "generate model".
+      ! documents --with-form; generate model rejects it: Unknown option --with-form for "generate model".
+      ! documents --with-migration; generate model rejects it: Unknown option --with-migration for "generate model". Did you mean --no-migration?
+      ! documents --with-route; generate model rejects it: Unknown option --with-route for "generate model".
+      ! documents --with-test; generate model rejects it: Unknown option --with-test for "generate model".
+      ! documents --with-view; generate model rejects it: Unknown option --with-view for "generate model".
+BAD docs/ruby
+      . forwarded verbatim: tina4ruby generate model Product --fields name:string,price:float --with-route --with-migration
+      . generate crud Product: model+migration+route+templates+test (9 files)
+      ! `tina4 generate model Product --fields name:string,price:float --with-route --with-migration` rc=1: Unknown option --with-route for "generate model".
+      ! documents --with; generate model rejects it: Unknown option --with for "generate model".
+      ! documents --with-form; generate model rejects it: Unknown option --with-form for "generate model".
+      ! documents --with-migration; generate model rejects it: Unknown option --with-migration for "generate model".
+      ! documents --with-route; generate model rejects it: Unknown option --with-route for "generate model".
+      ! documents --with-test; generate model rejects it: Unknown option --with-test for "generate model".
+      ! documents --with-view; generate model rejects it: Unknown option --with-view for "generate model".
+BAD docs/nodejs
+      . forwarded verbatim: tina4nodejs generate model Product --fields name:string,price:float --with-route --with-migration
+      . generate crud Product: model+migration+route+templates+test (9 files)
+      ! `tina4 generate model Product --fields name:string,price:float --with-route --with-migration` rc=1: Unknown option --with-route for "generate model".
+      ! documents --with; generate model rejects it: Unknown option --with for "generate model".
+      ! documents --with-form; generate model rejects it: Unknown option --with-form for "generate model".
+      ! documents --with-migration; generate model rejects it: Unknown option --with-migration for "generate model". Did you mean --no-migration?
+      ! documents --with-route; generate model rejects it: Unknown option --with-route for "generate model".
+      ! documents --with-test; generate model rejects it: Unknown option --with-test for "generate model".
+      ! documents --with-view; generate model rejects it: Unknown option --with-view for "generate model".
+VERDICT: FAIL ok=0 bad=4 (19-scaffolding Combining Generators, 4 ports, docs=/var/home/work/.cache/tina4-worktrees/verify-1029/d-cli-02/stock-docs book=none)

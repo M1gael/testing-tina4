@@ -1,0 +1,35 @@
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"INFO","message":"Tina4 Ruby v3.13.154 initializing..."}
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"DEBUG","message":"Route registered: GET /__health"}
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"DEBUG","message":"Route registered: GET /health"}
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"DEBUG","message":"Route registered: GET /__frond/live/{name}"}
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"INFO","message":"Tina4 initialized successfully"}
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"DEBUG","message":"Route replaced: GET /__health"}
+{"timestamp":"2026-10-28T12:24:30.800Z","level":"DEBUG","message":"Route replaced: GET /health"}
+
+  ______ _             __ __
+ /_  __/(_)___  ____ _/ // /
+  / /  / / __ \/ __ `/ // /_
+ / /  / / / / / /_/ /__  __/
+/_/  /_/_/ /_/\__,_/  /_/
+  TINA4 — The Intelligent Native Application 4ramework
+  Simple. Fast. Human. | Built for AI. Built for you.
+
+  Server:    http://localhost:7695 (puma)
+  Debug:     OFF (Log level: ALL)
+
+{"timestamp":"2026-10-28T12:24:30.838Z","level":"INFO","message":"Production server: puma (TINA4_SHUTDOWN_TIMEOUT=30s)"}
+Puma starting in single mode...
+* Puma version: 6.6.1 ("Return to Forever")
+* Ruby version: ruby 3.4.10 (2026-06-30 revision 2b0b7728dc) +PRISM [x86_64-linux]
+*  Min threads: 0
+*  Max threads: 16
+*  Environment: production
+*          PID: 229895
+* Listening on http://0.0.0.0:7695
+Use Ctrl-C to stop
+{"timestamp":"2026-10-28T12:24:30.995Z","level":"WARNING","message":"TINA4_CSP is not set, so Tina4 is serving the default Content-Security-Policy \"default-src 'self'\" on every response. The framework injects a per-response nonce into style-src and script-src, so its own inline <style>/<script> (and your templates using the csp_nonce() Frond global) work under this policy. The default still blocks cross-origin fonts/scripts/CDNs, data: URIs, and cross-origin WebSocket/XHR (e.g. a separate API or LiveKit host). If your app uses any of these, set TINA4_CSP to a policy that allows them (see https://tina4.com); to silence this notice without changing behaviour, set TINA4_CSP=\"default-src 'self'\".","request_id":"4160afaf"}
+- Gracefully stopping, waiting for requests to finish
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2026-10-28 14:24:31 +0200 ===
+- Goodbye!
+{"timestamp":"2026-10-28T12:24:31.115Z","level":"INFO","message":"Background tasks stopped"}

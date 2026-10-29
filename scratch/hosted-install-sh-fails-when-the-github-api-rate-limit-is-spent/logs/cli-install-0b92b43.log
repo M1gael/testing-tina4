@@ -1,0 +1,17 @@
+
+  Tina4 CLI Installer
+  ===================
+  Version:      v3.8.106
+  Platform:     linux/amd64
+  Install to:   /tmp/tmp.84z6FrQTtw/bin/tina4
+
+Downloading tina4-linux-amd64...
+Checksum verified (sha256).
+
+✓ tina4 v3.8.106 installed successfully
+
+Get started (these work any time):
+  tina4 setup    — Guided onboarding: language + AI tool + first project
+  tina4 doctor   — Check your environment
+  tina4 serve    — Start the dev server
+

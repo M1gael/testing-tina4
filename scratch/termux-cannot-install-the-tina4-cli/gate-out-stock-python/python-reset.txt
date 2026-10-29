@@ -1,0 +1,5 @@
+    - SHA256:0838db3d93557f90fe76a2574474f27d9986ea5ca28fab97c40435ce0a647f7c
+    - SHA1:65834f004c3decc53fb14b4e14d8de5f566bfefc [weak]
+    - MD5Sum:81779dcacbb5baa2f5c8fbe84ab0b822 [weak]
+   Release file created at: Tue, 20 Oct 2026 07:01:01 +0000
+E: Some index files failed to download. They have been ignored, or old ones used instead.

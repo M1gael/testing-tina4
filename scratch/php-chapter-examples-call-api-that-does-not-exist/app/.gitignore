@@ -1,0 +1,6 @@
+vendor/
+logs/
+*.db
+.env
+.env.local
+node_modules/

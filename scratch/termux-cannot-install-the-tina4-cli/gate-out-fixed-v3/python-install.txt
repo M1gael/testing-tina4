@@ -1,0 +1,11 @@
+
+▶ Installing Python...
+  ✓ Python and uv already installed
+  ▶ Installing tina4python...
+Resolved 1 package in 4ms
+Installed 1 package in 37ms
+ + tina4-python==3.13.151
+Installed 1 executable: tina4python
+warning: `/data/data/com.termux/files/home/.local/bin` is not on your PATH. To use installed tools, run `export PATH="/data/data/com.termux/files/home/.local/bin:$PATH"` or `uv tool update-shell`.
+  ℹ Added /data/data/com.termux/files/home/.local/bin to PATH - open a new Termux session to use tina4python
+INSTALL_RC=0

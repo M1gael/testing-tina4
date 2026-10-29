@@ -1,0 +1,71 @@
+
+▶ Initialising ruby project at /data/data/com.termux/files/home/g/app
+
+▶ Checking ruby runtime...
+  ✓ ruby found
+
+▶ Checking package manager...
+  ✓ bundler found
+  ▶ Running: pkg install -y libsqlite
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://packages-cf.termux.dev/apt/termux-main: ok
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Hit:1 https://packages-cf.termux.dev/apt/termux-main stable InRelease
+Reading package lists...
+Building dependency tree...
+Reading state information...
+74 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following NEW packages will be installed:
+  libsqlite
+0 upgraded, 1 newly installed, 0 to remove and 74 not upgraded.
+Need to get 815 kB of archives.
+After this operation, 3367 kB of additional disk space will be used.
+Get:1 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libsqlite x86_64 3.54.1 [815 kB]
+Fetched 815 kB in 1s (1341 kB/s)
+Selecting previously unselected package libsqlite.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 16743 files and directories currently installed.)
+Preparing to unpack .../libsqlite_3.54.1_x86%5f64.deb ...
+Unpacking libsqlite (3.54.1) ...
+Setting up libsqlite (3.54.1) ...
+  ✓ Installed successfully
+  ✓ Bundler set to build sqlite3 against Termux's SQLite
+  ✓ Created directory /data/data/com.termux/files/home/g/app
+
+▶ Scaffolding ruby project...
+  ✓ Created directory structure
+  ✓ Created .env
+  ✓ Created app.rb
+  ✓ Created .gitignore
+  ✓ Created Gemfile
+  ✓ Created Ruby scaffold
+
+▶ Installing dependencies...
+  ▶ Running: bundle install (in /data/data/com.termux/files/home/g/app)
+Fetching gem metadata from https://rubygems.org/.....
+Resolving dependencies...
+Fetching mini_portile2 2.8.9
+Fetching sqlite3 2.10.1
+Fetching tina4ruby 3.13.151
+Installing mini_portile2 2.8.9
+Installing tina4ruby 3.13.151
+Installing sqlite3 2.10.1 with native extensions
+Bundle complete! 2 Gemfile dependencies, 3 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+  ✓ Dependencies installed
+
+✓ Project created at /data/data/com.termux/files/home/g/app
+
+  Start the server now? [Y/n]:   To start later:
+    cd /data/data/com.termux/files/home/g/app
+    tina4 serve
+
+INIT_RC=0

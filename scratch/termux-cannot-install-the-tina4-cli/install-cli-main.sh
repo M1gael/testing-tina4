@@ -1,0 +1,221 @@
+#!/bin/sh
+# Copyright (c) 2026 Code Infinity
+# SPDX-License-Identifier: MPL-2.0
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+# Tina4 CLI installer — https://tina4.com
+# Usage: curl -fsSL https://raw.githubusercontent.com/tina4stack/tina4/main/install.sh | sh
+#    or: wget -qO- https://raw.githubusercontent.com/tina4stack/tina4/main/install.sh | sh
+set -e
+
+REPO="tina4stack/tina4"
+INSTALL_DIR="${TINA4_INSTALL_DIR:-/usr/local/bin}"
+MUSL_ONLY=""
+
+# Detect OS and architecture
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+
+case "$OS" in
+  Darwin)  PLATFORM="darwin" ;;
+  Linux)   PLATFORM="linux" ;;
+  MINGW*|MSYS*|CYGWIN*) PLATFORM="windows" ;;
+  *) echo "Error: Unsupported OS: $OS" >&2; exit 1 ;;
+esac
+
+# Android (Termux) reports itself as Linux, but it has no glibc: the libc is
+# Bionic, so the glibc build fails to exec with "GLIBC_x.y not found" or a
+# misleading "No such file or directory" (its loader is missing). The static
+# musl build is no way out either: Termux's termux-exec runs binaries through
+# /system/bin/linker64, which rejects a non-PIE static binary ("unexpected
+# e_type: 2"), and musl's resolver finds no /etc/resolv.conf there. Only the
+# native Android build (tina4-android-*) runs. Termux also has no
+# /usr/local/bin - its binaries live in $PREFIX/bin.
+ANDROID=""
+if [ "$PLATFORM" = "linux" ] && { [ "$(uname -o 2>/dev/null)" = "Android" ] || [ -n "${TERMUX_VERSION:-}" ]; }; then
+  ANDROID="1"
+  if [ -z "${TINA4_INSTALL_DIR:-}" ] && [ -n "${PREFIX:-}" ]; then
+    INSTALL_DIR="${PREFIX}/bin"
+  fi
+fi
+
+case "$ARCH" in
+  x86_64|amd64)  ARCH_NAME="amd64" ;;
+  arm64|aarch64)  ARCH_NAME="arm64" ;;
+  # 32-bit x86 is what iSH (Linux shell on iPhone/iPad) emulates. Only a static
+  # musl build is published for it, so it always takes the musl path below.
+  i386|i486|i586|i686)  ARCH_NAME="386"; MUSL_ONLY="1" ;;
+  *)
+    echo "Error: Unsupported architecture: $ARCH" >&2
+    echo "  Prebuilt binaries cover x86_64 and arm64. Build from source with:" >&2
+    echo "    cargo install tina4   (needs Rust - https://rustup.rs)" >&2
+    exit 1 ;;
+esac
+
+# Helper: download a URL to stdout
+fetch() {
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$1"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -qO- "$1"
+  else
+    echo "Error: curl or wget is required" >&2
+    exit 1
+  fi
+}
+
+# Helper: download a URL to a file
+fetch_to() {
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$1" -o "$2"
+  else
+    wget -q "$1" -O "$2"
+  fi
+}
+
+# Get latest release metadata (tag + asset list)
+RELEASE_JSON=$(fetch "https://api.github.com/repos/${REPO}/releases/latest")
+
+LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+
+if [ -z "$LATEST" ]; then
+  echo "Error: Could not determine latest release" >&2
+  exit 1
+fi
+
+# Match the correct binary from release assets.
+# Releases may use varying names (e.g. amd64 vs x86_64, darwin vs macos).
+if [ "$PLATFORM" = "windows" ]; then
+  BINARY=$(echo "$RELEASE_JSON" | grep -oE '"name": *"tina4-windows-[^"]+\.exe"' | head -1 | sed -E 's/"name": *"([^"]+)"/\1/')
+else
+  # Android (Termux) can only run the native Android build, and 32-bit x86
+  # (iSH on iOS) only the static musl build, so each is the ONLY candidate
+  # there - any fallback would install a binary that cannot exec.
+  if [ -n "$ANDROID" ]; then
+    CANDIDATES="tina4-android-${ARCH_NAME}"
+  elif [ -n "$MUSL_ONLY" ]; then
+    CANDIDATES="tina4-linux-musl-${ARCH_NAME}"
+  else
+    CANDIDATES=""
+  fi
+  # Otherwise try the canonical name first (tina4-linux-amd64), then common alternatives.
+  [ -z "$CANDIDATES" ] && for CANDIDATE in \
+    "tina4-${PLATFORM}-${ARCH_NAME}" \
+    "tina4-${PLATFORM}-$([ "$ARCH_NAME" = "amd64" ] && echo x86_64 || echo "$ARCH_NAME")" \
+    "tina4-$([ "$PLATFORM" = "darwin" ] && echo macos || echo "$PLATFORM")-${ARCH_NAME}" \
+    "tina4-$([ "$PLATFORM" = "darwin" ] && echo macos || echo "$PLATFORM")-$([ "$ARCH_NAME" = "amd64" ] && echo x86_64 || echo "$ARCH_NAME")"
+  do
+    CANDIDATES="$CANDIDATES $CANDIDATE"
+  done
+  for CANDIDATE in $CANDIDATES; do
+    if echo "$RELEASE_JSON" | grep -q "\"name\": *\"${CANDIDATE}\""; then
+      BINARY="$CANDIDATE"
+      break
+    fi
+  done
+fi
+
+if [ -z "$BINARY" ]; then
+  echo "Error: No matching binary found for ${PLATFORM}/${ARCH_NAME} in release ${LATEST}" >&2
+  echo "Available assets:" >&2
+  echo "$RELEASE_JSON" | grep '"name"' | sed -E 's/.*"name": *"([^"]+)".*/  \1/' >&2
+  exit 1
+fi
+
+URL="https://github.com/${REPO}/releases/download/${LATEST}/${BINARY}"
+
+echo ""
+echo "  Tina4 CLI Installer"
+echo "  ==================="
+echo "  Version:      ${LATEST}"
+echo "  Platform:     ${PLATFORM}/${ARCH_NAME}${ANDROID:+ (Android/Termux) - native Android build}${MUSL_ONLY:+ - static musl build}"
+echo "  Install to:   ${INSTALL_DIR}/tina4"
+echo ""
+
+TMP=$(mktemp)
+echo "Downloading ${BINARY}..."
+fetch_to "$URL" "$TMP"
+
+# Verify integrity against the release SHA256SUMS before trusting the binary.
+# SHA256SUMS is mandatory; missing or mismatched integrity data aborts installation.
+SUMS_TMP=$(mktemp)
+if fetch_to "https://github.com/${REPO}/releases/download/${LATEST}/SHA256SUMS" "$SUMS_TMP" 2>/dev/null && [ -s "$SUMS_TMP" ]; then
+  EXPECTED=$(grep -E "[[:space:]]\*?${BINARY}\$" "$SUMS_TMP" | awk '{print $1}' | head -1)
+  if [ -z "$EXPECTED" ]; then
+    echo "Error: ${BINARY} is not listed in SHA256SUMS for ${LATEST}" >&2
+    rm -f "$TMP" "$SUMS_TMP"; exit 1
+  fi
+  if command -v sha256sum >/dev/null 2>&1; then
+    ACTUAL=$(sha256sum "$TMP" | awk '{print $1}')
+  elif command -v shasum >/dev/null 2>&1; then
+    ACTUAL=$(shasum -a 256 "$TMP" | awk '{print $1}')
+  else
+    echo "Error: no sha256 tool (sha256sum or shasum) available to verify the download" >&2
+    rm -f "$TMP" "$SUMS_TMP"; exit 1
+  fi
+  if [ "$EXPECTED" != "$ACTUAL" ]; then
+    echo "Error: checksum mismatch for ${BINARY} - refusing to install" >&2
+    echo "  expected: ${EXPECTED}" >&2
+    echo "  actual:   ${ACTUAL}" >&2
+    rm -f "$TMP" "$SUMS_TMP"; exit 1
+  fi
+  echo "Checksum verified (sha256)."
+else
+  # Fail closed: a missing SHA256SUMS means we cannot prove the download is the
+  # published binary, so we do NOT install it. (Every release from 3.8.53 on
+  # publishes SHA256SUMS; a build old enough to lack it can be installed by
+  # pinning an explicit older asset by hand.)
+  echo "Error: SHA256SUMS is not available for ${LATEST} - refusing to install an unverified binary." >&2
+  rm -f "$TMP" "$SUMS_TMP"; exit 1
+fi
+rm -f "$SUMS_TMP"
+
+chmod +x "$TMP"
+
+# Install. The target directory may not exist yet: a clean macOS has no
+# /usr/local/bin (it was historically created by Homebrew), so a bare `mv` there
+# fails with "No such file or directory". Create the directory first, then move
+# without sudo when we can and escalate only when the location needs root.
+if [ -d "$INSTALL_DIR" ] && [ -w "$INSTALL_DIR" ]; then
+  mv "$TMP" "${INSTALL_DIR}/tina4"
+elif mkdir -p "$INSTALL_DIR" 2>/dev/null && [ -w "$INSTALL_DIR" ]; then
+  mv "$TMP" "${INSTALL_DIR}/tina4"
+else
+  echo "Need sudo to install to ${INSTALL_DIR}"
+  sudo mkdir -p "$INSTALL_DIR"
+  sudo mv "$TMP" "${INSTALL_DIR}/tina4"
+fi
+
+echo ""
+echo "✓ tina4 ${LATEST} installed successfully"
+echo ""
+
+# Always print the command list FIRST, so that if setup is interrupted or
+# crashes the user still has `tina4 setup` on screen to run again.
+echo "Get started (these work any time):"
+echo "  tina4 setup    — Guided onboarding: language + AI tool + first project"
+echo "  tina4 doctor   — Check your environment"
+echo "  tina4 serve    — Start the dev server"
+echo ""
+
+# Launch guided setup now. `curl | sh` leaves stdin attached to the pipe (not
+# the keyboard), so read the answers from the controlling terminal. With no tty
+# (CI / non-interactive) we skip the launch — the commands above already tell
+# the user how to run it. A non-zero exit prints a clear retry hint.
+# `[ -r /dev/tty ]` alone is NOT enough: it is a permission/stat test, and it
+# passes on a headless host where /dev/tty exists but the process has NO
+# controlling terminal. The open then fails and every such install ends on
+# "cannot open /dev/tty: No such device or address" -- verified on a real
+# headless box (sudo over ssh). Actually TRY the open in a subshell; only launch
+# the interactive wizard if that succeeds. Docker / CI / provisioning runs now
+# finish clean on the "run tina4 setup" hint already printed above.
+if [ -r /dev/tty ] && (exec < /dev/tty) 2>/dev/null; then
+  echo "  Starting setup..."
+  echo ""
+  if ! "${INSTALL_DIR}/tina4" setup < /dev/tty; then
+    echo ""
+    echo "  Setup didn't finish. Run it again any time with: tina4 setup"
+  fi
+fi

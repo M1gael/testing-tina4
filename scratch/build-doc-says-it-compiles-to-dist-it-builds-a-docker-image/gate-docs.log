@@ -1,0 +1,7 @@
+GATE RED docs_general_cli.md: VERDICT: FAIL wrong=1 missing=1
+GATE RED docs_nodejs_31-cli.md: VERDICT: FAIL wrong=4 missing=1
+GATE RED docs_nodejs_34-deployment.md.hunk1: VERDICT: FAIL wrong=4 missing=1
+GATE RED docs_nodejs_34-deployment.md.hunk2: VERDICT: FAIL wrong=1 missing=0
+GATE RED docs_ruby_31-cli.md: VERDICT: FAIL wrong=2 missing=1
+GATE RED docs_ruby_index.md: VERDICT: FAIL wrong=1 missing=1
+GATE SUMMARY docs: red=6 not_gated=0

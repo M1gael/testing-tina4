@@ -1,0 +1,7 @@
+
+▶ Initialising python project at /data/data/com.termux/files/home/g/app
+
+▶ Checking python runtime...
+  ⚠ python not found — attempting install
+  ✗ Please install Python 3: https://www.python.org/downloads/
+INIT_RC=1

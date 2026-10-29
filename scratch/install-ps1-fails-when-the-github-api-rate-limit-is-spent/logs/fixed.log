@@ -1,0 +1,28 @@
+api remaining: 0
+
+  Tina4 CLI Installer
+  ===================
+  Version:    v3.8.106
+  Install to: C:\Users\mig\AppData\Local\Temp\t4inst-2nwdbmju.axn\tina4\tina4.exe
+
+Downloading tina4-windows-amd64.exe...
+Checksum verified (sha256).
+Signature verified: CN=Code Infinity (Pty) Ltd, O=Code Infinity (Pty) Ltd, STREET="1B Madrid Street, Uitzicht", PostalCode=7570, L=Cape Town, S=Western Cape, C=ZA, SERIALNUMBER=2014/003866/07, OID.1.3.6.1.4.1.311.60.2.1.3=ZA, OID.2.5.4.15=Private Organization
+Put C:\Users\mig\AppData\Local\Temp\t4inst-2nwdbmju.axn\tina4 first on PATH
+
+  Heads up: other tina4 copies are also on PATH:
+    C:\Users\mig\AppData\Local\tina4\tina4.exe
+  If 'tina4 --version' doesn't show v3.8.106 in a new terminal, remove the
+  one(s) above (or their folder from PATH).
+
+  tina4 v3.8.106 installed successfully
+
+  Next step - run this in your terminal:
+
+    tina4 setup    Guided onboarding: language + AI tool + first project
+
+  Other commands (any time):
+    tina4 doctor   - Check your environment
+    tina4 serve    - Start the dev server
+
+RESULT installed: tina4 3.8.106

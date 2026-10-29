@@ -1,0 +1,21 @@
+
+  Tina4 CLI Installer
+  ===================
+  Version:      v9.9.9
+  Platform:     linux/amd64 (Android/Termux) - native Android build
+  Install to:   /data/data/com.termux/files/usr/bin/tina4
+
+Downloading tina4-android-amd64...
+Checksum verified (sha256).
+
+✓ tina4 v9.9.9 installed successfully
+
+Get started (these work any time):
+  tina4 setup    — Guided onboarding: language + AI tool + first project
+  tina4 doctor   — Check your environment
+  tina4 serve    — Start the dev server
+
+INSTALL_RC=0
+-rwx------. 1 u0_a192 u0_a192 11346696 Oct 20 15:14 /data/data/com.termux/files/usr/bin/tina4
+tina4 3.8.102
+WHICH=/data/data/com.termux/files/usr/bin/tina4

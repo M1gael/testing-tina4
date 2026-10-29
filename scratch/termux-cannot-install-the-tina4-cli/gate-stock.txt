@@ -1,0 +1,4 @@
+php: FAIL  init_rc=1 http=none tina4_marks=0 install_rc=0 install_failures=2 doctor=no
+ruby: FAIL  init_rc=1 http=none tina4_marks=0 install_rc=0 install_failures=2 doctor=no
+nodejs: FAIL  init_rc=1 http=none tina4_marks=0 install_rc=0 install_failures=3 doctor=no
+python: RESET FAILED

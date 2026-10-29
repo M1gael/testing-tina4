@@ -1,0 +1,272 @@
+
+  [36mTina4 Setup[0m
+  [2mA few questions and you'll be building.[0m
+
+  Which language do you want to build with?
+    1. Python[32m  (default)[0m  [2m— recommended · APIs, AI, data[0m
+    2. Node.js  [2m— real-time apps, JS/TS teams[0m
+    3. PHP  [2m— classic web, shared hosting[0m
+    4. Ruby  [2m— rapid prototyping[0m
+  Choose 1-4 [[2m1[0m]: 4
+
+  Which AI tool do you want to build with?
+    1. [1mClaude Desktop[0m  [2m(default) — the chat app; opens your project ready to build[0m
+    2. [1mClaude Code[0m  [2m— AI in your terminal, opens a real coding session in your project[0m
+    3. [1mCodex[0m  [2m— OpenAI coding agent in your terminal or desktop app[0m
+    4. [1mCursor[0m  [2m— AI-native IDE; installs skills into ~/.cursor/skills[0m
+    5. [1mAll AI tools[0m  [2m— Claude, Codex, and Cursor[0m
+    6. [1mJust my code editor[0m  [2m— no AI[0m
+  Choose 1-6 [[2m1[0m]: 6
+
+  Where should your projects live? (created if it doesn't exist)
+  Projects folder [[2m/data/data/com.termux/files/home/projects[0m]: 
+  Name of your first project [[2mtina4example[0m]: 
+
+[32m▶[0m Setting up — this can take a few minutes...
+
+
+[32m▶[0m Installing Ruby...
+  [32m▶[0m Running: pkg install -y ruby
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://packages-cf.termux.dev/apt/termux-main: ok
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Hit:1 https://packages-cf.termux.dev/apt/termux-main stable InRelease
+[33m                                                        0% [Working][0m[33m20% [Working][0m             Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... 98%Reading package lists... 98%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 14%Reading state information... Done
+74 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 14%Reading state information... Done
+The following additional packages will be installed:
+  clang gdbm glib libandroid-execinfo libandroid-posix-semaphore
+  libcompiler-rt libcrypt libexpat libffi libllvm libsqlite libxml2 libyaml
+  lld llvm make ncurses ncurses-ui-libs ndk-sysroot pkg-config python
+  python-ensurepip-wheels python-pip
+Suggested packages:
+  python-tkinter
+The following NEW packages will be installed:
+  clang gdbm glib libandroid-execinfo libandroid-posix-semaphore
+  libcompiler-rt libcrypt libexpat libffi libllvm libsqlite libxml2 libyaml
+  lld llvm make ncurses-ui-libs ndk-sysroot pkg-config python
+  python-ensurepip-wheels python-pip ruby
+The following packages will be upgraded:
+  ncurses
+1 upgraded, 23 newly installed, 0 to remove and 73 not upgraded.
+Need to get 115 MB of archives.
+After this operation, 647 MB of additional disk space will be used.
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Get:1 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 ncurses x86_64 6.6.20260307+really6.5.20250830 [570 kB]
+[33m                                                        0% [1 ncurses 3256 B/570 kB 1%][0m[33m                               1% [Working][0m            Get:2 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libcompiler-rt x86_64 21.1.8-3 [3104 kB]
+[33m1% [2 libcompiler-rt 15.5 kB/3104 kB 1%][0m[33m                                        4% [Waiting for headers][0m                        Get:3 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libffi x86_64 3.8.0 [40.6 kB]
+[33m4% [3 libffi 12.3 kB/40.6 kB 30%][0m[33m                                 5% [Working][0m            Get:4 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libxml2 x86_64 2.15.4-1 [470 kB]
+[33m5% [4 libxml2 16.4 kB/470 kB 3%][0m[33m                                6% [Waiting for headers][0m                        Get:5 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libllvm x86_64 21.1.8-3 [33.8 MB]
+[33m6% [5 libllvm 5183 B/33.8 MB 0%][0m[33m14% [5 libllvm 11.7 MB/33.8 MB 35%][0m[33m23% [5 libllvm 24.0 MB/33.8 MB 71%][0m[33m28% [5 libllvm 31.1 MB/33.8 MB 92%][0m[33m                                   31% [Waiting for headers][0m                         Get:6 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 lld x86_64 21.1.8-3 [3091 kB]
+[33m31% [6 lld 24.6 kB/3091 kB 1%][0m[33m                              34% [Waiting for headers][0m                         Get:7 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 llvm x86_64 21.1.8-3 [16.7 MB]
+[33m34% [7 llvm 13.2 kB/16.7 MB 0%][0m[33m41% [7 llvm 11.2 MB/16.7 MB 67%][0m[33m                                46% [Waiting for headers][0m                         Get:8 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 ndk-sysroot x86_64 30 [1996 kB]
+[33m46% [8 ndk-sysroot 12.3 kB/1996 kB 1%][0m[33m                                      48% [Waiting for headers][0m                         Get:9 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 clang x86_64 21.1.8-3 [33.2 MB]
+[33m48% [9 clang 28.7 kB/33.2 MB 0%][0m[33m56% [9 clang 11.8 MB/33.2 MB 36%][0m[33m65% [9 clang 24.3 MB/33.2 MB 73%][0m[33m                                 72% [Waiting for headers][0m                         Get:10 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 gdbm x86_64 1.26-1 [155 kB]
+[33m72% [10 gdbm 0 B/155 kB 0%][0m[33m                           73% [Waiting for headers][0m                         Get:11 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libandroid-posix-semaphore x86_64 0.1-4 [3984 B]
+[33m73% [11 libandroid-posix-semaphore 3984 B/3984 B 100%][0m[33m                                                      74% [Working][0m             Get:12 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libcrypt x86_64 0.2-6 [8808 B]
+[33m74% [12 libcrypt 4096 B/8808 B 47%][0m[33m                                   75% [Working][0m             Get:13 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libexpat x86_64 2.9.0 [106 kB]
+[33m75% [13 libexpat 6279 B/106 kB 6%][0m[33m                                  76% [Working][0m             Get:14 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libsqlite x86_64 3.54.1 [815 kB]
+[33m76% [14 libsqlite 6279 B/815 kB 1%][0m[33m                                   77% [Waiting for headers][0m                         Get:15 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 ncurses-ui-libs x86_64 6.6.20260307+really6.5.20250830 [35.6 kB]
+[33m77% [15 ncurses-ui-libs 15.5 kB/35.6 kB 44%][0m[33m                                            78% [Working][0m             Get:16 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 python x86_64 3.14.8 [5105 kB]
+[33m78% [16 python 16.4 kB/5105 kB 0%][0m[33m                                  82% [Waiting for headers][0m                         Get:17 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 glib x86_64 2.90.1 [2639 kB]
+[33m82% [17 glib 15.5 kB/2639 kB 1%][0m[33m                                85% [Waiting for headers][0m                         Get:18 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libandroid-execinfo x86_64 0.1-3 [15.2 kB]
+[33m85% [18 libandroid-execinfo 11.2 kB/15.2 kB 74%][0m[33m                                                86% [Waiting for headers][0m                         Get:19 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 libyaml x86_64 0.2.5-5 [46.9 kB]
+[33m86% [19 libyaml 31.9 kB/46.9 kB 68%][0m[33m                                    87% [Working][0m             Get:20 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 make x86_64 4.4.1-1 [248 kB]
+[33m87% [20 make 13.0 kB/248 kB 5%][0m[33m                               88% [Waiting for headers][0m                         Get:21 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 pkg-config x86_64 0.29.2-3 [33.5 kB]
+[33m88% [21 pkg-config 15.5 kB/33.5 kB 46%][0m[33m                                       88% [Working][0m             Get:22 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 python-ensurepip-wheels all 3.14.8 [1738 kB]
+[33m88% [22 python-ensurepip-wheels 6273 B/1738 kB 0%][0m[33m                                                  91% [Working][0m             Get:23 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 python-pip all 26.2.1 [1190 kB]
+[33m91% [23 python-pip 22.5 kB/1190 kB 2%][0m[33m                                      92% [Waiting for headers][0m                         Get:24 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 ruby x86_64 4.0.7 [10.0 MB]
+[33m92% [24 ruby 15.5 kB/10.0 MB 0%][0m[33m                                100% [Working][0m              Fetched 115 MB in 6s (19.7 MB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5292 files and directories currently installed.)
+Preparing to unpack .../ncurses_6.6.20260307+really6.5.20250830_x86%5f64.deb ...
+Unpacking ncurses (6.6.20260307+really6.5.20250830) over (6.5.20240831-2) ...
+Setting up ncurses (6.6.20260307+really6.5.20250830) ...
+Selecting previously unselected package libcompiler-rt.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5296 files and directories currently installed.)
+Preparing to unpack .../00-libcompiler-rt_21.1.8-3_x86%5f64.deb ...
+Unpacking libcompiler-rt (21.1.8-3) ...
+Selecting previously unselected package libffi.
+Preparing to unpack .../01-libffi_3.8.0_x86%5f64.deb ...
+Unpacking libffi (3.8.0) ...
+Selecting previously unselected package libxml2.
+Preparing to unpack .../02-libxml2_2.15.4-1_x86%5f64.deb ...
+Unpacking libxml2 (2.15.4-1) ...
+Selecting previously unselected package libllvm.
+Preparing to unpack .../03-libllvm_21.1.8-3_x86%5f64.deb ...
+Unpacking libllvm (21.1.8-3) ...
+Selecting previously unselected package lld.
+Preparing to unpack .../04-lld_21.1.8-3_x86%5f64.deb ...
+Unpacking lld (21.1.8-3) ...
+Selecting previously unselected package llvm.
+Preparing to unpack .../05-llvm_21.1.8-3_x86%5f64.deb ...
+Unpacking llvm (21.1.8-3) ...
+Selecting previously unselected package ndk-sysroot.
+Preparing to unpack .../06-ndk-sysroot_30_x86%5f64.deb ...
+Unpacking ndk-sysroot (30) ...
+Selecting previously unselected package clang.
+Preparing to unpack .../07-clang_21.1.8-3_x86%5f64.deb ...
+Unpacking clang (21.1.8-3) ...
+Selecting previously unselected package gdbm.
+Preparing to unpack .../08-gdbm_1.26-1_x86%5f64.deb ...
+Unpacking gdbm (1.26-1) ...
+Selecting previously unselected package libandroid-posix-semaphore.
+Preparing to unpack .../09-libandroid-posix-semaphore_0.1-4_x86%5f64.deb ...
+Unpacking libandroid-posix-semaphore (0.1-4) ...
+Selecting previously unselected package libcrypt.
+Preparing to unpack .../10-libcrypt_0.2-6_x86%5f64.deb ...
+Unpacking libcrypt (0.2-6) ...
+Selecting previously unselected package libexpat.
+Preparing to unpack .../11-libexpat_2.9.0_x86%5f64.deb ...
+Unpacking libexpat (2.9.0) ...
+Selecting previously unselected package libsqlite.
+Preparing to unpack .../12-libsqlite_3.54.1_x86%5f64.deb ...
+Unpacking libsqlite (3.54.1) ...
+Selecting previously unselected package ncurses-ui-libs.
+Preparing to unpack .../13-ncurses-ui-libs_6.6.20260307+really6.5.20250830_x86%5f64.deb ...
+Unpacking ncurses-ui-libs (6.6.20260307+really6.5.20250830) ...
+Selecting previously unselected package python.
+Preparing to unpack .../14-python_3.14.8_x86%5f64.deb ...
+Unpacking python (3.14.8) ...
+Selecting previously unselected package glib.
+Preparing to unpack .../15-glib_2.90.1_x86%5f64.deb ...
+Unpacking glib (2.90.1) ...
+Selecting previously unselected package libandroid-execinfo.
+Preparing to unpack .../16-libandroid-execinfo_0.1-3_x86%5f64.deb ...
+Unpacking libandroid-execinfo (0.1-3) ...
+Selecting previously unselected package libyaml.
+Preparing to unpack .../17-libyaml_0.2.5-5_x86%5f64.deb ...
+Unpacking libyaml (0.2.5-5) ...
+Selecting previously unselected package make.
+Preparing to unpack .../18-make_4.4.1-1_x86%5f64.deb ...
+Unpacking make (4.4.1-1) ...
+Selecting previously unselected package pkg-config.
+Preparing to unpack .../19-pkg-config_0.29.2-3_x86%5f64.deb ...
+Unpacking pkg-config (0.29.2-3) ...
+Selecting previously unselected package python-ensurepip-wheels.
+Preparing to unpack .../20-python-ensurepip-wheels_3.14.8_all.deb ...
+Unpacking python-ensurepip-wheels (3.14.8) ...
+Selecting previously unselected package python-pip.
+Preparing to unpack .../21-python-pip_26.2.1_all.deb ...
+Unpacking python-pip (26.2.1) ...
+Selecting previously unselected package ruby.
+Preparing to unpack .../22-ruby_4.0.7_x86%5f64.deb ...
+Unpacking ruby (4.0.7) ...
+Setting up gdbm (1.26-1) ...
+Setting up ndk-sysroot (30) ...
+Setting up libexpat (2.9.0) ...
+Setting up libandroid-posix-semaphore (0.1-4) ...
+Setting up libsqlite (3.54.1) ...
+Setting up libffi (3.8.0) ...
+Setting up libandroid-execinfo (0.1-3) ...
+Setting up libyaml (0.2.5-5) ...
+Setting up libcrypt (0.2-6) ...
+Setting up ncurses-ui-libs (6.6.20260307+really6.5.20250830) ...
+Setting up ruby (4.0.7) ...
+Setting up make (4.4.1-1) ...
+Setting up libcompiler-rt (21.1.8-3) ...
+Setting up python (3.14.8) ...
+Setting up libxml2 (2.15.4-1) ...
+Setting up python-ensurepip-wheels (3.14.8) ...
+Setting up python-pip (26.2.1) ...
+pip setup...
+Writing to /data/data/com.termux/files/usr/etc/pip.conf
+Setting up libllvm (21.1.8-3) ...
+Setting up glib (2.90.1) ...
+No schema files found: doing nothing.
+Setting up lld (21.1.8-3) ...
+Setting up pkg-config (0.29.2-3) ...
+Setting up llvm (21.1.8-3) ...
+Setting up clang (21.1.8-3) ...
+  [32m✓[0m Installed successfully
+  [32m✓[0m Bundler already installed
+  [32m✓[0m Bundler set to build sqlite3 against Termux's SQLite
+  [32m▶[0m Installing tina4ruby...
+Fetching tina4ruby-3.13.151.gem
+Successfully installed tina4ruby-3.13.151
+Parsing documentation for tina4ruby-3.13.151
+Installing ri documentation for tina4ruby-3.13.151
+Done installing documentation for tina4ruby after 3 seconds
+1 gem installed
+
+A new release of RubyGems is available: 4.0.20 → 4.0.23!
+See https://github.com/ruby/rubygems/blob/v4.0.23/CHANGELOG.md for the changes since 4.0.20.
+Run `gem update --system 4.0.23` to update your installation.
+
+  [32m▶[0m Installing Git...
+  [32m▶[0m Running: pkg install -y git
+No mirror or mirror group selected. You might want to select one by running 'termux-change-repo'
+Checking availability of current mirror:
+[*] https://packages-cf.termux.dev/apt/termux-main: ok
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Hit:1 https://packages-cf.termux.dev/apt/termux-main stable InRelease
+[33m                                                        0% [Working][0m[33m20% [Working][0m             Reading package lists... 0%Reading package lists... 0%Reading package lists... 3%Reading package lists... 98%Reading package lists... 98%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 3%Reading state information... Done
+73 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... 0%Reading package lists... 100%Reading package lists... Done
+Building dependency tree... 0%Building dependency tree... 0%Building dependency tree... 50%Building dependency tree... 50%Building dependency tree... Done
+Reading state information... 0% Reading state information... 3%Reading state information... Done
+Suggested packages:
+  perl
+The following NEW packages will be installed:
+  git
+0 upgraded, 1 newly installed, 0 to remove and 73 not upgraded.
+Need to get 4657 kB of archives.
+After this operation, 25.6 MB of additional disk space will be used.
+[33m0% [Working][0m[33m0% [Connected to packages-cf.termux.dev (104.21.44.149)][0m                                                        Get:1 https://packages-cf.termux.dev/apt/termux-main stable/main x86_64 git x86_64 2.56.0 [4657 kB]
+[33m                                                        0% [1 git 1889 B/4657 kB 0%][0m[33m                            100% [Working][0m              Fetched 4657 kB in 1s (6521 kB/s)
+Selecting previously unselected package git.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 18876 files and directories currently installed.)
+Preparing to unpack .../git_2.56.0_x86%5f64.deb ...
+Unpacking git (2.56.0) ...
+Setting up git (2.56.0) ...
+  [32m✓[0m Installed successfully
+  [32m✓[0m Projects folder: [36m/data/data/com.termux/files/home/projects[0m
+
+[32m▶[0m Initialising [36mruby[0m project at [36m/data/data/com.termux/files/home/projects/tina4example[0m
+
+[32m▶[0m Checking [36mruby[0m runtime...
+  [32m✓[0m ruby found
+
+[32m▶[0m Checking package manager...
+  [32m✓[0m bundler found
+  [32m✓[0m Bundler set to build sqlite3 against Termux's SQLite
+  [32m✓[0m Created directory /data/data/com.termux/files/home/projects/tina4example
+
+[32m▶[0m Scaffolding [36mruby[0m project...
+  [32m✓[0m Created directory structure
+  [32m✓[0m Created .env
+  [32m✓[0m Created app.rb
+  [32m✓[0m Created .gitignore
+  [32m✓[0m Created Gemfile
+  [32m✓[0m Created Ruby scaffold
+
+[32m▶[0m Installing dependencies...
+  [32m▶[0m Running: bundle install (in /data/data/com.termux/files/home/projects/tina4example)
+Fetching gem metadata from https://rubygems.org/.....
+Resolving dependencies...
+[32mFetching mini_portile2 2.8.9[0m
+[32mFetching sqlite3 2.10.1[0m
+[32mInstalling mini_portile2 2.8.9[0m
+[32mInstalling sqlite3 2.10.1 with native extensions[0m
+[32mBundle complete! 2 Gemfile dependencies, 3 gems now installed.[0m
+[32mUse `bundle info [gemname]` to see where a bundled gem is installed.[0m
+  [32m✓[0m Dependencies installed
+
+[32m✓[0m Project created at /data/data/com.termux/files/home/projects/tina4example
+
+  [32m✓[0m Wrote [36mCLAUDE.md[0m
+  [32m✓[0m Wrote .mcp.json (Claude Code → live tina4 tools at /__dev/mcp)
+
+  [32m✓[0m Your project is ready: [36m/data/data/com.termux/files/home/projects/tina4example[0m
+
+  Start it any time:
+    cd /data/data/com.termux/files/home/projects/tina4example
+    tina4 serve        [2m# opens your app in the browser[0m
+
+  Start it now and open it in your browser? [[2my[0m]: n
+  [34mℹ[0m No problem — run [36mtina4 serve[0m when you're ready.
+SETUP_RC=0
+Connection to 127.0.0.1 closed.
