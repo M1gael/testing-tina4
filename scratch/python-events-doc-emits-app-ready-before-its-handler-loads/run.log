@@ -1,0 +1,24 @@
+## stock docs 2c09454
+page: docs origin/main; framework: /var/home/work/.cache/tina4-worktrees/grind-1102/dmisc04/stock-tina4-python (3.13.156)
+  FAIL A1 debug=false as written (src/routes/user_events.py src/app.py): 'Application ready.' printed 0 times
+  PASS C1 debug=false control: emit file renamed under src/zz_*: printed once
+  FAIL A1 debug=true as written (src/routes/user_events.py src/app.py): 'Application ready.' printed 0 times
+  PASS C1 debug=true control: emit file renamed under src/zz_*: printed once
+result: 2 pass, 2 fail
+## stock book 20b1006
+page: /var/home/work/.cache/tina4-worktrees/grind-1102/dmisc04/stock-tina4-book; framework: /var/home/work/.cache/tina4-worktrees/grind-1102/dmisc04/stock-tina4-python (3.13.156)
+  FAIL A1 debug=false as written (src/routes/user_events.py src/app.py): 'Application ready.' printed 0 times
+  PASS C1 debug=false control: emit file renamed under src/zz_*: printed once
+  FAIL A1 debug=true as written (src/routes/user_events.py src/app.py): 'Application ready.' printed 0 times
+  PASS C1 debug=true control: emit file renamed under src/zz_*: printed once
+result: 2 pass, 2 fail
+## fixed docs
+page: /var/home/work/.cache/tina4-worktrees/dmisc04-tina4-documentation; framework: /var/home/work/.cache/tina4-worktrees/grind-1102/dmisc04/stock-tina4-python (3.13.156)
+  PASS A1 debug=false as written (src/routes/user_events.py): 'Application ready.' printed once
+  PASS A1 debug=true as written (src/routes/user_events.py): 'Application ready.' printed once
+result: 2 pass, 0 fail
+## fixed book
+page: /var/home/work/.cache/tina4-worktrees/dmisc04-tina4-book; framework: /var/home/work/.cache/tina4-worktrees/grind-1102/dmisc04/stock-tina4-python (3.13.156)
+  PASS A1 debug=false as written (src/routes/user_events.py): 'Application ready.' printed once
+  PASS A1 debug=true as written (src/routes/user_events.py): 'Application ready.' printed once
+result: 2 pass, 0 fail

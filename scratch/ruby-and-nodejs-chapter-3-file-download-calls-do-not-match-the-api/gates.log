@@ -1,0 +1,54 @@
+== SKIP=1
+  FAIL b2 response.file("/path/to/report.pdf", "monthly-report-march-2026.pdf") -> status 500 wrong number of arguments (given 2, expected 1)
+  FAIL b4 response.file(filepath, "Q1-2026-Sales-Report.pdf") -> status 500 wrong number of arguments (given 2, expected 1)
+  FAIL prose: page still says 'adds `Content-Disposition`'
+  FAIL prose: page still says 'The browser downloads the file'
+  FAIL prose: page still says 'your chosen filename'
+  FAIL prose: page still says 'ustom filename'
+  FAIL prose: page still says 'specific download filename'
+docs-ruby: 4/11
+docs-nodejs: 11/11
+  FAIL b2 response.file("/path/to/report.pdf", "monthly-report-march-2026.pdf") -> status 500 wrong number of arguments (given 2, expected 1)
+  FAIL b4 response.file(filepath, "Q1-2026-Sales-Report.pdf") -> status 500 wrong number of arguments (given 2, expected 1)
+  FAIL prose: page still says 'adds `Content-Disposition`'
+  FAIL prose: page still says 'The browser downloads the file'
+  FAIL prose: page still says 'your chosen filename'
+  FAIL prose: page still says 'ustom filename'
+  FAIL prose: page still says 'specific download filename'
+book-ruby: 4/11
+book-nodejs: 11/11
+FAILS: 14
+== SKIP=2
+  FAIL b3 response.file(filepath) -> status 403 Forbidden
+  FAIL b5 response.file(filepath) -> status 403 Forbidden
+docs-ruby: 9/11
+docs-nodejs: 11/11
+  FAIL b3 response.file(filepath) -> status 403 Forbidden
+  FAIL b5 response.file(filepath) -> status 403 Forbidden
+book-ruby: 9/11
+book-nodejs: 11/11
+FAILS: 4
+== SKIP=3
+docs-ruby: 11/11
+  FAIL b2 res.file("/path/to/report.pdf", "monthly-report-march-2026.pdf") -> 2-arg call (download/filename) but no attachment header 
+  FAIL b4 res.file(filepath, "Q1-2026-Sales-Report.pdf") -> 2-arg call (download/filename) but no attachment header 
+  FAIL prose: page still says 'adds a `Content-Disposition`'
+  FAIL prose: page still says 'ustom filename'
+  FAIL prose: page still says 'specific download filename'
+docs-nodejs: 6/11
+book-ruby: 11/11
+  FAIL b2 res.file("/path/to/report.pdf", "monthly-report-march-2026.pdf") -> 2-arg call (download/filename) but no attachment header 
+  FAIL b4 res.file(filepath, "Q1-2026-Sales-Report.pdf") -> 2-arg call (download/filename) but no attachment header 
+  FAIL prose: page still says 'adds a `Content-Disposition`'
+  FAIL prose: page still says 'ustom filename'
+  FAIL prose: page still says 'specific download filename'
+book-nodejs: 6/11
+FAILS: 10
+== SKIP=4
+  FAIL b3 response.file(filepath) -> missing file -> 500, not the example's 404 
+docs-ruby: 10/11
+docs-nodejs: 11/11
+  FAIL b3 response.file(filepath) -> missing file -> 500, not the example's 404 
+book-ruby: 10/11
+book-nodejs: 11/11
+FAILS: 2

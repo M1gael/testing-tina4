@@ -1,0 +1,28 @@
+### DOCS=/var/home/work/.cache/tina4-worktrees/grind-1102/dorm04/stock-tina4-documentation
+FAIL docs/python/05-database.md: generator wrote ['migrations/20261102123316_create_notes_table.down.sql', 'migrations/20261102123316_create_notes_table.sql', 'tests/test_notes_table_migration.py']; missing from page ['tests/test_notes_table_migration.py']; count words [2]
+FAIL docs/php/05-database.md: generator wrote ['migrations/20261102103316_create_products_table.down.sql', 'migrations/20261102103316_create_products_table.sql', 'tests/ProductsTableMigrationTest.php']; missing from page ['tests/ProductsTableMigrationTest.php']; count words [2]
+FAIL docs/ruby/05-database.md: generator wrote ['migrations/20261102123316_create_products_table.down.sql', 'migrations/20261102123316_create_products_table.sql', 'spec/products_table_migration_spec.rb']; missing from page ['spec/products_table_migration_spec.rb']; count words []; says both the up and down files
+FAIL docs/nodejs/05-database.md: generator wrote ['migrations/20261102123316_create_products_table.down.sql', 'migrations/20261102123316_create_products_table.sql', 'tests/products_table_migration.test.ts']; missing from page ['tests/products_table_migration.test.ts']; count words [2]
+FAIL ok=0 bad=4
+rc=1
+### BOOK=/var/home/work/.cache/tina4-worktrees/grind-1102/dorm04/stock-tina4-book
+FAIL book-1-python/chapters/05-database.md: generator wrote ['migrations/20261102123317_create_notes_table.down.sql', 'migrations/20261102123317_create_notes_table.sql', 'tests/test_notes_table_migration.py']; missing from page ['tests/test_notes_table_migration.py']; count words [2]
+FAIL book-2-php/chapters/05-database.md: generator wrote ['migrations/20261102103317_create_products_table.down.sql', 'migrations/20261102103317_create_products_table.sql', 'tests/ProductsTableMigrationTest.php']; missing from page ['tests/ProductsTableMigrationTest.php']; count words [2]
+FAIL book-3-ruby/chapters/05-database.md: generator wrote ['migrations/20261102123317_create_products_table.down.sql', 'migrations/20261102123317_create_products_table.sql', 'spec/products_table_migration_spec.rb']; missing from page ['spec/products_table_migration_spec.rb']; count words []; says both the up and down files
+FAIL book-4-nodejs/chapters/05-database.md: generator wrote ['migrations/20261102123318_create_products_table.down.sql', 'migrations/20261102123318_create_products_table.sql', 'tests/products_table_migration.test.ts']; missing from page ['tests/products_table_migration.test.ts']; count words [2]
+FAIL ok=0 bad=4
+rc=1
+### DOCS=/var/home/work/.cache/tina4-worktrees/dorm04-tina4-documentation
+ok   docs/python/05-database.md: lists all 3 files ['migrations/20261102123318_create_notes_table.down.sql', 'migrations/20261102123318_create_notes_table.sql', 'tests/test_notes_table_migration.py']
+ok   docs/php/05-database.md: lists all 3 files ['migrations/20261102103319_create_products_table.down.sql', 'migrations/20261102103319_create_products_table.sql', 'tests/ProductsTableMigrationTest.php']
+ok   docs/ruby/05-database.md: lists all 3 files ['migrations/20261102123319_create_products_table.down.sql', 'migrations/20261102123319_create_products_table.sql', 'spec/products_table_migration_spec.rb']
+ok   docs/nodejs/05-database.md: lists all 3 files ['migrations/20261102123319_create_products_table.down.sql', 'migrations/20261102123319_create_products_table.sql', 'tests/products_table_migration.test.ts']
+PASS ok=4 bad=0
+rc=0
+### BOOK=/var/home/work/.cache/tina4-worktrees/dorm04-tina4-book
+ok   book-1-python/chapters/05-database.md: lists all 3 files ['migrations/20261102123320_create_notes_table.down.sql', 'migrations/20261102123320_create_notes_table.sql', 'tests/test_notes_table_migration.py']
+ok   book-2-php/chapters/05-database.md: lists all 3 files ['migrations/20261102103320_create_products_table.down.sql', 'migrations/20261102103320_create_products_table.sql', 'tests/ProductsTableMigrationTest.php']
+ok   book-3-ruby/chapters/05-database.md: lists all 3 files ['migrations/20261102123320_create_products_table.down.sql', 'migrations/20261102123320_create_products_table.sql', 'spec/products_table_migration_spec.rb']
+ok   book-4-nodejs/chapters/05-database.md: lists all 3 files ['migrations/20261102123321_create_products_table.down.sql', 'migrations/20261102123321_create_products_table.sql', 'tests/products_table_migration.test.ts']
+PASS ok=4 bad=0
+rc=0

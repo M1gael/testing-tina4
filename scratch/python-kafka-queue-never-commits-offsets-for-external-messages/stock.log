@@ -1,0 +1,9 @@
+# stock origin/v3 ba84f43c, apache/kafka 3.8.0, confluent-kafka 2.16.1
+A external, complete x3            job_ids=['unknown', 'unknown', 'unknown'] committed=-1001 want=3  FAIL
+B tina4 push, complete x3          job_ids=['04369a77ee2343d4', '2f5e8f9807546795', '71590e834f0f02db'] committed=3 want=3  PASS
+C external, fail x1 (retries left) job_ids=['unknown'] committed=-1001 want=1  FAIL
+D two records share payload id, ack 1st job_ids=['dup', 'dup'] committed=2 want=1  FAIL
+reject: job.id=unknown dead_ids=['unknown'] retry=True back=None
+fail: job.id=unknown dead_ids=['unknown'] retry=True back=None
+raw ids ['unknown', 'unknown'] [{'n': 0}, {'n': 1}]
+before={'n': 'before'} after_dead_letters=None second_try=None FAIL (main topic no longer read)

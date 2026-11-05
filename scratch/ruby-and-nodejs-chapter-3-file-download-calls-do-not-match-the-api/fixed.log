@@ -1,0 +1,28 @@
+frameworks: rb 3.13.156 (/var/home/work/.cache/tina4-worktrees/grind-1102/drt08/stock-tina4-ruby) nd 3.13.156 (/var/home/work/.cache/tina4-worktrees/grind-1102/drt08/stock-tina4-nodejs)
+docs 2c09454 /var/home/work/.cache/tina4-worktrees/drt08-tina4-documentation
+  PASS b1 response.file("/path/to/report.pdf") -> 200 (no Content-Disposition)
+  PASS b2 response.file("/path/to/report.pdf", download: true) -> 200 attachment; filename="report.pdf"
+  PASS b3 response.file(filepath) -> 200 (no Content-Disposition)
+  PASS b4 response.file(filepath, download: true) -> 200 attachment; filename="report.pdf"
+  PASS b5 response.file(filepath) -> 200 (no Content-Disposition)
+docs-ruby: 11/11
+  PASS b1 res.file("/path/to/report.pdf") -> 200 (no Content-Disposition)
+  PASS b2 res.file("/path/to/report.pdf", { download: true }) -> 200 attachment; filename="report.pdf"
+  PASS b3 res.file(filepath) -> 200 (no Content-Disposition)
+  PASS b4 res.file(filepath, { download: true }) -> 200 attachment; filename="report.pdf"
+  PASS b5 res.file(filepath) -> 200 (no Content-Disposition)
+docs-nodejs: 11/11
+book 20b1006 /var/home/work/.cache/tina4-worktrees/drt08-tina4-book
+  PASS b1 response.file("/path/to/report.pdf") -> 200 (no Content-Disposition)
+  PASS b2 response.file("/path/to/report.pdf", download: true) -> 200 attachment; filename="report.pdf"
+  PASS b3 response.file(filepath) -> 200 (no Content-Disposition)
+  PASS b4 response.file(filepath, download: true) -> 200 attachment; filename="report.pdf"
+  PASS b5 response.file(filepath) -> 200 (no Content-Disposition)
+book-ruby: 11/11
+  PASS b1 res.file("/path/to/report.pdf") -> 200 (no Content-Disposition)
+  PASS b2 res.file("/path/to/report.pdf", { download: true }) -> 200 attachment; filename="report.pdf"
+  PASS b3 res.file(filepath) -> 200 (no Content-Disposition)
+  PASS b4 res.file(filepath, { download: true }) -> 200 attachment; filename="report.pdf"
+  PASS b5 res.file(filepath) -> 200 (no Content-Disposition)
+book-nodejs: 11/11
+ALL PASS

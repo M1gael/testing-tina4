@@ -1,0 +1,8 @@
+# fix on ba84f43c (/var/home/work/.cache/tina4-worktrees/q274-tina4-python.fix.patch)
+A external, complete x3            job_ids=['q274_e78c6d12:0:0', 'q274_e78c6d12:0:1', 'q274_e78c6d12:0:2'] committed=3 want=3  PASS
+B tina4 push, complete x3          job_ids=['b06cbc4b6f735136', '7c7d4cd7475f519d', 'd6c4b98b27e248f9'] committed=3 want=3  PASS
+C external, fail x1 (retries left) job_ids=['q274_cc0bbf49:0:0'] committed=1 want=1  PASS
+D two records share payload id, ack 1st job_ids=['dup', 'dup'] committed=1 want=1  PASS
+reject: job.id=q274d_14cb2cfb:0:0 dead_ids=['q274d_14cb2cfb:0:0'] retry=True back=None
+fail: job.id=q274d_bccba58a:0:0 dead_ids=['q274d_bccba58a:0:0'] retry=True back=None
+raw ids ['q274r_eeada29a:0:0', 'q274r_eeada29a:0:1'] [{'n': 0}, {'n': 1}]

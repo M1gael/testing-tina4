@@ -1,0 +1,6 @@
+"<script>x()</script>" caught
+"<SCRIPT>x()</SCRIPT>" MISSED
+"<script>x()</script >" MISSED
+home.js true
+a+b.js false
+identity-replace no-op: true
