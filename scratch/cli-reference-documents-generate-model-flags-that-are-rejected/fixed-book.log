@@ -1,0 +1,67 @@
+ok   python:155 runs ['tina4 generate model Product']
+ok   python:155 output block
+ok   python:196 runs ['tina4 generate model Product --fields "name:string,price:float,category:string,in_stock:bool"']
+ok   python:259 runs ['tina4 generate route products']
+ok   python:259 output block
+ok   python:438 runs ['tina4 generate model Product', 'tina4 generate route products']
+ok   python:438 output block
+ok   python:631 runs ['tina4 generate model Customer', 'tina4 generate route customers']
+ok   python:653 runs ['tina4 generate model Customer', 'tina4 generate route customers']
+ok   python options-table --fields rc=0
+ok   python options-table --table-name rc=0
+ok   python options-table --no-migration rc=0
+ok   python note --dry-run rc=0
+ok   python note --json rc=0
+ok   python note --help rc=0
+ok   python note --with-route rc=1
+ok   python note --soft-delete rc=1
+ok   php:152 runs ['tina4 generate model Order']
+ok   php:152 output block
+ok   php:198 runs ['tina4 generate model Order --fields "userId:int,total:float,status:string,paid:bool"']
+ok   php:198 output block
+ok   php:275 runs ['tina4 generate route Order']
+ok   php:275 output block
+ok   php:641 runs ['tina4 generate model Task --fields "userId:int,title:string,description:text,priority:string,completed:bool"', 'tina4 generate route Task']
+ok   php options-table --fields rc=0
+ok   php options-table --table-name rc=0
+ok   php options-table --no-migration rc=0
+ok   php note --dry-run rc=0
+ok   php note --json rc=0
+ok   php note --help rc=0
+ok   php note --with-route rc=1
+ok   php note --soft-delete rc=1
+ok   ruby:159 runs ['tina4 generate model Product']
+ok   ruby:159 output block
+ok   ruby:200 runs ['tina4 generate model Product --fields "name:string,price:float,category:string,in_stock:bool"']
+ok   ruby:262 runs ['tina4 generate route products']
+ok   ruby:262 output block
+ok   ruby:432 runs ['tina4 generate model Product', 'tina4 generate route products']
+ok   ruby:432 output block
+ok   ruby:671 runs ['tina4 generate model Customer', 'tina4 generate route customers']
+ok   ruby:695 runs ['tina4 generate model Customer', 'tina4 generate route customers']
+ok   ruby options-table --fields rc=0
+ok   ruby options-table --table-name rc=0
+ok   ruby options-table --no-migration rc=0
+ok   ruby note --dry-run rc=0
+ok   ruby note --json rc=0
+ok   ruby note --help rc=0
+ok   ruby note --with-route rc=1
+ok   ruby note --soft-delete rc=1
+ok   nodejs:155 runs ['tina4 generate model Product']
+ok   nodejs:155 output block
+ok   nodejs:201 runs ['tina4 generate model Product --fields "name:string,price:float,category:string,inStock:bool"']
+ok   nodejs:269 runs ['tina4 generate route products']
+ok   nodejs:269 output block
+ok   nodejs:452 runs ['tina4 generate model Product', 'tina4 generate route products']
+ok   nodejs:452 output block
+ok   nodejs:724 runs ['tina4 generate model Customer', 'tina4 generate route customers']
+ok   nodejs:746 runs ['tina4 generate model Customer', 'tina4 generate route customers']
+ok   nodejs options-table --fields rc=0
+ok   nodejs options-table --table-name rc=0
+ok   nodejs options-table --no-migration rc=0
+ok   nodejs note --dry-run rc=0
+ok   nodejs note --json rc=0
+ok   nodejs note --help rc=0
+ok   nodejs note --with-route rc=1
+ok   nodejs note --soft-delete rc=1
+VERDICT: PASS ok=66 bad=0

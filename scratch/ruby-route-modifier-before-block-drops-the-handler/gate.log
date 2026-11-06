@@ -1,0 +1,5 @@
+RED   docs 10-middleware-security.md: 1 checks fail
+RED   docs 36-releases.md: 1 checks fail
+RED   book 10-middleware-security.md: 1 checks fail
+RED   book 36-releases.md: 1 checks fail
+GATE PASS: every piece goes red alone

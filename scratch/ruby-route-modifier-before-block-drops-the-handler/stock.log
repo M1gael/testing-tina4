@@ -1,0 +1,33 @@
+FAIL static docs: 9 route blocks handed to a modifier
+    10-middleware-security.md:791	Tina4::Router.post("/api/webhooks/stripe").no_auth do |request, response|
+    10-middleware-security.md:802	Tina4::Router.get("/api/admin/users").secure do |request, response|
+    10-middleware-security.md:994	Tina4::Router.post("/api/login").no_auth do |request, response|
+    10-middleware-security.md:1092	Tina4::Router.post("/api/logout").no_auth do |request, response|
+    10-middleware-security.md:1131	Tina4::Router.post("/api/login").no_auth do |request, response|
+    10-middleware-security.md:1204	Tina4::Router.post("/api/login").no_auth.middleware(LoginRateLimit) do |request, response|
+    10-middleware-security.md:1318	Tina4::Router.post("/api/contact").no_auth do |request, response|
+    36-releases.md:5312	Tina4::Router.get("/dashboard").secure do |request, response|
+    36-releases.md:5316	Tina4::Router.get("/static-page").cache(ttl: 3600) do |request, response|
+FAIL static book: 9 route blocks handed to a modifier
+    10-middleware-security.md:791	Tina4::Router.post("/api/webhooks/stripe").no_auth do |request, response|
+    10-middleware-security.md:802	Tina4::Router.get("/api/admin/users").secure do |request, response|
+    10-middleware-security.md:980	Tina4::Router.post("/api/login").no_auth do |request, response|
+    10-middleware-security.md:1078	Tina4::Router.post("/api/logout").no_auth do |request, response|
+    10-middleware-security.md:1117	Tina4::Router.post("/api/login").no_auth do |request, response|
+    10-middleware-security.md:1190	Tina4::Router.post("/api/login").no_auth.middleware(LoginRateLimit) do |request, response|
+    10-middleware-security.md:1300	Tina4::Router.post("/api/contact").no_auth do |request, response|
+    36-releases.md:4240	Tina4::Router.get("/dashboard").secure do |request, response|
+    36-releases.md:4244	Tina4::Router.get("/static-page").cache(ttl: 3600) do |request, response|
+FAIL served docs ch10 webhook (.no_auth): POST /api/webhooks/stripe -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 200 with '"received":true')
+FAIL served docs ch10 admin users (.secure): GET /api/admin/users -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 200 with '"users":[]')
+FAIL served docs ch10 webhook (.no_auth) (notoken): POST /api/webhooks/stripe -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 200 with '"received":true')
+PASS served docs ch10 admin users (.secure) (notoken): GET /api/admin/users -> 401 {"error":"Unauthorized"}
+FAIL served docs ch10 login rate limit (.no_auth.middleware) (notoken): POST /api/login -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 204 with '')
+FAIL served book ch10 webhook (.no_auth): POST /api/webhooks/stripe -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 200 with '"received":true')
+FAIL served book ch10 admin users (.secure): GET /api/admin/users -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 200 with '"users":[]')
+FAIL served book ch10 webhook (.no_auth) (notoken): POST /api/webhooks/stripe -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 200 with '"received":true')
+PASS served book ch10 admin users (.secure) (notoken): GET /api/admin/users -> 401 {"error":"Unauthorized"}
+FAIL served book ch10 login rate limit (.no_auth.middleware) (notoken): POST /api/login -> 500 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" (want 204 with '')
+PASS served control block on post: POST /control -> 200 {"ok":true}
+PASS served control end.no_auth.middleware runs the hook (notoken): POST /hit -> 429 
+VERDICT FAIL ok=4 bad=10

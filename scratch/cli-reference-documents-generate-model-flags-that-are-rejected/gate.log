@@ -1,0 +1,6 @@
+options table: VERDICT: FAIL ok=66 bad=1
+section 4 output: VERDICT: FAIL ok=65 bad=1
+section 5 output: VERDICT: FAIL ok=65 bad=1
+section 8 commands: VERDICT: FAIL ok=64 bad=2
+exercise commands: VERDICT: FAIL ok=65 bad=1
+php route output: VERDICT: FAIL ok=65 bad=1

@@ -1,0 +1,50 @@
+ok   python:155 runs ['tina4 generate model Product']
+BAD  python:155 output block -- claimed-not-written ['migrations/TS_create_products_table.sql', 'src/orm/product.py'] written-not-claimed ['migrations/TS_create_product.down.sql', 'migrations/TS_create_product.sql', 'src/orm/Product.py', 'tests/test_product_model.py']
+ok   python:194 runs ['tina4 generate model Product --fields "name:string,price:float,category:string,in_stock:bool"']
+ok   python:257 runs ['tina4 generate route products']
+BAD  python:257 output block -- claimed-not-written [] written-not-claimed ['tests/test_products.py']
+BAD  python:435 runs ['tina4 generate model Product --with-route --with-migration'] -- ['\'tina4 generate model Product --with-route --with-migration\' rc=1: Unknown option --with-route for "generate model".']
+BAD  python:435 output block -- claimed-not-written ['migrations/TS_create_products_table.sql', 'src/orm/product.py', 'src/routes/products.py'] written-not-claimed []
+BAD  python:624 runs ['tina4 generate model Customer --with-route --with-migration'] -- ['\'tina4 generate model Customer --with-route --with-migration\' rc=1: Unknown option --with-route for "generate model".']
+BAD  python:645 runs ['tina4 generate model Customer --with-route --with-migration'] -- ['\'tina4 generate model Customer --with-route --with-migration\' rc=1: Unknown option --with-route for "generate model".']
+ok   python options-table --fields rc=0
+BAD  python options-table --auto-crud rc=1: Unknown option --auto-crud for "generate model".
+BAD  python options-table --soft-delete rc=1: Unknown option --soft-delete for "generate model".
+ok   python options-table --no-migration rc=0
+BAD  python options-table --with-route rc=1: Unknown option --with-route for "generate model".
+ok   php:152 runs ['tina4 generate model Order']
+BAD  php:152 output block -- claimed-not-written ['migrations/TS_create_orders_table.sql'] written-not-claimed ['migrations/TS_create_orders.down.sql', 'migrations/TS_create_orders.sql', 'tests/OrderModelTest.php']
+ok   php:196 runs ['tina4 generate model Order --fields "userId:int,total:float,status:string,paid:bool"']
+BAD  php:196 output block -- claimed-not-written ['migrations/TS_create_orders_table.sql'] written-not-claimed ['migrations/TS_create_orders.down.sql', 'migrations/TS_create_orders.sql', 'tests/OrderModelTest.php']
+ok   php:270 runs ['tina4 generate route Order']
+BAD  php:270 output block -- claimed-not-written ['src/routes/orders.php'] written-not-claimed ['src/routes/Order.php', 'tests/OrderTest.php']
+ok   php:635 runs ['tina4 generate model Task --fields "userId:int,title:string,description:text,priority:string,completed:bool"', 'tina4 generate route Task']
+ok   php options-table --fields rc=0
+BAD  php options-table --auto-crud rc=1: Unknown option --auto-crud for "generate model".
+BAD  php options-table --soft-delete rc=1: Unknown option --soft-delete for "generate model".
+ok   php options-table --no-migration rc=0
+ok   ruby:159 runs ['tina4 generate model Product']
+BAD  ruby:159 output block -- claimed-not-written ['migrations/TS_create_products_table.sql'] written-not-claimed ['migrations/TS_create_product.down.sql', 'migrations/TS_create_product.sql', 'spec/product_model_spec.rb']
+ok   ruby:198 runs ['tina4 generate model Product --fields "name:string,price:float,category:string,in_stock:bool"']
+ok   ruby:260 runs ['tina4 generate route products']
+BAD  ruby:260 output block -- claimed-not-written [] written-not-claimed ['spec/products_spec.rb']
+ok   ruby options-table --fields rc=0
+BAD  ruby options-table --auto-crud rc=1: Unknown option --auto-crud for "generate model".
+BAD  ruby options-table --soft-delete rc=1: Unknown option --soft-delete for "generate model".
+ok   ruby options-table --no-migration rc=0
+BAD  ruby options-table --with-route rc=1: Unknown option --with-route for "generate model".
+ok   nodejs:155 runs ['tina4 generate model Product']
+BAD  nodejs:155 output block -- claimed-not-written ['migrations/TS_create_products_table.sql', 'src/orm/Product.ts'] written-not-claimed ['migrations/TS_create_product.down.sql', 'migrations/TS_create_product.sql', 'src/models/Product.ts', 'tests/product_model.test.ts']
+ok   nodejs:199 runs ['tina4 generate model Product --fields "name:string,price:float,category:string,inStock:bool"']
+ok   nodejs:267 runs ['tina4 generate route products']
+BAD  nodejs:267 output block -- claimed-not-written ['src/routes/products.ts'] written-not-claimed ['src/routes/api/products/[id]/delete.ts', 'src/routes/api/products/[id]/get.ts', 'src/routes/api/products/[id]/put.ts', 'src/routes/api/products/get.ts', 'src/routes/api/products/post.ts', 'tests/products.test.ts']
+BAD  nodejs:445 runs ['tina4 generate model Product --with-route --with-migration'] -- ['\'tina4 generate model Product --with-route --with-migration\' rc=1: Unknown option --with-route for "generate model".']
+BAD  nodejs:445 output block -- claimed-not-written ['migrations/TS_create_products_table.sql', 'src/orm/Product.ts', 'src/routes/products.ts'] written-not-claimed []
+BAD  nodejs:709 runs ['tina4 generate model Customer --with-route --with-migration'] -- ['\'tina4 generate model Customer --with-route --with-migration\' rc=1: Unknown option --with-route for "generate model".']
+BAD  nodejs:730 runs ['tina4 generate model Customer --with-route --with-migration'] -- ['\'tina4 generate model Customer --with-route --with-migration\' rc=1: Unknown option --with-route for "generate model".']
+ok   nodejs options-table --fields rc=0
+BAD  nodejs options-table --auto-crud rc=1: Unknown option --auto-crud for "generate model".
+BAD  nodejs options-table --soft-delete rc=1: Unknown option --soft-delete for "generate model".
+ok   nodejs options-table --no-migration rc=0
+BAD  nodejs options-table --with-route rc=1: Unknown option --with-route for "generate model".
+VERDICT: FAIL ok=21 bad=28

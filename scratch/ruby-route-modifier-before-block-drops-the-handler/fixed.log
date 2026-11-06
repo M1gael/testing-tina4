@@ -1,0 +1,15 @@
+PASS static docs: 0 route blocks handed to a modifier
+PASS static book: 0 route blocks handed to a modifier
+PASS served docs ch10 webhook (.no_auth): POST /api/webhooks/stripe -> 200 {"received":true}
+PASS served docs ch10 admin users (.secure): GET /api/admin/users -> 200 {"users":[]}
+PASS served docs ch10 webhook (.no_auth) (notoken): POST /api/webhooks/stripe -> 200 {"received":true}
+PASS served docs ch10 admin users (.secure) (notoken): GET /api/admin/users -> 401 {"error":"Unauthorized"}
+PASS served docs ch10 login rate limit (.no_auth.middleware) (notoken): POST /api/login -> 204 
+PASS served book ch10 webhook (.no_auth): POST /api/webhooks/stripe -> 200 {"received":true}
+PASS served book ch10 admin users (.secure): GET /api/admin/users -> 200 {"users":[]}
+PASS served book ch10 webhook (.no_auth) (notoken): POST /api/webhooks/stripe -> 200 {"received":true}
+PASS served book ch10 admin users (.secure) (notoken): GET /api/admin/users -> 401 {"error":"Unauthorized"}
+PASS served book ch10 login rate limit (.no_auth.middleware) (notoken): POST /api/login -> 204 
+PASS served control block on post: POST /control -> 200 {"ok":true}
+PASS served control end.no_auth.middleware runs the hook (notoken): POST /hit -> 429 
+VERDICT PASS ok=14 bad=0
